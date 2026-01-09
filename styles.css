@@ -97,11 +97,36 @@ img {
   padding: 0 2rem;
 }
 
+/* --- Top Bar (New Separate Header) --- */
+.top-bar {
+  background-color: #ffffff;
+  padding: 1rem 3rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 3rem;
+  border-bottom: 1px solid var(--border-light);
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--text-main);
+  text-transform: uppercase;
+}
+
+.top-bar a {
+  position: relative;
+  color: var(--text-main);
+}
+
+.top-bar a:hover {
+  color: var(--primary);
+}
+
 /* --- Navigation --- */
 header {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(12px);
-  padding: 1rem 3rem;
+  padding: 0.5rem 3rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -153,10 +178,10 @@ header {
   color: var(--primary);
 }
 
+/* Header Icons is now just for the CTA button */
 .header-icons {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
 }
 
 .header-icons a {
@@ -166,23 +191,12 @@ header {
   padding: 0.6rem 1.2rem;
   border-radius: 4px;
   transition: all 0.3s ease;
-}
-
-.header-icons a:first-child {
-  color: var(--text-main);
-}
-
-.header-icons a:first-child:hover {
-  color: var(--primary);
-}
-
-.header-icons a:last-child {
   background-color: var(--bg-surface);
   color: var(--primary);
   border: 1px solid var(--border-light);
 }
 
-.header-icons a:last-child:hover {
+.header-icons a:hover {
   background-color: var(--primary);
   color: white;
   border-color: var(--primary);
@@ -709,6 +723,51 @@ footer {
   transform: translateY(-2px);
 }
 
+/* --- Modal Popup Styling --- */
+.modal {
+  display: none;
+  /* Hidden by default */
+  position: fixed;
+  z-index: 2000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(5px);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 10% auto;
+  padding: 3rem;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 600px;
+  border-radius: 12px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  position: relative;
+  text-align: center;
+}
+
+.close-btn {
+  color: #aaa;
+  position: absolute;
+  top: 15px;
+  right: 25px;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
 /* Media Queries */
 @media (max-width: 1024px) {
   h1 {
@@ -725,6 +784,12 @@ footer {
 }
 
 @media (max-width: 768px) {
+  .top-bar {
+    justify-content: center;
+    gap: 1rem;
+    padding: 0.5rem;
+  }
+
   header {
     flex-direction: column;
     padding: 1rem;
@@ -752,5 +817,10 @@ footer {
   .footer-content {
     grid-template-columns: 1fr;
     gap: 2rem;
+  }
+
+  .modal-content {
+    width: 95%;
+    margin: 20% auto;
   }
 }
