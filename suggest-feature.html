@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Suggest a Feature | KJR Interior Designs Inc.</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  <!-- Top Utility Bar -->
+  <div class="top-bar">
+    <div class="top-bar-left">
+      <span class="utility-info">📞 <strong>888-944-6313</strong> • Call 24/7 • Live Operator</span>
+    </div>
+    <div class="top-bar-right">
+      <a href="contact-us.html">Contact</a>
+      <a href="suggest-feature.html">Suggest Feature</a>
+      <a href="sales-login.html" class="sales-login-btn">SALES LOGIN</a>
+    </div>
+  </div>
+
+  <!-- Main Navigation Header -->
+  <header class="main-header">
+    <div class="header-container">
+      <div class="logo">
+        <a href="index.html">
+          <img src="logo-new.jpeg" alt="KJR Interior Designs Inc.">
+        </a>
+      </div>
+      <nav class="secondary-nav">
+        <div class="secondary-nav-container">
+          <ul class="nav-links">
+            <li><a href="index.html">HOME</a></li>
+            <li><a href="about-us.html">ABOUT</a></li>
+            <li class="has-dropdown">
+              <a href="#">SERVICES <span class="dropdown-arrow">▾</span></a>
+              <ul class="dropdown-menu">
+                <li><a href="bid-projects.html">Bid Projects</a></li>
+                <li><a href="bid-projects.html">Completed Work</a></li>
+                <li><a href="property-mgmt.html">Property Management</a></li>
+              </ul>
+            </li>
+            <li><a href="career-move.html">CAREERS</a></li>
+          </ul>
+        </div>
+      </nav>
+      <div class="header-actions">
+        <a href="index.html#parts" class="parts-highlight">10M+ PARTS</a>
+        <a href="contact-us.html" class="btn-outline">GET QUOTE</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero" style="height: 50vh;">
+    <video autoplay muted loop playsinline class="hero-bg">
+      <source
+        src="https://res.cloudinary.com/dc8xxhoaf/video/upload/v1767988938/3773486-hd-1920-1080-30fps-tyea3fib-1_3P5aPwyY_online-video-cutter.com_tzwfze.mp4"
+        type="video/mp4">
+    </video>
+    <div class="hero-content">
+      <h1>SUGGEST A FEATURE</h1>
+      <p>Help us improve! Share your ideas and feedback.</p>
+    </div>
+  </section>
+
+  <!-- Surveys Section -->
+  <section class="content-section" style="background: white; padding: 4rem 2rem;">
+    <div class="feature-card" style="max-width: 900px;">
+      <h2 class="feature-title" style="text-align: center; margin-bottom: 2rem; color: var(--primary);">📊 QUICK SURVEYS
+      </h2>
+      <p style="text-align: center; margin-bottom: 3rem; color: var(--text-body);">
+        Help us serve you better by answering these quick questions
+      </p>
+
+      <!-- Survey 1: Service Satisfaction -->
+      <div
+        style="background: #fdfdfd; padding: 2rem; border-radius: 8px; margin-bottom: 2rem; border: 2px solid #e0e0e0;">
+        <h3 style="margin-bottom: 1.5rem; color: var(--text-main);">How satisfied are you with our services?</h3>
+        <form class="survey-form" data-survey-id="service-satisfaction">
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem;">
+            <label style="cursor: pointer;">
+              <input type="radio" name="satisfaction" value="very-satisfied" required>
+              <span style="margin-left: 0.5rem;">Very Satisfied 😊</span>
+            </label>
+            <label style="cursor: pointer;">
+              <input type="radio" name="satisfaction" value="satisfied" required>
+              <span style="margin-left: 0.5rem;">Satisfied 🙂</span>
+            </label>
+            <label style="cursor: pointer;">
+              <input type="radio" name="satisfaction" value="neutral" required>
+              <span style="margin-left: 0.5rem;">Neutral 😐</span>
+            </label>
+            <label style="cursor: pointer;">
+              <input type="radio" name="satisfaction" value="dissatisfied" required>
+              <span style="margin-left: 0.5rem;">Dissatisfied 😕</span>
+            </label>
+          </div>
+          <button type="submit" class="btn"
+            style="background: var(--primary); color: white; border: none; padding: 0.5rem 2rem; border-radius: 50px; cursor: pointer;">
+            Submit
+          </button>
+        </form>
+      </div>
+
+      <!-- Survey 2: Feature Priority -->
+      <div
+        style="background: #fdfdfd; padding: 2rem; border-radius: 8px; margin-bottom: 2rem; border: 2px solid #e0e0e0;">
+        <h3 style="margin-bottom: 1.5rem; color: var(--text-main);">Which feature would you like to see next?</h3>
+        <form class="survey-form" data-survey-id="feature-priority">
+          <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1rem;">
+            <label style="cursor: pointer;">
+              <input type="radio" name="feature" value="online-ordering" required>
+              <span style="margin-left: 0.5rem;">🛒 Online Parts Ordering System</span>
+            </label>
+            <label style="cursor: pointer;">
+              <input type="radio" name="feature" value="mobile-app" required>
+              <span style="margin-left: 0.5rem;">📱 Mobile App</span>
+            </label>
+            <label style="cursor: pointer;">
+              <input type="radio" name="feature" value="live-chat" required>
+              <span style="margin-left: 0.5rem;">💬 Live Chat Support</span>
+            </label>
+            <label style="cursor: pointer;">
+              <input type="radio" name="feature" value="project-tracking" required>
+              <span style="margin-left: 0.5rem;">📊 Project Status Tracking</span>
+            </label>
+            <label style="cursor: pointer;">
+              <input type="radio" name="feature" value="other" required>
+              <span style="margin-left: 0.5rem;">💡 Other (suggest below)</span>
+            </label>
+          </div>
+          <button type="submit" class="btn"
+            style="background: var(--primary); color: white; border: none; padding: 0.5rem 2rem; border-radius: 50px; cursor: pointer;">
+            Submit
+          </button>
+        </form>
+      </div>
+
+      <!-- Survey 3: Service Usage -->
+      <div
+        style="background: #fdfdfd; padding: 2rem; border-radius: 8px; margin-bottom: 2rem; border: 2px solid #e0e0e0;">
+        <h3 style="margin-bottom: 1.5rem; color: var(--text-main);">How often do you use our services?</h3>
+        <form class="survey-form" data-survey-id="service-usage">
+          <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1rem;">
+            <label style="cursor: pointer;">
+              <input type="radio" name="frequency" value="daily" required>
+              <span style="margin-left: 0.5rem;">Daily</span>
+            </label>
+            <label style="cursor: pointer;">
+              <input type="radio" name="frequency" value="weekly" required>
+              <span style="margin-left: 0.5rem;">Weekly</span>
+            </label>
+            <label style="cursor: pointer;">
+              <input type="radio" name="frequency" value="monthly" required>
+              <span style="margin-left: 0.5rem;">Monthly</span>
+            </label>
+            <label style="cursor: pointer;">
+              <input type="radio" name="frequency" value="occasionally" required>
+              <span style="margin-left: 0.5rem;">Occasionally</span>
+            </label>
+            <label style="cursor: pointer;">
+              <input type="radio" name="frequency" value="first-time" required>
+              <span style="margin-left: 0.5rem;">First Time User</span>
+            </label>
+          </div>
+          <button type="submit" class="btn"
+            style="background: var(--primary); color: white; border: none; padding: 0.5rem 2rem; border-radius: 50px; cursor: pointer;">
+            Submit
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Suggestion Form Section -->
+  <section class="content-section" style="background: #fdfdfd; padding: 4rem 2rem;">
+    <div class="feature-card" style="max-width: 800px;">
+      <h2 class="feature-title" style="text-align: center; margin-bottom: 2rem; color: var(--primary);">💡 SUGGEST A NEW
+        FEATURE</h2>
+      <p style="text-align: center; margin-bottom: 3rem; color: var(--text-body);">
+        Have an idea? We'd love to hear it! Your suggestions help us build better services.
+      </p>
+
+      <!-- Suggestion Form -->
+      <form id="suggestionForm"
+        style="background: white; padding: 3rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+        <div style="margin-bottom: 1.5rem;">
+          <label for="suggestName"
+            style="display: block; margin-bottom: 0.5rem; font-weight: 700; color: var(--text-main);">
+            Your Name <span style="color: var(--text-muted); font-weight: 400; font-size: 0.9rem;">(optional)</span>
+          </label>
+          <input type="text" id="suggestName" name="suggestName"
+            style="width: 100%; padding: 0.75rem; border: 2px solid #e0e0e0; border-radius: 4px; font-family: var(--font-body); font-size: 1rem;">
+        </div>
+
+        <div style="margin-bottom: 1.5rem;">
+          <label for="suggestEmail"
+            style="display: block; margin-bottom: 0.5rem; font-weight: 700; color: var(--text-main);">
+            Email <span style="color: var(--text-muted); font-weight: 400; font-size: 0.9rem;">(optional)</span>
+          </label>
+          <input type="email" id="suggestEmail" name="suggestEmail"
+            style="width: 100%; padding: 0.75rem; border: 2px solid #e0e0e0; border-radius: 4px; font-family: var(--font-body); font-size: 1rem;">
+          <small style="color: var(--text-muted); font-size: 0.85rem; display: block; margin-top: 0.25rem;">
+            Leave email if you'd like us to follow up on your suggestion
+          </small>
+        </div>
+
+        <div style="margin-bottom: 1.5rem;">
+          <label for="suggestionCategory"
+            style="display: block; margin-bottom: 0.5rem; font-weight: 700; color: var(--text-main);">
+            Category
+          </label>
+          <select id="suggestionCategory" name="suggestionCategory"
+            style="width: 100%; padding: 0.75rem; border: 2px solid #e0e0e0; border-radius: 4px; font-family: var(--font-body); font-size: 1rem;">
+            <option value="website">Website Improvement</option>
+            <option value="service">New Service</option>
+            <option value="parts">Parts & Inventory</option>
+            <option value="mobile">Mobile App</option>
+            <option value="communication">Communication</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div style="margin-bottom: 1.5rem;">
+          <label for="suggestionText"
+            style="display: block; margin-bottom: 0.5rem; font-weight: 700; color: var(--text-main);">
+            Your Suggestion <span style="color: var(--primary);">*</span>
+          </label>
+          <textarea id="suggestionText" name="suggestionText" rows="6" required
+            placeholder="Describe your feature idea or improvement suggestion..."
+            style="width: 100%; padding: 0.75rem; border: 2px solid #e0e0e0; border-radius: 4px; font-family: var(--font-body); font-size: 1rem; resize: vertical;"></textarea>
+        </div>
+
+        <div style="text-align: center;">
+          <button type="submit" class="btn"
+            style="background: var(--primary); color: white; border: none; padding: 1rem 3rem; font-size: 1rem; border-radius: 50px; cursor: pointer; box-shadow: 0 4px 15px rgba(204,0,0,0.3); transition: all 0.3s ease;">
+            Submit Suggestion
+          </button>
+        </div>
+
+        <div id="suggestionMessage" style="margin-top: 1.5rem; text-align: center; display: none;"></div>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-brand">
+        <img src="logo-new.jpeg" alt="KJR Interior Designs Inc." style="height: 70px; margin-bottom: 1.5rem;">
+        <p>A massive supplier for home appliances, electronics, HVAC, and more. BBB Accredited since 2014.</p>
+      </div>
+
+      <div class="footer-col">
+        <h4>INSURANCE REQUIREMENTS</h4>
+        <ul class="footer-links">
+          <li><a href="#">Workers Comp</a></li>
+          <li><a href="#">General Liability</a></li>
+          <li><a href="#">Auto Insurance</a></li>
+          <li><a href="#">Vendor Profile</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>QUICK LINKS</h4>
+        <ul class="footer-links">
+          <li><a href="#">Upload Invoice</a></li>
+          <li><a href="sales-login.html">Sign In</a></li>
+          <li><a href="#">Create Profile</a></li>
+          <li><a href="contact-us.html">Contact Support</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>CONTACT</h4>
+        <p>888-944-6313<br>Open 24/7</p>
+        <p style="margin-top: 1rem;">1420 Industrial Park Road<br>Paris, TN 38242</p>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div>&copy; 2024 KJR Interior Designs Inc. All rights reserved.</div>
+      <div><a href="#">Privacy Policy</a> &nbsp;|&nbsp; <a href="#">Terms of Service</a></div>
+    </div>
+  </footer>
+
+  <script>
+    // Survey submission handler
+    document.querySelectorAll('.survey-form').forEach(form => {
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const surveyId = this.dataset.surveyId;
+        const formData = new FormData(this);
+        const surveyData = {
+          surveyId: surveyId,
+          response: Object.fromEntries(formData),
+          submittedAt: new Date().toISOString()
+        };
+
+        // TODO: Send to backend API for storage
+        console.log('Survey Submission:', surveyData);
+
+        // Show success message
+        const button = this.querySelector('button[type="submit"]');
+        const originalText = button.textContent;
+        button.textContent = '✓ Thank you!';
+        button.style.backgroundColor = '#28a745';
+        button.disabled = true;
+
+        // Reset after 3 seconds
+        setTimeout(() => {
+          button.textContent = originalText;
+          button.style.backgroundColor = '';
+          button.disabled = false;
+          this.reset();
+        }, 3000);
+      });
+    });
+
+    // Suggestion form submission handler
+    document.getElementById('suggestionForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const suggestionData = {
+        name: document.getElementById('suggestName').value,
+        email: document.getElementById('suggestEmail').value,
+        category: document.getElementById('suggestionCategory').value,
+        suggestion: document.getElementById('suggestionText').value,
+        submittedAt: new Date().toISOString()
+      };
+
+      // TODO: Send to backend API
+      console.log('Suggestion Submission:', suggestionData);
+
+      const messageDiv = document.getElementById('suggestionMessage');
+      messageDiv.style.display = 'block';
+      messageDiv.style.padding = '1rem';
+      messageDiv.style.borderRadius = '4px';
+      messageDiv.style.backgroundColor = '#d4edda';
+      messageDiv.style.color = '#155724';
+      messageDiv.style.border = '1px solid #c3e6cb';
+      messageDiv.innerHTML = '✓ Thank you for your suggestion! We review all feedback and will consider it for future updates.';
+
+      // Reset form
+      this.reset();
+
+      // Hide message after 5 seconds
+      setTimeout(() => {
+        messageDiv.style.display = 'none';
+      }, 5000);
+    });
+  </script>
+</body>
+
+</html>
