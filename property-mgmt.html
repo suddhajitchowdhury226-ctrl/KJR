@@ -265,14 +265,73 @@
 
       <div class="feature-card" style="margin-top: 3rem; text-align: center;">
         <h3 style="margin-bottom: 2rem;">Ready to Join?</h3>
-        <p style="margin-bottom: 2rem;">By clicking "I Agree", you accept the Pre-Set Pricing structure and Terms.</p>
-        <form id="apply">
+
+        <div style="text-align: center;">
           <input type="text" placeholder="Type your full name (Electronic Signature)"
-            style="padding: 1rem;width: 60%; border: 1px solid #ccc; border-radius: 4px; margin-bottom: 1rem;">
+            style="padding: 1rem; width: 60%; border: 1px solid #ccc; border-radius: 4px; margin-bottom: 1rem;">
           <br>
-          <button class="btn" style="background: var(--primary); color: white; border: none; padding: 1rem 3rem;">I
-            AGREE & SUBMIT</button>
-        </form>
+          <input type="email" placeholder="Type your email address"
+            style="padding: 1rem; width: 60%; border: 1px solid #ccc; border-radius: 4px; margin-bottom: 1rem;">
+
+          <p style="margin-bottom: 2rem; color: var(--text-muted); font-size: 0.9rem;">
+            By clicking "I Agree", you accept the Pre-Set Pricing structure and Terms.
+          </p>
+
+          <a href="property-profile-creation.html" class="btn"
+            style="background: var(--primary); color: white; border: none; padding: 1rem 3rem; display: inline-block; text-decoration: none;">
+            I AGREE & SUBMIT
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Approved Crews List -->
+  <section class="content-section" style="background: var(--bg-surface);">
+    <div class="section-header">
+      <h2>APPROVED PROPERTY MANAGEMENT CREWS</h2>
+      <p>Qualified companies currently serving our network</p>
+    </div>
+
+    <div class="feature-card" style="max-width: 1000px;">
+      <div style="font-family: var(--primary-font); color: var(--text-body);">
+        <p style="margin-bottom: 2rem; text-align: center; color: var(--text-muted);">
+          The following companies have been verified and approved to receive work orders.
+        </p>
+
+        <!-- Company List Grid -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem;">
+          <!-- Placeholders -->
+          <div
+            style="background: white; padding: 1rem; border: 1px solid #eee; border-radius: 4px; display: flex; align-items: center;">
+            <span style="color: #28a745; margin-right: 0.5rem;">✓</span> Elite Renovations LLC
+          </div>
+          <div
+            style="background: white; padding: 1rem; border: 1px solid #eee; border-radius: 4px; display: flex; align-items: center;">
+            <span style="color: #28a745; margin-right: 0.5rem;">✓</span> Atlanta Premier Services
+          </div>
+          <div
+            style="background: white; padding: 1rem; border: 1px solid #eee; border-radius: 4px; display: flex; align-items: center;">
+            <span style="color: #28a745; margin-right: 0.5rem;">✓</span> Rapid Response Maintainence
+          </div>
+          <div
+            style="background: white; padding: 1rem; border: 1px solid #eee; border-radius: 4px; display: flex; align-items: center;">
+            <span style="color: #28a745; margin-right: 0.5rem;">✓</span> Trusted Hands Construction
+          </div>
+          <div
+            style="background: white; padding: 1rem; border: 1px solid #eee; border-radius: 4px; display: flex; align-items: center;">
+            <span style="color: #28a745; margin-right: 0.5rem;">✓</span> Sunshine State Fixers
+          </div>
+          <div
+            style="background: white; padding: 1rem; border: 1px solid #eee; border-radius: 4px; display: flex; align-items: center;">
+            <span style="color: #28a745; margin-right: 0.5rem;">✓</span> Metro City Repairs
+          </div>
+          <!-- More placeholders can be added -->
+        </div>
+
+        <p style="text-align: center; margin-top: 2rem; font-size: 0.9rem; color: var(--text-muted);">
+          * List updated weekly strictly for approved vendors with valid insurance on file.
+        </p>
       </div>
     </div>
   </section>

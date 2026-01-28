@@ -170,7 +170,7 @@
         </ul>
       </div>
 
-      <div style="display: flex; gap: 1rem; margin-top: 3rem; justify-content: flex-start;">
+      <div style="display: flex; gap: 1rem; margin-top: 3rem; justify-content: flex-start; flex-wrap: wrap;">
         <a href="#" class="btn" style="background: var(--primary); color: white; border: none; border-radius: 6px;">
           View Drawings
         </a>
@@ -178,6 +178,10 @@
           style="background: white; color: var(--primary); border: 2px solid var(--primary); border-radius: 6px;">
           View Specifications
         </a>
+        <button onclick="openBidModal('AutoZone GA 10597')" class="btn"
+          style="background: #28a745; color: white; border: none; border-radius: 6px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+          Respond / Submit Bid
+        </button>
       </div>
     </div>
 
@@ -285,7 +289,7 @@
         </tbody>
       </table>
 
-      <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+      <div style="display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap;">
         <a href="#" class="btn" style="background: var(--primary); color: white; border: none; border-radius: 6px;">
           View Drawings
         </a>
@@ -293,8 +297,295 @@
           style="background: white; color: var(--primary); border: 2px solid var(--primary); border-radius: 6px;">
           View Specifications
         </a>
+        <button onclick="openBidModal('Dollar Tree - Marietta')" class="btn"
+          style="background: #28a745; color: white; border: none; border-radius: 6px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+          Respond / Submit Bid
+        </button>
       </div>
     </div>
+  </section>
+
+  <!-- Bid Response Modal -->
+  <div id="bidResponseModal"
+    style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 10000; justify-content: center; align-items: center; overflow-y: auto;">
+    <div
+      style="background: white; width: 90%; max-width: 600px; padding: 2.5rem; border-radius: 8px; position: relative; margin: 2rem 0;">
+      <button onclick="closeBidModal()"
+        style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; cursor: pointer;">&times;</button>
+
+      <h2 style="color: var(--primary); margin-bottom: 0.5rem;" id="modalProjectTitle">Project Name</h2>
+      <p style="color: var(--text-muted); margin-bottom: 2rem;">Invitation to Bid Response</p>
+
+      <form id="bidResponseForm">
+        <!-- Step 1: Intent -->
+        <div style="margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid #eee;">
+          <label style="display: block; font-weight: 700; margin-bottom: 1rem; color: var(--text-main);">Will you be
+            bidding on this project? *</label>
+          <div style="display: flex; gap: 2rem;">
+            <label style="display: flex; align-items: center; cursor: pointer;">
+              <input type="radio" name="bidIntent" value="yes" onchange="toggleBidFields(this.value)" required>
+              <span style="margin-left: 0.5rem; font-weight: 600; color: #28a745;">Yes, I will bid</span>
+            </label>
+            <label style="display: flex; align-items: center; cursor: pointer;">
+              <input type="radio" name="bidIntent" value="no" onchange="toggleBidFields(this.value)" required>
+              <span style="margin-left: 0.5rem; font-weight: 600; color: #dc3545;">No, I will not bid</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Step 2A: Decline Reason (Hidden by default) -->
+        <div id="declineFields" style="display: none;">
+          <label style="display: block; font-weight: 700; margin-bottom: 0.5rem; color: var(--text-main);">Reason for
+            declining (Optional)</label>
+          <textarea placeholder="e.g., Too busy, Not in scope, Location..." rows="3"
+            style="width: 100%; padding: 0.8rem; border: 1px solid #ccc; border-radius: 4px;"></textarea>
+        </div>
+
+        <!-- Step 2B: Bid Submission (Hidden by default) -->
+        <div id="acceptFields" style="display: none;">
+          <div style="margin-bottom: 1.5rem;">
+            <label style="display: block; font-weight: 700; margin-bottom: 0.5rem; color: var(--text-main);">Total Bid
+              Amount ($)</label>
+            <input type="number" placeholder="0.00"
+              style="width: 100%; padding: 0.8rem; border: 1px solid #ccc; border-radius: 4px;">
+          </div>
+
+          <div style="margin-bottom: 1.5rem;">
+            <label style="display: block; font-weight: 700; margin-bottom: 0.5rem; color: var(--text-main);">Upload
+              Proposal / Documents</label>
+            <div
+              style="border: 2px dashed #ccc; padding: 2rem; text-align: center; border-radius: 4px; background: #fafafa;">
+              <p style="margin-bottom: 1rem; color: #666;">Drag & drop files here or click to browse</p>
+              <input type="file" multiple style="margin: 0 auto;">
+            </div>
+            <small style="color: #888;">Accepted: PDF, DOCX, XLS, JPG</small>
+          </div>
+
+          <div style="margin-bottom: 1.5rem;">
+            <label style="display: block; font-weight: 700; margin-bottom: 0.5rem; color: var(--text-main);">Comments /
+              Scope Notes</label>
+            <textarea placeholder="Add any notes about inclusions, exclusions, or lead times..." rows="4"
+              style="width: 100%; padding: 0.8rem; border: 1px solid #ccc; border-radius: 4px;"></textarea>
+          </div>
+        </div>
+
+        <!-- Contact Info (Always Visible) -->
+        <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #eee;">
+          <h4 style="margin-bottom: 1rem;">Your Information</h4>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+            <input type="text" placeholder="Company Name *" required
+              style="padding: 0.8rem; border: 1px solid #ccc; border-radius: 4px;">
+            <input type="text" placeholder="Contact Person *" required
+              style="padding: 0.8rem; border: 1px solid #ccc; border-radius: 4px;">
+          </div>
+          <input type="email" placeholder="Email Address *" required
+            style="width: 100%; padding: 0.8rem; border: 1px solid #ccc; border-radius: 4px;">
+        </div>
+
+        <div style="text-align: right; margin-top: 2rem;">
+          <button type="button" onclick="closeBidModal()"
+            style="padding: 0.8rem 1.5rem; background: #eee; border: none; border-radius: 4px; cursor: pointer; margin-right: 1rem;">Cancel</button>
+          <button type="submit" class="btn"
+            style="background: var(--primary); color: white; padding: 0.8rem 2rem; border: none; border-radius: 4px; cursor: pointer;">Submit
+            Response</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const bidModal = document.getElementById('bidResponseModal');
+    const modalTitle = document.getElementById('modalProjectTitle');
+
+    function openBidModal(title) {
+      modalTitle.textContent = title;
+      bidModal.style.display = 'flex';
+      // Reset form
+      document.getElementById('bidResponseForm').reset();
+      document.getElementById('acceptFields').style.display = 'none';
+      document.getElementById('declineFields').style.display = 'none';
+    }
+
+    function closeBidModal() {
+      bidModal.style.display = 'none';
+    }
+
+    function toggleBidFields(val) {
+      if (val === 'yes') {
+        document.getElementById('acceptFields').style.display = 'block';
+        document.getElementById('declineFields').style.display = 'none';
+      } else {
+        document.getElementById('acceptFields').style.display = 'none';
+        document.getElementById('declineFields').style.display = 'block';
+      }
+    }
+
+    document.getElementById('bidResponseForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      alert('Thank you! Your response has been submitted to KJRID.');
+      closeBidModal();
+    });
+
+    // Close on click outside
+    window.onclick = function (event) {
+      if (event.target == bidModal) {
+        closeBidModal();
+      }
+    }
+  </script>
+
+  <!-- Expanding Across Georgia & Nationwide Database -->
+  <section class="content-section" style="background: white; padding-top: 4rem;">
+    <div class="section-header">
+      <h2>EXPANDING ACROSS GEORGIA & NATIONWIDE</h2>
+      <p>Browse our database of companies by state and county</p>
+    </div>
+
+    <!-- State Tabs Navigation -->
+    <div class="tabs-container">
+      <style>
+        .tabs-container {
+          max-width: 1200px;
+          margin: 0 auto;
+        }
+
+        .state-tabs {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+          margin-bottom: 2rem;
+          justify-content: center;
+        }
+
+        .state-tab {
+          padding: 0.5rem 1rem;
+          background: #f0f0f0;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 0.9rem;
+          transition: all 0.2s ease;
+        }
+
+        .state-tab:hover {
+          background: #e0e0e0;
+        }
+
+        .state-tab.active {
+          background: var(--primary);
+          color: white;
+          border-color: var(--primary);
+        }
+
+        .tab-content {
+          display: none;
+          padding: 2rem;
+          border: 1px solid #e0e0e0;
+          border-radius: 8px;
+          background: #fdfdfd;
+        }
+
+        .tab-content.active {
+          display: block;
+        }
+
+        .company-count-badge {
+          display: inline-block;
+          background: rgba(0, 0, 0, 0.1);
+          border-radius: 10px;
+          padding: 2px 6px;
+          font-size: 0.75rem;
+          margin-left: 5px;
+        }
+      </style>
+
+      <div class="state-tabs" id="stateTabs">
+        <!-- Tabs will be generated by JS -->
+      </div>
+
+      <div id="tabsContentContainer">
+        <!-- Content will be generated by JS -->
+      </div>
+    </div>
+
+    <script>
+      const statesList = [
+        "Georgia", "Alabama", "Arkansas", "Arizona", "California", "Colorado", "Connecticut",
+        "Delaware", "District of Columbia", "Florida", "Illinois", "Indiana", "Iowa", "Kansas",
+        "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota",
+        "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey",
+        "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Ontario",
+        "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas",
+        "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin"
+      ];
+
+      // Placeholder content generator since real data spreadsheet is not available
+      function generateTabContent(stateName) {
+        if (stateName === "Georgia") {
+          return `
+            <h3 style="margin-bottom: 1rem; color: var(--primary);">Georgia Counties</h3>
+            <p style="margin-bottom: 2rem; color: var(--text-muted);">Select a county to view detailed company listings (6,354 companies database).</p>
+            <div class="pill-grid">
+               <!-- Placeholder for 159 counties -->
+               <span class="pill">Appling County <span class="company-count-badge">42</span></span>
+               <span class="pill">Atkinson County <span class="company-count-badge">15</span></span>
+               <span class="pill">Bacon County <span class="company-count-badge">23</span></span>
+               <span class="pill">Baker County <span class="company-count-badge">8</span></span>
+               <span class="pill">Baldwin County <span class="company-count-badge">56</span></span>
+               <span class="pill">Banks County <span class="company-count-badge">31</span></span>
+               <span class="pill">Barrow County <span class="company-count-badge">89</span></span>
+               <span class="pill">Bartow County <span class="company-count-badge">112</span></span>
+               <span class="pill">Ben Hill County <span class="company-count-badge">19</span></span>
+               <span class="pill">Berrien County <span class="company-count-badge">27</span></span>
+               <span class="pill">Bibb County <span class="company-count-badge">145</span></span>
+               <!-- ... and more -->
+            </div>
+          `;
+        } else {
+          return `
+            <h3 style="margin-bottom: 1rem; color: var(--primary);">${stateName} Companies</h3>
+            <p style="margin-bottom: 2rem; color: var(--text-muted);">Listing companies located in ${stateName}. Mouse over tabs to see company counts.</p>
+            <div style="padding: 2rem; text-align: center; color: var(--text-muted); border: 2px dashed #ccc; border-radius: 8px;">
+              Data source pending integration. Company list for ${stateName} will appear here.
+            </div>
+          `;
+        }
+      }
+
+      const tabsContainer = document.getElementById('stateTabs');
+      const contentContainer = document.getElementById('tabsContentContainer');
+
+      statesList.forEach((state, index) => {
+        // Create Tab
+        const tab = document.createElement('div');
+        tab.className = `state-tab ${index === 0 ? 'active' : ''}`;
+        tab.textContent = state;
+        tab.dataset.state = state;
+
+        // Add hover tooltip for counts (mock data)
+        const mockCount = Math.floor(Math.random() * 500) + 50;
+        tab.title = `${mockCount} Companies Listen`;
+
+        tab.addEventListener('click', () => {
+          // Deactivate all
+          document.querySelectorAll('.state-tab').forEach(t => t.classList.remove('active'));
+          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+          // Activate current
+          tab.classList.add('active');
+          document.getElementById(`content-${state}`).classList.add('active');
+        });
+
+        tabsContainer.appendChild(tab);
+
+        // Create Content
+        const content = document.createElement('div');
+        content.className = `tab-content ${index === 0 ? 'active' : ''}`;
+        content.id = `content-${state}`;
+        content.innerHTML = generateTabContent(state);
+        contentContainer.appendChild(content);
+      });
+    </script>
   </section>
 
   <!-- Footer -->

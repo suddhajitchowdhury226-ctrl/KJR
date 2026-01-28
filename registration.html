@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contact Us | KJR Interior Designs Inc.</title>
+  <title>Create Account | KJR Interior Designs Inc.</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -54,95 +54,112 @@
   </header>
 
   <!-- Hero Section -->
-  <section class="hero" style="height: 50vh;">
+  <section class="hero" style="height: 40vh; min-height: 250px;">
     <video autoplay muted loop playsinline class="hero-bg">
       <source
         src="https://res.cloudinary.com/dc8xxhoaf/video/upload/v1767988938/3773486-hd-1920-1080-30fps-tyea3fib-1_3P5aPwyY_online-video-cutter.com_tzwfze.mp4"
         type="video/mp4">
     </video>
     <div class="hero-content">
-      <h1>CONTACT US</h1>
-      <p>We're here to help. Reach out with any questions or inquiries.</p>
+      <h1>REGISTER ACCOUNT</h1>
+      <p>Join our authorized sales team network</p>
     </div>
   </section>
 
-  <!-- Contact Form Section -->
-  <section class="content-section" style="background: #fdfdfd; padding: 5rem 2rem;">
-    <div class="feature-card" style="max-width: 800px;">
-      <h2 class="feature-title" style="text-align: center; margin-bottom: 3rem;">Get In Touch</h2>
+  <!-- Registration Form Section -->
+  <section class="content-section" style="background: #f5f5f5; padding: 4rem 2rem; min-height: 60vh;">
+    <div class="feature-card" style="max-width: 600px;">
+      <h2 class="feature-title" style="text-align: center; margin-bottom: 2rem; color: var(--primary);">Create Your
+        Account</h2>
 
-      <!-- Contact Information -->
-      <div
-        style="text-align: center; margin-bottom: 3rem; padding: 2rem; background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
-        <h3 style="color: var(--primary); margin-bottom: 1rem;">Quick Contact</h3>
-        <p style="font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem;">📞 888-944-6313</p>
-        <p style="color: var(--text-muted); margin-bottom: 1rem;">Available 24/7 • Live Operator</p>
-        <p style="color: var(--text-body);">1420 Industrial Park Road<br>Paris, TN 38242</p>
-      </div>
+      <p style="text-align: center; margin-bottom: 2rem; color: var(--text-body);">
+        Please fill in your details below to request access.
+      </p>
 
-      <!-- Contact Form -->
-      <form id="contactForm"
-        style="background: white; padding: 3rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
-        <div style="margin-bottom: 1.5rem;">
-          <label for="fullName"
-            style="display: block; margin-bottom: 0.5rem; font-weight: 700; color: var(--text-main);">
-            Full Name <span style="color: var(--primary);">*</span>
-          </label>
-          <input type="text" id="fullName" name="fullName" required
-            style="width: 100%; padding: 0.75rem; border: 2px solid #e0e0e0; border-radius: 4px; font-family: var(--font-body); font-size: 1rem;">
+      <form id="registrationForm"
+        style="background: white; padding: 3rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+
+        <!-- Name Fields -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+          <div>
+            <label for="firstName"
+              style="display: block; margin-bottom: 0.5rem; font-weight: 700; color: var(--text-main);">
+              First Name <span style="color: var(--primary);">*</span>
+            </label>
+            <input type="text" id="firstName" name="firstName" required
+              style="width: 100%; padding: 0.75rem; border: 2px solid #e0e0e0; border-radius: 4px; font-family: var(--font-body); font-size: 1rem;">
+          </div>
+          <div>
+            <label for="lastName"
+              style="display: block; margin-bottom: 0.5rem; font-weight: 700; color: var(--text-main);">
+              Last Name <span style="color: var(--primary);">*</span>
+            </label>
+            <input type="text" id="lastName" name="lastName" required
+              style="width: 100%; padding: 0.75rem; border: 2px solid #e0e0e0; border-radius: 4px; font-family: var(--font-body); font-size: 1rem;">
+          </div>
         </div>
 
+        <!-- Contact Info -->
         <div style="margin-bottom: 1.5rem;">
           <label for="email" style="display: block; margin-bottom: 0.5rem; font-weight: 700; color: var(--text-main);">
-            Email <span style="color: var(--primary);">*</span>
+            Email Address <span style="color: var(--primary);">*</span>
           </label>
-          <input type="email" id="email" name="email" required
+          <input type="email" id="email" name="email" required autocomplete="email"
             style="width: 100%; padding: 0.75rem; border: 2px solid #e0e0e0; border-radius: 4px; font-family: var(--font-body); font-size: 1rem;">
         </div>
 
         <div style="margin-bottom: 1.5rem;">
           <label for="phone" style="display: block; margin-bottom: 0.5rem; font-weight: 700; color: var(--text-main);">
-            Phone <span style="color: var(--text-muted); font-weight: 400; font-size: 0.9rem;">(optional)</span>
+            Phone Number <span style="color: var(--primary);">*</span>
           </label>
-          <input type="tel" id="phone" name="phone"
+          <input type="tel" id="phone" name="phone" required autocomplete="tel"
             style="width: 100%; padding: 0.75rem; border: 2px solid #e0e0e0; border-radius: 4px; font-family: var(--font-body); font-size: 1rem;">
         </div>
 
+        <!-- Security -->
         <div style="margin-bottom: 1.5rem;">
-          <label for="subject"
+          <label for="password"
             style="display: block; margin-bottom: 0.5rem; font-weight: 700; color: var(--text-main);">
-            Subject / Category <span style="color: var(--primary);">*</span>
+            Create Password <span style="color: var(--primary);">*</span>
           </label>
-          <select id="subject" name="subject" required
+          <input type="password" id="password" name="password" required minlength="8"
             style="width: 100%; padding: 0.75rem; border: 2px solid #e0e0e0; border-radius: 4px; font-family: var(--font-body); font-size: 1rem;">
-            <option value="">Select a category...</option>
-            <option value="general">General Inquiry</option>
-            <option value="parts">Parts & Supply</option>
-            <option value="project">Project Bidding</option>
-            <option value="career">Career Opportunities</option>
-            <option value="property">Property Management</option>
-            <option value="support">Technical Support</option>
-            <option value="other">Other</option>
-          </select>
+          <small style="color: var(--text-muted);">Must be at least 8 characters</small>
         </div>
 
-        <div style="margin-bottom: 1.5rem;">
-          <label for="message"
+        <div style="margin-bottom: 2rem;">
+          <label for="confirmPassword"
             style="display: block; margin-bottom: 0.5rem; font-weight: 700; color: var(--text-main);">
-            Message <span style="color: var(--primary);">*</span>
+            Confirm Password <span style="color: var(--primary);">*</span>
           </label>
-          <textarea id="message" name="message" rows="6" required
-            style="width: 100%; padding: 0.75rem; border: 2px solid #e0e0e0; border-radius: 4px; font-family: var(--font-body); font-size: 1rem; resize: vertical;"></textarea>
+          <input type="password" id="confirmPassword" name="confirmPassword" required minlength="8"
+            style="width: 100%; padding: 0.75rem; border: 2px solid #e0e0e0; border-radius: 4px; font-family: var(--font-body); font-size: 1rem;">
+        </div>
+
+        <!-- Agreements -->
+        <div style="margin-bottom: 2rem;">
+          <label style="display: flex; gap: 0.5rem; align-items: flex-start; cursor: pointer;">
+            <input type="checkbox" required style="margin-top: 5px;">
+            <span style="font-size: 0.9rem; line-height: 1.5; color: var(--text-body);">
+              I agree to the <a href="#" style="color: var(--primary);">Terms of Service</a> and <a href="#"
+                style="color: var(--primary);">Privacy Policy</a>.
+            </span>
+          </label>
         </div>
 
         <div style="text-align: center;">
           <button type="submit" class="btn"
-            style="background: var(--primary); color: white; border: none; padding: 1rem 3rem; font-size: 1rem; border-radius: 50px; cursor: pointer; box-shadow: 0 4px 15px rgba(204,0,0,0.3); transition: all 0.3s ease;">
-            Send Message
+            style="width: 100%; background: var(--primary); color: white; border: none; padding: 1rem; font-size: 1rem; border-radius: 50px; cursor: pointer; box-shadow: 0 4px 15px rgba(204,0,0,0.3); transition: all 0.3s ease;">
+            Request Account
           </button>
         </div>
 
-        <div id="formMessage" style="margin-top: 1.5rem; text-align: center; display: none;"></div>
+        <div style="text-align: center; margin-top: 1.5rem;">
+          <span style="color: var(--text-body);">Already have an account? </span>
+          <a href="sales-login.html" style="color: var(--primary); font-weight: 700; text-decoration: none;">Login
+            here</a>
+        </div>
+
       </form>
     </div>
   </section>
@@ -189,39 +206,30 @@
   </footer>
 
   <script>
-    // Form submission handler
-    document.getElementById('contactForm').addEventListener('submit', function (e) {
+    document.getElementById('registrationForm').addEventListener('submit', function (e) {
       e.preventDefault();
 
-      const formData = {
-        fullName: document.getElementById('fullName').value,
-        email: document.getElementById('email').value,
-        phone: document.getElementById('phone').value,
-        subject: document.getElementById('subject').value,
-        message: document.getElementById('message').value,
-        submittedAt: new Date().toISOString()
-      };
+      const pwd = document.getElementById('password').value;
+      const confirmPwd = document.getElementById('confirmPassword').value;
 
-      // TODO: Send to backend API
-      // For now, show success message and log to console
-      console.log('Contact Form Submission:', formData);
+      if (pwd !== confirmPwd) {
+        alert('Passwords do not match!');
+        return;
+      }
 
-      const messageDiv = document.getElementById('formMessage');
-      messageDiv.style.display = 'block';
-      messageDiv.style.padding = '1rem';
-      messageDiv.style.borderRadius = '4px';
-      messageDiv.style.backgroundColor = '#d4edda';
-      messageDiv.style.color = '#155724';
-      messageDiv.style.border = '1px solid #c3e6cb';
-      messageDiv.innerHTML = '✓ Thank you for contacting us! We will respond within 24 hours.';
+      // Simulate submission
+      const btn = this.querySelector('button[type="submit"]');
+      const originalText = btn.innerText;
 
-      // Reset form
-      this.reset();
+      btn.disabled = true;
+      btn.innerText = "Submitting...";
 
-      // Hide message after 5 seconds
       setTimeout(() => {
-        messageDiv.style.display = 'none';
-      }, 5000);
+        alert('Registration request submitted! Please check your email for verification.');
+        btn.disabled = false;
+        btn.innerText = originalText;
+        this.reset();
+      }, 1500);
     });
   </script>
 </body>
