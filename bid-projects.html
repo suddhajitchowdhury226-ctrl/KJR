@@ -409,6 +409,7 @@
     function openBidModal(title) {
       modalTitle.textContent = title;
       document.getElementById('hiddenProjectName').value = title;
+      document.querySelector('input[name="_subject"]').value = "Bid Response: " + title;
       bidModal.style.display = 'flex';
       // Reset form
       document.getElementById('bidResponseForm').reset();
