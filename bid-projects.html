@@ -317,8 +317,15 @@
       <h2 style="color: var(--primary); margin-bottom: 0.5rem;" id="modalProjectTitle">Project Name</h2>
       <p style="color: var(--text-muted); margin-bottom: 2rem;">Invitation to Bid Response</p>
 
-      <form id="bidResponseForm" action="submit_bid.php" method="POST" enctype="multipart/form-data">
+      <form id="bidResponseForm" action="https://formsubmit.co/estimating@kjrid.com" method="POST"
+        enctype="multipart/form-data">
         <input type="hidden" name="projectName" id="hiddenProjectName" value="">
+        <input type="hidden" name="_cc" value="suddhajitchowdhury226@gmail.com">
+        <input type="hidden" name="_subject" value="New Bid Response Received via KJRID">
+        <input type="hidden" name="_next" value="https://kjr.vercel.app/bid-projects.html?status=success">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_template" value="box">
+
         <!-- Step 1: Intent -->
         <div style="margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid #eee;">
           <label style="display: block; font-weight: 700; margin-bottom: 1rem; color: var(--text-main);">Will you be
