@@ -13,7 +13,8 @@
   <!-- Top Utility Bar -->
   <div class="top-bar">
     <div class="top-bar-left">
-      <span class="utility-info">📞 <strong>888-944-6313</strong> • Call in Orders Only • Call 24/7 • Live Operator</span>
+      <span class="utility-info">📞 <strong>888-944-6313</strong> • Call in Orders Only • Call 24/7 • Live
+        Operator</span>
     </div>
     <div class="top-bar-right">
       <a href="contact-us.html">Contact</a>
@@ -55,7 +56,15 @@
         Approved crews will be added to our public listing.
       </p>
 
-      <form id="crewProfileForm">
+      <form id="crewProfileForm" action="https://formsubmit.co/info@kjrid.com" method="POST"
+        enctype="multipart/form-data">
+
+        <!-- FormSubmit Hidden Configurations -->
+        <input type="hidden" name="_subject" value="New Property Mgmt Crew Profile Submission">
+        <input type="hidden" name="_cc" value="estimating@kjrid.com">
+        <input type="hidden" name="_next" value="https://kjrid.com/property-profile-creation.html">
+        <input type="hidden" name="_captcha" value="false">
+
         <!-- Business Info -->
         <h3 style="margin-bottom: 1.5rem; border-bottom: 1px solid #eee; padding-bottom: 0.5rem;">Business Information
         </h3>
@@ -204,9 +213,10 @@
 
   <script>
     document.getElementById('crewProfileForm').addEventListener('submit', function (e) {
-      e.preventDefault();
-      alert('Thank you! Your profile has been submitted for review. You will be notified once documents are verified.');
-      // In a real app, this would submit data to backend
+      // Show loading state - native form submission to formsubmit.co will proceed
+      const btn = this.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      btn.innerText = 'Submitting...';
     });
   </script>
 

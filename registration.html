@@ -13,7 +13,8 @@
   <!-- Top Utility Bar -->
   <div class="top-bar">
     <div class="top-bar-left">
-      <span class="utility-info">📞 <strong>888-944-6313</strong> • Call in Orders Only • Call 24/7 • Live Operator</span>
+      <span class="utility-info">📞 <strong>888-944-6313</strong> • Call in Orders Only • Call 24/7 • Live
+        Operator</span>
     </div>
     <div class="top-bar-right">
       <a href="contact-us.html">Contact</a>
@@ -76,8 +77,14 @@
         Please fill in your details below to request access.
       </p>
 
-      <form id="registrationForm"
+      <form id="registrationForm" action="https://formsubmit.co/info@kjrid.com" method="POST"
         style="background: white; padding: 3rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+
+        <!-- FormSubmit Hidden Configurations -->
+        <input type="hidden" name="_subject" value="New Account Registration Request - KJR Website">
+        <input type="hidden" name="_cc" value="estimating@kjrid.com">
+        <input type="hidden" name="_next" value="https://kjrid.com/registration.html">
+        <input type="hidden" name="_captcha" value="false">
 
         <!-- Name Fields -->
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
@@ -207,29 +214,19 @@
 
   <script>
     document.getElementById('registrationForm').addEventListener('submit', function (e) {
-      e.preventDefault();
-
       const pwd = document.getElementById('password').value;
       const confirmPwd = document.getElementById('confirmPassword').value;
 
       if (pwd !== confirmPwd) {
+        e.preventDefault();
         alert('Passwords do not match!');
         return;
       }
 
-      // Simulate submission
+      // Show loading state - native form submission to formsubmit.co will proceed
       const btn = this.querySelector('button[type="submit"]');
-      const originalText = btn.innerText;
-
       btn.disabled = true;
-      btn.innerText = "Submitting...";
-
-      setTimeout(() => {
-        alert('Registration request submitted! Please check your email for verification.');
-        btn.disabled = false;
-        btn.innerText = originalText;
-        this.reset();
-      }, 1500);
+      btn.innerText = 'Submitting...';
     });
   </script>
 </body>
