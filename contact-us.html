@@ -13,7 +13,8 @@
   <!-- Top Utility Bar -->
   <div class="top-bar">
     <div class="top-bar-left">
-      <span class="utility-info">📞 <strong>888-944-6313</strong> • Call 24/7 • Live Operator</span>
+      <span class="utility-info">📞 <strong>888-944-6313</strong> • Call in Orders Only • Call 24/7 • Live
+        Operator</span>
     </div>
     <div class="top-bar-right">
       <a href="contact-us.html">Contact</a>
@@ -81,8 +82,15 @@
       </div>
 
       <!-- Contact Form -->
-      <form id="contactForm"
+      <!-- Contact Form -->
+      <form id="contactForm" action="https://formsubmit.co/info@kjrid.com" method="POST"
         style="background: white; padding: 3rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+
+        <!-- FormSubmit Hidden Configurations -->
+        <input type="hidden" name="_subject" value="New Contact Inquiry from KJR Website">
+        <input type="hidden" name="_next" value="https://kjrid.com/contact-us.html">
+        <input type="hidden" name="_captcha" value="false">
+
         <div style="margin-bottom: 1.5rem;">
           <label for="fullName"
             style="display: block; margin-bottom: 0.5rem; font-weight: 700; color: var(--text-main);">
@@ -189,39 +197,12 @@
   </footer>
 
   <script>
-    // Form submission handler
+    // Form validation check before submission
     document.getElementById('contactForm').addEventListener('submit', function (e) {
-      e.preventDefault();
-
-      const formData = {
-        fullName: document.getElementById('fullName').value,
-        email: document.getElementById('email').value,
-        phone: document.getElementById('phone').value,
-        subject: document.getElementById('subject').value,
-        message: document.getElementById('message').value,
-        submittedAt: new Date().toISOString()
-      };
-
-      // TODO: Send to backend API
-      // For now, show success message and log to console
-      console.log('Contact Form Submission:', formData);
-
-      const messageDiv = document.getElementById('formMessage');
-      messageDiv.style.display = 'block';
-      messageDiv.style.padding = '1rem';
-      messageDiv.style.borderRadius = '4px';
-      messageDiv.style.backgroundColor = '#d4edda';
-      messageDiv.style.color = '#155724';
-      messageDiv.style.border = '1px solid #c3e6cb';
-      messageDiv.innerHTML = '✓ Thank you for contacting us! We will respond within 24 hours.';
-
-      // Reset form
-      this.reset();
-
-      // Hide message after 5 seconds
-      setTimeout(() => {
-        messageDiv.style.display = 'none';
-      }, 5000);
+      const submitBtn = this.querySelector('button[type="submit"]');
+      submitBtn.innerHTML = 'Sending...';
+      submitBtn.style.opacity = '0.7';
+      // Native form submission to formsubmit.co will proceed
     });
   </script>
 </body>

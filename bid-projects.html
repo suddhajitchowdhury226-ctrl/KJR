@@ -50,7 +50,8 @@
   <!-- Top Utility Bar -->
   <div class="top-bar">
     <div class="top-bar-left">
-      <span class="utility-info">📞 <strong>888-944-6313</strong> • Call 24/7 • Live Operator</span>
+      <span class="utility-info">📞 <strong>888-944-6313</strong> • Call in Orders Only • Call 24/7 • Live
+        Operator</span>
     </div>
     <div class="top-bar-right">
       <a href="contact-us.html">Contact</a>
@@ -316,7 +317,8 @@
       <h2 style="color: var(--primary); margin-bottom: 0.5rem;" id="modalProjectTitle">Project Name</h2>
       <p style="color: var(--text-muted); margin-bottom: 2rem;">Invitation to Bid Response</p>
 
-      <form id="bidResponseForm">
+      <form id="bidResponseForm" action="submit_bid.php" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="projectName" id="hiddenProjectName" value="">
         <!-- Step 1: Intent -->
         <div style="margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid #eee;">
           <label style="display: block; font-weight: 700; margin-bottom: 1rem; color: var(--text-main);">Will you be
@@ -337,7 +339,7 @@
         <div id="declineFields" style="display: none;">
           <label style="display: block; font-weight: 700; margin-bottom: 0.5rem; color: var(--text-main);">Reason for
             declining (Optional)</label>
-          <textarea placeholder="e.g., Too busy, Not in scope, Location..." rows="3"
+          <textarea name="declineReason" placeholder="e.g., Too busy, Not in scope, Location..." rows="3"
             style="width: 100%; padding: 0.8rem; border: 1px solid #ccc; border-radius: 4px;"></textarea>
         </div>
 
@@ -346,7 +348,7 @@
           <div style="margin-bottom: 1.5rem;">
             <label style="display: block; font-weight: 700; margin-bottom: 0.5rem; color: var(--text-main);">Total Bid
               Amount ($)</label>
-            <input type="number" placeholder="0.00"
+            <input type="number" name="bidAmount" placeholder="0.00" step="0.01"
               style="width: 100%; padding: 0.8rem; border: 1px solid #ccc; border-radius: 4px;">
           </div>
 
@@ -356,7 +358,7 @@
             <div
               style="border: 2px dashed #ccc; padding: 2rem; text-align: center; border-radius: 4px; background: #fafafa;">
               <p style="margin-bottom: 1rem; color: #666;">Drag & drop files here or click to browse</p>
-              <input type="file" multiple style="margin: 0 auto;">
+              <input type="file" name="documents[]" multiple style="margin: 0 auto;">
             </div>
             <small style="color: #888;">Accepted: PDF, DOCX, XLS, JPG</small>
           </div>
@@ -364,8 +366,8 @@
           <div style="margin-bottom: 1.5rem;">
             <label style="display: block; font-weight: 700; margin-bottom: 0.5rem; color: var(--text-main);">Comments /
               Scope Notes</label>
-            <textarea placeholder="Add any notes about inclusions, exclusions, or lead times..." rows="4"
-              style="width: 100%; padding: 0.8rem; border: 1px solid #ccc; border-radius: 4px;"></textarea>
+            <textarea name="comments" placeholder="Add any notes about inclusions, exclusions, or lead times..."
+              rows="4" style="width: 100%; padding: 0.8rem; border: 1px solid #ccc; border-radius: 4px;"></textarea>
           </div>
         </div>
 
@@ -373,19 +375,19 @@
         <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #eee;">
           <h4 style="margin-bottom: 1rem;">Your Information</h4>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-            <input type="text" placeholder="Company Name *" required
+            <input type="text" name="companyName" placeholder="Company Name *" required
               style="padding: 0.8rem; border: 1px solid #ccc; border-radius: 4px;">
-            <input type="text" placeholder="Contact Person *" required
+            <input type="text" name="contactPerson" placeholder="Contact Person *" required
               style="padding: 0.8rem; border: 1px solid #ccc; border-radius: 4px;">
           </div>
-          <input type="email" placeholder="Email Address *" required
+          <input type="email" name="emailAddress" placeholder="Email Address *" required
             style="width: 100%; padding: 0.8rem; border: 1px solid #ccc; border-radius: 4px;">
         </div>
 
         <div style="text-align: right; margin-top: 2rem;">
           <button type="button" onclick="closeBidModal()"
             style="padding: 0.8rem 1.5rem; background: #eee; border: none; border-radius: 4px; cursor: pointer; margin-right: 1rem;">Cancel</button>
-          <button type="submit" class="btn"
+          <button type="submit" class="btn" id="submitBidBtn"
             style="background: var(--primary); color: white; padding: 0.8rem 2rem; border: none; border-radius: 4px; cursor: pointer;">Submit
             Response</button>
         </div>
@@ -399,6 +401,7 @@
 
     function openBidModal(title) {
       modalTitle.textContent = title;
+      document.getElementById('hiddenProjectName').value = title;
       bidModal.style.display = 'flex';
       // Reset form
       document.getElementById('bidResponseForm').reset();
@@ -421,9 +424,10 @@
     }
 
     document.getElementById('bidResponseForm').addEventListener('submit', function (e) {
-      e.preventDefault();
-      alert('Thank you! Your response has been submitted to KJRID.');
-      closeBidModal();
+      const submitBtn = document.getElementById('submitBidBtn');
+      submitBtn.innerHTML = 'Sending...';
+      submitBtn.style.opacity = '0.7';
+      // Native form submission to submit_bid.php will proceed
     });
 
     // Close on click outside
@@ -432,6 +436,16 @@
         closeBidModal();
       }
     }
+
+    // Check for PHP success redirect
+    window.onload = function () {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('status') === 'success') {
+        alert("✅ Success! Your bid response and documents have been sent to estimating@kjrid.com.");
+        // Clean URL to prevent recurring alerts
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+    };
   </script>
 
   <!-- Expanding Across Georgia & Nationwide Database -->
@@ -519,34 +533,32 @@
         "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin"
       ];
 
-      // Placeholder content generator since real data spreadsheet is not available
+      const georgiaCounties = [
+        "Appling", "Atkinson", "Bacon", "Baker", "Baldwin", "Banks", "Barrow", "Bartow", "Ben Hill", "Berrien", "Bibb", "Bleckley", "Brantley", "Brooks", "Bryan", "Bulloch", "Burke", "Butts", "Calhoun", "Camden", "Candler", "Carroll", "Catoosa", "Charlton", "Chatham", "Chattahoochee", "Chattooga", "Cherokee", "Clarke", "Clay", "Clayton", "Clinch", "Cobb", "Coffee", "Colquitt", "Columbia", "Cook", "Coweta", "Crawford", "Crisp", "Dade", "Dawson", "Decatur", "DeKalb", "Dodge", "Dooly", "Dougherty", "Douglas", "Early", "Echols", "Effingham", "Elbert", "Emanuel", "Evans", "Fannin", "Fayette", "Floyd", "Forsyth", "Franklin", "Fulton", "Gilmer", "Glascock", "Glynn", "Gordon", "Grady", "Greene", "Gwinnett", "Habersham", "Hall", "Hancock", "Haralson", "Harris", "Hart", "Heard", "Henry", "Houston", "Irwin", "Jackson", "Jasper", "Jeff Davis", "Jefferson", "Jenkins", "Johnson", "Jones", "Lamar", "Lanier", "Laurens", "Lee", "Liberty", "Lincoln", "Long", "Lowndes", "Lumpkin", "Macon", "Madison", "Marion", "McDuffie", "McIntosh", "Meriwether", "Miller", "Mitchell", "Monroe", "Montgomery", "Morgan", "Murray", "Muscogee", "Newton", "Oconee", "Oglethorpe", "Paulding", "Peach", "Pickens", "Pierce", "Pike", "Polk", "Pulaski", "Putnam", "Quitman", "Rabun", "Randolph", "Richmond", "Rockdale", "Schley", "Screven", "Seminole", "Spalding", "Stephens", "Stewart", "Sumter", "Talbot", "Taliaferro", "Tattnall", "Taylor", "Telfair", "Terrell", "Thomas", "Tift", "Toombs", "Towns", "Treutlen", "Troup", "Turner", "Twiggs", "Union", "Upson", "Walker", "Walton", "Ware", "Warren", "Washington", "Wayne", "Webster", "Wheeler", "White", "Whitfield", "Wilcox", "Wilkes", "Wilkinson", "Worth"
+      ];
+
       function generateTabContent(stateName) {
         if (stateName === "Georgia") {
+          let countiesHtml = '';
+          georgiaCounties.forEach(county => {
+            // Mock data generation for 6,354 total companies
+            const mockCount = Math.floor(Math.random() * 80) + 10;
+            countiesHtml += `<span class="pill" style="margin-bottom:0.5rem;" title="${mockCount} Companies Listed in ${county} County">${county} County <span class="company-count-badge">${mockCount}</span></span>`;
+          });
+
           return `
             <h3 style="margin-bottom: 1rem; color: var(--primary);">Georgia Counties</h3>
-            <p style="margin-bottom: 2rem; color: var(--text-muted);">Select a county to view detailed company listings (6,354 companies database).</p>
+            <p style="margin-bottom: 2rem; color: var(--text-muted);">Select a county to view detailed company listings (6,354 companies database mapping scheduled for backend integration).</p>
             <div class="pill-grid">
-               <!-- Placeholder for 159 counties -->
-               <span class="pill">Appling County <span class="company-count-badge">42</span></span>
-               <span class="pill">Atkinson County <span class="company-count-badge">15</span></span>
-               <span class="pill">Bacon County <span class="company-count-badge">23</span></span>
-               <span class="pill">Baker County <span class="company-count-badge">8</span></span>
-               <span class="pill">Baldwin County <span class="company-count-badge">56</span></span>
-               <span class="pill">Banks County <span class="company-count-badge">31</span></span>
-               <span class="pill">Barrow County <span class="company-count-badge">89</span></span>
-               <span class="pill">Bartow County <span class="company-count-badge">112</span></span>
-               <span class="pill">Ben Hill County <span class="company-count-badge">19</span></span>
-               <span class="pill">Berrien County <span class="company-count-badge">27</span></span>
-               <span class="pill">Bibb County <span class="company-count-badge">145</span></span>
-               <!-- ... and more -->
+               ${countiesHtml}
             </div>
           `;
         } else {
           return `
             <h3 style="margin-bottom: 1rem; color: var(--primary);">${stateName} Companies</h3>
-            <p style="margin-bottom: 2rem; color: var(--text-muted);">Listing companies located in ${stateName}. Mouse over tabs to see company counts.</p>
+            <p style="margin-bottom: 2rem; color: var(--text-muted);">Listing companies located in ${stateName}. Mouse over state tabs above to see company counts.</p>
             <div style="padding: 2rem; text-align: center; color: var(--text-muted); border: 2px dashed #ccc; border-radius: 8px;">
-              Data source pending integration. Company list for ${stateName} will appear here.
+              Data source parsing pending integration. Individual company list logic for ${stateName} will dynamically render here via database.
             </div>
           `;
         }
@@ -562,9 +574,9 @@
         tab.textContent = state;
         tab.dataset.state = state;
 
-        // Add hover tooltip for counts (mock data)
-        const mockCount = Math.floor(Math.random() * 500) + 50;
-        tab.title = `${mockCount} Companies Listen`;
+        // Add hover tooltip for counts (mock data mapping to the spreadsheet requirement)
+        const mockCount = state === "Georgia" ? "6,354" : Math.floor(Math.random() * 500) + 50;
+        tab.title = `${mockCount} Companies Listed`;
 
         tab.addEventListener('click', () => {
           // Deactivate all
@@ -586,6 +598,23 @@
         contentContainer.appendChild(content);
       });
     </script>
+  </section>
+
+  <!-- Admin Placeholder Section (For Informational Purposes) -->
+  <section class="content-section" style="background: #fdfdfd; border-top: 1px solid #ddd;">
+    <div class="feature-card" style="max-width: 800px; text-align: center;">
+      <h2 style="color: #666; font-size: 1.5rem; margin-bottom: 1rem;">Admin & Backend Requirements Notice</h2>
+      <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">
+        <strong>Phase 2 Architecture Required:</strong> The requested administrative tools to upload new jobs, send mass
+        "Invitations to Bid" via a controlled email list, map 6,354 spreadsheet rows to specific database queries,
+        process client responses (Yes/No), and handle bid document uploads per individual invitation are strictly
+        <strong>backend systems</strong>.
+        <br><br>
+        A backend server (Node.js/Express) and relational database (MySQL/PostgreSQL) are required to ingest your
+        spreadsheet and process incoming bid files. Please refer to Phase 2 documentation to proceed with full system
+        capability.
+      </p>
+    </div>
   </section>
 
   <!-- Footer -->

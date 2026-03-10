@@ -13,7 +13,8 @@
   <!-- Top Utility Bar -->
   <div class="top-bar">
     <div class="top-bar-left">
-      <span class="utility-info">📞 <strong>888-944-6313</strong> • Call 24/7 • Live Operator</span>
+      <span class="utility-info">📞 <strong>888-944-6313</strong> • Call in Orders Only • Call 24/7 • Live
+        Operator</span>
     </div>
     <div class="top-bar-right">
       <a href="contact-us.html">Contact</a>
@@ -190,8 +191,13 @@
       </p>
 
       <!-- Suggestion Form -->
-      <form id="suggestionForm"
+      <form id="suggestionForm" action="https://formsubmit.co/info@kjrid.com" method="POST"
         style="background: white; padding: 3rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+
+        <input type="hidden" name="_subject" value="New Website Suggestion">
+        <input type="hidden" name="_next" value="https://kjrid.com/suggest-feature.html">
+        <input type="hidden" name="_captcha" value="false">
+
         <div style="margin-bottom: 1.5rem;">
           <label for="suggestName"
             style="display: block; margin-bottom: 0.5rem; font-weight: 700; color: var(--text-main);">
@@ -307,10 +313,9 @@
           submittedAt: new Date().toISOString()
         };
 
-        // TODO: Send to backend API for storage
+        // For now, show success message
         console.log('Survey Submission:', surveyData);
 
-        // Show success message
         const button = this.querySelector('button[type="submit"]');
         const originalText = button.textContent;
         button.textContent = '✓ Thank you!';
@@ -329,35 +334,10 @@
 
     // Suggestion form submission handler
     document.getElementById('suggestionForm').addEventListener('submit', function (e) {
-      e.preventDefault();
-
-      const suggestionData = {
-        name: document.getElementById('suggestName').value,
-        email: document.getElementById('suggestEmail').value,
-        category: document.getElementById('suggestionCategory').value,
-        suggestion: document.getElementById('suggestionText').value,
-        submittedAt: new Date().toISOString()
-      };
-
-      // TODO: Send to backend API
-      console.log('Suggestion Submission:', suggestionData);
-
-      const messageDiv = document.getElementById('suggestionMessage');
-      messageDiv.style.display = 'block';
-      messageDiv.style.padding = '1rem';
-      messageDiv.style.borderRadius = '4px';
-      messageDiv.style.backgroundColor = '#d4edda';
-      messageDiv.style.color = '#155724';
-      messageDiv.style.border = '1px solid #c3e6cb';
-      messageDiv.innerHTML = '✓ Thank you for your suggestion! We review all feedback and will consider it for future updates.';
-
-      // Reset form
-      this.reset();
-
-      // Hide message after 5 seconds
-      setTimeout(() => {
-        messageDiv.style.display = 'none';
-      }, 5000);
+      const submitBtn = this.querySelector('button[type="submit"]');
+      submitBtn.innerHTML = 'Sending...';
+      submitBtn.style.opacity = '0.7';
+      // Native form submission to formsubmit.co will proceed
     });
   </script>
 </body>
