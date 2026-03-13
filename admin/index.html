@@ -296,7 +296,9 @@
   </div>
 
   <script>
-    const API_URL = 'http://localhost:5001/api';
+    // Auto-detect environment: use local backend when running locally, deployed backend on Vercel
+    const isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.protocol === 'file:';
+    const API_URL = isLocal ? 'http://localhost:5001/api' : 'https://app-server-maaw.onrender.com/api';
     let token = localStorage.getItem('kjr_admin_token');
 
     // Init
