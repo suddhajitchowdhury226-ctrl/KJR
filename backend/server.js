@@ -16,10 +16,16 @@ app.use(cors({
     const allowedOrigins = [
       process.env.FRONTEND_URL,
       'http://localhost:3000',
+      'http://localhost:5000',
+      'http://localhost:5001',
       'http://localhost:5173',
+      'http://localhost:5500',
+      'http://127.0.0.1:5500',
+      'http://127.0.0.1:3000',
+      'null', // file:// pages send "null" as origin string
     ];
-    // Allow requests with no origin (local file:// access, Postman, etc.)
-    if (!origin || allowedOrigins.includes(origin)) {
+    // Allow requests with no origin (local file:// access, Postman, curl, etc.)
+    if (!origin || origin === 'null' || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
