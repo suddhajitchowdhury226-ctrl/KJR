@@ -3,7 +3,7 @@
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // 1. Recipient Address
-    $to = "estimating@kjrid.com, suddhajitchowdhury226@gmail.com";
+    $to = "estimating@kjrid.com, mtusa.king@kjrid.com, superintendent@kjrid.com, Aryee.jacob@kjrid.com, suddhajitchowdhury226@gmail.com";
 
     // 2. Sanitize and Assign Post Variables
     $projectName   = htmlspecialchars($_POST['projectName'] ?? 'Unknown Project');
