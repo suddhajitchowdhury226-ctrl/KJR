@@ -6,316 +6,951 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Panel | KJR Interior Designs Inc.</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
     :root {
       --primary: #cc0000;
-      --bg: #f4f7f6;
+      --primary-dark: #990000;
+      --bg: #f0f2f5;
       --surface: #ffffff;
-      --text: #333333;
-      --sidebar: #1f2937;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --sidebar-bg: #0f172a;
+      --sidebar-hover: #1e293b;
+      --border: #e2e8f0;
+      --green: #16a34a;
+      --yellow: #d97706;
+      --red: #cc0000;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
 
     body {
-      background-color: var(--bg);
+      background: var(--bg);
       color: var(--text);
       display: flex;
       height: 100vh;
       overflow: hidden;
     }
 
-    /* Login Page */
+    /* ============================
+       LOGIN PAGE
+    ============================ */
     #login-page {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: var(--bg);
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
       display: flex;
       justify-content: center;
       align-items: center;
-      z-index: 1000;
+      z-index: 9999;
     }
 
     .login-box {
-      background: var(--surface);
-      padding: 3rem;
-      border-radius: 8px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      width: 400px;
+      background: white;
+      padding: 3rem 3.5rem;
+      border-radius: 16px;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+      width: 420px;
+      text-align: center;
+    }
+
+    .login-logo {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 0.25rem;
+      letter-spacing: -0.02em;
+    }
+
+    .login-sub {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      margin-bottom: 2.5rem;
     }
 
     .form-group {
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.25rem;
+      text-align: left;
     }
 
-    input {
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
       width: 100%;
-      padding: 0.8rem;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      margin-top: 0.5rem;
+      padding: 0.75rem 1rem;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      transition: border-color 0.2s;
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      background: white;
     }
 
-    .btn {
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .btn-primary {
       background: var(--primary);
       color: white;
       border: none;
-      padding: 0.8rem 1.5rem;
+      padding: 0.85rem 1.5rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 700;
       cursor: pointer;
-      border-radius: 4px;
+      transition: all 0.2s;
       width: 100%;
     }
 
-    /* Dashboard Layout */
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* ============================
+       LAYOUT
+    ============================ */
+    #app { display: flex; width: 100%; height: 100vh; }
+
+    /* ============================
+       SIDEBAR
+    ============================ */
     .sidebar {
-      width: 250px;
-      background: var(--sidebar);
+      width: 260px;
+      background: var(--sidebar-bg);
       color: white;
       display: flex;
       flex-direction: column;
+      flex-shrink: 0;
+      overflow-y: auto;
     }
 
-    .sidebar-header {
-      padding: 1.5rem;
-      font-size: 1.2rem;
-      font-weight: bold;
-      border-bottom: 1px solid #374151;
+    .sidebar-brand {
+      padding: 1.75rem 1.5rem 1.25rem;
+      border-bottom: 1px solid #1e293b;
+    }
+
+    .sidebar-brand .brand-name {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: white;
+      letter-spacing: -0.01em;
+    }
+
+    .sidebar-brand .brand-sub {
+      font-size: 0.75rem;
+      color: #64748b;
+      margin-top: 0.2rem;
+    }
+
+    .sidebar-section {
+      padding: 1rem 1rem 0.5rem;
+    }
+
+    .sidebar-section-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #475569;
+      padding: 0 0.5rem;
+      margin-bottom: 0.5rem;
     }
 
     .nav-item {
-      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
       cursor: pointer;
-      transition: 0.2s;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #94a3b8;
+      transition: all 0.2s;
+      margin-bottom: 0.15rem;
     }
 
-    .nav-item:hover,
+    .nav-item:hover {
+      background: var(--sidebar-hover);
+      color: white;
+    }
+
     .nav-item.active {
-      background: #374151;
-      border-left: 4px solid var(--primary);
+      background: var(--primary);
+      color: white;
+      font-weight: 600;
     }
 
-    .main-content {
+    .nav-item .nav-icon { font-size: 1rem; width: 20px; text-align: center; }
+    .nav-item .nav-badge {
+      margin-left: auto;
+      background: rgba(255,255,255,0.15);
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.15rem 0.5rem;
+      border-radius: 50px;
+    }
+
+    .nav-item.active .nav-badge { background: rgba(255,255,255,0.25); }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 1rem 1.25rem;
+      border-top: 1px solid #1e293b;
+    }
+
+    .logout-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      color: #64748b;
+      font-size: 0.85rem;
+      cursor: pointer;
+      padding: 0.6rem;
+      border-radius: 6px;
+      transition: all 0.2s;
+      border: none;
+      background: none;
+      width: 100%;
+    }
+
+    .logout-btn:hover { background: #1e293b; color: white; }
+
+    /* ============================
+       MAIN CONTENT
+    ============================ */
+    .main {
       flex: 1;
       display: flex;
       flex-direction: column;
       overflow: hidden;
     }
 
-    .header {
-      background: var(--surface);
-      padding: 1rem 2rem;
+    .topbar {
+      background: white;
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      height: 64px;
       display: flex;
+      align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid #ddd;
+      flex-shrink: 0;
+    }
+
+    .topbar-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .topbar-badge {
+      background: #f0fdf4;
+      color: var(--green);
+      border: 1px solid #bbf7d0;
+      padding: 0.3rem 0.8rem;
+      border-radius: 50px;
+      font-size: 0.75rem;
+      font-weight: 600;
     }
 
     .content-area {
-      padding: 2rem;
-      overflow-y: auto;
       flex: 1;
+      overflow-y: auto;
+      padding: 2rem;
     }
 
-    /* Tables */
+    /* ============================
+       TAB PANES
+    ============================ */
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+
+    /* ============================
+       STAT CARDS
+    ============================ */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+
+    .stat-icon.red { background: #fff1f1; }
+    .stat-icon.green { background: #f0fdf4; }
+    .stat-icon.blue { background: #eff6ff; }
+    .stat-icon.yellow { background: #fffbeb; }
+
+    .stat-value { font-size: 1.8rem; font-weight: 800; color: var(--text); line-height: 1; }
+    .stat-label { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem; }
+
+    /* ============================
+       TABLES
+    ============================ */
+    .table-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .table-card-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .table-card-header h3 {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
-      background: var(--surface);
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    }
-
-    th,
-    td {
-      padding: 1rem;
-      text-align: left;
-      border-bottom: 1px solid #eee;
     }
 
     th {
       background: #f8fafc;
+      padding: 0.85rem 1.25rem;
+      text-align: left;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+    }
+
+    td {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.875rem;
+      color: var(--text);
+    }
+
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #f8fafc; }
+
+    /* ============================
+       BADGES
+    ============================ */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.3rem 0.75rem;
+      border-radius: 50px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .badge::before { content: '●'; font-size: 0.6rem; }
+    .badge.active { background: #f0fdf4; color: var(--green); }
+    .badge.closed { background: #fff1f1; color: var(--red); }
+    .badge.draft { background: #fffbeb; color: var(--yellow); }
+    .badge.yes { background: #f0fdf4; color: var(--green); }
+    .badge.no { background: #fff1f1; color: var(--red); }
+
+    /* ============================
+       ACTION BUTTONS
+    ============================ */
+    .btn-sm {
+      padding: 0.4rem 0.85rem;
+      border-radius: 6px;
+      font-size: 0.78rem;
       font-weight: 600;
-    }
-
-    tr:hover {
-      background: #f1f5f9;
       cursor: pointer;
+      border: 1px solid;
+      transition: all 0.15s;
+      font-family: 'Inter', sans-serif;
     }
 
-    /* Modal */
-    .modal {
+    .btn-sm.red { background: var(--primary); color: white; border-color: var(--primary); }
+    .btn-sm.red:hover { background: var(--primary-dark); }
+    .btn-sm.ghost { background: transparent; color: var(--text-muted); border-color: var(--border); }
+    .btn-sm.ghost:hover { background: var(--bg); color: var(--text); }
+    .btn-sm.danger { background: transparent; color: #dc2626; border-color: #fca5a5; }
+    .btn-sm.danger:hover { background: #fff1f1; }
+    .btn-sm.close-proj { background: transparent; color: var(--yellow); border-color: #fcd34d; }
+    .btn-sm.close-proj:hover { background: #fffbeb; }
+
+    /* ============================
+       MODAL
+    ============================ */
+    .modal-overlay {
       display: none;
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 2000;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 5000;
       justify-content: center;
-      align-items: center;
-    }
-
-    .modal-content {
-      background: white;
-      padding: 2rem;
-      border-radius: 8px;
-      width: 600px;
-      max-height: 90vh;
+      align-items: flex-start;
+      padding: 2rem 1rem;
       overflow-y: auto;
     }
 
-    .hidden {
-      display: none !important;
+    .modal-overlay.open { display: flex; }
+
+    .modal-box {
+      background: white;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 680px;
+      overflow: hidden;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.25);
+      margin: auto;
+      animation: modalIn 0.25s ease;
     }
 
-    .flex-between {
+    @keyframes modalIn {
+      from { opacity: 0; transform: translateY(-20px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .modal-header {
+      background: linear-gradient(135deg, var(--primary), #880000);
+      color: white;
+      padding: 1.5rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+    }
+
+    .modal-header h3 { font-size: 1.1rem; color: white; margin: 0; }
+    .modal-header p { font-size: 0.8rem; color: rgba(255,255,255,0.7); margin: 0.2rem 0 0; }
+
+    .modal-close {
+      background: rgba(255,255,255,0.15);
+      border: none;
+      color: white;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+
+    .modal-close:hover { background: rgba(255,255,255,0.3); }
+
+    .modal-body { padding: 2rem; }
+    .modal-body .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .modal-body .form-group { margin-bottom: 1rem; }
+
+    .modal-footer {
+      padding: 1.25rem 2rem;
+      background: #f8fafc;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+    }
+
+    .section-separator {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--primary);
+      margin: 1.5rem 0 0.75rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Trades input row */
+    .trade-input-row {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .trade-input-row input {
+      flex: 1;
+      padding: 0.6rem 0.8rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .trade-input-row input:focus { outline: none; border-color: var(--primary); }
+
+    .trade-remove-btn {
+      background: #fff1f1;
+      border: 1px solid #fca5a5;
+      color: #dc2626;
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .add-row-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: none;
+      border: none;
+      color: var(--primary);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 0.3rem 0;
+      transition: opacity 0.2s;
+    }
+
+    .add-row-btn:hover { opacity: 0.75; }
+
+    /* ============================
+       BID DETAIL PANEL
+    ============================ */
+    .bid-detail-panel {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
       margin-bottom: 1rem;
     }
 
-    .badge {
-      padding: 0.25rem 0.5rem;
-      border-radius: 12px;
-      font-size: 0.8rem;
-      color: white;
+    .bid-detail-header {
+      background: #f8fafc;
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
     }
 
-    .badge.active {
-      background: #10b981;
+    .bid-detail-body {
+      padding: 1.25rem 1.5rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
     }
 
-    .badge.closed {
-      background: #ef4444;
+    .bid-detail-row { margin-bottom: 0.5rem; }
+    .bid-detail-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 0.15rem; }
+    .bid-detail-value { font-size: 0.9rem; color: var(--text); }
+
+    /* ============================
+       EMPTY STATES
+    ============================ */
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--text-muted);
     }
+
+    .empty-state .empty-icon { font-size: 2.5rem; margin-bottom: 1rem; opacity: 0.5; }
+    .empty-state h4 { font-size: 1rem; color: var(--text); margin-bottom: 0.4rem; }
+    .empty-state p { font-size: 0.875rem; }
+
+    .loading-dots {
+      display: inline-flex;
+      gap: 4px;
+      margin-left: 8px;
+    }
+
+    .loading-dots span {
+      width: 5px;
+      height: 5px;
+      background: currentColor;
+      border-radius: 50%;
+      animation: bounce 1.2s infinite ease-in-out;
+    }
+
+    .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes bounce {
+      0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+      40% { transform: scale(1); opacity: 1; }
+    }
+
+    /* alert strip */
+    .alert-strip {
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+      display: none;
+    }
+
+    .alert-strip.error { background: #fff1f1; color: #dc2626; border: 1px solid #fca5a5; }
+    .alert-strip.success { background: #f0fdf4; color: var(--green); border: 1px solid #bbf7d0; }
   </style>
 </head>
 
 <body>
 
-  <!-- Login Overlay -->
+  <!-- ============ LOGIN PAGE ============ -->
   <div id="login-page">
     <div class="login-box">
-      <h2 style="margin-bottom: 2rem; text-align: center; color: var(--primary);">KJR Admin Login</h2>
+      <div class="login-logo">KJR</div>
+      <div class="login-sub">Interior Designs Inc. — Admin Portal</div>
+      <div class="alert-strip error" id="login-error"></div>
       <form id="login-form">
         <div class="form-group">
-          <label>Email</label>
-          <input type="email" id="email" required>
+          <label>Email Address</label>
+          <input type="email" id="login-email" placeholder="admin@kjrid.com" required>
         </div>
         <div class="form-group">
           <label>Password</label>
-          <input type="password" id="password" required>
+          <input type="password" id="login-password" placeholder="••••••••" required>
         </div>
-        <button type="submit" class="btn" id="login-btn">Login</button>
-        <p id="login-error" style="color: red; margin-top: 1rem; display: none;"></p>
+        <button type="submit" class="btn-primary" id="login-btn">Sign In to Admin Panel</button>
       </form>
     </div>
   </div>
 
-  <!-- Main Dashboard -->
-  <aside class="sidebar">
-    <div class="sidebar-header">KJR Admin</div>
-    <div class="nav-item active" onclick="switchTab('projects-tab')">Projects (Bids)</div>
-    <div class="nav-item" onclick="switchTab('forms-tab')">Form Submissions</div>
-    <div style="margin-top: auto; padding: 1rem;">
-      <button class="btn" style="background: transparent; border: 1px solid white;" onclick="logout()">Logout</button>
+  <!-- ============ MAIN APP ============ -->
+  <div id="app">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-name">KJR Admin</div>
+        <div class="brand-sub">Interior Designs Inc.</div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Management</div>
+        <div class="nav-item active" data-tab="tab-projects" onclick="switchTab(this, 'tab-projects')">
+          <span class="nav-icon">🏗️</span>Projects
+          <span class="nav-badge" id="badge-projects">—</span>
+        </div>
+        <div class="nav-item" data-tab="tab-bids" onclick="switchTab(this, 'tab-bids')">
+          <span class="nav-icon">📋</span>Bid Submissions
+          <span class="nav-badge" id="badge-bids">—</span>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Communication</div>
+        <div class="nav-item" data-tab="tab-forms" onclick="switchTab(this, 'tab-forms')">
+          <span class="nav-icon">✉️</span>Contact Forms
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <button class="logout-btn" onclick="logout()">
+          <span>🚪</span> Logout
+        </button>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+      <div class="topbar">
+        <div class="topbar-title" id="page-title">Manage Projects</div>
+        <div class="topbar-right">
+          <span class="topbar-badge" id="topbar-admin-label">● Admin</span>
+          <a href="../bid-projects.html" target="_blank" style="font-size:0.8rem; color: var(--text-muted); text-decoration:none;">
+            View Public Page ↗
+          </a>
+        </div>
+      </div>
+
+      <div class="content-area">
+        <div class="alert-strip" id="global-alert"></div>
+
+        <!-- ======== TAB: PROJECTS ======== -->
+        <div id="tab-projects" class="tab-pane active">
+          <!-- Stats -->
+          <div class="stats-row">
+            <div class="stat-card">
+              <div class="stat-icon red">🏗️</div>
+              <div>
+                <div class="stat-value" id="stat-active">—</div>
+                <div class="stat-label">Active Projects</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon yellow">🔒</div>
+              <div>
+                <div class="stat-value" id="stat-closed">—</div>
+                <div class="stat-label">Closed Projects</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon green">📩</div>
+              <div>
+                <div class="stat-value" id="stat-total-bids">—</div>
+                <div class="stat-label">Total Bids Received</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon blue">📊</div>
+              <div>
+                <div class="stat-value" id="stat-total">—</div>
+                <div class="stat-label">Total Projects</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Projects Table -->
+          <div class="table-card">
+            <div class="table-card-header">
+              <h3>All Projects</h3>
+              <button class="btn-sm red" onclick="openProjectModal()">+ Add New Project</button>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Project Name</th>
+                  <th>Location</th>
+                  <th>Bid Due</th>
+                  <th>Status</th>
+                  <th>Bids</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="projects-tbody">
+                <tr>
+                  <td colspan="6" style="text-align:center; padding: 3rem; color: var(--text-muted);">
+                    Loading<span class="loading-dots"><span></span><span></span><span></span></span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ======== TAB: BID SUBMISSIONS ======== -->
+        <div id="tab-bids" class="tab-pane">
+          <div class="table-card" style="margin-bottom: 1.5rem;">
+            <div class="table-card-header">
+              <h3>All Bid Submissions</h3>
+              <select id="bids-filter-project" onchange="filterBids()" style="padding: 0.4rem 0.8rem; font-size: 0.85rem; border: 1px solid var(--border); border-radius: 6px; color: var(--text); background: white;">
+                <option value="">All Projects</option>
+              </select>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Project</th>
+                  <th>Company</th>
+                  <th>Contact</th>
+                  <th>Email</th>
+                  <th>Intent</th>
+                  <th>Bid Amount</th>
+                  <th>Date</th>
+                  <th>Details</th>
+                </tr>
+              </thead>
+              <tbody id="bids-tbody">
+                <tr>
+                  <td colspan="8" style="text-align:center; padding: 2rem; color: var(--text-muted);">
+                    Loading<span class="loading-dots"><span></span><span></span><span></span></span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ======== TAB: FORMS ======== -->
+        <div id="tab-forms" class="tab-pane">
+          <div class="table-card">
+            <div class="table-card-header">
+              <h3>Contact Form Submissions</h3>
+            </div>
+            <div class="empty-state">
+              <div class="empty-icon">✉️</div>
+              <h4>Forms go to your email inbox</h4>
+              <p>Contact &amp; suggestion form submissions are sent directly to<br>
+                <strong>info@kjrid.com</strong> and <strong>estimating@kjrid.com</strong><br>
+                via <a href="https://formsubmit.co" target="_blank" style="color:var(--primary);">FormSubmit.co</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ============ ADD / EDIT PROJECT MODAL ============ -->
+  <div class="modal-overlay" id="project-modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div>
+          <h3 id="modal-title">Create New Bid Project</h3>
+          <p>This project will appear on the public Bid Projects page.</p>
+        </div>
+        <button class="modal-close" onclick="closeProjectModal()">✕</button>
+      </div>
+      <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+        <div class="alert-strip error" id="modal-error"></div>
+
+        <p class="section-separator">Basic Information</p>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Project Title *</label>
+            <input type="text" id="p-title" placeholder="e.g. AutoZone GA 10597">
+          </div>
+          <div class="form-group">
+            <label>Location *</label>
+            <input type="text" id="p-location" placeholder="e.g. Richmond Hills, GA">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Address</label>
+          <input type="text" id="p-address" placeholder="e.g. S.W. of 12100 GA 144, Richmond Hills, GA 31324">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Bid Due Date *</label>
+            <input type="text" id="p-date" placeholder="e.g. Monday Jan 11th @ 2PM EST">
+          </div>
+          <div class="form-group">
+            <label>Estimator</label>
+            <input type="text" id="p-estimator" value="KING MTUSA" placeholder="e.g. KING MTUSA">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Submit Bids To (Email)</label>
+            <input type="email" id="p-bid-email" value="estimating@kjrid.com" placeholder="estimating@kjrid.com">
+          </div>
+          <div class="form-group">
+            <label>Status</label>
+            <select id="p-status">
+              <option value="active">Active</option>
+              <option value="draft">Draft (hidden from public)</option>
+              <option value="closed">Closed</option>
+            </select>
+          </div>
+        </div>
+
+        <p class="section-separator">Documents</p>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Drawings URL</label>
+            <input type="url" id="p-drawings" placeholder="https://... (Google Drive, Dropbox, etc.)">
+          </div>
+          <div class="form-group">
+            <label>Specifications URL</label>
+            <input type="url" id="p-specs" placeholder="https://... (Google Drive, Dropbox, etc.)">
+          </div>
+        </div>
+
+        <p class="section-separator">Trades Requested</p>
+        <div id="trades-container"></div>
+        <button type="button" class="add-row-btn" onclick="addTradeRow()">+ Add Trade</button>
+
+        <p class="section-separator">Cost Codes</p>
+        <div id="cost-codes-container"></div>
+        <button type="button" class="add-row-btn" onclick="addCostCodeRow()">+ Add Cost Code</button>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-sm ghost" onclick="closeProjectModal()">Cancel</button>
+        <button class="btn-sm red" id="save-project-btn" onclick="saveProject()">Save Project</button>
+      </div>
     </div>
-  </aside>
+  </div>
 
-  <main class="main-content">
-    <header class="header">
-      <h2 id="page-title">Manage Projects</h2>
-      <div id="admin-user">Admin</div>
-    </header>
-
-    <div class="content-area">
-      <!-- Projects Tab -->
-      <div id="projects-tab" class="tab-pane">
-        <div class="flex-between">
-          <h3>Active Bid Projects</h3>
-          <button class="btn" style="width: auto;" onclick="openProjectModal()">+ Add New Project</button>
+  <!-- ============ BID DETAIL MODAL ============ -->
+  <div class="modal-overlay" id="bid-detail-modal-overlay">
+    <div class="modal-box" style="max-width: 600px;">
+      <div class="modal-header">
+        <div>
+          <h3>📋 Bid Details</h3>
+          <p id="bid-detail-title">—</p>
         </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Project Name</th>
-              <th>Location</th>
-              <th>Due Date</th>
-              <th>Status</th>
-              <th>Total Bids Received</th>
-            </tr>
-          </thead>
-          <tbody id="projects-list">
-            <!-- Populated via JS -->
-          </tbody>
-        </table>
+        <button class="modal-close" onclick="closeBidDetailModal()">✕</button>
       </div>
-
-      <!-- Forms Tab (Placeholder) -->
-      <div id="forms-tab" class="tab-pane hidden">
-        <h3>Contact & Suggestion Forms</h3>
-        <p style="margin-top: 1rem; color: #666;">Form submissions are currently tracked in your email inbox
-          (info@kjrid.com). Database integration coming in Phase 3.</p>
-      </div>
-    </div>
-  </main>
-
-  <!-- Create Project Modal -->
-  <div class="modal" id="project-modal">
-    <div class="modal-content">
-      <div class="flex-between">
-        <h3>Create New Bid Project</h3>
-        <button onclick="closeProjectModal()"
-          style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
-      </div>
-      <form id="project-form" style="margin-top: 1rem;">
-        <div class="form-group">
-          <label>Project Title</label>
-          <input type="text" id="p-title" required>
-        </div>
-        <div class="form-group">
-          <label>Location</label>
-          <input type="text" id="p-location" required>
-        </div>
-        <div class="form-group">
-          <label>Bid Due Date (Text)</label>
-          <input type="text" id="p-date" placeholder="e.g. Monday Jan 11th @ 2PM EST" required>
-        </div>
-        <button type="submit" class="btn" id="save-project-btn">Save Project</button>
-      </form>
+      <div class="modal-body" id="bid-detail-content" style="max-height: 70vh; overflow-y: auto;"></div>
     </div>
   </div>
 
   <script>
-    // Auto-detect environment: use local backend when running locally, deployed backend on Vercel
+    // =====================================================
+    // CONFIG
+    // =====================================================
     const isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.protocol === 'file:';
     const API_URL = isLocal ? 'http://localhost:5001/api' : 'https://app-server-maaw.onrender.com/api';
     let token = localStorage.getItem('kjr_admin_token');
+    let allProjects = [];
+    let allBids = [];
+    let editingProjectId = null;
 
-    // Init
+    // =====================================================
+    // INIT
+    // =====================================================
     if (token) {
       document.getElementById('login-page').style.display = 'none';
-      loadProjects();
+      initDashboard();
     }
 
-    // Login Logic
+    async function initDashboard() {
+      await Promise.all([loadProjects(), loadAllBids()]);
+    }
+
+    // =====================================================
+    // LOGIN
+    // =====================================================
     document.getElementById('login-form').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
       const btn = document.getElementById('login-btn');
       const err = document.getElementById('login-error');
+      err.style.display = 'none';
+      btn.textContent = 'Signing in...';
+      btn.disabled = true;
 
-      btn.innerText = 'Loging in...';
       try {
         const res = await fetch(`${API_URL}/admin/login`, {
           method: 'POST',
@@ -323,21 +958,22 @@
           body: JSON.stringify({ email, password })
         });
         const data = await res.json();
-
         if (res.ok && data.token) {
           localStorage.setItem('kjr_admin_token', data.token);
           token = data.token;
           document.getElementById('login-page').style.display = 'none';
-          loadProjects();
+          initDashboard();
         } else {
-          err.innerText = data.errors?.[0]?.msg || 'Invalid credentials';
+          err.textContent = data.errors?.[0]?.msg || 'Invalid email or password.';
           err.style.display = 'block';
         }
-      } catch (error) {
-        err.innerText = 'Server error. Is the backend running?';
+      } catch (ex) {
+        err.textContent = 'Cannot reach server. Is the backend running?';
         err.style.display = 'block';
+      } finally {
+        btn.textContent = 'Sign In to Admin Panel';
+        btn.disabled = false;
       }
-      btn.innerText = 'Login';
     });
 
     function logout() {
@@ -345,67 +981,427 @@
       location.reload();
     }
 
-    // Navigation
-    function switchTab(tabId) {
-      document.querySelectorAll('.tab-pane').forEach(t => t.classList.add('hidden'));
+    // =====================================================
+    // NAVIGATION
+    // =====================================================
+    const tabTitles = {
+      'tab-projects': 'Manage Projects',
+      'tab-bids': 'Bid Submissions',
+      'tab-forms': 'Contact Forms'
+    };
+
+    function switchTab(el, tabId) {
+      document.querySelectorAll('.tab-pane').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-      document.getElementById(tabId).classList.remove('hidden');
-      event.target.classList.add('active');
+      document.getElementById(tabId).classList.add('active');
+      el.classList.add('active');
+      document.getElementById('page-title').textContent = tabTitles[tabId];
     }
 
-    // Load Projects
+    // =====================================================
+    // PROJECTS
+    // =====================================================
     async function loadProjects() {
+      const tbody = document.getElementById('projects-tbody');
       try {
-        const res = await fetch(`${API_URL}/admin/projects`, {
+        const res = await fetch(`${API_URL}/admin/projects`, { headers: { 'x-auth-token': token } });
+        if (res.status === 401) { alert('Session expired.'); logout(); return; }
+        if (!res.ok) throw new Error(`Server error ${res.status}`);
+
+        allProjects = await res.json();
+        renderProjectsTable();
+        updateStats();
+        populateBidsFilter();
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:2rem;color:#dc2626;">Failed to load projects. Is the backend running?</td></tr>`;
+      }
+    }
+
+    function renderProjectsTable() {
+      const tbody = document.getElementById('projects-tbody');
+      if (!allProjects.length) {
+        tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="empty-icon">🏗️</div><h4>No projects yet</h4><p>Click "Add New Project" to create your first bid invitation.</p></div></td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = allProjects.map(p => {
+        const bidCount = allBids.filter(b => b.project === p._id).length;
+        return `
+          <tr>
+            <td><strong>${escHtml(p.title)}</strong></td>
+            <td>${escHtml(p.location)}</td>
+            <td style="white-space:nowrap;">${escHtml(p.bidDueDate)}</td>
+            <td><span class="badge ${p.status}">${p.status.toUpperCase()}</span></td>
+            <td>
+              <button class="btn-sm ghost" onclick="showProjectBids('${p._id}', '${escHtml(p.title)}')">
+                ${bidCount} bid${bidCount !== 1 ? 's' : ''} →
+              </button>
+            </td>
+            <td>
+              <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
+                <button class="btn-sm ghost" onclick="editProject('${p._id}')">Edit</button>
+                ${p.status === 'active'
+                  ? `<button class="btn-sm close-proj" onclick="toggleProjectStatus('${p._id}', 'closed')">Close</button>`
+                  : `<button class="btn-sm ghost" onclick="toggleProjectStatus('${p._id}', 'active')">Re-open</button>`
+                }
+                <button class="btn-sm danger" onclick="deleteProject('${p._id}', '${escHtml(p.title)}')">Delete</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function updateStats() {
+      const active = allProjects.filter(p => p.status === 'active').length;
+      const closed = allProjects.filter(p => p.status === 'closed').length;
+      document.getElementById('stat-active').textContent = active;
+      document.getElementById('stat-closed').textContent = closed;
+      document.getElementById('stat-total').textContent = allProjects.length;
+      document.getElementById('stat-total-bids').textContent = allBids.length;
+      document.getElementById('badge-projects').textContent = allProjects.length;
+      document.getElementById('badge-bids').textContent = allBids.length;
+    }
+
+    async function toggleProjectStatus(id, newStatus) {
+      try {
+        const res = await fetch(`${API_URL}/projects/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+          body: JSON.stringify({ status: newStatus })
+        });
+        if (!res.ok) throw new Error();
+        await loadProjects();
+        showGlobalAlert(`Project status updated to "${newStatus}".`, 'success');
+      } catch {
+        showGlobalAlert('Failed to update project status.', 'error');
+      }
+    }
+
+    async function deleteProject(id, name) {
+      if (!confirm(`Delete project "${name}" permanently? This cannot be undone.`)) return;
+      try {
+        const res = await fetch(`${API_URL}/projects/${id}`, {
+          method: 'DELETE',
           headers: { 'x-auth-token': token }
         });
-        const projects = await res.json();
-        const tbody = document.getElementById('projects-list');
-        tbody.innerHTML = '';
-
-        projects.forEach(p => {
-          tbody.innerHTML += `
-            <tr onclick="fetchBids('${p._id}')">
-              <td><strong>${p.title}</strong></td>
-              <td>${p.location}</td>
-              <td>${p.bidDueDate}</td>
-              <td><span class="badge ${p.status}">${p.status.toUpperCase()}</span></td>
-              <td>-</td>
-            </tr>
-          `;
-        });
-      } catch (e) { console.error('Error fetching projects'); }
+        if (!res.ok) throw new Error();
+        allProjects = allProjects.filter(p => p._id !== id);
+        renderProjectsTable();
+        updateStats();
+        showGlobalAlert('Project deleted successfully.', 'success');
+      } catch {
+        showGlobalAlert('Failed to delete project.', 'error');
+      }
     }
 
-    // Create Project
-    function openProjectModal() { document.getElementById('project-modal').style.display = 'flex'; }
-    function closeProjectModal() { document.getElementById('project-modal').style.display = 'none'; }
+    // =====================================================
+    // PROJECT MODAL (CREATE + EDIT)
+    // =====================================================
+    function openProjectModal(project = null) {
+      editingProjectId = project ? project._id : null;
+      document.getElementById('modal-title').textContent = project ? 'Edit Project' : 'Create New Bid Project';
+      document.getElementById('modal-error').style.display = 'none';
 
-    document.getElementById('project-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
+      // Reset fields
+      document.getElementById('p-title').value = project?.title || '';
+      document.getElementById('p-location').value = project?.location || '';
+      document.getElementById('p-address').value = project?.address || '';
+      document.getElementById('p-date').value = project?.bidDueDate || '';
+      document.getElementById('p-estimator').value = project?.estimator || 'KING MTUSA';
+      document.getElementById('p-bid-email').value = project?.bidEmail || 'estimating@kjrid.com';
+      document.getElementById('p-status').value = project?.status || 'active';
+      document.getElementById('p-drawings').value = project?.drawingsUrl || '';
+      document.getElementById('p-specs').value = project?.specificationsUrl || '';
+
+      // Rebuild trades
+      const tradesContainer = document.getElementById('trades-container');
+      tradesContainer.innerHTML = '';
+      const trades = project?.tradesRequested || [''];
+      trades.forEach(t => addTradeRow(t));
+
+      // Rebuild cost codes
+      const codesContainer = document.getElementById('cost-codes-container');
+      codesContainer.innerHTML = '';
+      const codes = project?.costCodes || [{ code: '', description: '', scope: '' }];
+      codes.forEach(c => addCostCodeRow(c));
+
+      document.getElementById('project-modal-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeProjectModal() {
+      document.getElementById('project-modal-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+      editingProjectId = null;
+    }
+
+    function editProject(id) {
+      const project = allProjects.find(p => p._id === id);
+      if (project) openProjectModal(project);
+    }
+
+    function addTradeRow(value = '') {
+      const container = document.getElementById('trades-container');
+      const row = document.createElement('div');
+      row.className = 'trade-input-row';
+      row.innerHTML = `
+        <input type="text" placeholder="e.g. Demolition, Electrical, HVAC..." value="${escHtml(value)}">
+        <button type="button" class="trade-remove-btn" onclick="this.parentElement.remove()">×</button>
+      `;
+      container.appendChild(row);
+    }
+
+    function addCostCodeRow(code = {}) {
+      const container = document.getElementById('cost-codes-container');
+      const row = document.createElement('div');
+      row.style.cssText = 'display:grid; grid-template-columns: 6rem 1fr 1fr auto; gap:0.5rem; margin-bottom:0.5rem;';
+      row.innerHTML = `
+        <input type="text" placeholder="Code" value="${escHtml(code.code || '')}" style="padding:0.6rem 0.8rem;border:1px solid var(--border);border-radius:6px;font-size:0.85rem;font-family:'Inter',sans-serif;">
+        <input type="text" placeholder="Description" value="${escHtml(code.description || '')}" style="padding:0.6rem 0.8rem;border:1px solid var(--border);border-radius:6px;font-size:0.85rem;font-family:'Inter',sans-serif;">
+        <input type="text" placeholder="Scope (optional)" value="${escHtml(code.scope || '')}" style="padding:0.6rem 0.8rem;border:1px solid var(--border);border-radius:6px;font-size:0.85rem;font-family:'Inter',sans-serif;">
+        <button type="button" class="trade-remove-btn" onclick="this.parentElement.remove()">×</button>
+      `;
+      container.appendChild(row);
+    }
+
+    async function saveProject() {
+      const errEl = document.getElementById('modal-error');
+      errEl.style.display = 'none';
+
+      const title = document.getElementById('p-title').value.trim();
+      const location = document.getElementById('p-location').value.trim();
+      const bidDueDate = document.getElementById('p-date').value.trim();
+
+      if (!title || !location || !bidDueDate) {
+        errEl.textContent = 'Please fill in all required fields: Title, Location, and Bid Due Date.';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      // Collect trades
+      const trades = [...document.querySelectorAll('#trades-container .trade-input-row input')]
+        .map(i => i.value.trim()).filter(Boolean);
+
+      // Collect cost codes
+      const costCodeRows = document.querySelectorAll('#cost-codes-container > div');
+      const costCodes = [...costCodeRows].map(row => {
+        const inputs = row.querySelectorAll('input');
+        return {
+          code: inputs[0]?.value.trim() || '',
+          description: inputs[1]?.value.trim() || '',
+          scope: inputs[2]?.value.trim() || ''
+        };
+      }).filter(c => c.code || c.description);
+
       const payload = {
-        title: document.getElementById('p-title').value,
-        location: document.getElementById('p-location').value,
-        bidDueDate: document.getElementById('p-date').value
+        title,
+        location,
+        address: document.getElementById('p-address').value.trim(),
+        bidDueDate,
+        estimator: document.getElementById('p-estimator').value.trim() || 'KING MTUSA',
+        bidEmail: document.getElementById('p-bid-email').value.trim() || 'estimating@kjrid.com',
+        status: document.getElementById('p-status').value,
+        drawingsUrl: document.getElementById('p-drawings').value.trim(),
+        specificationsUrl: document.getElementById('p-specs').value.trim(),
+        tradesRequested: trades,
+        costCodes
       };
 
+      const btn = document.getElementById('save-project-btn');
+      btn.textContent = 'Saving...';
+      btn.disabled = true;
+
       try {
-        await fetch(`${API_URL}/projects`, {
-          method: 'POST',
+        const url = editingProjectId ? `${API_URL}/projects/${editingProjectId}` : `${API_URL}/projects`;
+        const method = editingProjectId ? 'PUT' : 'POST';
+        const res = await fetch(url, {
+          method,
           headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
           body: JSON.stringify(payload)
         });
+
+        if (res.status === 401) { alert('Session expired.'); logout(); return; }
+        if (!res.ok) throw new Error(`Server error ${res.status}`);
+
         closeProjectModal();
-        loadProjects();
-        e.target.reset();
-      } catch (err) { alert('Failed to create project'); }
+        await loadProjects();
+        showGlobalAlert(editingProjectId ? 'Project updated successfully!' : 'Project created! It is now live on the public Bid Projects page.', 'success');
+      } catch (err) {
+        errEl.textContent = 'Failed to save project. Is the backend running?';
+        errEl.style.display = 'block';
+      } finally {
+        btn.textContent = 'Save Project';
+        btn.disabled = false;
+      }
+    }
+
+    // =====================================================
+    // BIDS
+    // =====================================================
+    async function loadAllBids() {
+      const tbody = document.getElementById('bids-tbody');
+      try {
+        const res = await fetch(`${API_URL}/admin/bids`, { headers: { 'x-auth-token': token } });
+        if (res.status === 401) { logout(); return; }
+        if (!res.ok) throw new Error();
+
+        allBids = await res.json();
+        renderBidsTable(allBids);
+        updateStats();
+      } catch {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:2rem;color:#dc2626;">Failed to load bids. Is the backend running?</td></tr>`;
+      }
+    }
+
+    function renderBidsTable(bids) {
+      const tbody = document.getElementById('bids-tbody');
+      if (!bids.length) {
+        tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><div class="empty-icon">📭</div><h4>No bids received yet</h4><p>When contractors submit bids on the public page, they'll appear here.</p></div></td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = bids.map(b => `
+        <tr>
+          <td><strong>${escHtml(b.projectName || '—')}</strong></td>
+          <td>${escHtml(b.companyName)}</td>
+          <td>${escHtml(b.contactPerson)}</td>
+          <td><a href="mailto:${escHtml(b.emailAddress)}" style="color:var(--primary);">${escHtml(b.emailAddress)}</a></td>
+          <td><span class="badge ${b.bidIntent}">${b.bidIntent === 'yes' ? '✅ YES' : '❌ NO'}</span></td>
+          <td>${b.bidAmount ? '$' + Number(b.bidAmount).toLocaleString() : '—'}</td>
+          <td style="white-space:nowrap; font-size:0.8rem; color:var(--text-muted);">${formatDate(b.createdAt)}</td>
+          <td>
+            <button class="btn-sm ghost" onclick='showBidDetail(${JSON.stringify(b).replace(/'/g, "&#39;")})'>View →</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function populateBidsFilter() {
+      const select = document.getElementById('bids-filter-project');
+      const currentVal = select.value;
+      select.innerHTML = '<option value="">All Projects</option>';
+      allProjects.forEach(p => {
+        const opt = document.createElement('option');
+        opt.value = p._id;
+        opt.textContent = p.title;
+        select.appendChild(opt);
+      });
+      select.value = currentVal;
+    }
+
+    function filterBids() {
+      const projectId = document.getElementById('bids-filter-project').value;
+      const filtered = projectId ? allBids.filter(b => b.project === projectId) : allBids;
+      renderBidsTable(filtered);
+    }
+
+    function showProjectBids(projectId, projectTitle) {
+      // Switch to bids tab and filter
+      const bidsNavItem = document.querySelector('.nav-item[data-tab="tab-bids"]');
+      switchTab(bidsNavItem, 'tab-bids');
+      const select = document.getElementById('bids-filter-project');
+      select.value = projectId;
+      filterBids();
+    }
+
+    // Bid Detail Modal
+    function showBidDetail(bid) {
+      document.getElementById('bid-detail-title').textContent = `${bid.projectName} — ${bid.companyName}`;
+      const intentText = bid.bidIntent === 'yes'
+        ? `<span style="color:var(--green); font-weight:700;">✅ YES — Will Bid</span>${bid.bidAmount ? ` &nbsp;|&nbsp; Estimated: <strong>$${Number(bid.bidAmount).toLocaleString()}</strong>` : ''}`
+        : `<span style="color:var(--red); font-weight:700;">❌ NO — Passing</span>${bid.declineReason ? ` &nbsp;|&nbsp; Reason: ${escHtml(bid.declineReason)}` : ''}`;
+
+      document.getElementById('bid-detail-content').innerHTML = `
+        <div style="display:grid; gap:1.25rem;">
+          <div style="background:#f8fafc; border-radius:8px; padding:1rem 1.25rem;">
+            <div style="font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted); margin-bottom:0.5rem;">Project</div>
+            <strong style="font-size:1rem;">${escHtml(bid.projectName)}</strong>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+            <div>
+              <div style="font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted); margin-bottom:0.25rem;">Company</div>
+              <div style="font-weight:600;">${escHtml(bid.companyName)}</div>
+            </div>
+            <div>
+              <div style="font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted); margin-bottom:0.25rem;">Contact Person</div>
+              <div>${escHtml(bid.contactPerson)}</div>
+            </div>
+            <div>
+              <div style="font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted); margin-bottom:0.25rem;">Email</div>
+              <div><a href="mailto:${escHtml(bid.emailAddress)}" style="color:var(--primary);">${escHtml(bid.emailAddress)}</a></div>
+            </div>
+            <div>
+              <div style="font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted); margin-bottom:0.25rem;">Phone</div>
+              <div>${bid.phone ? escHtml(bid.phone) : '<span style="color:var(--text-muted);">Not provided</span>'}</div>
+            </div>
+          </div>
+
+          <div style="background:${bid.bidIntent === 'yes' ? '#f0fdf4' : '#fff1f1'}; border-radius:8px; padding:1rem 1.25rem; border-left: 4px solid ${bid.bidIntent === 'yes' ? 'var(--green)' : 'var(--red)'};">
+            <div style="font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted); margin-bottom:0.25rem;">Bid Response</div>
+            <div>${intentText}</div>
+          </div>
+
+          ${bid.comments ? `
+            <div>
+              <div style="font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted); margin-bottom:0.4rem;">Comments</div>
+              <div style="background:#f8fafc; padding:1rem; border-radius:8px; font-size:0.9rem; line-height:1.6;">${escHtml(bid.comments)}</div>
+            </div>
+          ` : ''}
+
+          <div style="font-size:0.8rem; color:var(--text-muted); padding-top:0.5rem; border-top: 1px solid var(--border);">
+            Submitted: ${formatDate(bid.createdAt)} &nbsp;|&nbsp; ID: ${bid._id}
+          </div>
+
+          <a href="mailto:${escHtml(bid.emailAddress)}?subject=Re: Bid for ${encodeURIComponent(bid.projectName)}"
+            class="btn-sm red" style="display:inline-flex; align-items:center; gap:0.4rem; justify-content:center; padding: 0.7rem 1.5rem; text-decoration:none; border-radius:8px; font-size:0.875rem;">
+            ✉️ Reply to ${escHtml(bid.contactPerson)}
+          </a>
+        </div>
+      `;
+      document.getElementById('bid-detail-modal-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeBidDetailModal() {
+      document.getElementById('bid-detail-modal-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    // Close modals on overlay click
+    document.getElementById('project-modal-overlay').addEventListener('click', function(e) {
+      if (e.target === this) closeProjectModal();
     });
 
-    // Bids placeholder (in production this opens a new view)
-    function fetchBids(projectId) {
-      alert(`Loading bids for project ID: ${projectId} (Backend route /api/admin/bids/:id is ready)`);
+    document.getElementById('bid-detail-modal-overlay').addEventListener('click', function(e) {
+      if (e.target === this) closeBidDetailModal();
+    });
+
+    // =====================================================
+    // HELPERS
+    // =====================================================
+    function formatDate(iso) {
+      if (!iso) return '—';
+      const d = new Date(iso);
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) +
+        ' ' + d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+    }
+
+    function escHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    function showGlobalAlert(msg, type = 'success') {
+      const el = document.getElementById('global-alert');
+      el.textContent = msg;
+      el.className = `alert-strip ${type}`;
+      el.style.display = 'block';
+      setTimeout(() => { el.style.display = 'none'; }, 5000);
     }
   </script>
 </body>
-
 </html>

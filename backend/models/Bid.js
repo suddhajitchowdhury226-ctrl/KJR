@@ -6,6 +6,7 @@ const bidSchema = new mongoose.Schema({
   companyName: { type: String, required: true },
   contactPerson: { type: String, required: true },
   emailAddress: { type: String, required: true },
+  phone: { type: String, default: '' },
   bidIntent: { type: String, enum: ['yes', 'no'], required: true },
   declineReason: { type: String, default: '' },
   bidAmount: { type: Number, default: 0 },
