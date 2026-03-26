@@ -5,21 +5,31 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bid Projects | KJR Interior Designs Inc.</title>
-  <meta name="description" content="View active bid projects from KJR Interior Designs Inc. and submit your proposals for upcoming construction projects.">
+  <meta name="description" content="View active bid projects by location from KJR Interior Designs Inc. and submit your proposals.">
   <link rel="stylesheet" href="styles.css">
   <style>
     /* ── Hero ── */
     .bid-hero {
       background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-      padding: 7rem 2rem 6rem;
+      padding: 6rem 2rem 5.5rem;
       text-align: center;
       color: white;
+      position: relative;
+      overflow: hidden;
+    }
+    .bid-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
     }
     .bid-hero-badge {
-      display: inline-block;
-      background: rgba(204, 0, 0, 0.18);
-      color: #ff6666;
-      border: 1px solid rgba(204, 0, 0, 0.4);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(204,0,0,0.18);
+      color: #ff7777;
+      border: 1px solid rgba(204,0,0,0.4);
       padding: 0.5rem 1.6rem;
       border-radius: 50px;
       font-size: 0.77rem;
@@ -28,49 +38,83 @@
       text-transform: uppercase;
       margin-bottom: 1.5rem;
     }
+    .dot-live {
+      width: 8px; height: 8px;
+      background: #ff4444;
+      border-radius: 50%;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0%,100%{opacity:1;} 50%{opacity:0.3;}
+    }
     .bid-hero h1 {
       font-size: 3.5rem;
       font-weight: 800;
       color: white;
-      letter-spacing: -0.02em;
-      margin-bottom: 1rem;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.1rem;
     }
     .bid-hero p {
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       color: #94a3b8;
-      max-width: 650px;
+      max-width: 620px;
       margin: 0 auto;
       line-height: 1.7;
     }
+    .hero-stats {
+      display: flex;
+      gap: 3rem;
+      justify-content: center;
+      margin-top: 3rem;
+    }
+    .hstat { text-align: center; }
+    .hstat-num { font-size: 2rem; font-weight: 800; color: white; }
+    .hstat-lbl { font-size: 0.78rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.12em; margin-top: 0.2rem; }
 
-    /* ── Main Layout ── */
-    .bid-wrap {
-      max-width: 1360px;
-      margin: 4rem auto 6rem;
+    /* ── Notice ── */
+    .notice-band {
+      background: #fffbeb;
+      border-bottom: 1px solid #fde68a;
+      padding: 1rem 3rem;
+    }
+    .notice-band p {
+      max-width: 1200px;
+      margin: 0 auto;
+      font-size: 0.875rem;
+      color: #92400e;
+      line-height: 1.7;
+    }
+    .notice-band strong { color: #78350f; }
+    .notice-band a { color: #cc0000; font-weight: 700; }
+
+    /* ── Layout ── */
+    .bid-layout {
+      max-width: 1400px;
+      margin: 3rem auto 6rem;
       padding: 0 2.5rem;
       display: grid;
       grid-template-columns: 260px 1fr;
       gap: 3rem;
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      align-items: start;
     }
-    @media (max-width: 900px) {
-      .bid-wrap { grid-template-columns: 1fr; }
-      .sidebar { position: static !important; }
+    @media (max-width: 868px) {
+      .bid-layout { grid-template-columns: 1fr; }
+      .loc-sidebar { position: static !important; }
+      .bid-hero h1 { font-size: 2.2rem; }
     }
 
-    /* ── Sidebar ── */
-    .sidebar {
+    /* ── Location Sidebar ── */
+    .loc-sidebar {
+      position: sticky;
+      top: 90px;
       background: white;
       border-radius: 18px;
       border: 1px solid #e2e8f0;
       overflow: hidden;
-      height: fit-content;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-      position: sticky;
-      top: 100px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.05);
     }
-    .sb-head {
-      padding: 1.4rem 1.75rem;
+    .ls-head {
+      padding: 1.25rem 1.75rem;
       background: #f8fafc;
       border-bottom: 1px solid #e2e8f0;
       font-size: 0.72rem;
@@ -79,59 +123,63 @@
       text-transform: uppercase;
       color: #94a3b8;
     }
-    .state-btn {
+    .loc-item {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      width: 100%;
-      padding: 0.9rem 1.75rem;
-      font-size: 0.92rem;
-      font-weight: 600;
-      color: #475569;
-      background: transparent;
-      border: none;
-      border-left: 3px solid transparent;
+      padding: 1rem 1.75rem;
       cursor: pointer;
+      border-left: 3px solid transparent;
+      border-bottom: 1px solid #f8fafc;
       transition: all 0.2s;
-      text-align: left;
+      text-decoration: none;
     }
-    .state-btn:hover { background: #fef2f2; color: #cc0000; }
-    .state-btn.active {
-      background: #fff5f5;
-      color: #cc0000;
-      border-left-color: #cc0000;
-      font-weight: 700;
+    .loc-item:last-child { border-bottom: none; }
+    .loc-item:hover { background: #fef2f2; border-left-color: #fca5a5; }
+    .loc-item.active { background: #fff5f5; border-left-color: #cc0000; }
+    .loc-name {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #334155;
     }
-    .sc {
+    .loc-item.active .loc-name { color: #cc0000; font-weight: 700; }
+    .loc-item:hover .loc-name { color: #cc0000; }
+    .loc-badge {
       background: #e2e8f0;
       color: #64748b;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 700;
-      padding: 0.18rem 0.55rem;
+      padding: 0.2rem 0.6rem;
       border-radius: 20px;
-      min-width: 24px;
-      text-align: center;
     }
-    .state-btn.active .sc { background: #fecaca; color: #991b1b; }
-
-    /* ── Projects Area ── */
-    .projects-head {
-      margin-bottom: 2rem;
+    .loc-item.active .loc-badge { background: #fecaca; color: #991b1b; }
+    
+    /* ── Section Header (per state) ── */
+    .state-group { margin-bottom: 3.5rem; scroll-margin-top: 100px; }
+    .state-label {
       display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
+      align-items: center;
       gap: 1rem;
-      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
     }
-    .projects-head h2 {
-      font-size: 1.9rem;
+    .state-label-text {
+      font-size: 1.5rem;
       font-weight: 800;
       color: #0f172a;
     }
-    .projects-head p {
-      color: #64748b;
-      font-size: 0.92rem;
-      margin-top: 0.25rem;
+    .state-label-line {
+      flex: 1;
+      height: 2px;
+      background: linear-gradient(90deg, #e2e8f0, transparent);
+      border-radius: 2px;
+    }
+    .state-label-count {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #94a3b8;
+      background: #f1f5f9;
+      padding: 0.35rem 0.9rem;
+      border-radius: 20px;
     }
 
     /* ── Project Card ── */
@@ -139,176 +187,152 @@
       background: white;
       border-radius: 18px;
       border: 1px solid #e2e8f0;
-      padding: 2.5rem;
-      margin-bottom: 2rem;
-      box-shadow: 0 6px 24px rgba(0,0,0,0.05);
-      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s;
-      display: none;
-    }
-    .pc.vis {
-      display: block;
-      animation: fadeUp 0.35s ease;
-    }
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(12px); }
-      to { opacity: 1; transform: translateY(0); }
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+      transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
     }
     .pc:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 16px 40px rgba(0,0,0,0.1);
+      transform: translateY(-4px);
+      box-shadow: 0 14px 40px rgba(0,0,0,0.1);
       border-color: #cbd5e1;
     }
-
-    .pc-top {
+    .pc.highlighted {
+      border-color: #cc0000;
+      box-shadow: 0 0 0 3px rgba(204,0,0,0.12), 0 14px 40px rgba(0,0,0,0.1);
+    }
+    .pc-hdr {
+      background: #111827;
+      padding: 1.8rem 2.5rem;
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
       gap: 1.5rem;
-      margin-bottom: 1.5rem;
       flex-wrap: wrap;
+      position: relative;
     }
-    .itb-tag {
+    .pc-hdr::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #cc0000, #ff5555);
+    }
+    .itb-pill {
       display: inline-flex;
       align-items: center;
       gap: 0.4rem;
-      background: #fee2e2;
-      color: #cc0000;
-      font-size: 0.72rem;
+      background: rgba(204,0,0,0.2);
+      color: #ff7777;
+      font-size: 0.7rem;
       font-weight: 800;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       padding: 0.4rem 0.9rem;
       border-radius: 5px;
-      margin-bottom: 0.8rem;
+      margin-bottom: 0.6rem;
     }
-    .itb-tag::before {
-      content: '';
-      width: 7px;
-      height: 7px;
-      background: #cc0000;
-      border-radius: 50%;
-      animation: blink 1.5s infinite;
-    }
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
-    }
+    .itb-pill .dot { width:7px;height:7px; background:#ff4444; border-radius:50%; animation:pulse 1.5s infinite; }
     .pc-title {
-      font-size: 1.55rem;
+      font-size: 1.45rem;
       font-weight: 800;
-      color: #0f172a;
+      color: white;
+      margin-bottom: 0.45rem;
       letter-spacing: -0.01em;
-      margin-bottom: 0.5rem;
     }
     .pc-loc {
       display: flex;
       align-items: center;
-      gap: 0.45rem;
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: #64748b;
+      gap: 0.4rem;
+      color: rgba(255,255,255,0.65);
+      font-size: 0.9rem;
+      font-weight: 500;
     }
-
-    .due-pill {
-      background: #f1f5f9;
-      border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      padding: 1.1rem 1.6rem;
+    .due-box {
       text-align: center;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px;
+      padding: 1rem 1.5rem;
+      min-width: 170px;
       flex-shrink: 0;
     }
-    .due-label {
-      font-size: 0.7rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: #94a3b8;
-      margin-bottom: 0.4rem;
-    }
-    .due-val {
-      font-size: 1.05rem;
-      font-weight: 800;
-      color: #cc0000;
-    }
+    .due-lbl { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 0.4rem; }
+    .due-val { font-size: 0.95rem; font-weight: 800; color: #fca5a5; }
 
-    /* Scope divider */
-    .pc-scope {
-      background: #f8fafc;
-      border-left: 3px solid #e2e8f0;
-      border-radius: 0 8px 8px 0;
-      padding: 1.25rem 1.5rem;
-      margin-bottom: 1.8rem;
+    .pc-body { padding: 2rem 2.5rem; }
+    .pc-scope-lbl {
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: #94a3b8;
+      margin-bottom: 0.6rem;
+    }
+    .pc-scope-txt {
       font-size: 0.92rem;
       color: #334155;
-      line-height: 1.7;
-    }
-    .pc-scope strong { color: #0f172a; }
-
-    .pc-email {
-      font-size: 0.88rem;
-      color: #64748b;
+      line-height: 1.75;
       margin-bottom: 1.5rem;
+      padding: 1.25rem 1.5rem;
+      background: #f8fafc;
+      border-radius: 8px;
+      border-left: 3px solid #e2e8f0;
     }
-    .pc-email a { color: #cc0000; font-weight: 600; }
+    .pc-contact {
+      font-size: 0.85rem;
+      color: #64748b;
+      margin-bottom: 0;
+    }
+    .pc-contact a { color: #cc0000; font-weight: 600; }
 
-    /* Actions */
     .pc-actions {
       display: flex;
-      gap: 0.85rem;
       align-items: center;
+      gap: 1rem;
+      padding: 1.5rem 2.5rem;
       border-top: 1px solid #f1f5f9;
-      padding-top: 1.5rem;
+      background: #fafbfc;
       flex-wrap: wrap;
     }
     .btn-apply {
       background: #cc0000;
       color: white;
-      padding: 0.78rem 2rem;
+      padding: 0.8rem 2rem;
       border-radius: 8px;
       font-size: 0.92rem;
       font-weight: 700;
       border: none;
       cursor: pointer;
       transition: all 0.25s;
+      font-family: inherit;
     }
     .btn-apply:hover {
       background: #990000;
       transform: translateY(-2px);
       box-shadow: 0 6px 18px rgba(204,0,0,0.3);
     }
-    .btn-outline {
+    .btn-doc {
       background: white;
       color: #334155;
-      padding: 0.78rem 1.5rem;
+      padding: 0.8rem 1.5rem;
       border-radius: 8px;
-      font-size: 0.92rem;
+      font-size: 0.88rem;
       font-weight: 700;
       border: 1.5px solid #cbd5e1;
       cursor: pointer;
       transition: all 0.2s;
+      font-family: inherit;
     }
-    .btn-outline:hover { border-color: #0f172a; color: #0f172a; }
-    .btn-outline:disabled { opacity: 0.45; cursor: not-allowed; }
+    .btn-doc:hover { border-color: #475569; color: #0f172a; }
+    .btn-doc:disabled { opacity: 0.45; cursor: not-allowed; }
 
-    /* No Results */
-    .no-res {
-      text-align: center;
-      padding: 4rem 2rem;
-      background: white;
-      border-radius: 18px;
-      border: 1.5px dashed #cbd5e1;
-      color: #64748b;
-      display: none;
-    }
-    .no-res.vis { display: block; }
-    .no-res h3 { font-size: 1.25rem; color: #0f172a; margin-bottom: 0.5rem; }
-
-    /* ── Apply Modal ── */
-    .modal-overlay {
+    /* ── Modal ── */
+    .m-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(15,23,42,0.7);
-      backdrop-filter: blur(5px);
+      background: rgba(15,23,42,0.75);
+      backdrop-filter: blur(6px);
       z-index: 9999;
       display: none;
       align-items: flex-start;
@@ -316,66 +340,42 @@
       padding: 3rem 1rem;
       overflow-y: auto;
     }
-    .modal-overlay.active { display: flex; }
-    .modal-box {
+    .m-overlay.open { display: flex; }
+    .m-box {
       background: white;
       width: 100%;
       max-width: 580px;
       border-radius: 20px;
       overflow: hidden;
       box-shadow: 0 30px 70px rgba(0,0,0,0.25);
-      animation: mslide 0.3s ease;
+      animation: mup 0.3s ease;
       margin: auto;
     }
-    @keyframes mslide {
-      from { transform: translateY(-18px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-    .mhdr {
+    @keyframes mup { from{transform:translateY(-20px);opacity:0;} to{transform:translateY(0);opacity:1;} }
+    .m-hdr {
       background: linear-gradient(135deg, #cc0000, #8b0000);
-      padding: 2rem 2.5rem;
+      padding: 2rem 2.5rem 1.75rem;
       position: relative;
     }
-    .mhdr h3 {
-      color: white;
-      font-size: 1.4rem;
-      font-weight: 800;
-      margin-bottom: 0.2rem;
-    }
-    .mhdr p {
-      color: rgba(255,255,255,0.75);
-      font-size: 0.88rem;
-    }
+    .m-hdr h3 { color: white; font-size: 1.35rem; font-weight: 800; margin-bottom: 0.3rem; }
+    .m-hdr p { color: rgba(255,255,255,0.7); font-size: 0.88rem; line-height: 1.5; }
     .m-close {
-      position: absolute;
-      top: 1.25rem;
-      right: 1.5rem;
-      background: rgba(255,255,255,0.18);
-      border: none;
-      color: white;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      font-size: 1.2rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      position: absolute; top: 1.2rem; right: 1.6rem;
+      background: rgba(255,255,255,0.2);
+      border: none; color: white;
+      width: 32px; height: 32px;
+      border-radius: 50%; font-size: 1.1rem;
+      cursor: pointer; display: flex;
+      align-items: center; justify-content: center;
     }
-    .m-close:hover { background: rgba(255,255,255,0.32); }
-    .mbody { padding: 2rem 2.5rem; }
+    .m-close:hover { background: rgba(255,255,255,0.35); }
+    .m-body { padding: 2rem 2.5rem; }
     .fgrp { margin-bottom: 1.2rem; }
-    .fgrp label {
-      display: block;
-      font-size: 0.82rem;
-      font-weight: 700;
-      color: #334155;
-      margin-bottom: 0.45rem;
-    }
-    .fgrp label .req { color: #cc0000; }
+    .fgrp label { display:block; font-size:0.82rem; font-weight:700; color:#374151; margin-bottom:0.45rem; }
+    .fgrp label .req { color:#cc0000; }
     .fgrp input, .fgrp select, .fgrp textarea {
       width: 100%;
-      padding: 0.78rem 1rem;
+      padding: 0.8rem 1rem;
       border: 1.5px solid #dde5ee;
       border-radius: 8px;
       font-size: 0.92rem;
@@ -387,65 +387,27 @@
     .fgrp input:focus, .fgrp select:focus, .fgrp textarea:focus {
       outline: none;
       border-color: #cc0000;
-      background: white;
+      background: #fff;
       box-shadow: 0 0 0 3px rgba(204,0,0,0.09);
     }
     .frow { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    .mftr {
+    .m-ftr {
       background: #f8fafc;
       border-top: 1px solid #e2e8f0;
       padding: 1.4rem 2.5rem;
       display: flex;
       justify-content: flex-end;
-      align-items: center;
       gap: 0.85rem;
     }
-    .mftr-note { font-size: 0.78rem; color: #94a3b8; flex: 1; }
-    .btn-cancel {
-      background: white;
-      color: #64748b;
-      border: 1.5px solid #cbd5e1;
-      padding: 0.7rem 1.4rem;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
+    .btn-cancel { background: white; color: #64748b; border: 1.5px solid #cbd5e1; padding: 0.72rem 1.5rem; border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer; font-family: inherit; }
     .btn-cancel:hover { border-color: #94a3b8; }
-    .btn-submit {
-      background: #cc0000;
-      color: white;
-      border: none;
-      padding: 0.7rem 1.8rem;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      font-weight: 700;
-      cursor: pointer;
-    }
+    .btn-submit { background: #cc0000; color: white; border: none; padding: 0.72rem 2rem; border-radius: 8px; font-size: 0.9rem; font-weight: 700; cursor: pointer; font-family: inherit; }
     .btn-submit:hover { background: #990000; }
-
-    /* Success state */
-    .success-view {
-      display: none;
-      text-align: center;
-      padding: 3.5rem 2.5rem;
-    }
-    .success-view.vis { display: block; }
-    .suc-icon {
-      width: 64px;
-      height: 64px;
-      background: #dcfce7;
-      border: 2px solid #16a34a;
-      color: #16a34a;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.6rem;
-      margin: 0 auto 1.5rem;
-    }
-    .success-view h2 { font-size: 1.6rem; font-weight: 800; color: #0f172a; margin-bottom: 0.6rem; }
-    .success-view p { color: #64748b; font-size: 0.95rem; line-height: 1.7; max-width: 400px; margin: 0 auto 1.5rem; }
+    /* Success */
+    #success-view { display:none; text-align:center; padding:3.5rem 2.5rem; }
+    .suc-icon { width:64px; height:64px; background:#dcfce7; border:2px solid #16a34a; color:#16a34a; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.6rem; margin:0 auto 1.5rem; }
+    #success-view h2 { font-size:1.5rem; font-weight:800; color:#0f172a; margin-bottom:0.6rem; }
+    #success-view p { color:#64748b; font-size:0.92rem; line-height:1.7; max-width:380px; margin:0 auto 1.8rem; }
   </style>
 </head>
 
@@ -463,7 +425,7 @@
     </div>
   </div>
 
-  <!-- Main Navigation Header -->
+  <!-- Navigation -->
   <header class="main-header">
     <div class="header-container">
       <div class="logo">
@@ -495,221 +457,258 @@
   </header>
 
   <!-- Hero -->
-  <div class="bid-hero">
-    <div class="bid-hero-badge">Now Accepting Bids</div>
+  <section class="bid-hero">
+    <div class="bid-hero-badge"><span class="dot-live"></span> Now Accepting Bids</div>
     <h1>Active Bid Opportunities</h1>
-    <p>Browse open commercial construction projects by location. Click any project to see full scope details and submit your application to the KJRID estimating team.</p>
+    <p>All active projects are listed below, organized by location. Click any state in the sidebar to jump directly to those projects, then apply with one click.</p>
+    <div class="hero-stats">
+      <div class="hstat"><div class="hstat-num">5</div><div class="hstat-lbl">Open Projects</div></div>
+      <div class="hstat"><div class="hstat-num">4</div><div class="hstat-lbl">States</div></div>
+      <div class="hstat"><div class="hstat-num">24/7</div><div class="hstat-lbl">Estimator Access</div></div>
+    </div>
+  </section>
+
+  <!-- Notice -->
+  <div class="notice-band">
+    <p><strong>Contractor Notice:</strong> All items on plans are the responsibility of subcontractors — cross-reference all plans to your scope. Bids excluding applicable items will be disqualified. Submit all bids to <a href="mailto:estimating@kjrid.com">estimating@kjrid.com</a> &nbsp;|&nbsp; Questions: <a href="mailto:mtusa.king@kjrid.com">mtusa.king@kjrid.com</a></p>
   </div>
 
-  <!-- Notice strip -->
-  <div style="background: #fffbeb; border-bottom: 1px solid #fde68a; padding: 1rem 2.5rem;">
-    <p style="max-width: 1100px; margin: 0 auto; font-size: 0.875rem; color: #92400e; line-height: 1.7;">
-      <strong>Important:</strong> This invitation is being sent to a pre-set list of contractors. All items on plans are the responsibility of subcontractors — please cross-reference all plans to your scope. Bids excluding applicable items will be disqualified. Submit bids to <a href="mailto:estimating@kjrid.com" style="color: #cc0000; font-weight: 700;">estimating@kjrid.com</a>
-    </p>
-  </div>
+  <!-- Main Layout -->
+  <div class="bid-layout">
 
-  <!-- Main Body -->
-  <div class="bid-wrap">
-
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <div class="sb-head">Filter by State</div>
-      <button class="state-btn active" data-state="All" onclick="filterState(this)">All Projects <span class="sc" id="c-all">5</span></button>
-      <button class="state-btn" data-state="Georgia" onclick="filterState(this)">Georgia <span class="sc" id="c-ga">2</span></button>
-      <button class="state-btn" data-state="Florida" onclick="filterState(this)">Florida <span class="sc" id="c-fl">1</span></button>
-      <button class="state-btn" data-state="Texas" onclick="filterState(this)">Texas <span class="sc" id="c-tx">1</span></button>
-      <button class="state-btn" data-state="North Carolina" onclick="filterState(this)">North Carolina <span class="sc" id="c-nc">1</span></button>
+    <!-- Sidebar: Location Quick Nav -->
+    <aside class="loc-sidebar">
+      <div class="ls-head">All Locations</div>
+      <a class="loc-item active" href="#state-ga" onclick="setActive(this)">
+        <span class="loc-name">📍 Georgia</span>
+        <span class="loc-badge">2</span>
+      </a>
+      <a class="loc-item" href="#state-fl" onclick="setActive(this)">
+        <span class="loc-name">📍 Florida</span>
+        <span class="loc-badge">1</span>
+      </a>
+      <a class="loc-item" href="#state-tx" onclick="setActive(this)">
+        <span class="loc-name">📍 Texas</span>
+        <span class="loc-badge">1</span>
+      </a>
+      <a class="loc-item" href="#state-nc" onclick="setActive(this)">
+        <span class="loc-name">📍 North Carolina</span>
+        <span class="loc-badge">1</span>
+      </a>
     </aside>
 
-    <!-- Projects -->
+    <!-- All Projects -->
     <div>
-      <div class="projects-head">
-        <div>
-          <h2 id="loc-title">All Active Projects</h2>
-          <p id="loc-sub">Showing all open bid opportunities across all locations</p>
+
+      <!-- ════ GEORGIA ════ -->
+      <div class="state-group" id="state-ga">
+        <div class="state-label">
+          <span class="state-label-text">Georgia</span>
+          <span class="state-label-count">2 Projects</span>
+          <div class="state-label-line"></div>
         </div>
-      </div>
 
-      <div id="no-res" class="no-res">
-        <h3>No open projects for this region.</h3>
-        <p style="margin-top: 0.4rem;">Check back soon — new bids are added regularly. You can also submit a general profile below.</p>
-        <button class="btn-apply" style="margin-top: 1.2rem;" onclick="openModal('General Profile', 'Nationwide', 'Ongoing')">Submit General Profile</button>
-      </div>
-
-      <!-- ─────────── PROJECT 1: Dollar Tree ─────────── -->
-      <div class="pc vis" data-state="Georgia">
-        <div class="pc-top">
-          <div>
-            <div class="itb-tag">Active ITB</div>
-            <div class="pc-title">Dollar Tree — Retail Retrofit</div>
-            <div class="pc-loc">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
-              Marietta, GA
+        <!-- Dollar Tree -->
+        <div class="pc">
+          <div class="pc-hdr">
+            <div>
+              <div class="itb-pill"><span class="dot"></span>Active ITB</div>
+              <div class="pc-title">Dollar Tree — Full Retail Retrofit</div>
+              <div class="pc-loc">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+                Marietta, GA
+              </div>
+            </div>
+            <div class="due-box">
+              <div class="due-lbl">Bids Due</div>
+              <div class="due-val">Jan 25, 2026 @ 2PM EST</div>
             </div>
           </div>
-          <div class="due-pill">
-            <div class="due-label">Bids Due</div>
-            <div class="due-val">Jan 25, 2026 @ 2PM EST</div>
-          </div>
-        </div>
-
-        <div class="pc-scope">
-          <strong>Scope:</strong> Full interior retrofit of existing retail space including demolition, concrete repairs, drywall & framing, acoustical ceilings, VCT flooring, painting, storefront modifications, and complete MEP trades. All subcontractors must cross-reference plans to their specific scope.
-        </div>
-
-        <div class="pc-email">
-          Submit bids to: <a href="mailto:estimating@kjrid.com">estimating@kjrid.com</a> &nbsp;&nbsp;|&nbsp;&nbsp; Questions: <a href="mailto:mtusa.king@kjrid.com">mtusa.king@kjrid.com</a> &nbsp;&nbsp;|&nbsp;&nbsp; Estimator: King Mtusa · 803-638-0569
-        </div>
-
-        <div class="pc-actions">
-          <button class="btn-apply" onclick="openModal('Dollar Tree – Marietta GA', 'Marietta, GA', 'Jan 25, 2026 @ 2PM EST')">&#10003; Apply to Bid</button>
-          <button class="btn-outline">&#128196; View Drawings &amp; Plans</button>
-          <button class="btn-outline">&#128196; View Specifications</button>
-        </div>
-      </div>
-
-      <!-- ─────────── PROJECT 2: AutoZone ─────────── -->
-      <div class="pc vis" data-state="Georgia">
-        <div class="pc-top">
-          <div>
-            <div class="itb-tag">Active ITB</div>
-            <div class="pc-title">AutoZone GA 10597</div>
-            <div class="pc-loc">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
-              Richmond Hill, GA 31324
+          <div class="pc-body">
+            <div class="pc-scope-lbl">Scope of Work</div>
+            <div class="pc-scope-txt">
+              Full interior retrofit of existing retail space. Trades requested include: demolition, concrete repairs, structural steel, carpentry &amp; framing, drywall, acoustical ceilings, VCT flooring, interior &amp; exterior painting, aluminum storefront, doors &amp; hardware, plumbing, HVAC, fire sprinkler, fire alarm, and electrical. All items on plans are the responsibility of the subcontractor.
+            </div>
+            <div class="pc-contact">
+              Submit bids to <a href="mailto:estimating@kjrid.com">estimating@kjrid.com</a> &nbsp;&bull;&nbsp; Questions: <a href="mailto:mtusa.king@kjrid.com">mtusa.king@kjrid.com</a> &nbsp;&bull;&nbsp; Estimator: King Mtusa · 803-638-0569
             </div>
           </div>
-          <div class="due-pill">
-            <div class="due-label">Bids Due</div>
-            <div class="due-val">Jan 11, 2026 @ 2PM EST</div>
+          <div class="pc-actions">
+            <button class="btn-apply" onclick="openModal('Dollar Tree – Marietta, GA', 'Marietta, GA', 'Jan 25, 2026 @ 2PM EST')">&#10003; Apply to Bid</button>
+            <button class="btn-doc">&#128196; View Drawings &amp; Plans</button>
+            <button class="btn-doc">&#128196; View Specifications</button>
           </div>
         </div>
 
-        <div class="pc-scope">
-          <strong>Scope:</strong> Small slab pour &amp; ramp, masonry fixes, pipe guards, aluminum platform, structural steel, carpentry &amp; drywall, roofing (flash 3 curbs), storefront, doors &amp; hardware, flooring, painting, restroom accessories, platform lift, plumbing, HVAC, fire sprinkler, electrical, and fire alarm.
-        </div>
-
-        <div class="pc-email">
-          Submit bids to: <a href="mailto:estimating@kjrid.com">estimating@kjrid.com</a> &nbsp;&nbsp;|&nbsp;&nbsp; Estimator: King Mtusa · 803-638-0569
-        </div>
-
-        <div class="pc-actions">
-          <button class="btn-apply" onclick="openModal('AutoZone GA 10597', 'Richmond Hill, GA', 'Jan 11, 2026 @ 2PM EST')">&#10003; Apply to Bid</button>
-          <button class="btn-outline">&#128196; View Drawings &amp; Plans</button>
-          <button class="btn-outline">&#128196; View Specifications</button>
-        </div>
-      </div>
-
-      <!-- ─────────── PROJECT 3: Walmart ─────────── -->
-      <div class="pc" data-state="Florida">
-        <div class="pc-top">
-          <div>
-            <div class="itb-tag">Active ITB</div>
-            <div class="pc-title">Walmart Supercenter — Resurfacing</div>
-            <div class="pc-loc">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
-              Orlando, FL
+        <!-- AutoZone -->
+        <div class="pc">
+          <div class="pc-hdr">
+            <div>
+              <div class="itb-pill"><span class="dot"></span>Active ITB</div>
+              <div class="pc-title">AutoZone GA 10597</div>
+              <div class="pc-loc">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+                Richmond Hill, GA 31324 (SW of 12100 GA 144)
+              </div>
+            </div>
+            <div class="due-box">
+              <div class="due-lbl">Bids Due</div>
+              <div class="due-val">Jan 11, 2026 @ 2PM EST</div>
             </div>
           </div>
-          <div class="due-pill">
-            <div class="due-label">Bids Due</div>
-            <div class="due-val">Feb 10, 2026</div>
-          </div>
-        </div>
-
-        <div class="pc-scope">
-          <strong>Scope:</strong> Specialized concrete resurfacing and exterior masonry work for main entrance and garden center area. Includes prep, crack repair, coatings application, and final sealing. Night work may be required.
-        </div>
-
-        <div class="pc-email">
-          Submit bids to: <a href="mailto:estimating@kjrid.com">estimating@kjrid.com</a> &nbsp;&nbsp;|&nbsp;&nbsp; Estimator: King Mtusa · 803-638-0569
-        </div>
-
-        <div class="pc-actions">
-          <button class="btn-apply" onclick="openModal('Walmart Supercenter – Orlando FL', 'Orlando, FL', 'Feb 10, 2026')">&#10003; Apply to Bid</button>
-          <button class="btn-outline" disabled>&#128196; Plans Pending Upload</button>
-        </div>
-      </div>
-
-      <!-- ─────────── PROJECT 4: Target ─────────── -->
-      <div class="pc" data-state="Texas">
-        <div class="pc-top">
-          <div>
-            <div class="itb-tag">Active ITB</div>
-            <div class="pc-title">Target Store Retrofit — Phase 2</div>
-            <div class="pc-loc">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
-              Austin, TX
+          <div class="pc-body">
+            <div class="pc-scope-lbl">Scope of Work</div>
+            <div class="pc-scope-txt">
+              Small slab pour &amp; ramp, masonry fixes, pipe guards, aluminum platform, structural steel, rough carpentry &amp; framing, drywall, roofing (flash 3 HVAC curbs), storefront, doors &amp; hardware, flooring, painting, restroom accessories, platform lift, plumbing, HVAC, fire sprinkler, electrical, and fire alarm. KJR provides primary millwork.
+            </div>
+            <div class="pc-contact">
+              Submit bids to <a href="mailto:estimating@kjrid.com">estimating@kjrid.com</a> &nbsp;&bull;&nbsp; Estimator: King Mtusa · 803-638-0569
             </div>
           </div>
-          <div class="due-pill">
-            <div class="due-label">Bids Due</div>
-            <div class="due-val">Mar 05, 2026</div>
+          <div class="pc-actions">
+            <button class="btn-apply" onclick="openModal('AutoZone GA 10597', 'Richmond Hill, GA', 'Jan 11, 2026 @ 2PM EST')">&#10003; Apply to Bid</button>
+            <button class="btn-doc">&#128196; View Drawings &amp; Plans</button>
+            <button class="btn-doc">&#128196; View Specifications</button>
           </div>
-        </div>
-
-        <div class="pc-scope">
-          <strong>Scope:</strong> Phase 2 interior remodel — finish carpentry, VCT &amp; LVT flooring, interior painting, fixture backing &amp; blocking, ceiling tile replacements, and minor MEP modifications. Work to proceed after store hours.
-        </div>
-
-        <div class="pc-email">
-          Submit bids to: <a href="mailto:estimating@kjrid.com">estimating@kjrid.com</a> &nbsp;&nbsp;|&nbsp;&nbsp; Estimator: King Mtusa · 803-638-0569
-        </div>
-
-        <div class="pc-actions">
-          <button class="btn-apply" onclick="openModal('Target Store Retrofit – Phase 2', 'Austin, TX', 'Mar 05, 2026')">&#10003; Apply to Bid</button>
-          <button class="btn-outline">&#128196; View Drawings &amp; Plans</button>
-          <button class="btn-outline">&#128196; View Specifications</button>
         </div>
       </div>
 
-      <!-- ─────────── PROJECT 5: CVS ─────────── -->
-      <div class="pc" data-state="North Carolina">
-        <div class="pc-top">
-          <div>
-            <div class="itb-tag">Active ITB</div>
-            <div class="pc-title">CVS Pharmacy — Interior Remodel</div>
-            <div class="pc-loc">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
-              Charlotte, NC
+      <!-- ════ FLORIDA ════ -->
+      <div class="state-group" id="state-fl">
+        <div class="state-label">
+          <span class="state-label-text">Florida</span>
+          <span class="state-label-count">1 Project</span>
+          <div class="state-label-line"></div>
+        </div>
+
+        <!-- Walmart -->
+        <div class="pc">
+          <div class="pc-hdr">
+            <div>
+              <div class="itb-pill"><span class="dot"></span>Active ITB</div>
+              <div class="pc-title">Walmart Supercenter — Concrete Resurfacing</div>
+              <div class="pc-loc">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+                Orlando, FL
+              </div>
+            </div>
+            <div class="due-box">
+              <div class="due-lbl">Bids Due</div>
+              <div class="due-val">Feb 10, 2026</div>
             </div>
           </div>
-          <div class="due-pill">
-            <div class="due-label">Bids Due</div>
-            <div class="due-val">Feb 22, 2026</div>
+          <div class="pc-body">
+            <div class="pc-scope-lbl">Scope of Work</div>
+            <div class="pc-scope-txt">
+              Specialized concrete resurfacing and exterior masonry work for the main entrance and garden center area. Includes full surface prep, crack repair, polymer coating application, and final sealing. Night shift work may be required to avoid store disruption.
+            </div>
+            <div class="pc-contact">
+              Submit bids to <a href="mailto:estimating@kjrid.com">estimating@kjrid.com</a> &nbsp;&bull;&nbsp; Estimator: King Mtusa · 803-638-0569
+            </div>
           </div>
-        </div>
-
-        <div class="pc-scope">
-          <strong>Scope:</strong> Complete pharmacy area retrofit, secure glass partition installation, new lighting fixture upgrades, flooring, painting, and pharmacy counter millwork. All bidders must hold appropriate state license.
-        </div>
-
-        <div class="pc-email">
-          Submit bids to: <a href="mailto:estimating@kjrid.com">estimating@kjrid.com</a> &nbsp;&nbsp;|&nbsp;&nbsp; Estimator: King Mtusa · 803-638-0569
-        </div>
-
-        <div class="pc-actions">
-          <button class="btn-apply" onclick="openModal('CVS Pharmacy – Charlotte NC', 'Charlotte, NC', 'Feb 22, 2026')">&#10003; Apply to Bid</button>
-          <button class="btn-outline">&#128196; View Drawings &amp; Plans</button>
-          <button class="btn-outline">&#128196; View Specifications</button>
+          <div class="pc-actions">
+            <button class="btn-apply" onclick="openModal('Walmart Supercenter – Orlando, FL', 'Orlando, FL', 'Feb 10, 2026')">&#10003; Apply to Bid</button>
+            <button class="btn-doc" disabled>&#128196; Plans Pending Upload</button>
+          </div>
         </div>
       </div>
 
-    </div><!-- end projects -->
-  </div><!-- end bid-wrap -->
+      <!-- ════ TEXAS ════ -->
+      <div class="state-group" id="state-tx">
+        <div class="state-label">
+          <span class="state-label-text">Texas</span>
+          <span class="state-label-count">1 Project</span>
+          <div class="state-label-line"></div>
+        </div>
 
-  <!-- ─────────── Apply Modal ─────────── -->
-  <div class="modal-overlay" id="applyModal" onclick="closeBg(event)">
-    <div class="modal-box">
+        <!-- Target -->
+        <div class="pc">
+          <div class="pc-hdr">
+            <div>
+              <div class="itb-pill"><span class="dot"></span>Active ITB</div>
+              <div class="pc-title">Target Store Retrofit — Phase 2</div>
+              <div class="pc-loc">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+                Austin, TX
+              </div>
+            </div>
+            <div class="due-box">
+              <div class="due-lbl">Bids Due</div>
+              <div class="due-val">Mar 05, 2026</div>
+            </div>
+          </div>
+          <div class="pc-body">
+            <div class="pc-scope-lbl">Scope of Work</div>
+            <div class="pc-scope-txt">
+              Phase 2 interior remodel including finish carpentry, VCT &amp; LVT flooring installation, interior painting, fixture blocking, ceiling tile replacements, and minor MEP modifications. All work to proceed after store hours. Bidders must include all applicable items per plans.
+            </div>
+            <div class="pc-contact">
+              Submit bids to <a href="mailto:estimating@kjrid.com">estimating@kjrid.com</a> &nbsp;&bull;&nbsp; Estimator: King Mtusa · 803-638-0569
+            </div>
+          </div>
+          <div class="pc-actions">
+            <button class="btn-apply" onclick="openModal('Target Store Retrofit – Phase 2', 'Austin, TX', 'Mar 05, 2026')">&#10003; Apply to Bid</button>
+            <button class="btn-doc">&#128196; View Drawings &amp; Plans</button>
+            <button class="btn-doc">&#128196; View Specifications</button>
+          </div>
+        </div>
+      </div>
 
-      <!-- Form View -->
+      <!-- ════ NORTH CAROLINA ════ -->
+      <div class="state-group" id="state-nc">
+        <div class="state-label">
+          <span class="state-label-text">North Carolina</span>
+          <span class="state-label-count">1 Project</span>
+          <div class="state-label-line"></div>
+        </div>
+
+        <!-- CVS -->
+        <div class="pc">
+          <div class="pc-hdr">
+            <div>
+              <div class="itb-pill"><span class="dot"></span>Active ITB</div>
+              <div class="pc-title">CVS Pharmacy — Interior Remodel</div>
+              <div class="pc-loc">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+                Charlotte, NC
+              </div>
+            </div>
+            <div class="due-box">
+              <div class="due-lbl">Bids Due</div>
+              <div class="due-val">Feb 22, 2026</div>
+            </div>
+          </div>
+          <div class="pc-body">
+            <div class="pc-scope-lbl">Scope of Work</div>
+            <div class="pc-scope-txt">
+              Complete pharmacy area retrofit — secure glass partition installation, new LED lighting fixtures, LVT flooring, interior painting, pharmacy counter millwork, and restroom upgrades. All bidders must maintain appropriate state contractor license for NC.
+            </div>
+            <div class="pc-contact">
+              Submit bids to <a href="mailto:estimating@kjrid.com">estimating@kjrid.com</a> &nbsp;&bull;&nbsp; Estimator: King Mtusa · 803-638-0569
+            </div>
+          </div>
+          <div class="pc-actions">
+            <button class="btn-apply" onclick="openModal('CVS Pharmacy – Charlotte, NC', 'Charlotte, NC', 'Feb 22, 2026')">&#10003; Apply to Bid</button>
+            <button class="btn-doc">&#128196; View Drawings &amp; Plans</button>
+            <button class="btn-doc">&#128196; View Specifications</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /projects -->
+  </div><!-- /bid-layout -->
+
+  <!-- ══ Apply Modal ══ -->
+  <div class="m-overlay" id="applyModal" onclick="closeBg(event)">
+    <div class="m-box">
+
       <div id="form-view">
-        <div class="mhdr">
+        <div class="m-hdr">
           <h3>Apply to Bid</h3>
-          <p id="m-proj-sub">Project &bull; Location &bull; Due Date</p>
+          <p id="m-sub">Submitting for: Project · Location · Due Date</p>
           <button class="m-close" onclick="closeModal()">&times;</button>
         </div>
-        <div class="mbody">
+        <div class="m-body">
           <div class="frow">
             <div class="fgrp">
               <label>First Name <span class="req">*</span></label>
@@ -742,12 +741,12 @@
               <option>Concrete / Masonry</option>
               <option>Structural Steel</option>
               <option>Misc Metals</option>
-              <option>Rough Carpentry</option>
+              <option>Rough Carpentry / Framing</option>
               <option>Finish Carpentry / Millwork</option>
               <option>Roofing</option>
               <option>Aluminum Storefront</option>
               <option>Doors &amp; Hardware</option>
-              <option>Drywall / Framing</option>
+              <option>Drywall</option>
               <option>Flooring (VCT / LVT / Tile)</option>
               <option>Painting (Interior &amp; Exterior)</option>
               <option>Acoustical Ceilings</option>
@@ -761,27 +760,26 @@
             </select>
           </div>
           <div class="fgrp">
-            <label>Contractor License #</label>
-            <input type="text" id="f-lic" placeholder="State license number (if applicable)">
+            <label>Contractor License # (if applicable)</label>
+            <input type="text" id="f-lic" placeholder="State license number">
           </div>
           <div class="fgrp">
             <label>Notes / Questions for Estimator</label>
-            <textarea id="f-notes" rows="3" placeholder="Any additional details or questions for the estimating team..."></textarea>
+            <textarea id="f-notes" rows="3" placeholder="Any questions or additional scope notes..."></textarea>
           </div>
         </div>
-        <div class="mftr">
-          <span class="mftr-note">* Required. Submission sent to estimating@kjrid.com</span>
+        <div class="m-ftr">
           <button class="btn-cancel" onclick="closeModal()">Cancel</button>
           <button class="btn-submit" onclick="submitForm()">Submit Application &rarr;</button>
         </div>
       </div>
 
-      <!-- Success View -->
-      <div class="success-view" id="success-view">
+      <!-- Success -->
+      <div id="success-view">
         <div class="suc-icon">&#10003;</div>
-        <h2>Application Submitted!</h2>
-        <p>The KJRID estimating team will review your application for <strong id="suc-proj"></strong> and follow up at your email address within 1–2 business days.</p>
-        <button class="btn-cancel" onclick="closeModal()">Done</button>
+        <h2>Application Received!</h2>
+        <p>Your bid application for <strong id="suc-proj"></strong> has been sent to the KJRID estimating team. You will be contacted at your email within 1–2 business days with plan access if approved.</p>
+        <button class="btn-cancel" onclick="closeModal()">Close</button>
       </div>
 
     </div>
@@ -794,7 +792,6 @@
         <img src="logo-new.jpeg" alt="KJR Interior Designs Inc." style="height: 70px; margin-bottom: 1.5rem;">
         <p>KJR Interior Designs Inc. &mdash; Professional interior construction services. BBB Accredited since 2014.</p>
       </div>
-
       <div class="footer-col">
         <h4>INSURANCE REQUIREMENTS</h4>
         <ul class="footer-links">
@@ -804,7 +801,6 @@
           <li><a href="#">Vendor Profile</a></li>
         </ul>
       </div>
-
       <div class="footer-col">
         <h4>QUICK LINKS</h4>
         <ul class="footer-links">
@@ -814,7 +810,6 @@
           <li><a href="contact-us.html">Contact Support</a></li>
         </ul>
       </div>
-
       <div class="footer-col">
         <h4>ESTIMATING</h4>
         <p>888-944-6313<br>Open 24/7</p>
@@ -822,7 +817,6 @@
         <p style="margin-top: 0.5rem;"><a href="mailto:mtusa.king@kjrid.com" style="color: var(--primary);">mtusa.king@kjrid.com</a></p>
       </div>
     </div>
-
     <div class="footer-bottom">
       <div>&copy; 2024 KJR Interior Designs Inc. All rights reserved.</div>
       <div><a href="#">Privacy Policy</a> &nbsp;|&nbsp; <a href="#">Terms of Service</a></div>
@@ -830,53 +824,64 @@
   </footer>
 
   <script>
-    // ── Filter ──
-    function filterState(btn) {
-      document.querySelectorAll('.state-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const state = btn.dataset.state;
-
-      const cards = document.querySelectorAll('.pc');
-      let visible = 0;
-      cards.forEach(c => {
-        const show = state === 'All' || c.dataset.state === state;
-        c.classList.toggle('vis', show);
-        if (show) visible++;
-      });
-
-      document.getElementById('no-res').classList.toggle('vis', visible === 0);
-      document.getElementById('loc-title').textContent = state === 'All' ? 'All Active Projects' : state + ' Projects';
-      document.getElementById('loc-sub').textContent = visible + (visible === 1 ? ' project' : ' projects') + ' currently open for bidding' + (state !== 'All' ? ' in ' + state : '');
+    // Sidebar active state on click
+    function setActive(el) {
+      document.querySelectorAll('.loc-item').forEach(i => i.classList.remove('active'));
+      el.classList.add('active');
     }
 
-    // ── Modal ──
+    // Highlight group on sidebar click
+    document.querySelectorAll('.loc-item').forEach(item => {
+      item.addEventListener('click', function(e) {
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          // flash highlight
+          document.querySelectorAll('.pc').forEach(c => c.classList.remove('highlighted'));
+          target.querySelectorAll('.pc').forEach(c => {
+            c.classList.add('highlighted');
+            setTimeout(() => c.classList.remove('highlighted'), 2000);
+          });
+        }
+      });
+    });
+
+    // Auto-set active sidebar based on scroll
+    const groups = document.querySelectorAll('.state-group');
+    const locItems = document.querySelectorAll('.loc-item');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      groups.forEach(g => {
+        if (window.scrollY >= g.offsetTop - 150) current = '#' + g.id;
+      });
+      locItems.forEach(i => {
+        i.classList.toggle('active', i.getAttribute('href') === current);
+      });
+    });
+
+    // Modal
     function openModal(proj, loc, due) {
-      document.getElementById('m-proj-sub').textContent = proj + '  ·  ' + loc + '  ·  Due ' + due;
+      document.getElementById('m-sub').textContent = proj + '  ·  ' + loc + '  ·  Due ' + due;
       document.getElementById('suc-proj').textContent = proj;
       document.getElementById('form-view').style.display = '';
-      document.getElementById('success-view').classList.remove('vis');
-      document.getElementById('applyModal').classList.add('active');
+      document.getElementById('success-view').style.display = 'none';
+      document.getElementById('applyModal').classList.add('open');
     }
-
     function closeModal() {
-      document.getElementById('applyModal').classList.remove('active');
+      document.getElementById('applyModal').classList.remove('open');
     }
-
     function closeBg(e) {
       if (e.target === document.getElementById('applyModal')) closeModal();
     }
-
     function submitForm() {
-      const first = document.getElementById('f-first').value.trim();
-      const company = document.getElementById('f-company').value.trim();
-      const email = document.getElementById('f-email').value.trim();
-      const trade = document.getElementById('f-trade').value;
-      if (!first || !company || !email || !trade) {
-        alert('Please fill in all required fields before submitting.');
+      if (!document.getElementById('f-first').value.trim() ||
+          !document.getElementById('f-company').value.trim() ||
+          !document.getElementById('f-email').value.trim() ||
+          !document.getElementById('f-trade').value) {
+        alert('Please fill in all required fields.');
         return;
       }
       document.getElementById('form-view').style.display = 'none';
-      document.getElementById('success-view').classList.add('vis');
+      document.getElementById('success-view').style.display = 'block';
     }
   </script>
 
