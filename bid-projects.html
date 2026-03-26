@@ -8,748 +8,444 @@
   <meta name="description" content="View active bid projects from KJR Interior Designs Inc. and submit your proposals for upcoming construction projects.">
   <link rel="stylesheet" href="styles.css">
   <style>
-    /* ===== Page Layout ===== */
-    .bid-page-wrap {
-      background: #f4f5f7;
-      min-height: 60vh;
+    /* ── Hero ── */
+    .bid-hero {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      padding: 7rem 2rem 6rem;
+      text-align: center;
+      color: white;
     }
-
-    /* ===== Hero Badge ===== */
     .bid-hero-badge {
       display: inline-block;
-      background: rgba(204, 0, 0, 0.15);
-      color: var(--primary);
-      border: 1px solid rgba(204, 0, 0, 0.35);
-      padding: 0.4rem 1.2rem;
+      background: rgba(204, 0, 0, 0.18);
+      color: #ff6666;
+      border: 1px solid rgba(204, 0, 0, 0.4);
+      padding: 0.5rem 1.6rem;
       border-radius: 50px;
-      font-size: 0.78rem;
+      font-size: 0.77rem;
       font-weight: 700;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.15em;
       text-transform: uppercase;
       margin-bottom: 1.5rem;
     }
-
-    /* ===== Loading / State ===== */
-    .projects-loading {
-      text-align: center;
-      padding: 5rem 2rem;
-      color: var(--text-muted);
+    .bid-hero h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      color: white;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
     }
-
-    .projects-loading .spinner {
-      width: 44px;
-      height: 44px;
-      border: 3px solid #e2e8f0;
-      border-top-color: var(--primary);
-      border-radius: 50%;
-      animation: spin 0.9s linear infinite;
-      margin: 0 auto 1.5rem;
-    }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    .no-projects {
-      text-align: center;
-      padding: 4rem 2rem;
-      background: white;
-      border-radius: 10px;
-      border: 1px solid #e2e8f0;
-      max-width: 640px;
+    .bid-hero p {
+      font-size: 1.1rem;
+      color: #94a3b8;
+      max-width: 650px;
       margin: 0 auto;
+      line-height: 1.7;
     }
 
-    /* ===== Invitation to Bid Card ===== */
-    .itb-card {
+    /* ── Main Layout ── */
+    .bid-wrap {
+      max-width: 1360px;
+      margin: 4rem auto 6rem;
+      padding: 0 2.5rem;
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 3rem;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    @media (max-width: 900px) {
+      .bid-wrap { grid-template-columns: 1fr; }
+      .sidebar { position: static !important; }
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
       background: white;
+      border-radius: 18px;
       border: 1px solid #e2e8f0;
-      border-radius: 10px;
       overflow: hidden;
-      margin-bottom: 3rem;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-      animation: fadeInUp 0.5s ease forwards;
-      opacity: 0;
+      height: fit-content;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+      position: sticky;
+      top: 100px;
+    }
+    .sb-head {
+      padding: 1.4rem 1.75rem;
+      background: #f8fafc;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #94a3b8;
+    }
+    .state-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 0.9rem 1.75rem;
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: #475569;
+      background: transparent;
+      border: none;
+      border-left: 3px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: left;
+    }
+    .state-btn:hover { background: #fef2f2; color: #cc0000; }
+    .state-btn.active {
+      background: #fff5f5;
+      color: #cc0000;
+      border-left-color: #cc0000;
+      font-weight: 700;
+    }
+    .sc {
+      background: #e2e8f0;
+      color: #64748b;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.18rem 0.55rem;
+      border-radius: 20px;
+      min-width: 24px;
+      text-align: center;
+    }
+    .state-btn.active .sc { background: #fecaca; color: #991b1b; }
+
+    /* ── Projects Area ── */
+    .projects-head {
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .projects-head h2 {
+      font-size: 1.9rem;
+      font-weight: 800;
+      color: #0f172a;
+    }
+    .projects-head p {
+      color: #64748b;
+      font-size: 0.92rem;
+      margin-top: 0.25rem;
     }
 
-    .itb-card:hover {
-      box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+    /* ── Project Card ── */
+    .pc {
+      background: white;
+      border-radius: 18px;
+      border: 1px solid #e2e8f0;
+      padding: 2.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.05);
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s;
+      display: none;
     }
-
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(18px); }
+    .pc.vis {
+      display: block;
+      animation: fadeUp 0.35s ease;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
       to { opacity: 1; transform: translateY(0); }
     }
+    .pc:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.1);
+      border-color: #cbd5e1;
+    }
 
-    /* ─── ITB Header ─── */
-    .itb-header {
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-      color: white;
-      padding: 1.6rem 2rem;
+    .pc-top {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
       gap: 1.5rem;
+      margin-bottom: 1.5rem;
       flex-wrap: wrap;
     }
-
-    .itb-header-left .itb-label {
-      font-size: 0.68rem;
-      font-weight: 700;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.5);
-      margin-bottom: 0.35rem;
-    }
-
-    .itb-header-left .itb-company {
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: rgba(255,255,255,0.6);
-      margin-bottom: 0.5rem;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
-
-    .itb-project-title {
-      font-size: 1.55rem;
-      font-weight: 800;
-      color: white;
-      letter-spacing: -0.02em;
-      line-height: 1.2;
-    }
-
-    .itb-due-box {
-      background: var(--primary, #cc0000);
-      border-radius: 6px;
-      padding: 0.75rem 1.25rem;
-      text-align: center;
-      min-width: 160px;
-      flex-shrink: 0;
-    }
-
-    .itb-due-box .due-label {
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.75);
-      margin-bottom: 0.2rem;
-    }
-
-    .itb-due-box .due-date {
-      font-size: 0.88rem;
-      font-weight: 700;
-      color: white;
-      line-height: 1.3;
-    }
-
-    /* ─── ITB Meta Row ─── */
-    .itb-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0;
-      border-bottom: 1px solid #e2e8f0;
-      background: #fafbfc;
-    }
-
-    .itb-meta-item {
-      padding: 0.9rem 1.75rem;
-      border-right: 1px solid #e2e8f0;
-      flex: 1;
-      min-width: 180px;
-    }
-
-    .itb-meta-item:last-child { border-right: none; }
-
-    .meta-label {
-      font-size: 0.68rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: #94a3b8;
-      margin-bottom: 0.2rem;
-    }
-
-    .meta-value {
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: #1e293b;
-    }
-
-    .meta-value a { color: var(--primary); text-decoration: none; }
-    .meta-value a:hover { text-decoration: underline; }
-
-    /* ─── ITB Body ─── */
-    .itb-body {
-      padding: 2rem;
-    }
-
-    .itb-notes {
-      background: #fffbf0;
-      border: 1px solid #fde68a;
-      border-left: 4px solid #f59e0b;
-      border-radius: 6px;
-      padding: 1rem 1.25rem;
-      font-size: 0.875rem;
-      color: #78350f;
-      line-height: 1.7;
-      margin-bottom: 2rem;
-    }
-
-    .itb-notes strong { color: #92400e; }
-
-    /* ─── Section Headers ─── */
-    .itb-section-title {
-      font-size: 0.72rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: #64748b;
-      margin-bottom: 0.85rem;
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-    }
-
-    .itb-section-title::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: #e2e8f0;
-    }
-
-    /* ─── Cost Codes Table ─── */
-    .cc-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.88rem;
-      margin-bottom: 2rem;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      overflow: hidden;
-    }
-
-    .cc-table thead {
-      background: #f1f5f9;
-    }
-
-    .cc-table th {
-      padding: 0.65rem 1rem;
-      text-align: left;
-      font-size: 0.72rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: #475569;
-      border-bottom: 1px solid #cbd5e1;
-    }
-
-    .cc-table td {
-      padding: 0.65rem 1rem;
-      border-bottom: 1px solid #f1f5f9;
-      color: #334155;
-    }
-
-    .cc-table tbody tr:last-child td { border-bottom: none; }
-    .cc-table tbody tr:nth-child(even) { background: #f8fafc; }
-    .cc-table td strong { color: #1e293b; font-weight: 700; font-family: monospace; font-size: 0.85rem; }
-
-    /* ─── Trades Grid ─── */
-    .trades-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-      gap: 0.5rem;
-      margin-bottom: 2rem;
-    }
-
-    .trade-item {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      font-size: 0.875rem;
-      color: #334155;
-      padding: 0.5rem 0.75rem;
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 5px;
-    }
-
-    .trade-check {
-      width: 14px;
-      height: 14px;
-      background: var(--primary, #cc0000);
-      border-radius: 2px;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .trade-check svg { display: block; }
-
-    /* ─── Action Buttons ─── */
-    .itb-actions {
-      display: flex;
-      gap: 0.85rem;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      padding-top: 1.5rem;
-      border-top: 1px solid #e2e8f0;
-      margin-top: 1rem;
-    }
-
-    .itb-actions .doc-btns {
-      display: flex;
-      gap: 0.85rem;
-      flex-wrap: wrap;
-    }
-
-    .btn-doc {
+    .itb-tag {
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
-      padding: 0.75rem 1.4rem;
-      border-radius: 6px;
-      font-size: 0.875rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.25s ease;
-      text-decoration: none;
-      border: 2px solid;
-    }
-
-    .btn-doc-outline {
-      background: transparent;
-      color: var(--primary, #cc0000);
-      border-color: var(--primary, #cc0000);
-    }
-
-    .btn-doc-outline:hover {
-      background: var(--primary, #cc0000);
-      color: white;
-    }
-
-    .btn-doc-outline:hover svg path, .btn-doc-outline:hover svg rect, .btn-doc-outline:hover svg polyline { stroke: white; }
-
-    .btn-doc-solid {
-      background: #1e293b;
-      color: white;
-      border-color: #1e293b;
-    }
-
-    .btn-doc-solid:hover {
-      background: #0f172a;
-      border-color: #0f172a;
-    }
-
-    .btn-doc-disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-      pointer-events: none;
-    }
-
-    .btn-submit-bid {
-      background: var(--primary, #cc0000);
-      color: white;
-      border: 2px solid var(--primary, #cc0000);
-      padding: 0.78rem 1.75rem;
-      border-radius: 6px;
-      font-size: 0.9rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.25s ease;
-      font-family: var(--font-sans);
-      letter-spacing: 0.02em;
-    }
-
-    .btn-submit-bid:hover {
-      background: #aa0000;
-      border-color: #aa0000;
-      transform: translateY(-1px);
-      box-shadow: 0 6px 20px rgba(204,0,0,0.3);
-    }
-
-    /* ===== Notes Banner ===== */
-    .notes-strip {
-      background: white;
-      border-bottom: 1px solid #e2e8f0;
-      padding: 1.25rem 2rem;
-    }
-
-    .notes-strip-inner {
-      max-width: 1000px;
-      margin: 0 auto;
-      font-size: 0.875rem;
-      color: #475569;
-      line-height: 1.7;
-    }
-
-    .notes-strip-inner strong { color: #cc0000; }
-
-    /* ===== BID SUBMISSION MODAL ===== */
-    .bid-modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.65);
-      z-index: 9999;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 2rem 1rem;
-      overflow-y: auto;
-      backdrop-filter: blur(3px);
-    }
-
-    .bid-modal-overlay.active { display: flex; }
-
-    .bid-modal {
-      background: white;
-      border-radius: 10px;
-      width: 100%;
-      max-width: 640px;
-      overflow: hidden;
-      box-shadow: 0 25px 60px rgba(0,0,0,0.25);
-      animation: modalIn 0.28s ease;
-      margin: auto;
-    }
-
-    @keyframes modalIn {
-      from { opacity: 0; transform: translateY(-24px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .modal-header {
-      background: linear-gradient(135deg, #cc0000, #8b0000);
-      color: white;
-      padding: 1.4rem 1.75rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 1rem;
-    }
-
-    .modal-header h3 {
-      color: white;
-      font-size: 1.15rem;
+      gap: 0.4rem;
+      background: #fee2e2;
+      color: #cc0000;
+      font-size: 0.72rem;
       font-weight: 800;
-      margin: 0 0 0.2rem;
-      letter-spacing: -0.01em;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.4rem 0.9rem;
+      border-radius: 5px;
+      margin-bottom: 0.8rem;
     }
-
-    .modal-header p {
-      color: rgba(255,255,255,0.75);
-      font-size: 0.82rem;
-      margin: 0;
-    }
-
-    .modal-close {
-      background: rgba(255,255,255,0.15);
-      border: none;
-      color: white;
-      width: 30px;
-      height: 30px;
+    .itb-tag::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      background: #cc0000;
       border-radius: 50%;
-      cursor: pointer;
-      font-size: 1rem;
-      line-height: 1;
+      animation: blink 1.5s infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    .pc-title {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.5rem;
+    }
+    .pc-loc {
       display: flex;
       align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      transition: background 0.2s;
+      gap: 0.45rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #64748b;
     }
 
-    .modal-close:hover { background: rgba(255,255,255,0.28); }
-
-    .modal-body { padding: 1.75rem; }
-
-    .modal-section-label {
+    .due-pill {
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 1.1rem 1.6rem;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .due-label {
       font-size: 0.7rem;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.12em;
       color: #94a3b8;
-      margin: 1.25rem 0 0.75rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
+      margin-bottom: 0.4rem;
     }
-
-    .modal-section-label::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: #e2e8f0;
-    }
-
-    .modal-section-label:first-child { margin-top: 0; }
-
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.85rem;
-    }
-
-    .form-group {
-      margin-bottom: 0.85rem;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 0.82rem;
-      font-weight: 700;
-      color: #374151;
-      margin-bottom: 0.35rem;
-    }
-
-    .form-group label .req { color: #cc0000; }
-
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-      width: 100%;
-      padding: 0.65rem 0.9rem;
-      border: 1.5px solid #d1d5db;
-      border-radius: 6px;
-      font-family: var(--font-sans);
-      font-size: 0.875rem;
-      color: #111827;
-      background: white;
-      transition: border-color 0.2s;
-      box-sizing: border-box;
-    }
-
-    .form-group input:focus,
-    .form-group select:focus,
-    .form-group textarea:focus {
-      outline: none;
-      border-color: #cc0000;
-      box-shadow: 0 0 0 3px rgba(204,0,0,0.08);
-    }
-
-    /* Intent toggle */
-    .intent-options {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.75rem;
-    }
-
-    .intent-option {
-      border: 1.5px solid #d1d5db;
-      border-radius: 7px;
-      padding: 0.85rem 1rem;
-      cursor: pointer;
-      text-align: center;
-      transition: all 0.2s;
-      user-select: none;
-    }
-
-    .intent-option input[type="radio"] { display: none; }
-
-    .intent-option:hover { border-color: #cc0000; }
-
-    .intent-option.sel-yes {
-      border-color: #16a34a;
-      background: #f0fdf4;
-      color: #15803d;
-    }
-
-    .intent-option.sel-no {
-      border-color: #cc0000;
-      background: #fff8f8;
+    .due-val {
+      font-size: 1.05rem;
+      font-weight: 800;
       color: #cc0000;
     }
 
-    .intent-text {
-      font-size: 0.875rem;
-      font-weight: 700;
+    /* Scope divider */
+    .pc-scope {
+      background: #f8fafc;
+      border-left: 3px solid #e2e8f0;
+      border-radius: 0 8px 8px 0;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.8rem;
+      font-size: 0.92rem;
+      color: #334155;
+      line-height: 1.7;
     }
+    .pc-scope strong { color: #0f172a; }
 
-    .intent-sub {
-      font-size: 0.75rem;
-      color: #94a3b8;
-      margin-top: 0.1rem;
+    .pc-email {
+      font-size: 0.88rem;
+      color: #64748b;
+      margin-bottom: 1.5rem;
     }
+    .pc-email a { color: #cc0000; font-weight: 600; }
 
-    .intent-option.sel-yes .intent-sub { color: #86efac; }
-    .intent-option.sel-no .intent-sub { color: #fca5a5; }
-
-    /* Conditional fields */
-    .cond-field { display: none; }
-
-    /* Upload Zone */
-    .upload-zone {
-      border: 2px dashed #d1d5db;
+    /* Actions */
+    .pc-actions {
+      display: flex;
+      gap: 0.85rem;
+      align-items: center;
+      border-top: 1px solid #f1f5f9;
+      padding-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .btn-apply {
+      background: #cc0000;
+      color: white;
+      padding: 0.78rem 2rem;
       border-radius: 8px;
-      padding: 1.5rem;
-      text-align: center;
+      font-size: 0.92rem;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+    .btn-apply:hover {
+      background: #990000;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(204,0,0,0.3);
+    }
+    .btn-outline {
+      background: white;
+      color: #334155;
+      padding: 0.78rem 1.5rem;
+      border-radius: 8px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      border: 1.5px solid #cbd5e1;
       cursor: pointer;
       transition: all 0.2s;
-      background: #f9fafb;
     }
+    .btn-outline:hover { border-color: #0f172a; color: #0f172a; }
+    .btn-outline:disabled { opacity: 0.45; cursor: not-allowed; }
 
-    .upload-zone:hover,
-    .upload-zone.dragover {
-      border-color: #cc0000;
-      background: #fff8f8;
+    /* No Results */
+    .no-res {
+      text-align: center;
+      padding: 4rem 2rem;
+      background: white;
+      border-radius: 18px;
+      border: 1.5px dashed #cbd5e1;
+      color: #64748b;
+      display: none;
     }
+    .no-res.vis { display: block; }
+    .no-res h3 { font-size: 1.25rem; color: #0f172a; margin-bottom: 0.5rem; }
 
-    .upload-zone-icon {
-      width: 38px;
-      height: 38px;
-      background: #f1f5f9;
-      border-radius: 8px;
+    /* ── Apply Modal ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,0.7);
+      backdrop-filter: blur(5px);
+      z-index: 9999;
+      display: none;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 3rem 1rem;
+      overflow-y: auto;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-box {
+      background: white;
+      width: 100%;
+      max-width: 580px;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 30px 70px rgba(0,0,0,0.25);
+      animation: mslide 0.3s ease;
+      margin: auto;
+    }
+    @keyframes mslide {
+      from { transform: translateY(-18px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .mhdr {
+      background: linear-gradient(135deg, #cc0000, #8b0000);
+      padding: 2rem 2.5rem;
+      position: relative;
+    }
+    .mhdr h3 {
+      color: white;
+      font-size: 1.4rem;
+      font-weight: 800;
+      margin-bottom: 0.2rem;
+    }
+    .mhdr p {
+      color: rgba(255,255,255,0.75);
+      font-size: 0.88rem;
+    }
+    .m-close {
+      position: absolute;
+      top: 1.25rem;
+      right: 1.5rem;
+      background: rgba(255,255,255,0.18);
+      border: none;
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 0.75rem;
     }
-
-    .upload-zone p {
-      margin: 0;
-      font-size: 0.85rem;
-      color: #6b7280;
-    }
-
-    .upload-zone strong { color: #374151; }
-
-    .upload-zone small {
+    .m-close:hover { background: rgba(255,255,255,0.32); }
+    .mbody { padding: 2rem 2.5rem; }
+    .fgrp { margin-bottom: 1.2rem; }
+    .fgrp label {
       display: block;
-      margin-top: 0.25rem;
-      font-size: 0.75rem;
-      color: #9ca3af;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #334155;
+      margin-bottom: 0.45rem;
     }
-
-    #file-input { display: none; }
-
-    .file-list {
-      margin-top: 0.75rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
+    .fgrp label .req { color: #cc0000; }
+    .fgrp input, .fgrp select, .fgrp textarea {
+      width: 100%;
+      padding: 0.78rem 1rem;
+      border: 1.5px solid #dde5ee;
+      border-radius: 8px;
+      font-size: 0.92rem;
+      font-family: inherit;
+      color: #0f172a;
+      background: #f8fafc;
+      transition: all 0.2s;
     }
-
-    .file-item {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      background: #f1f5f9;
-      border: 1px solid #e2e8f0;
-      border-radius: 5px;
-      padding: 0.45rem 0.75rem;
-      font-size: 0.8rem;
-      color: #374151;
+    .fgrp input:focus, .fgrp select:focus, .fgrp textarea:focus {
+      outline: none;
+      border-color: #cc0000;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(204,0,0,0.09);
     }
-
-    .file-item .file-name { flex: 1; font-weight: 600; }
-    .file-item .file-size { color: #94a3b8; font-size: 0.75rem; }
-
-    .file-remove {
-      background: none;
-      border: none;
-      color: #94a3b8;
-      cursor: pointer;
-      padding: 0;
-      font-size: 1rem;
-      line-height: 1;
-    }
-
-    .file-remove:hover { color: #cc0000; }
-
-    /* Modal footer */
-    .modal-footer {
+    .frow { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .mftr {
       background: #f8fafc;
       border-top: 1px solid #e2e8f0;
-      padding: 1.1rem 1.75rem;
+      padding: 1.4rem 2.5rem;
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-end;
       align-items: center;
-      gap: 1rem;
+      gap: 0.85rem;
     }
-
-    .modal-footer-note {
-      font-size: 0.78rem;
-      color: #94a3b8;
-    }
-
-    .btn-modal-cancel {
-      background: transparent;
-      border: 1.5px solid #d1d5db;
-      color: #374151;
-      padding: 0.65rem 1.25rem;
-      border-radius: 6px;
-      font-size: 0.875rem;
+    .mftr-note { font-size: 0.78rem; color: #94a3b8; flex: 1; }
+    .btn-cancel {
+      background: white;
+      color: #64748b;
+      border: 1.5px solid #cbd5e1;
+      padding: 0.7rem 1.4rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s;
-      font-family: var(--font-sans);
     }
-
-    .btn-modal-cancel:hover { border-color: #9ca3af; background: #f9fafb; }
-
-    .btn-modal-submit {
+    .btn-cancel:hover { border-color: #94a3b8; }
+    .btn-submit {
       background: #cc0000;
       color: white;
       border: none;
-      padding: 0.65rem 1.75rem;
-      border-radius: 6px;
+      padding: 0.7rem 1.8rem;
+      border-radius: 8px;
       font-size: 0.9rem;
       font-weight: 700;
       cursor: pointer;
-      transition: all 0.2s;
-      font-family: var(--font-sans);
     }
-
-    .btn-modal-submit:hover:not(:disabled) {
-      background: #aa0000;
-      transform: translateY(-1px);
-      box-shadow: 0 4px 14px rgba(204,0,0,0.3);
-    }
-
-    .btn-modal-submit:disabled { opacity: 0.55; cursor: not-allowed; }
-
-    /* Form error */
-    .form-error {
-      color: #cc0000;
-      font-size: 0.82rem;
-      margin-top: 0.5rem;
-      display: none;
-    }
+    .btn-submit:hover { background: #990000; }
 
     /* Success state */
-    .modal-success {
+    .success-view {
       display: none;
       text-align: center;
-      padding: 2.5rem 2rem;
+      padding: 3.5rem 2.5rem;
     }
-
-    .success-circle {
-      width: 60px;
-      height: 60px;
-      background: #f0fdf4;
+    .success-view.vis { display: block; }
+    .suc-icon {
+      width: 64px;
+      height: 64px;
+      background: #dcfce7;
       border: 2px solid #16a34a;
+      color: #16a34a;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 1.25rem;
+      font-size: 1.6rem;
+      margin: 0 auto 1.5rem;
     }
-
-    .modal-success h3 { color: #15803d; margin-bottom: 0.5rem; }
-    .modal-success p { color: #475569; font-size: 0.9rem; line-height: 1.6; }
-
-    /* ===== Responsive ===== */
-    @media (max-width: 768px) {
-      .itb-header { flex-direction: column; gap: 1rem; }
-      .itb-due-box { width: 100%; text-align: left; }
-      .form-row { grid-template-columns: 1fr; }
-      .intent-options { grid-template-columns: 1fr; }
-      .itb-actions { flex-direction: column; align-items: stretch; }
-      .itb-actions .doc-btns { flex-direction: column; }
-      .modal-footer { flex-wrap: wrap; }
-      .itb-meta-item { border-right: none; border-bottom: 1px solid #e2e8f0; }
-      .itb-meta-item:last-child { border-bottom: none; }
-    }
+    .success-view h2 { font-size: 1.6rem; font-weight: 800; color: #0f172a; margin-bottom: 0.6rem; }
+    .success-view p { color: #64748b; font-size: 0.95rem; line-height: 1.7; max-width: 400px; margin: 0 auto 1.5rem; }
   </style>
 </head>
 
@@ -767,12 +463,12 @@
     </div>
   </div>
 
-  <!-- Header -->
+  <!-- Main Navigation Header -->
   <header class="main-header">
     <div class="header-container">
       <div class="logo">
         <a href="index.html">
-          <img src="logo-new.jpeg" alt="KJR Interior Designs Inc." style="height: 55px;">
+          <img src="logo-new.jpeg" alt="KJR Interior Designs Inc.">
         </a>
       </div>
       <nav class="secondary-nav">
@@ -780,11 +476,11 @@
           <ul class="nav-links">
             <li><a href="index.html">HOME</a></li>
             <li class="has-dropdown">
-              <a href="#">WORK FORCE <span class="dropdown-arrow">▾</span></a>
+              <a href="#" class="active">WORK FORCE <span class="dropdown-arrow">▾</span></a>
               <ul class="dropdown-menu">
                 <li><a href="career-move.html">Career Move</a></li>
                 <li><a href="property-mgmt.html">Property Mgmt Crew</a></li>
-                <li><a href="bid-projects.html">Bid Projects</a></li>
+                <li><a href="bid-projects.html" class="active">Bid Projects</a></li>
                 <li><a href="work-completed.html">Work Completed by KJRID</a></li>
               </ul>
             </li>
@@ -798,121 +494,298 @@
     </div>
   </header>
 
-  <!-- Hero Section -->
-  <section class="hero" style="height: 50vh;">
-    <video autoplay muted loop playsinline class="hero-bg">
-      <source
-        src="https://res.cloudinary.com/dc8xxhoaf/video/upload/v1767988938/3773486-hd-1920-1080-30fps-tyea3fib-1_3P5aPwyY_online-video-cutter.com_tzwfze.mp4"
-        type="video/mp4">
-    </video>
-    <div class="hero-content">
-      <div class="bid-hero-badge">Now Accepting Bids</div>
-      <h1>INVITATION TO BID</h1>
-      <p>Review current project specifications and submit your proposals to KJR Interior Designs Inc.</p>
-    </div>
-  </section>
-
-  <!-- Notes Strip -->
-  <div class="notes-strip">
-    <div class="notes-strip-inner">
-      <strong>Important Notice:</strong> This invitation is being sent to a pre-set list of contractors. All items on all plans are the responsibility of subcontractors — please cross-reference all plans to areas of your scope. Subcontractor bids must include all items applicable to your scope. Bids excluding applicable items will be disqualified. It is assumed that bidders are familiar with and have included all existing visible conditions.
-    </div>
+  <!-- Hero -->
+  <div class="bid-hero">
+    <div class="bid-hero-badge">Now Accepting Bids</div>
+    <h1>Active Bid Opportunities</h1>
+    <p>Browse open commercial construction projects by location. Click any project to see full scope details and submit your application to the KJRID estimating team.</p>
   </div>
 
-  <!-- Projects Section -->
-  <div class="bid-page-wrap">
-    <section class="content-section" style="padding: 2.5rem 2rem 4rem; max-width: 1050px; margin: 0 auto;">
-      <div class="projects-loading" id="loading-state">
-        <div class="spinner"></div>
-        <p>Loading active bid projects&hellip;</p>
+  <!-- Notice strip -->
+  <div style="background: #fffbeb; border-bottom: 1px solid #fde68a; padding: 1rem 2.5rem;">
+    <p style="max-width: 1100px; margin: 0 auto; font-size: 0.875rem; color: #92400e; line-height: 1.7;">
+      <strong>Important:</strong> This invitation is being sent to a pre-set list of contractors. All items on plans are the responsibility of subcontractors — please cross-reference all plans to your scope. Bids excluding applicable items will be disqualified. Submit bids to <a href="mailto:estimating@kjrid.com" style="color: #cc0000; font-weight: 700;">estimating@kjrid.com</a>
+    </p>
+  </div>
+
+  <!-- Main Body -->
+  <div class="bid-wrap">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sb-head">Filter by State</div>
+      <button class="state-btn active" data-state="All" onclick="filterState(this)">All Projects <span class="sc" id="c-all">5</span></button>
+      <button class="state-btn" data-state="Georgia" onclick="filterState(this)">Georgia <span class="sc" id="c-ga">2</span></button>
+      <button class="state-btn" data-state="Florida" onclick="filterState(this)">Florida <span class="sc" id="c-fl">1</span></button>
+      <button class="state-btn" data-state="Texas" onclick="filterState(this)">Texas <span class="sc" id="c-tx">1</span></button>
+      <button class="state-btn" data-state="North Carolina" onclick="filterState(this)">North Carolina <span class="sc" id="c-nc">1</span></button>
+    </aside>
+
+    <!-- Projects -->
+    <div>
+      <div class="projects-head">
+        <div>
+          <h2 id="loc-title">All Active Projects</h2>
+          <p id="loc-sub">Showing all open bid opportunities across all locations</p>
+        </div>
       </div>
-      <div id="projects-list"></div>
-    </section>
-  </div>
 
-  <!-- ===== PREMIUM DIRECTORY UI ===== -->
-  <section style="background: #f4f7f9; padding: 4rem 2rem;">
-    <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 280px 1fr; gap: 2rem; align-items: start;">
-      
-      <!-- Left Sidebar: State Selector -->
-      <aside style="background: #ffffff; border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.03); position: sticky; top: 2rem;">
-        <h3 style="font-size: 1.1rem; font-weight: 800; color: #1e293b; margin-bottom: 1rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.75rem;">Select State</h3>
-        <ul id="state-list" style="list-style: none; margin: 0; padding: 0; max-height: 60vh; overflow-y: auto;">
-          <li class="state-item active" onclick="showDirState(this, 'Georgia')">Georgia</li>
-          <li class="state-item" onclick="showDirState(this, 'Alabama')">Alabama</li>
-          <li class="state-item" onclick="showDirState(this, 'Arkansas')">Arkansas</li>
-          <li class="state-item" onclick="showDirState(this, 'Arizona')">Arizona</li>
-          <li class="state-item" onclick="showDirState(this, 'California')">California</li>
-          <li class="state-item" onclick="showDirState(this, 'Florida')">Florida</li>
-          <li class="state-item" onclick="showDirState(this, 'Texas')">Texas</li>
-          <li class="state-item" onclick="showDirState(this, 'New York')">New York</li>
-        </ul>
-        <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 1rem; text-align: center;">+ 42 More States Available</div>
-      </aside>
+      <div id="no-res" class="no-res">
+        <h3>No open projects for this region.</h3>
+        <p style="margin-top: 0.4rem;">Check back soon — new bids are added regularly. You can also submit a general profile below.</p>
+        <button class="btn-apply" style="margin-top: 1.2rem;" onclick="openModal('General Profile', 'Nationwide', 'Ongoing')">Submit General Profile</button>
+      </div>
 
-      <!-- Right Content: Database View -->
-      <main style="background: #ffffff; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); overflow: hidden; min-height: 60vh;">
-        
-        <!-- Dynamic State View -->
-        <div id="dir-panel-Active" style="display: block;">
-          <div style="padding: 2rem; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; background: #fafbfc;">
-            <div>
-              <h2 id="dir-active-title" style="font-size: 1.75rem; font-weight: 800; color: #0f172a; margin-bottom: 0.25rem;">Georgia Database</h2>
-              <p id="dir-active-subtitle" style="color: #64748b; font-size: 0.95rem; margin: 0;">159 Counties &mdash; 6,354 Companies Mapped</p>
+      <!-- ─────────── PROJECT 1: Dollar Tree ─────────── -->
+      <div class="pc vis" data-state="Georgia">
+        <div class="pc-top">
+          <div>
+            <div class="itb-tag">Active ITB</div>
+            <div class="pc-title">Dollar Tree — Retail Retrofit</div>
+            <div class="pc-loc">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+              Marietta, GA
             </div>
-            <div style="background: #cc0000; color: white; padding: 0.5rem 1rem; border-radius: 50px; font-weight: 700; font-size: 0.85rem;">Phase 1 Ready</div>
           </div>
-          <div style="padding: 2rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 1rem;" id="dir-active-grid">
-            <!-- Populated via JS -->
+          <div class="due-pill">
+            <div class="due-label">Bids Due</div>
+            <div class="due-val">Jan 25, 2026 @ 2PM EST</div>
           </div>
         </div>
 
-      </main>
-    </div>
-  </section>
+        <div class="pc-scope">
+          <strong>Scope:</strong> Full interior retrofit of existing retail space including demolition, concrete repairs, drywall & framing, acoustical ceilings, VCT flooring, painting, storefront modifications, and complete MEP trades. All subcontractors must cross-reference plans to their specific scope.
+        </div>
 
-  <style>
-    .state-item {
-      padding: 0.75rem 1rem;
-      border-radius: 8px;
-      color: #475569;
-      font-weight: 600;
-      font-size: 0.95rem;
-      cursor: pointer;
-      transition: all 0.2s;
-      margin-bottom: 0.25rem;
-    }
-    .state-item:hover { background: #f1f5f9; color: #0f172a; }
-    .state-item.active { background: #fef2f2; color: #cc0000; font-weight: 700; }
-    
-    .dir-card {
-      padding: 1rem;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      transition: all 0.2s;
-      cursor: pointer;
-      background: white;
-    }
-    .dir-card:hover { border-color: #cc0000; box-shadow: 0 4px 12px rgba(204,0,0,0.08); transform: translateY(-2px); }
-    .c-name { font-weight: 700; color: #1e293b; font-size: 0.85rem; }
-    .c-num { background: #f1f5f9; color: #64748b; font-size: 0.75rem; font-weight: 800; padding: 0.2rem 0.6rem; border-radius: 20px; }
-    .dir-card:hover .c-num { background: #cc0000; color: white; }
-    
-    /* Scrollbar styling for state list */
-    #state-list::-webkit-scrollbar { width: 6px; }
-    #state-list::-webkit-scrollbar-track { background: transparent; }
-    #state-list::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-    
-    @media(max-width: 768px) {
-      div[style*="grid-template-columns: 280px 1fr"] { grid-template-columns: 1fr !important; }
-      aside[style*="position: sticky"] { position: relative !important; top: 0 !important; }
-      #state-list { display: flex; overflow-x: auto; max-height: max-content; padding-bottom: 0.5rem; }
-      .state-item { white-space: nowrap; margin-bottom: 0; margin-right: 0.5rem; }
-    }
-  </style>
+        <div class="pc-email">
+          Submit bids to: <a href="mailto:estimating@kjrid.com">estimating@kjrid.com</a> &nbsp;&nbsp;|&nbsp;&nbsp; Questions: <a href="mailto:mtusa.king@kjrid.com">mtusa.king@kjrid.com</a> &nbsp;&nbsp;|&nbsp;&nbsp; Estimator: King Mtusa · 803-638-0569
+        </div>
+
+        <div class="pc-actions">
+          <button class="btn-apply" onclick="openModal('Dollar Tree – Marietta GA', 'Marietta, GA', 'Jan 25, 2026 @ 2PM EST')">&#10003; Apply to Bid</button>
+          <button class="btn-outline">&#128196; View Drawings &amp; Plans</button>
+          <button class="btn-outline">&#128196; View Specifications</button>
+        </div>
+      </div>
+
+      <!-- ─────────── PROJECT 2: AutoZone ─────────── -->
+      <div class="pc vis" data-state="Georgia">
+        <div class="pc-top">
+          <div>
+            <div class="itb-tag">Active ITB</div>
+            <div class="pc-title">AutoZone GA 10597</div>
+            <div class="pc-loc">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+              Richmond Hill, GA 31324
+            </div>
+          </div>
+          <div class="due-pill">
+            <div class="due-label">Bids Due</div>
+            <div class="due-val">Jan 11, 2026 @ 2PM EST</div>
+          </div>
+        </div>
+
+        <div class="pc-scope">
+          <strong>Scope:</strong> Small slab pour &amp; ramp, masonry fixes, pipe guards, aluminum platform, structural steel, carpentry &amp; drywall, roofing (flash 3 curbs), storefront, doors &amp; hardware, flooring, painting, restroom accessories, platform lift, plumbing, HVAC, fire sprinkler, electrical, and fire alarm.
+        </div>
+
+        <div class="pc-email">
+          Submit bids to: <a href="mailto:estimating@kjrid.com">estimating@kjrid.com</a> &nbsp;&nbsp;|&nbsp;&nbsp; Estimator: King Mtusa · 803-638-0569
+        </div>
+
+        <div class="pc-actions">
+          <button class="btn-apply" onclick="openModal('AutoZone GA 10597', 'Richmond Hill, GA', 'Jan 11, 2026 @ 2PM EST')">&#10003; Apply to Bid</button>
+          <button class="btn-outline">&#128196; View Drawings &amp; Plans</button>
+          <button class="btn-outline">&#128196; View Specifications</button>
+        </div>
+      </div>
+
+      <!-- ─────────── PROJECT 3: Walmart ─────────── -->
+      <div class="pc" data-state="Florida">
+        <div class="pc-top">
+          <div>
+            <div class="itb-tag">Active ITB</div>
+            <div class="pc-title">Walmart Supercenter — Resurfacing</div>
+            <div class="pc-loc">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+              Orlando, FL
+            </div>
+          </div>
+          <div class="due-pill">
+            <div class="due-label">Bids Due</div>
+            <div class="due-val">Feb 10, 2026</div>
+          </div>
+        </div>
+
+        <div class="pc-scope">
+          <strong>Scope:</strong> Specialized concrete resurfacing and exterior masonry work for main entrance and garden center area. Includes prep, crack repair, coatings application, and final sealing. Night work may be required.
+        </div>
+
+        <div class="pc-email">
+          Submit bids to: <a href="mailto:estimating@kjrid.com">estimating@kjrid.com</a> &nbsp;&nbsp;|&nbsp;&nbsp; Estimator: King Mtusa · 803-638-0569
+        </div>
+
+        <div class="pc-actions">
+          <button class="btn-apply" onclick="openModal('Walmart Supercenter – Orlando FL', 'Orlando, FL', 'Feb 10, 2026')">&#10003; Apply to Bid</button>
+          <button class="btn-outline" disabled>&#128196; Plans Pending Upload</button>
+        </div>
+      </div>
+
+      <!-- ─────────── PROJECT 4: Target ─────────── -->
+      <div class="pc" data-state="Texas">
+        <div class="pc-top">
+          <div>
+            <div class="itb-tag">Active ITB</div>
+            <div class="pc-title">Target Store Retrofit — Phase 2</div>
+            <div class="pc-loc">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+              Austin, TX
+            </div>
+          </div>
+          <div class="due-pill">
+            <div class="due-label">Bids Due</div>
+            <div class="due-val">Mar 05, 2026</div>
+          </div>
+        </div>
+
+        <div class="pc-scope">
+          <strong>Scope:</strong> Phase 2 interior remodel — finish carpentry, VCT &amp; LVT flooring, interior painting, fixture backing &amp; blocking, ceiling tile replacements, and minor MEP modifications. Work to proceed after store hours.
+        </div>
+
+        <div class="pc-email">
+          Submit bids to: <a href="mailto:estimating@kjrid.com">estimating@kjrid.com</a> &nbsp;&nbsp;|&nbsp;&nbsp; Estimator: King Mtusa · 803-638-0569
+        </div>
+
+        <div class="pc-actions">
+          <button class="btn-apply" onclick="openModal('Target Store Retrofit – Phase 2', 'Austin, TX', 'Mar 05, 2026')">&#10003; Apply to Bid</button>
+          <button class="btn-outline">&#128196; View Drawings &amp; Plans</button>
+          <button class="btn-outline">&#128196; View Specifications</button>
+        </div>
+      </div>
+
+      <!-- ─────────── PROJECT 5: CVS ─────────── -->
+      <div class="pc" data-state="North Carolina">
+        <div class="pc-top">
+          <div>
+            <div class="itb-tag">Active ITB</div>
+            <div class="pc-title">CVS Pharmacy — Interior Remodel</div>
+            <div class="pc-loc">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+              Charlotte, NC
+            </div>
+          </div>
+          <div class="due-pill">
+            <div class="due-label">Bids Due</div>
+            <div class="due-val">Feb 22, 2026</div>
+          </div>
+        </div>
+
+        <div class="pc-scope">
+          <strong>Scope:</strong> Complete pharmacy area retrofit, secure glass partition installation, new lighting fixture upgrades, flooring, painting, and pharmacy counter millwork. All bidders must hold appropriate state license.
+        </div>
+
+        <div class="pc-email">
+          Submit bids to: <a href="mailto:estimating@kjrid.com">estimating@kjrid.com</a> &nbsp;&nbsp;|&nbsp;&nbsp; Estimator: King Mtusa · 803-638-0569
+        </div>
+
+        <div class="pc-actions">
+          <button class="btn-apply" onclick="openModal('CVS Pharmacy – Charlotte NC', 'Charlotte, NC', 'Feb 22, 2026')">&#10003; Apply to Bid</button>
+          <button class="btn-outline">&#128196; View Drawings &amp; Plans</button>
+          <button class="btn-outline">&#128196; View Specifications</button>
+        </div>
+      </div>
+
+    </div><!-- end projects -->
+  </div><!-- end bid-wrap -->
+
+  <!-- ─────────── Apply Modal ─────────── -->
+  <div class="modal-overlay" id="applyModal" onclick="closeBg(event)">
+    <div class="modal-box">
+
+      <!-- Form View -->
+      <div id="form-view">
+        <div class="mhdr">
+          <h3>Apply to Bid</h3>
+          <p id="m-proj-sub">Project &bull; Location &bull; Due Date</p>
+          <button class="m-close" onclick="closeModal()">&times;</button>
+        </div>
+        <div class="mbody">
+          <div class="frow">
+            <div class="fgrp">
+              <label>First Name <span class="req">*</span></label>
+              <input type="text" id="f-first" placeholder="John">
+            </div>
+            <div class="fgrp">
+              <label>Last Name <span class="req">*</span></label>
+              <input type="text" id="f-last" placeholder="Smith">
+            </div>
+          </div>
+          <div class="fgrp">
+            <label>Company Name <span class="req">*</span></label>
+            <input type="text" id="f-company" placeholder="Your company name">
+          </div>
+          <div class="frow">
+            <div class="fgrp">
+              <label>Email Address <span class="req">*</span></label>
+              <input type="email" id="f-email" placeholder="you@company.com">
+            </div>
+            <div class="fgrp">
+              <label>Phone Number <span class="req">*</span></label>
+              <input type="tel" id="f-phone" placeholder="555-000-0000">
+            </div>
+          </div>
+          <div class="fgrp">
+            <label>Trade / Scope Bidding <span class="req">*</span></label>
+            <select id="f-trade">
+              <option value="">Select your trade...</option>
+              <option>Demolition</option>
+              <option>Concrete / Masonry</option>
+              <option>Structural Steel</option>
+              <option>Misc Metals</option>
+              <option>Rough Carpentry</option>
+              <option>Finish Carpentry / Millwork</option>
+              <option>Roofing</option>
+              <option>Aluminum Storefront</option>
+              <option>Doors &amp; Hardware</option>
+              <option>Drywall / Framing</option>
+              <option>Flooring (VCT / LVT / Tile)</option>
+              <option>Painting (Interior &amp; Exterior)</option>
+              <option>Acoustical Ceilings</option>
+              <option>Plumbing</option>
+              <option>HVAC</option>
+              <option>Fire Sprinkler</option>
+              <option>Fire Alarm</option>
+              <option>Electrical</option>
+              <option>Final Clean</option>
+              <option>Other / General</option>
+            </select>
+          </div>
+          <div class="fgrp">
+            <label>Contractor License #</label>
+            <input type="text" id="f-lic" placeholder="State license number (if applicable)">
+          </div>
+          <div class="fgrp">
+            <label>Notes / Questions for Estimator</label>
+            <textarea id="f-notes" rows="3" placeholder="Any additional details or questions for the estimating team..."></textarea>
+          </div>
+        </div>
+        <div class="mftr">
+          <span class="mftr-note">* Required. Submission sent to estimating@kjrid.com</span>
+          <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+          <button class="btn-submit" onclick="submitForm()">Submit Application &rarr;</button>
+        </div>
+      </div>
+
+      <!-- Success View -->
+      <div class="success-view" id="success-view">
+        <div class="suc-icon">&#10003;</div>
+        <h2>Application Submitted!</h2>
+        <p>The KJRID estimating team will review your application for <strong id="suc-proj"></strong> and follow up at your email address within 1–2 business days.</p>
+        <button class="btn-cancel" onclick="closeModal()">Done</button>
+      </div>
+
+    </div>
+  </div>
 
   <!-- Footer -->
   <footer>
@@ -921,6 +794,7 @@
         <img src="logo-new.jpeg" alt="KJR Interior Designs Inc." style="height: 70px; margin-bottom: 1.5rem;">
         <p>KJR Interior Designs Inc. &mdash; Professional interior construction services. BBB Accredited since 2014.</p>
       </div>
+
       <div class="footer-col">
         <h4>INSURANCE REQUIREMENTS</h4>
         <ul class="footer-links">
@@ -930,6 +804,7 @@
           <li><a href="#">Vendor Profile</a></li>
         </ul>
       </div>
+
       <div class="footer-col">
         <h4>QUICK LINKS</h4>
         <ul class="footer-links">
@@ -939,6 +814,7 @@
           <li><a href="contact-us.html">Contact Support</a></li>
         </ul>
       </div>
+
       <div class="footer-col">
         <h4>ESTIMATING</h4>
         <p>888-944-6313<br>Open 24/7</p>
@@ -946,672 +822,63 @@
         <p style="margin-top: 0.5rem;"><a href="mailto:mtusa.king@kjrid.com" style="color: var(--primary);">mtusa.king@kjrid.com</a></p>
       </div>
     </div>
+
     <div class="footer-bottom">
       <div>&copy; 2024 KJR Interior Designs Inc. All rights reserved.</div>
       <div><a href="#">Privacy Policy</a> &nbsp;|&nbsp; <a href="#">Terms of Service</a></div>
     </div>
   </footer>
 
-  <!-- ===== BID SUBMISSION MODAL ===== -->
-  <div class="bid-modal-overlay" id="bid-modal-overlay">
-    <div class="bid-modal" id="bid-modal">
-
-      <div class="modal-header">
-        <div>
-          <h3 id="modal-project-title">Submit Bid Response</h3>
-          <p id="modal-project-subtitle">Invitation to Bid &mdash; KJR Interior Designs Inc.</p>
-        </div>
-        <button class="modal-close" onclick="closeBidModal()" title="Close">&times;</button>
-      </div>
-
-      <!-- Success State -->
-      <div class="modal-success" id="modal-success">
-        <div class="success-circle">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-        </div>
-        <h3>Response Submitted</h3>
-        <p>Your bid response has been received and our estimating team has been notified.<br>A confirmation will be sent to <strong id="success-email-display"></strong>.</p>
-        <br>
-        <button class="btn-modal-submit" onclick="closeBidModal()" style="margin: 0 auto; display: inline-block;">Close</button>
-      </div>
-
-      <!-- Form State -->
-      <div id="modal-form-wrap">
-        <form class="modal-body" id="bid-form" novalidate>
-          <input type="hidden" id="f-project-id">
-          <input type="hidden" id="f-project-name">
-
-          <!-- Section: Your Information -->
-          <p class="modal-section-label">Your Information</p>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="f-company">Company Name <span class="req">*</span></label>
-              <input type="text" id="f-company" placeholder="Company name" required>
-            </div>
-            <div class="form-group">
-              <label for="f-contact">Contact Person <span class="req">*</span></label>
-              <input type="text" id="f-contact" placeholder="Full name" required>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="f-email">Email Address <span class="req">*</span></label>
-              <input type="email" id="f-email" placeholder="email@company.com" required>
-            </div>
-            <div class="form-group">
-              <label for="f-phone">Phone Number</label>
-              <input type="tel" id="f-phone" placeholder="Optional">
-            </div>
-          </div>
-
-          <!-- Section: Bid Response -->
-          <p class="modal-section-label" style="margin-top: 0.5rem;">Bid Response</p>
-
-          <div class="form-group">
-            <label>Will you be bidding on this project? <span class="req">*</span></label>
-            <div class="intent-options">
-              <label class="intent-option" id="opt-yes" for="r-yes" onclick="selectIntent('yes')">
-                <input type="radio" name="bidIntent" id="r-yes" value="yes">
-                <div class="intent-text">Yes, I will bid</div>
-                <div class="intent-sub">Submit a proposal</div>
-              </label>
-              <label class="intent-option" id="opt-no" for="r-no" onclick="selectIntent('no')">
-                <input type="radio" name="bidIntent" id="r-no" value="no">
-                <div class="intent-text">No, I will not bid</div>
-                <div class="intent-sub">Decline this invitation</div>
-              </label>
-            </div>
-          </div>
-
-          <!-- Shown when YES -->
-          <div class="cond-field" id="field-amount">
-            <div class="form-group">
-              <label for="f-amount">Total Bid Amount ($)</label>
-              <input type="number" id="f-amount" placeholder="0.00" min="0" step="0.01">
-            </div>
-          </div>
-
-          <!-- Shown when NO -->
-          <div class="cond-field" id="field-decline">
-            <div class="form-group">
-              <label for="f-decline">Reason for Declining <span style="color:#94a3b8; font-weight:400;">(Optional)</span></label>
-              <input type="text" id="f-decline" placeholder="e.g. Too busy, Not in scope, Location...">
-            </div>
-          </div>
-
-          <!-- Upload Documents -->
-          <p class="modal-section-label">Upload Proposal / Documents</p>
-
-          <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
-            <div class="upload-zone-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-            </div>
-            <p><strong>Drag &amp; drop files here</strong> or click to browse</p>
-            <small>Accepted: PDF, DOCX, XLS, JPG &mdash; Max 10MB per file</small>
-          </div>
-          <input type="file" id="file-input" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png" onchange="handleFileSelect(event)">
-          <div class="file-list" id="file-list"></div>
-
-          <!-- Comments -->
-          <p class="modal-section-label">Scope Notes</p>
-
-          <div class="form-group">
-            <label for="f-comments">Comments / Scope Notes</label>
-            <textarea id="f-comments" rows="3" placeholder="Add any notes about inclusions, exclusions, or lead times..."></textarea>
-          </div>
-
-          <div class="form-error" id="form-error"></div>
-        </form>
-
-        <div class="modal-footer">
-          <span class="modal-footer-note">Submissions go directly to our estimating team.</span>
-          <div style="display:flex; gap:0.75rem;">
-            <button class="btn-modal-cancel" onclick="closeBidModal()">Cancel</button>
-            <button class="btn-modal-submit" id="submit-btn" onclick="submitBid()">Submit Response</button>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
   <script>
-    // ─── CONFIG ───────────────────────────────────────────────
-    const isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.protocol === 'file:';
-    const API_URL = isLocal ? 'http://localhost:5001/api' : 'https://app-server-maaw.onrender.com/api';
-
-    // Selected files for upload
-    let selectedFiles = [];
-
-    // ─── LOAD PROJECTS ────────────────────────────────────────
-    async function loadProjects() {
-      const list = document.getElementById('projects-list');
-      const loading = document.getElementById('loading-state');
-      try {
-        const res = await fetch(`${API_URL}/projects`);
-        loading.style.display = 'none';
-        if (!res.ok) throw new Error('Server error');
-        const projects = await res.json();
-        if (!projects || projects.length === 0) {
-          list.innerHTML = `<div class="no-projects">
-            <h3 style="margin-bottom:0.75rem; color:#1e293b;">No Active Projects at This Time</h3>
-            <p style="color:#64748b;">New bid invitations will appear here when posted by our estimating team. Please check back soon or contact us at <a href="mailto:estimating@kjrid.com" style="color:#cc0000;">estimating@kjrid.com</a></p>
-          </div>`;
-          document.querySelector('.hero-content').innerHTML = `
-            <div class="bid-hero-badge" style="background: rgba(100,116,139,0.15); border-color: rgba(100,116,139,0.35); color: white;">Check Back Later</div>
-            <h1>BIDS CLOSED</h1>
-            <p>We do not have any open projects for bidding at this time. New project specifications will be posted sequentially.</p>
-          `;
-          return;
-        }
-        projects.forEach((p, i) => list.insertAdjacentHTML('beforeend', buildCard(p, i)));
-      } catch (err) {
-        loading.style.display = 'none';
-        list.innerHTML = `<div class="no-projects">
-          <h3 style="margin-bottom:0.75rem; color:#1e293b;">Projects Currently Unavailable</h3>
-          <p style="color:#64748b;">Please contact our estimating team at <a href="mailto:estimating@kjrid.com" style="color:#cc0000;">estimating@kjrid.com</a> or call <strong>888-944-6313</strong>.</p>
-        </div>`;
-      }
-    }
-
-    // ─── BUILD PROJECT CARD ───────────────────────────────────
-    function buildCard(p, idx) {
-      const delay = idx * 0.12;
-
-      // Cost codes
-      let costCodesHtml = '';
-      if (p.costCodes && p.costCodes.length > 0) {
-        const hasScope = p.costCodes.some(c => c.scope);
-        costCodesHtml = `
-          <p class="itb-section-title">Cost Codes</p>
-          <table class="cc-table">
-            <thead>
-              <tr>
-                <th style="width:130px;">Cost Code</th>
-                <th>Description</th>
-                ${hasScope ? '<th>Scope</th>' : ''}
-              </tr>
-            </thead>
-            <tbody>
-              ${p.costCodes.map(c => `
-                <tr>
-                  <td><strong>${esc(c.code || '')}</strong></td>
-                  <td>${esc(c.description || '')}</td>
-                  ${hasScope ? `<td>${esc(c.scope || '')}</td>` : ''}
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>`;
-      }
-
-      // Trades
-      let tradesHtml = '';
-      if (p.tradesRequested && p.tradesRequested.length > 0) {
-        tradesHtml = `
-          <p class="itb-section-title">Trades Requested</p>
-          <div class="trades-grid">
-            ${p.tradesRequested.map(t => `
-              <div class="trade-item">
-                <span class="trade-check">
-                  <svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="10 3 5 9 2 6"></polyline></svg>
-                </span>
-                ${esc(t)}
-              </div>
-            `).join('')}
-          </div>`;
-      }
-
-      // Doc Buttons
-      const drawBtn = p.drawingsUrl
-        ? `<a href="${esc(p.drawingsUrl)}" target="_blank" class="btn-doc btn-doc-outline">
-             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-             View Drawings
-           </a>`
-        : `<span class="btn-doc btn-doc-outline btn-doc-disabled">View Drawings</span>`;
-
-      const specBtn = p.specificationsUrl
-        ? `<a href="${esc(p.specificationsUrl)}" target="_blank" class="btn-doc btn-doc-solid">
-             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-             View Specifications
-           </a>`
-        : `<span class="btn-doc btn-doc-solid btn-doc-disabled">View Specifications</span>`;
-
-      return `
-        <div class="itb-card" style="animation-delay:${delay}s;">
-
-          <!-- Header -->
-          <div class="itb-header">
-            <div class="itb-header-left">
-              <div class="itb-label">Invitation to Bid</div>
-              <div class="itb-company">KJR Interior Designs Inc.</div>
-              <div class="itb-project-title">${esc(p.title)}</div>
-            </div>
-            <div class="itb-due-box">
-              <div class="due-label">Bid Due</div>
-              <div class="due-date">${esc(p.bidDueDate)}</div>
-            </div>
-          </div>
-
-          <!-- Meta Row -->
-          <div class="itb-meta">
-            <div class="itb-meta-item">
-              <div class="meta-label">Project Location</div>
-              <div class="meta-value">${esc(p.location)}${p.address ? '<br><span style="color:#64748b;font-size:0.82rem;font-weight:400;">' + esc(p.address) + '</span>' : ''}</div>
-            </div>
-            <div class="itb-meta-item">
-              <div class="meta-label">Estimator</div>
-              <div class="meta-value" style="display: flex; align-items: center; gap: 0.6rem;">
-                <img src="Accounts Payable.png" alt="KING MTUSA" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid #cbd5e1;">
-                ${esc(p.estimator || 'KING MTUSA')}
-              </div>
-            </div>
-            <div class="itb-meta-item">
-              <div class="meta-label">Submit Bids To</div>
-              <div class="meta-value"><a href="mailto:${esc(p.bidEmail || 'estimating@kjrid.com')}">${esc(p.bidEmail || 'estimating@kjrid.com')}</a></div>
-            </div>
-            <div class="itb-meta-item">
-              <div class="meta-label">Plan Support / Questions</div>
-              <div class="meta-value"><a href="mailto:mtusa.king@kjrid.com">mtusa.king@kjrid.com</a></div>
-            </div>
-            <div class="itb-meta-item">
-              <div class="meta-label">Superintendent</div>
-              <div class="meta-value" style="display: flex; align-items: center; gap: 0.6rem;">
-                <img src="Project Manager.png" alt="Jacob Aryee" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid #cbd5e1;">
-                Jacob Aryee
-              </div>
-            </div>
-            <div class="itb-meta-item">
-              <div class="meta-label">Site Contact / Support</div>
-              <div class="meta-value" style="line-height:1.4;">
-                <a href="mailto:superintendent@kjrid.com">superintendent@kjrid.com</a><br>
-                <a href="mailto:Aryee.jacob@kjrid.com" style="font-size: 0.82rem; color: #64748b; font-weight: 500;">Aryee.jacob@kjrid.com</a>
-              </div>
-            </div>
-          </div>
-
-          <!-- Body -->
-          <div class="itb-body">
-            ${costCodesHtml}
-            ${tradesHtml}
-
-            <!-- Action Row -->
-            <div class="itb-actions">
-              <div class="doc-btns">
-                ${drawBtn}
-                ${specBtn}
-              </div>
-              <button class="btn-submit-bid" onclick="openBidModal('${esc(p._id)}', '${esc(p.title)}')">
-                Respond / Submit Bid
-              </button>
-            </div>
-          </div>
-
-        </div>`;
-    }
-
-    function esc(str) {
-      if (!str) return '';
-      return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
-    }
-
-    // ─── MODAL OPEN/CLOSE ─────────────────────────────────────
-    function openBidModal(projectId, projectName) {
-      document.getElementById('f-project-id').value = projectId;
-      document.getElementById('f-project-name').value = projectName;
-      document.getElementById('modal-project-title').textContent = projectName;
-      document.getElementById('modal-project-subtitle').textContent = 'Invitation to Bid — KJR Interior Designs Inc.';
-      document.getElementById('bid-modal-overlay').classList.add('active');
-      document.getElementById('modal-form-wrap').style.display = '';
-      document.getElementById('modal-success').style.display = 'none';
-      document.getElementById('bid-form').reset();
-      document.getElementById('form-error').style.display = 'none';
-      document.getElementById('field-amount').style.display = 'none';
-      document.getElementById('field-decline').style.display = 'none';
-      document.getElementById('opt-yes').className = 'intent-option';
-      document.getElementById('opt-no').className = 'intent-option';
-      selectedFiles = [];
-      renderFileList();
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeBidModal() {
-      document.getElementById('bid-modal-overlay').classList.remove('active');
-      document.body.style.overflow = '';
-    }
-
-    document.getElementById('bid-modal-overlay').addEventListener('click', function(e) {
-      if (e.target === this) closeBidModal();
-    });
-
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeBidModal(); });
-
-    // ─── INTENT TOGGLE ────────────────────────────────────────
-    function selectIntent(choice) {
-      document.getElementById('opt-yes').className = 'intent-option' + (choice === 'yes' ? ' sel-yes' : '');
-      document.getElementById('opt-no').className  = 'intent-option' + (choice === 'no'  ? ' sel-no'  : '');
-      document.getElementById('r-yes').checked = choice === 'yes';
-      document.getElementById('r-no').checked  = choice === 'no';
-      document.getElementById('field-amount').style.display  = choice === 'yes' ? '' : 'none';
-      document.getElementById('field-decline').style.display = choice === 'no'  ? '' : 'none';
-    }
-
-    // ─── FILE UPLOAD ──────────────────────────────────────────
-    function handleFileSelect(e) {
-      addFiles(Array.from(e.target.files));
-      e.target.value = ''; // reset so same file can be re-added
-    }
-
-    function handleDragOver(e) {
-      e.preventDefault();
-      document.getElementById('upload-zone').classList.add('dragover');
-    }
-
-    function handleDragLeave(e) {
-      document.getElementById('upload-zone').classList.remove('dragover');
-    }
-
-    function handleDrop(e) {
-      e.preventDefault();
-      document.getElementById('upload-zone').classList.remove('dragover');
-      addFiles(Array.from(e.dataTransfer.files));
-    }
-
-    function addFiles(files) {
-      files.forEach(f => {
-        if (f.size > 10 * 1024 * 1024) {
-          alert(`"${f.name}" exceeds 10MB and was not added.`);
-          return;
-        }
-        selectedFiles.push(f);
-      });
-      renderFileList();
-    }
-
-    function removeFile(idx) {
-      selectedFiles.splice(idx, 1);
-      renderFileList();
-    }
-
-    function renderFileList() {
-      const list = document.getElementById('file-list');
-      if (selectedFiles.length === 0) { list.innerHTML = ''; return; }
-      list.innerHTML = selectedFiles.map((f, i) => `
-        <div class="file-item">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-          <span class="file-name">${f.name}</span>
-          <span class="file-size">${(f.size / 1024).toFixed(0)} KB</span>
-          <button class="file-remove" onclick="removeFile(${i})" title="Remove">&times;</button>
-        </div>
-      `).join('');
-    }
-
-    // ─── SUBMIT BID ───────────────────────────────────────────
-    async function submitBid() {
-      const errEl = document.getElementById('form-error');
-      errEl.style.display = 'none';
-
-      const company  = document.getElementById('f-company').value.trim();
-      const contact  = document.getElementById('f-contact').value.trim();
-      const email    = document.getElementById('f-email').value.trim();
-      const phone    = document.getElementById('f-phone').value.trim();
-      const intentY  = document.getElementById('r-yes').checked;
-      const intentN  = document.getElementById('r-no').checked;
-      const amount   = document.getElementById('f-amount').value;
-      const decline  = document.getElementById('f-decline').value.trim();
-      const comments = document.getElementById('f-comments').value.trim();
-      const projId   = document.getElementById('f-project-id').value;
-      const projName = document.getElementById('f-project-name').value;
-
-      if (!company) return showError('Company name is required.');
-      if (!contact) return showError('Contact person name is required.');
-      if (!email || !/\S+@\S+\.\S+/.test(email)) return showError('A valid email address is required.');
-      if (!intentY && !intentN) return showError('Please select your bid intention (Yes or No).');
-
-      const btn = document.getElementById('submit-btn');
-      btn.disabled = true;
-      btn.textContent = 'Submitting...';
-
-      try {
-        // Use FormData to support file uploads
-        const fd = new FormData();
-        fd.append('project', projId);
-        fd.append('projectName', projName);
-        fd.append('companyName', company);
-        fd.append('contactPerson', contact);
-        fd.append('emailAddress', email);
-        fd.append('phone', phone);
-        fd.append('bidIntent', intentY ? 'yes' : 'no');
-        fd.append('declineReason', decline);
-        fd.append('bidAmount', amount ? parseFloat(amount) : 0);
-        fd.append('comments', comments);
-        selectedFiles.forEach(f => fd.append('documents', f));
-
-        const res = await fetch(`${API_URL}/bids`, {
-          method: 'POST',
-          body: fd   // multipart/form-data — no Content-Type header needed
-        });
-
-        if (!res.ok) {
-          const data = await res.json().catch(() => ({}));
-          throw new Error(data.message || `Server error (${res.status})`);
-        }
-
-        // Show success
-        document.getElementById('success-email-display').textContent = email;
-        document.getElementById('modal-form-wrap').style.display = 'none';
-        document.getElementById('modal-success').style.display = 'block';
-
-      } catch (err) {
-        showError(`Submission failed: ${err.message}. Please email estimating@kjrid.com directly.`);
-      } finally {
-        btn.disabled = false;
-        btn.textContent = 'Submit Response';
-      }
-    }
-
-    function showError(msg) {
-      const el = document.getElementById('form-error');
-      el.textContent = msg;
-      el.style.display = 'block';
-    }
-
-    // ─── INIT ─────────────────────────────────────────────────
-    loadProjects();
-  </script>
-
-  <!-- ===== FULL EXCEL LIST MODAL ===== -->
-  <div class="bid-modal-overlay" id="full-list-overlay">
-    <div class="bid-modal" style="max-width: 800px; max-height: 90vh; display: flex; flex-direction: column;">
-      <div class="modal-header">
-        <div>
-          <h3>Complete Database Export</h3>
-          <p id="modal-export-subtitle">Georgia Statewide — Detailed Company Headcounts</p>
-        </div>
-        <button class="modal-close" onclick="closeFullListModal()" title="Close">&times;</button>
-      </div>
-      <div style="padding: 1rem; background: #f8fafc; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
-        <span id="modal-export-filename" style="font-size: 0.85rem; color: #64748b; font-weight: 600;">File: Phase1_Georgia_Companies.xlsx</span>
-        <button style="background: #16a34a; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.8rem; font-weight: 700; display: inline-flex; align-items: center; gap: 0.4rem; cursor: pointer; box-shadow: 0 2px 4px rgba(22,163,74,0.2);">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-          Download .XLSX
-        </button>
-      </div>
-      <div class="modal-body" style="padding: 0; overflow-y: auto; flex: 1;">
-        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem;">
-          <thead style="position: sticky; top: 0; background: white; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
-            <tr>
-              <th style="padding: 0.75rem 1.25rem; color: #475569; font-weight: 700; border-bottom: 2px solid #e2e8f0; border-right: 1px solid #f1f5f9;">County Name</th>
-              <th style="padding: 0.75rem 1.25rem; color: #475569; font-weight: 700; border-bottom: 2px solid #e2e8f0; border-right: 1px solid #f1f5f9;">State</th>
-              <th style="padding: 0.75rem 1.25rem; color: #475569; font-weight: 700; border-bottom: 2px solid #e2e8f0; text-align: right; border-right: 1px solid #f1f5f9;">Total Companies</th>
-              <th style="padding: 0.75rem 1.25rem; color: #475569; font-weight: 700; border-bottom: 2px solid #e2e8f0; text-align: center;">Status</th>
-            </tr>
-          </thead>
-          <tbody id="excel-table-body">
-            <!-- Populated via JS -->
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    const stateData = {
-      "Georgia": {
-        countiesTotal: 159, companiesTotal: "6,354", code: "GA",
-        counties: [
-          { name: "Appling", count: 65 }, { name: "Atkinson", count: 37 }, { name: "Bacon", count: 69 },
-          { name: "Baker", count: 22 }, { name: "Baldwin", count: 68 }, { name: "Banks", count: 45 },
-          { name: "Barrow", count: 47 }, { name: "Bartow", count: 69 }, { name: "Ben Hill", count: 62 },
-          { name: "Berrien", count: 87 }, { name: "Bibb", count: 75 }, { name: "Bleckley", count: 50 },
-          { name: "Brantley", count: 21 }, { name: "Brooks", count: 84 }, { name: "Bryan", count: 76 }
-        ]
-      },
-      "Alabama": {
-        countiesTotal: 67, companiesTotal: "3,120", code: "AL",
-        counties: [
-          { name: "Jefferson", count: 450 }, { name: "Mobile", count: 320 }, { name: "Madison", count: 280 },
-          { name: "Montgomery", count: 210 }, { name: "Shelby", count: 190 }, { name: "Tuscaloosa", count: 180 },
-          { name: "Baldwin", count: 150 }, { name: "Lee", count: 140 }, { name: "Morgan", count: 120 },
-          { name: "Calhoun", count: 110 }, { name: "Houston", count: 95 }, { name: "Etowah", count: 88 },
-          { name: "Limestone", count: 85 }, { name: "Marshall", count: 76 }, { name: "Cullman", count: 74 }
-        ]
-      },
-      "Arkansas": {
-        countiesTotal: 75, companiesTotal: "2,405", code: "AR",
-        counties: [
-          { name: "Pulaski", count: 380 }, { name: "Benton", count: 240 }, { name: "Washington", count: 195 },
-          { name: "Sebastian", count: 155 }, { name: "Faulkner", count: 120 }, { name: "Saline", count: 110 },
-          { name: "Craighead", count: 105 }, { name: "Garland", count: 95 }, { name: "White", count: 82 },
-          { name: "Jefferson", count: 78 }, { name: "Crawford", count: 65 }, { name: "Union", count: 60 }
-        ]
-      },
-      "Arizona": {
-        countiesTotal: 15, companiesTotal: "5,892", code: "AZ",
-        counties: [
-          { name: "Maricopa", count: 3450 }, { name: "Pima", count: 890 }, { name: "Pinal", count: 420 },
-          { name: "Yavapai", count: 280 }, { name: "Mohave", count: 210 }, { name: "Yuma", count: 195 },
-          { name: "Coconino", count: 150 }, { name: "Cochise", count: 110 }, { name: "Navajo", count: 85 },
-          { name: "Apache", count: 45 }, { name: "Gila", count: 40 }, { name: "Santa Cruz", count: 35 }
-        ]
-      },
-      "California": {
-        countiesTotal: 58, companiesTotal: "34,580", code: "CA",
-        counties: [
-          { name: "Los Angeles", count: 8500 }, { name: "San Diego", count: 3200 }, { name: "Orange", count: 3100 },
-          { name: "Riverside", count: 2100 }, { name: "San Bernardino", count: 1900 }, { name: "Santa Clara", count: 1800 },
-          { name: "Alameda", count: 1600 }, { name: "Sacramento", count: 1400 }, { name: "Contra Costa", count: 1100 },
-          { name: "Fresno", count: 950 }, { name: "Kern", count: 880 }, { name: "San Francisco", count: 850 },
-          { name: "Ventura", count: 820 }, { name: "San Mateo", count: 780 }, { name: "San Joaquin", count: 720 }
-        ]
-      },
-      "Florida": {
-        countiesTotal: 67, companiesTotal: "22,140", code: "FL",
-        counties: [
-          { name: "Miami-Dade", count: 3800 }, { name: "Broward", count: 2400 }, { name: "Palm Beach", count: 2100 },
-          { name: "Hillsborough", count: 1650 }, { name: "Orange", count: 1500 }, { name: "Pinellas", count: 1200 },
-          { name: "Duval", count: 1100 }, { name: "Lee", count: 850 }, { name: "Polk", count: 780 },
-          { name: "Brevard", count: 760 }, { name: "Volusia", count: 620 }, { name: "Pasco", count: 590 },
-          { name: "Seminole", count: 540 }, { name: "Sarasota", count: 520 }, { name: "Manatee", count: 480 }
-        ]
-      },
-      "Texas": {
-        countiesTotal: 254, companiesTotal: "28,950", code: "TX",
-        counties: [
-          { name: "Harris", count: 4200 }, { name: "Dallas", count: 3100 }, { name: "Tarrant", count: 2100 },
-          { name: "Bexar", count: 1950 }, { name: "Travis", count: 1800 }, { name: "Collin", count: 1200 },
-          { name: "Denton", count: 950 }, { name: "Fort Bend", count: 880 }, { name: "El Paso", count: 850 },
-          { name: "Montgomery", count: 780 }, { name: "Williamson", count: 620 }, { name: "Nueces", count: 410 }
-        ]
-      },
-      "New York": {
-        countiesTotal: 62, companiesTotal: "19,840", code: "NY",
-        counties: [
-          { name: "Kings", count: 2800 }, { name: "Queens", count: 2600 }, { name: "New York", count: 3500 },
-          { name: "Suffolk", count: 1900 }, { name: "Bronx", count: 1200 }, { name: "Nassau", count: 1800 },
-          { name: "Westchester", count: 1100 }, { name: "Erie", count: 880 }, { name: "Monroe", count: 780 },
-          { name: "Onondaga", count: 520 }, { name: "Richmond", count: 450 }, { name: "Albany", count: 390 }
-        ]
-      }
-    };
-
-    let currentState = 'Georgia';
-
-    function showDirState(btn, state) {
-      document.querySelectorAll('.state-item').forEach(b => b.classList.remove('active'));
+    // ── Filter ──
+    function filterState(btn) {
+      document.querySelectorAll('.state-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      currentState = state;
+      const state = btn.dataset.state;
 
-      const data = stateData[state];
-      if (!data) return;
-
-      document.getElementById('dir-active-title').textContent = state + ' Database';
-      document.getElementById('dir-active-subtitle').innerHTML = `${data.countiesTotal} Counties &mdash; ${data.companiesTotal} Companies Mapped`;
-      
-      const grid = document.getElementById('dir-active-grid');
-      let html = '';
-      data.counties.forEach(c => {
-        html += `<div class="dir-card"><span class="c-name">${c.name}</span><span class="c-num">${c.count}</span></div>`;
+      const cards = document.querySelectorAll('.pc');
+      let visible = 0;
+      cards.forEach(c => {
+        const show = state === 'All' || c.dataset.state === state;
+        c.classList.toggle('vis', show);
+        if (show) visible++;
       });
-      
-      // Calculate remaining counties dynamically to make up to Total
-      const remaining = data.countiesTotal - data.counties.length;
-      html += `
-        <!-- Interactive Action -->
-        <div style="grid-column: 1 / -1; display: flex; justify-content: center; margin-top: 1rem;">
-          <button onclick="openFullListModal()" style="background: white; border: 1.5px solid #cbd5e1; color: #334155; padding: 0.85rem 2rem; border-radius: 8px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.2s;" onmouseover="this.style.borderColor='#cc0000'; this.style.color='#cc0000'" onmouseout="this.style.borderColor='#cbd5e1'; this.style.color='#334155'">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
-            View Full Excel Sheet Data (+ ${remaining} More)
-          </button>
-        </div>
-      `;
-      grid.innerHTML = html;
+
+      document.getElementById('no-res').classList.toggle('vis', visible === 0);
+      document.getElementById('loc-title').textContent = state === 'All' ? 'All Active Projects' : state + ' Projects';
+      document.getElementById('loc-sub').textContent = visible + (visible === 1 ? ' project' : ' projects') + ' currently open for bidding' + (state !== 'All' ? ' in ' + state : '');
     }
 
-    function openFullListModal() {
-      const data = stateData[currentState];
-      document.getElementById('modal-export-subtitle').textContent = `${currentState} Statewide — Detailed Company Headcounts`;
-      document.getElementById('modal-export-filename').textContent = `File: Phase1_${currentState.replace(' ','_')}_Companies.xlsx`;
+    // ── Modal ──
+    function openModal(proj, loc, due) {
+      document.getElementById('m-proj-sub').textContent = proj + '  ·  ' + loc + '  ·  Due ' + due;
+      document.getElementById('suc-proj').textContent = proj;
+      document.getElementById('form-view').style.display = '';
+      document.getElementById('success-view').classList.remove('vis');
+      document.getElementById('applyModal').classList.add('active');
+    }
 
-      const tbody = document.getElementById('excel-table-body');
-      
-      // Auto-generate some dummy rows up to the total limit if we want to mock a massive list
-      let renderCounties = [...data.counties];
-      let fillerNeeded = data.countiesTotal - renderCounties.length;
-      for(let j = 1; j <= fillerNeeded; j++) {
-         renderCounties.push({ name: `Generated County ${j}`, count: Math.floor(Math.random() * 50) + 5 });
+    function closeModal() {
+      document.getElementById('applyModal').classList.remove('active');
+    }
+
+    function closeBg(e) {
+      if (e.target === document.getElementById('applyModal')) closeModal();
+    }
+
+    function submitForm() {
+      const first = document.getElementById('f-first').value.trim();
+      const company = document.getElementById('f-company').value.trim();
+      const email = document.getElementById('f-email').value.trim();
+      const trade = document.getElementById('f-trade').value;
+      if (!first || !company || !email || !trade) {
+        alert('Please fill in all required fields before submitting.');
+        return;
       }
-
-      tbody.innerHTML = renderCounties.map((c, i) => `
-        <tr style="border-bottom: 1px solid #f1f5f9; background: ${i % 2 === 0 ? 'white' : '#f8fafc'}; transition: background 0.15s;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='${i % 2 === 0 ? 'white' : '#f8fafc'}'">
-          <td style="padding: 0.65rem 1.25rem; color: #1e293b; font-weight: 600; border-right: 1px solid #f1f5f9;">${c.name}</td>
-          <td style="padding: 0.65rem 1.25rem; color: #475569; border-right: 1px solid #f1f5f9;">${data.code}</td>
-          <td style="padding: 0.65rem 1.25rem; color: #1e293b; text-align: right; border-right: 1px solid #f1f5f9;">${c.count}</td>
-          <td style="padding: 0.65rem 1.25rem; text-align: center;"><span style="background: #dcfce7; color: #166534; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 700;">Synced</span></td>
-        </tr>
-      `).join('');
-      document.getElementById('full-list-overlay').classList.add('active');
+      document.getElementById('form-view').style.display = 'none';
+      document.getElementById('success-view').classList.add('vis');
     }
-
-    function closeFullListModal() {
-      document.getElementById('full-list-overlay').classList.remove('active');
-    }
-    
-    // Allow closing by clicking outside specifically for full list
-    document.getElementById('full-list-overlay').addEventListener('click', function(e) {
-      if (e.target === this) closeFullListModal();
-    });
-    
-    // Initialize first load
-    setTimeout(() => showDirState(document.querySelector('.state-item.active'), 'Georgia'), 100);
   </script>
-</body>
-</html>
+
 </body>
 </html>
