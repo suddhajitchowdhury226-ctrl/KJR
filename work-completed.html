@@ -24,29 +24,40 @@
       margin: 3rem auto 0;
     }
 
+    
     /* ── Project Showcase Card ── */
     .project-showcase {
       background: white;
-      border-radius: 16px;
+      border-radius: 20px;
       overflow: hidden;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.04), 0 20px 50px rgba(0,0,0,0.08);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+      border: 1px solid rgba(0,0,0,0.05);
     }
 
     .project-showcase:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 12px rgba(0,0,0,0.06), 0 30px 60px rgba(0,0,0,0.12);
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
     }
 
     .project-header {
-      padding: 1.75rem 2rem;
-      background: linear-gradient(135deg, #cc0000 0%, #8b0000 100%);
+      padding: 2rem 2.5rem;
+      background: #111827;
       color: white;
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
       gap: 1rem;
       flex-wrap: wrap;
+      position: relative;
+    }
+
+    .project-header::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #cc0000, #ff4444);
     }
 
     .project-header-text { text-align: left; }
@@ -385,105 +396,212 @@
     </div>
 
     <div class="gallery-grid">
+<!-- ====== GOMES PROJECT ====== -->
 
-      <!-- ====== REAL PROJECT: Dual Vanity Countertop Installation ====== -->
       <div class="project-showcase">
         <div class="project-header">
           <div class="project-header-text">
-            <div class="project-title">Bathroom Vanity Countertop Installation</div>
-            <div class="project-desc">Custom cultured marble countertop with dual drop-in sinks, completed to spec on a commercial residential renovation project.</div>
+            <div class="project-title">Gomes Property Renovation</div>
+            <div class="project-desc">Complete exterior renovation and facelift.</div>
           </div>
-          <span class="project-tag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Completed</span>
-        </div>
-        <div class="single-image-container">
-          <div class="image-wrapper">
-            <span class="image-label after">After</span>
-            <img src="assets/23in x 61in.JPG" alt="Completed dual-sink bathroom vanity countertop installation by KJRID" loading="lazy">
-          </div>
-          <div class="single-image-caption">
-            <div class="caption-eyebrow">Countertop Installation</div>
-            <div class="caption-title">Dual-Sink Vanity with Dark Green Cultured Marble</div>
-            <div class="caption-body">This bathroom vanity countertop was custom-fabricated and installed by the KJRID team, featuring a rich dark green cultured marble surface with dual oval drop-in basin sinks — a hallmark of quality interior finishing.</div>
-            <div class="caption-specs">
-              <div class="spec-row"><span class="spec-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" y1="20" x2="15" y2="20"></line><line x1="12" y1="4" x2="12" y2="20"></line></svg></span> Dimensions: 23 in. × 61 in.</div>
-              <div class="spec-row"><span class="spec-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg></span> Material: Cultured Marble</div>
-              <div class="spec-row"><span class="spec-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"></path></svg></span> Sinks: Dual Drop-in Oval Basin</div>
-              <div class="spec-row"><span class="spec-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg></span> Completed: April 2012</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ====== REAL PROJECT: Kitchen / Utility Countertop ====== -->
-      <div class="project-showcase">
-        <div class="project-header">
-          <div class="project-header-text">
-            <div class="project-title">Kitchen / Utility Countertop Installation</div>
-            <div class="project-desc">Beige cultured marble surface countertop installed as part of a full interior renovation — including upper cabinetry and base unit finishing.</div>
-          </div>
-          <span class="project-tag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Completed</span>
-        </div>
-        <div class="single-image-container">
-          <div class="image-wrapper">
-            <span class="image-label after">After</span>
-            <img src="assets/25in x 49in.JPG" alt="Completed kitchen countertop with upper cabinetry installed by KJRID" loading="lazy">
-          </div>
-          <div class="single-image-caption">
-            <div class="caption-eyebrow">Countertop Installation</div>
-            <div class="caption-title">Beige Marble Surface with Upper Cabinet Finish</div>
-            <div class="caption-body">Clean-edge beige cultured marble countertop installed alongside upper cabinets as part of a complete kitchen fit-out. The surface features a molded backsplash edge and was precision-cut for a seamless fit against surrounding cabinetry.</div>
-            <div class="caption-specs">
-              <div class="spec-row"><span class="spec-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" y1="20" x2="15" y2="20"></line><line x1="12" y1="4" x2="12" y2="20"></line></svg></span> Dimensions: 25 in. × 49 in.</div>
-              <div class="spec-row"><span class="spec-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg></span> Material: Cultured Marble</div>
-              <div class="spec-row"><span class="spec-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l10 6.5v7L12 22 2 15.5v-7L12 2z"></path><path d="M12 22v-6.5"></path><path d="M22 8.5l-10 7-10-7"></path><path d="M2 15.5l10-7 10 7"></path></svg></span> Scope: Counter + Upper Cabinet Install</div>
-              <div class="spec-row"><span class="spec-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg></span> Completed: April 2012</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ====== Project: Retail Store Fit-out ====== -->
-      <div class="project-showcase">
-        <div class="project-header">
-          <div class="project-header-text">
-            <div class="project-title">Retail Store Fit-out: Avenue Moderne</div>
-            <div class="project-desc">Complete interior construction, custom shelving, lighting, and polished concrete flooring.</div>
-          </div>
-          <span class="project-tag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"></path><circle cx="12" cy="13" r="4"></circle></svg> Before / After</span>
+          <span class="project-tag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"></path><circle cx="12" cy="13" r="4"></circle></svg> Before & After</span>
         </div>
         <div class="comparison-container">
           <div class="image-wrapper">
             <span class="image-label before">Before</span>
-            <img src="assets/before_1.png" alt="Before retail store construction">
+            <img src="Before%20and%20After/Gomes%20Before.jpg" alt="Before Gomes Property Renovation" loading="lazy">
           </div>
           <div class="image-wrapper">
             <span class="image-label after">After</span>
-            <img src="assets/after_1.png" alt="After completed retail store">
+            <img src="Before%20and%20After/Gomes%20After.jpg" alt="After Gomes Property Renovation" loading="lazy">
           </div>
         </div>
       </div>
+<!-- ====== POND ENCLOSURE ====== -->
 
-      <!-- ====== Project: Corporate Office Renovation ====== -->
       <div class="project-showcase">
         <div class="project-header">
           <div class="project-header-text">
-            <div class="project-title">Corporate Office Renovation</div>
-            <div class="project-desc">Demolition of old layout, installation of glass partitions, modern carpeting, and new ceiling framework.</div>
+            <div class="project-title">Pond Enclosure Upgrade</div>
+            <div class="project-desc">Repainting, reinforcement, and structural upgrades of the pond enclosure.</div>
           </div>
-          <span class="project-tag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"></path><circle cx="12" cy="13" r="4"></circle></svg> Before / After</span>
+          <span class="project-tag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"></path><circle cx="12" cy="13" r="4"></circle></svg> Complete Renovation</span>
         </div>
         <div class="comparison-container">
           <div class="image-wrapper">
             <span class="image-label before">Before</span>
-            <img src="assets/before_2.png" alt="Before office renovation">
+            <img src="Before%20and%20After/Pond%20Enclosure%20Before.jpg" alt="Before Pond Enclosure Upgrade" loading="lazy">
           </div>
           <div class="image-wrapper">
-            <span class="image-label after">After</span>
-            <img src="assets/after_2.png" alt="After modern office space">
+            <span class="image-label after">After (Final)</span>
+            <img src="Before%20and%20After/Pond%20Enclosure%203%20painted%20After.jpg" alt="After Pond Enclosure Upgrade" loading="lazy">
+          </div>
+        </div>
+        <div class="comparison-container" style="border-top: 3px solid white;">
+          <div class="image-wrapper">
+            <span class="image-label after">Progress / Angle 1</span>
+            <img src="Before%20and%20After/Pond%20Enclosure%201%20After.jpg" alt="After Pond Enclosure Upgrade" loading="lazy" style="height:320px;">
+          </div>
+          <div class="image-wrapper">
+            <span class="image-label after">Progress / Angle 2</span>
+            <img src="Before%20and%20After/Pond%20Enclosure%202%20painted%20After.jpg" alt="After Pond Enclosure Upgrade" loading="lazy" style="height:320px;">
           </div>
         </div>
       </div>
+<!-- ====== FRONT EXTERIOR ====== -->
 
+      <div class="project-showcase">
+        <div class="project-header">
+          <div class="project-header-text">
+            <div class="project-title">Front Exterior Renovation</div>
+            <div class="project-desc">Revitalized front entry and architectural elements.</div>
+          </div>
+          <span class="project-tag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"></path><circle cx="12" cy="13" r="4"></circle></svg> Before & After</span>
+        </div>
+        <div class="comparison-container">
+          <div class="image-wrapper">
+            <span class="image-label before">Before</span>
+            <img src="Before%20and%20After/FRONT%20Before.png" alt="Before Front Exterior Renovation" loading="lazy">
+          </div>
+          <div class="image-wrapper">
+            <span class="image-label after">After</span>
+            <img src="Before%20and%20After/FRONT%20After.png" alt="After Front Exterior Renovation" loading="lazy">
+          </div>
+        </div>
+      </div>
+<!-- ====== HAND RAIL 1 ====== -->
+
+      <div class="project-showcase">
+        <div class="project-header">
+          <div class="project-header-text">
+            <div class="project-title">Veranda Hand Rail Installation (Phase 1)</div>
+            <div class="project-desc">New hand rail installation at the Veranda for improved safety and aesthetics.</div>
+          </div>
+          <span class="project-tag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"></path><circle cx="12" cy="13" r="4"></circle></svg> Before & After</span>
+        </div>
+        <div class="comparison-container">
+          <div class="image-wrapper">
+            <span class="image-label before">Before</span>
+            <img src="Before%20and%20After/Hand%20Rail%20%231%20%40%20Veranda%20%28Before%29.jpg" alt="Before Veranda Hand Rail Installation (Phase 1)" loading="lazy">
+          </div>
+          <div class="image-wrapper">
+            <span class="image-label after">After</span>
+            <img src="Before%20and%20After/Hand%20Rail%20%231%20%40%20Veranda%20%28After%29.jpg" alt="After Veranda Hand Rail Installation (Phase 1)" loading="lazy">
+          </div>
+        </div>
+      </div>
+<!-- ====== HAND RAIL 2 ====== -->
+
+      <div class="project-showcase">
+        <div class="project-header">
+          <div class="project-header-text">
+            <div class="project-title">Veranda Hand Rail Installation (Phase 2)</div>
+            <div class="project-desc">Secondary hand rail replacement utilizing modern materials.</div>
+          </div>
+          <span class="project-tag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"></path><circle cx="12" cy="13" r="4"></circle></svg> Before & After</span>
+        </div>
+        <div class="comparison-container">
+          <div class="image-wrapper">
+            <span class="image-label before">Before</span>
+            <img src="Before%20and%20After/Hand%20Rail%20%232%20%40%20Veranda%20%28Before%29.jpg" alt="Before Veranda Hand Rail Installation (Phase 2)" loading="lazy">
+          </div>
+          <div class="image-wrapper">
+            <span class="image-label after">After</span>
+            <img src="Before%20and%20After/Hand%20Rail%20%232%20%40%20Veranda%20%28After%29.jpg" alt="After Veranda Hand Rail Installation (Phase 2)" loading="lazy">
+          </div>
+        </div>
+      </div>
+<!-- ====== FRONT RAIL BALUSTERS ====== -->
+
+      <div class="project-showcase">
+        <div class="project-header">
+          <div class="project-header-text">
+            <div class="project-title">Front Rail Balusters Update</div>
+            <div class="project-desc">Complete replacement of front rail balusters with modern styled spindles.</div>
+          </div>
+          <span class="project-tag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"></path><circle cx="12" cy="13" r="4"></circle></svg> Before & After</span>
+        </div>
+        <div class="comparison-container">
+          <div class="image-wrapper">
+            <span class="image-label before">Before</span>
+            <img src="Before%20and%20After/Front%20RAIL%20Balusters%20Before.png" alt="Before Front Rail Balusters Update" loading="lazy">
+          </div>
+          <div class="image-wrapper">
+            <span class="image-label after">After</span>
+            <img src="Before%20and%20After/Front%20RAIL%20Balusters%20After.png" alt="After Front Rail Balusters Update" loading="lazy">
+          </div>
+        </div>
+      </div>
+<!-- ====== SIDE BROW ====== -->
+
+      <div class="project-showcase">
+        <div class="project-header">
+          <div class="project-header-text">
+            <div class="project-title">Exterior Side Brow Finish</div>
+            <div class="project-desc">Repaired and modernized side brow structures.</div>
+          </div>
+          <span class="project-tag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"></path><circle cx="12" cy="13" r="4"></circle></svg> Before & After</span>
+        </div>
+        <div class="comparison-container">
+          <div class="image-wrapper">
+            <span class="image-label before">Before</span>
+            <img src="Before%20and%20After/Side%20Brow%20Before.png" alt="Before Exterior Side Brow Finish" loading="lazy">
+          </div>
+          <div class="image-wrapper">
+            <span class="image-label after">After</span>
+            <img src="Before%20and%20After/Side%20Brow%20After.png" alt="After Exterior Side Brow Finish" loading="lazy">
+          </div>
+        </div>
+      </div>
+<!-- ====== WINDOW EYE BROW ====== -->
+
+      <div class="project-showcase">
+        <div class="project-header">
+          <div class="project-header-text">
+            <div class="project-title">Window Eye Brow Repair</div>
+            <div class="project-desc">Precision repair and painting of window eye brows.</div>
+          </div>
+          <span class="project-tag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"></path><circle cx="12" cy="13" r="4"></circle></svg> Before & After</span>
+        </div>
+        <div class="comparison-container">
+          <div class="image-wrapper">
+            <span class="image-label before">Before</span>
+            <img src="Before%20and%20After/Window%20Eye%20Brow%20Before.png" alt="Before Window Eye Brow Repair" loading="lazy">
+          </div>
+          <div class="image-wrapper">
+            <span class="image-label after">After</span>
+            <img src="Before%20and%20After/Window%20Eye%20Brow%20After.png" alt="After Window Eye Brow Repair" loading="lazy">
+          </div>
+        </div>
+      </div>
+<!-- ====== THE VERANDA BRICK BED ====== -->
+
+      <div class="project-showcase">
+        <div class="project-header">
+          <div class="project-header-text">
+            <div class="project-title">The Veranda Brick Bed</div>
+            <div class="project-desc">Custom brick laying for family bed area at The Veranda.</div>
+          </div>
+          <span class="project-tag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Completed</span>
+        </div>
+        <div style="width:100%; height:450px; overflow:hidden;">
+            <img src="Before%20and%20After/Brick%20%40%20The%20%20Veranda%20Bed%20Family.jpg" alt="The Veranda Brick Bed" loading="lazy" style="width:100%; height:100%; object-fit:cover; transition: transform 0.45s ease;" onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform='scale(1)'">
+        </div>
+      </div>
+<!-- ====== WALMART RESURFACING ====== -->
+
+      <div class="project-showcase">
+        <div class="project-header">
+          <div class="project-header-text">
+            <div class="project-title">Walmart Resurfacing Project</div>
+            <div class="project-desc">Commercial resurfacing providing a clean, professional concrete floor finish.</div>
+          </div>
+          <span class="project-tag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Completed</span>
+        </div>
+        <div style="width:100%; height:450px; overflow:hidden;">
+            <img src="Before%20and%20After/Walmart%20Resurfacing%202.jpg" alt="Walmart Resurfacing Project" loading="lazy" style="width:100%; height:100%; object-fit:cover; transition: transform 0.45s ease;" onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform='scale(1)'">
+        </div>
+      </div>
     </div>
   </section>
 
