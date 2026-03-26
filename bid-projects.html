@@ -4,369 +4,380 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bid Projects | KJR Interior Designs Inc.</title>
+  <meta name="description" content="Review open bid projects and submit proposals to KJR Interior Designs Inc.">
   <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    .bid-hero {
-      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-      padding: 6rem 2rem 5rem;
-      text-align: center;
-      color: white;
+    :root{
+      --gold:#C9962C; --gold-l:#E8BC5A;
+      --gold-pale:#FFF8EC;
+      --crim:#8B1A1A; --crim2:#CC0000; --saff:#C97A00;
+      --dark:#0F172A; --dark2:#1E293B;
+      --txt:#0F172A; --muted:#64748B;
+      --border:#E2E8F0; --bg:#F8FAFC;
     }
-    .live-badge {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      background: rgba(204,0,0,0.18); color: #ff7777;
-      border: 1px solid rgba(204,0,0,0.4);
-      padding: 0.5rem 1.5rem; border-radius: 50px;
-      font-size: 0.78rem; font-weight: 700; letter-spacing: 0.15em;
-      text-transform: uppercase; margin-bottom: 1.5rem;
-    }
-    .live-dot { width:8px;height:8px;background:#ff4444;border-radius:50%;animation:blink 1.5s infinite; }
-    @keyframes blink{0%,100%{opacity:1;}50%{opacity:0.25;}}
-    .bid-hero h1 { font-size:3rem;font-weight:800;color:white;letter-spacing:-0.03em;margin-bottom:1rem; }
-    .bid-hero > p { font-size:1.05rem;color:#94a3b8;max-width:590px;margin:0 auto;line-height:1.6; }
+    body{background:#fff;font-family:'Inter',sans-serif;margin:0;color:var(--txt);}
 
-    .notice {
-      background:#fffbeb;border-bottom:1px solid #fde68a;padding:0.85rem 2.5rem;
-      font-size:0.875rem;color:#92400e;text-align:center;
+    /* ── HERO ── */
+    .bid-hero{
+      position:relative;min-height:380px;display:flex;align-items:center;justify-content:center;
+      padding:5rem 2rem;overflow:hidden;background:#0F172A;text-align:center;
     }
-    .notice a{color:#cc0000;font-weight:700;}
+    .bid-hero video.hero-bg{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;}
+    .bid-hero::before{content:'';position:absolute;inset:0;background:linear-gradient(160deg,rgba(40,30,20,.7) 0%,rgba(10,15,20,.6) 100%);z-index:1;}
+    .hero-top-bar{position:absolute;top:0;left:0;right:0;height:4px;z-index:3;
+      background:linear-gradient(90deg,var(--crim2),var(--gold),var(--crim2));}
+    .hero-container{
+      position:relative;z-index:2;width:100%;max-width:900px;
+      display:flex;flex-direction:column;align-items:center;gap:1.5rem;
+    }
+    .live-badge{
+      display:inline-block;
+      background:rgba(204,0,0,.15);color:#ff4444;
+      border:1px solid rgba(204,0,0,.6);
+      padding:0.45rem 1.4rem;border-radius:50px;
+      font-size:.75rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+    }
+    .hero-container h1{
+      font-family:'Cinzel',serif;font-size:4.2rem;font-weight:700;color:#fff;
+      letter-spacing:.02em;margin:0;text-shadow:0 2px 15px rgba(0,0,0,.5);text-transform:uppercase;line-height:1.1;
+    }
+    .hero-container p{
+      color:rgba(255,255,255,.9);font-size:1.1rem;max-width:650px;margin:0 auto;
+      line-height:1.6;font-weight:400;text-shadow:0 1px 4px rgba(0,0,0,.5);
+    }
 
-    .states-section { max-width:1360px;margin:3.5rem auto 5rem;padding:0 2.5rem; }
-    .sec-top {
+    /* ── NOTICE ── */
+    .notice{
+      background:#FFF5F5;border-top:1px solid #FECACA;border-bottom:1px solid #FECACA;
+      padding:.85rem 2.5rem;font-size:.855rem;color:#7F1D1D;text-align:center;line-height:1.65;
+    }
+    .notice strong{color:var(--crim2);font-weight:700;}
+    .notice a{color:var(--crim2);font-weight:700;text-decoration:none;}
+    .notice a:hover{text-decoration:underline;}
+
+    /* ── LAYOUT ── */
+    .page-wrap{max-width:1300px;margin:2.5rem auto 5rem;padding:0 2rem;display:flex;gap:1.75rem;align-items:flex-start;}
+
+    /* ── SIDEBAR ── */
+    .sidebar{width:252px;flex-shrink:0;position:sticky;top:1.5rem;}
+    .sidebar-box{background:#fff;border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 1px 6px rgba(0,0,0,.06);}
+    .sidebar-title{padding:.85rem 1.25rem .7rem;font-size:.65rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);background:var(--bg);}
+    .state-btn{
       display:flex;align-items:center;justify-content:space-between;
-      margin-bottom:2rem;gap:1rem;flex-wrap:wrap;
+      width:100%;padding:.7rem 1.25rem;background:none;border:none;border-bottom:1px solid var(--border);
+      cursor:pointer;font-size:.875rem;font-weight:500;color:var(--txt);font-family:'Inter',sans-serif;
+      transition:background .15s;text-align:left;
     }
-    .sec-top h2 { font-size:1.8rem;font-weight:800;color:#0f172a; }
-    .sec-top p { color:#64748b;font-size:0.92rem;margin-top:0.2rem; }
-    .search-box {
-      padding:0.7rem 1.2rem;border:1.5px solid #e2e8f0;border-radius:8px;
-      font-size:0.92rem;font-family:inherit;color:#0f172a;background:#f8fafc;
-      min-width:220px;transition:all 0.2s;
+    .state-btn:hover{background:var(--bg);}
+    .state-btn.active{background:var(--crim2);color:#fff;font-weight:700;}
+    .state-btn.active .sb-count{background:rgba(255,255,255,.22);color:#fff;}
+    .sb-count{
+      background:#F1F5F9;color:#475569;
+      font-size:.7rem;font-weight:700;padding:.18rem .5rem;border-radius:20px;min-width:20px;text-align:center;
     }
-    .search-box:focus{outline:none;border-color:#cc0000;background:#fff;box-shadow:0 0 0 3px rgba(204,0,0,0.08);}
+    .state-btn.active .sb-count{background:rgba(255,255,255,.2);color:#fff;}
+    .state-btn.zero{color:#94a3b8;}
+    .state-btn.zero .sb-count{color:#cbd5e1;background:#f8fafc;}
 
-    .states-grid {
-      display:grid;
-      grid-template-columns:repeat(auto-fill, minmax(175px, 1fr));
-      gap:1rem;
-    }
-    .sc-card {
-      background:white;border:1.5px solid #e2e8f0;border-radius:14px;
-      padding:1.5rem 1.25rem;cursor:pointer;
-      transition:all 0.25s;text-align:center;position:relative;overflow:hidden;
-    }
-    .sc-card::before {
-      content:'';position:absolute;top:0;left:0;right:0;height:3px;
-      background:linear-gradient(90deg,#cc0000,#ff5555);
-      transform:scaleX(0);transform-origin:left;transition:transform 0.25s;
-    }
-    .sc-card:hover::before,.sc-card.has-bids::before { transform:scaleX(1); }
-    .sc-card:hover { transform:translateY(-4px);box-shadow:0 10px 28px rgba(0,0,0,0.1);border-color:#cc0000; }
-    .sc-card.has-bids { border-color:#fecaca;background:#fff5f5; }
-    .sc-emoji { font-size:2rem;margin-bottom:0.6rem; }
-    .sc-name { font-size:0.92rem;font-weight:700;color:#0f172a; }
-    .bid-badge {
-      display:inline-flex;align-items:center;gap:0.3rem;
-      background:#fee2e2;color:#cc0000;font-size:0.7rem;font-weight:800;
-      padding:0.25rem 0.65rem;border-radius:20px;margin-top:0.5rem;
-    }
-    .bid-badge .d{width:6px;height:6px;background:#cc0000;border-radius:50%;animation:blink 1.5s infinite;}
-    .no-tag { font-size:0.72rem;color:#94a3b8;font-weight:600;margin-top:0.5rem;display:block; }
+    /* ── MAIN CONTENT ── */
+    .main{flex:1;min-width:0;}
+    .main-hdr{margin-bottom:1.5rem;}
+    .main-hdr h2{font-size:1.5rem;font-weight:800;color:var(--dark);}
+    .main-hdr p{color:var(--muted);font-size:.85rem;margin-top:.2rem;}
 
-    /* ── Drawer Panel ── */
-    .drawer-overlay {
-      position:fixed;inset:0;background:rgba(15,23,42,0.76);
-      backdrop-filter:blur(6px);z-index:5000;
-      display:none;align-items:stretch;justify-content:flex-end;
-    }
-    .drawer-overlay.open { display:flex; }
-    .drawer-bg-close { flex:1; }
-    .drawer {
-      background:white;width:100%;max-width:700px;
-      height:100vh;overflow-y:auto;
-      animation:slideRight 0.35s cubic-bezier(0.165,0.84,0.44,1);
-      display:flex;flex-direction:column;
-    }
-    @keyframes slideRight{from{transform:translateX(100%);}to{transform:translateX(0);}}
+    /* ── PROJECT CARD ── */
+    .pj-card{background:#fff;border:1px solid var(--border);border-radius:12px;margin-bottom:1.25rem;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.05);transition:box-shadow .2s,border-color .2s;}
+    .pj-card:hover{box-shadow:0 4px 18px rgba(0,0,0,.09);border-color:#CBD5E1;}
+    .pj-inner{padding:1.4rem 1.75rem;}
 
-    .drawer-hdr {
-      background:linear-gradient(135deg,#1e293b,#0f172a);
-      padding:2rem 2.5rem;
-      position:sticky;top:0;z-index:10;
-      display:flex;justify-content:space-between;align-items:flex-start;
-      border-bottom:3px solid #cc0000;
-    }
-    .drawer-hdr h2 { color:white;font-size:1.5rem;font-weight:800;margin-bottom:0.3rem; }
-    .drawer-hdr p { color:#94a3b8;font-size:0.875rem; }
-    .drawer-close {
-      background:rgba(255,255,255,0.12);border:none;color:white;
-      width:36px;height:36px;border-radius:50%;font-size:1.3rem;
-      cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;
-      transition:background 0.2s;
-    }
-    .drawer-close:hover{background:rgba(255,255,255,0.25);}
-    .drawer-body { padding:2rem 2.5rem;flex:1; }
+    .pj-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.85rem;flex-wrap:wrap;gap:.5rem;}
+    .pj-badges{display:flex;align-items:center;gap:.35rem;flex-wrap:wrap;}
+    .badge{display:inline-block;font-size:.67rem;font-weight:600;padding:.22rem .6rem;border-radius:4px;letter-spacing:.03em;}
+    .badge-itb{background:#F1F5F9;color:#475569;border:1px solid #E2E8F0;}
+    .badge-active{background:#DCFCE7;color:#166534;border:1px solid #BBF7D0;}
+    .badge-state{background:#DBEAFE;color:#1D4ED8;border:1px solid #BFDBFE;}
+    .badge-state.al{background:#FEF3C7;color:#92400E;border:1px solid #FDE68A;}
+    .badge-state.fl{background:#EDE9FE;color:#6D28D9;border:1px solid #DDD6FE;}
+    .badge-state.tx{background:#FEE2E2;color:#B91C1C;border:1px solid #FECACA;}
+    .badge-state.nc{background:#D1FAE5;color:#065F46;border:1px solid #A7F3D0;}
+    .badge-state.sc{background:#FCE7F3;color:#9D174D;border:1px solid #FBCFE8;}
+    .kjr-address{text-align:right;font-size:.73rem;color:var(--muted);line-height:1.5;}
+    .kjr-address strong{font-size:.8rem;color:var(--txt);display:block;font-weight:700;letter-spacing:.01em;}
 
-    .no-proj-box {
-      text-align:center;padding:2.5rem 1.5rem;
-      background:#f8fafc;border-radius:12px;border:1px dashed #cbd5e1;
-      margin-bottom:2rem;
-    }
-    .no-proj-box h3{font-size:1.1rem;color:#334155;margin-bottom:0.4rem;}
-    .no-proj-box p{color:#64748b;font-size:0.88rem;}
+    .pj-title{font-size:1.2rem;font-weight:800;color:var(--dark);margin-bottom:1rem;}
 
-    /* Project cards in drawer */
-    .pj-card {
-      background:white;border:1px solid #e2e8f0;border-radius:14px;
-      margin-bottom:1.5rem;overflow:hidden;
-      box-shadow:0 2px 12px rgba(0,0,0,0.04);
-      transition:box-shadow 0.2s;
+    .pj-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem 2rem;margin-bottom:1.2rem;}
+    .pj-field label{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);display:flex;align-items:center;gap:.3rem;margin-bottom:.22rem;}
+    .pj-field label svg{opacity:.55;flex-shrink:0;}
+    .pj-field p{font-size:.875rem;font-weight:500;color:var(--txt);line-height:1.45;}
+    .pj-field a{color:var(--crim2);font-weight:600;text-decoration:none;}
+    .pj-field a:hover{text-decoration:underline;}
+    .due-chip{
+      display:inline-block;background:#111827;color:#FCD34D;
+      font-size:.75rem;font-weight:700;padding:.28rem .75rem;border-radius:5px;letter-spacing:.01em;
     }
-    .pj-card:hover{box-shadow:0 6px 20px rgba(0,0,0,0.08);}
-    .pj-hdr {
-      background:#111827;padding:1.5rem 2rem;position:relative;
-    }
-    .pj-hdr::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#cc0000,#ff5555);}
-    .itb-tag {
-      display:inline-flex;align-items:center;gap:0.35rem;
-      background:rgba(204,0,0,0.2);color:#ff7777;
-      font-size:0.68rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;
-      padding:0.3rem 0.75rem;border-radius:4px;margin-bottom:0.55rem;
-    }
-    .itb-d{width:6px;height:6px;background:#ff4444;border-radius:50%;animation:blink 1.5s infinite;}
-    .pj-title{font-size:1.2rem;font-weight:800;color:white;margin-bottom:0.35rem;}
-    .pj-loc{font-size:0.87rem;color:rgba(255,255,255,0.6);}
-    .pj-due-row {
-      display:flex;align-items:center;justify-content:space-between;
-      padding:0.85rem 1.75rem;background:#fafafa;
-      border-bottom:1px solid #e2e8f0;flex-wrap:wrap;gap:0.5rem;
-    }
-    .pj-dl{font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#94a3b8;}
-    .pj-dv{font-size:0.95rem;font-weight:800;color:#cc0000;}
-    .pj-email{font-size:0.82rem;color:#64748b;}
-    .pj-email a{color:#cc0000;font-weight:600;}
 
-    .pj-body{padding:1.4rem 2rem 1.75rem;}
-    .pj-scope-lbl{font-size:0.68rem;font-weight:800;text-transform:uppercase;letter-spacing:0.15em;color:#94a3b8;margin-bottom:0.6rem;}
-    .pj-scope{font-size:0.88rem;color:#334155;line-height:1.75;
-      background:#f8fafc;border-left:3px solid #e2e8f0;border-radius:0 8px 8px 0;
-      padding:1rem 1.25rem;margin-bottom:1.25rem;}
-    .pj-btns{display:flex;gap:0.75rem;flex-wrap:wrap;}
-
-    .btn-apply{background:#cc0000;color:white;padding:0.75rem 1.75rem;
-      border-radius:8px;font-size:0.9rem;font-weight:700;border:none;
-      cursor:pointer;transition:all 0.22s;font-family:inherit;}
-    .btn-apply:hover{background:#990000;transform:translateY(-2px);box-shadow:0 6px 18px rgba(204,0,0,0.3);}
-    .btn-doc{background:white;color:#334155;padding:0.75rem 1.25rem;
-      border-radius:8px;font-size:0.85rem;font-weight:700;
-      border:1.5px solid #cbd5e1;cursor:pointer;transition:all 0.2s;font-family:inherit;}
-    .btn-doc:hover{border-color:#475569;color:#0f172a;}
-    .btn-doc:disabled{opacity:0.45;cursor:not-allowed;}
-
-    /* DB Section */
-    .db-section{margin-top:2rem;padding-top:2rem;border-top:2px solid #f1f5f9;}
-    .db-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;flex-wrap:wrap;gap:0.5rem;}
-    .db-label{font-size:0.68rem;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;color:#94a3b8;margin-bottom:0.3rem;}
-    .db-title{font-size:1.1rem;font-weight:800;color:#0f172a;}
-    .db-badge{background:#fee2e2;color:#cc0000;font-size:0.72rem;font-weight:800;padding:0.4rem 1rem;border-radius:20px;}
-    .county-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:0.55rem;}
-    .county-chip{
-      background:white;border:1px solid #e2e8f0;border-radius:8px;
-      padding:0.65rem 0.9rem;display:flex;justify-content:space-between;align-items:center;
+    .pj-btns{display:flex;align-items:center;gap:.65rem;flex-wrap:wrap;padding-top:1rem;border-top:1px solid var(--border);}
+    .btn-red{
+      display:inline-flex;align-items:center;gap:.35rem;
+      background:var(--crim2);color:#fff;
+      padding:.6rem 1.15rem;border-radius:7px;font-size:.82rem;font-weight:700;border:none;
+      cursor:pointer;font-family:'Inter',sans-serif;transition:all .18s;
     }
-    .county-name{font-size:0.8rem;font-weight:600;color:#334155;}
-    .county-count{font-size:0.85rem;font-weight:800;color:#185FA5;}
-    .db-note{margin-top:0.75rem;font-size:0.76rem;color:#94a3b8;}
+    .btn-red:hover{background:#AA0000;}
+    .btn-green{
+      display:inline-flex;align-items:center;gap:.35rem;
+      background:#16a34a;color:#fff;
+      padding:.6rem 1.2rem;border-radius:7px;font-size:.82rem;font-weight:700;border:none;
+      cursor:pointer;font-family:'Inter',sans-serif;transition:all .18s;margin-left:auto;
+    }
+    .btn-green:hover{background:#15803d;}
 
-    /* ── Apply Modal ── */
-    .apply-overlay{
-      position:fixed;inset:0;background:rgba(15,23,42,0.82);
-      backdrop-filter:blur(6px);z-index:9999;
-      display:none;align-items:center;justify-content:center;
-      padding:2rem 1rem;overflow-y:auto;
+    .scope-toggle{
+      width:100%;background:#F8FAFC;border:none;border-top:1px solid var(--border);
+      padding:.8rem 1.75rem;font-size:.85rem;font-weight:600;color:var(--muted);
+      cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.4rem;
+      font-family:'Inter',sans-serif;transition:background .15s,color .15s;
     }
-    .apply-overlay.open{display:flex;}
-    .apply-box{
-      background:white;width:100%;max-width:560px;
-      border-radius:20px;overflow:hidden;
-      box-shadow:0 30px 70px rgba(0,0,0,0.3);
-      animation:popUp 0.3s ease;margin:auto;
+    .scope-toggle:hover{background:#F1F5F9;color:var(--txt);}
+    .scope-toggle .arr{transition:transform .25s;display:inline-block;}
+
+    .scope-body{display:none;padding:1.5rem 1.75rem;border-top:1px solid var(--border);background:#FAFAFA;}
+    .scope-body.open{display:block;}
+    .scope-intro{font-size:.84rem;color:var(--muted);line-height:1.65;margin-bottom:1.2rem;}
+
+    .cc-title{font-size:.92rem;font-weight:700;color:var(--dark);margin-bottom:.7rem;display:flex;align-items:center;gap:.4rem;}
+    table.cc-table{width:100%;border-collapse:collapse;font-size:.83rem;margin-bottom:1.25rem;border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+    table.cc-table th{background:var(--dark2);color:#E2E8F0;padding:.6rem 1rem;text-align:left;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;}
+    table.cc-table td{padding:.58rem 1rem;border-bottom:1px solid var(--border);color:var(--txt);}
+    table.cc-table tr:last-child td{border-bottom:none;}
+    table.cc-table tr:nth-child(even) td{background:#F8FAFC;}
+
+    .trades-label{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.15em;color:var(--muted);margin-bottom:.55rem;}
+    .trades-wrap{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:1.2rem;}
+    .trade-chip{background:#fff;color:#334155;font-size:.74rem;font-weight:500;padding:.28rem .7rem;border-radius:20px;border:1px solid var(--border);}
+
+    .notes-label{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.15em;color:var(--muted);margin-bottom:.55rem;}
+    .notes-list{padding-left:1.2rem;margin:0 0 1.2rem;font-size:.84rem;color:var(--txt);line-height:1.85;}
+
+    .scope-footer{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;
+      padding-top:1rem;border-top:1px solid var(--border);}
+    .scope-footer p{font-size:.82rem;color:var(--muted);}
+    .scope-footer a{color:var(--crim2);font-weight:600;}
+
+    /* ── APPLY MODAL ── */
+    .modal-overlay{
+      position:fixed;inset:0;background:rgba(26,10,0,.85);backdrop-filter:blur(6px);
+      z-index:9999;display:none;align-items:center;justify-content:center;padding:2rem 1rem;overflow-y:auto;
     }
-    @keyframes popUp{from{transform:translateY(-20px);opacity:0;}to{transform:translateY(0);opacity:1;}}
-    .ah{background:linear-gradient(135deg,#cc0000,#8b0000);padding:1.8rem 2.5rem;position:relative;}
-    .ah h3{color:white;font-size:1.3rem;font-weight:800;margin-bottom:0.25rem;}
-    .ah p{color:rgba(255,255,255,0.7);font-size:0.85rem;line-height:1.5;}
-    .ah-close{position:absolute;top:1.2rem;right:1.5rem;background:rgba(255,255,255,0.18);
-      border:none;color:white;width:30px;height:30px;border-radius:50%;font-size:1.1rem;
-      cursor:pointer;display:flex;align-items:center;justify-content:center;}
-    .ah-close:hover{background:rgba(255,255,255,0.3);}
-    .ab{padding:1.75rem 2.5rem;}
-    .fg{margin-bottom:1.1rem;}
-    .fg label{display:block;font-size:0.8rem;font-weight:700;color:#374151;margin-bottom:0.4rem;}
-    .fg label .r{color:#cc0000;}
+    .modal-overlay.open{display:flex;}
+    .modal-box{
+      background:#fff;width:100%;max-width:560px;border-radius:20px;overflow:hidden;
+      box-shadow:0 30px 70px rgba(26,10,0,.45);animation:popUp .3s ease;margin:auto;
+    }
+    @keyframes popUp{from{transform:translateY(-18px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+    .mhdr{
+      background:linear-gradient(135deg,var(--dark2),var(--dark));
+      padding:1.8rem 2.5rem;position:relative;
+      border-bottom:3px solid transparent;
+      border-image:linear-gradient(90deg,var(--crim2),var(--gold),var(--saff)) 1;
+    }
+    .mhdr h3{font-family:'Cinzel',serif;color:var(--gold-l);font-size:1.25rem;font-weight:600;margin-bottom:.25rem;}
+    .mhdr p{color:rgba(253,243,220,.6);font-size:.85rem;line-height:1.5;}
+    .mhdr-close{
+      position:absolute;top:1.2rem;right:1.5rem;background:rgba(255,255,255,.12);border:none;
+      color:var(--gold-l);width:30px;height:30px;border-radius:50%;font-size:1.1rem;
+      cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s;
+    }
+    .mhdr-close:hover{background:rgba(201,150,44,.25);}
+
+    /* In-modal project info */
+    .modal-proj-info{
+      display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;
+      padding:1rem 2.5rem;background:var(--gold-pale);border-bottom:1px solid rgba(201,150,44,.2);
+    }
+    .mpi-item label{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);}
+    .mpi-item p{font-size:.82rem;font-weight:700;color:var(--txt);margin-top:.1rem;}
+
+    .mbody{padding:1.5rem 2.5rem;}
+    .fg{margin-bottom:1rem;}
+    .fg label{display:block;font-size:.8rem;font-weight:700;color:var(--txt);margin-bottom:.35rem;}
+    .fg label .r{color:var(--crim2);}
     .fg input,.fg select,.fg textarea{
-      width:100%;padding:0.75rem 1rem;border:1.5px solid #dde5ee;border-radius:8px;
-      font-size:0.9rem;font-family:inherit;color:#0f172a;background:#f8fafc;transition:all 0.2s;
+      width:100%;padding:.7rem 1rem;border:1.5px solid rgba(201,150,44,.25);border-radius:8px;
+      font-size:.9rem;font-family:'Inter',sans-serif;color:var(--txt);background:var(--gold-pale);
+      transition:all .2s;box-sizing:border-box;
     }
-    .fg input:focus,.fg select:focus,.fg textarea:focus{
-      outline:none;border-color:#cc0000;background:#fff;box-shadow:0 0 0 3px rgba(204,0,0,0.09);
-    }
+    .fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:var(--gold);background:#fff;box-shadow:0 0 0 3px rgba(201,150,44,.12);}
     .fr{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
-    .af{background:#f8fafc;border-top:1px solid #e2e8f0;padding:1.25rem 2.5rem;display:flex;justify-content:flex-end;gap:0.85rem;}
-    .btn-cancel{background:white;color:#64748b;border:1.5px solid #cbd5e1;padding:0.68rem 1.5rem;border-radius:8px;font-size:0.88rem;font-weight:600;cursor:pointer;font-family:inherit;}
-    .btn-cancel:hover{border-color:#94a3b8;}
-    .btn-submit{background:#cc0000;color:white;border:none;padding:0.68rem 2rem;border-radius:8px;font-size:0.88rem;font-weight:700;cursor:pointer;font-family:inherit;}
-    .btn-submit:hover{background:#990000;}
-    #a-success{display:none;text-align:center;padding:3.5rem 2.5rem;}
-    .suc-circle{width:60px;height:60px;background:#dcfce7;border:2px solid #16a34a;color:#16a34a;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin:0 auto 1.25rem;}
-    #a-success h2{font-size:1.4rem;font-weight:800;color:#0f172a;margin-bottom:0.6rem;}
-    #a-success p{color:#64748b;font-size:0.92rem;line-height:1.7;max-width:360px;margin:0 auto 1.8rem;}
+    .mftr{background:var(--gold-pale);border-top:1px solid rgba(201,150,44,.2);padding:1.2rem 2.5rem;display:flex;justify-content:flex-end;gap:.75rem;}
+    .btn-cancel{background:#fff;color:var(--muted);border:1.5px solid rgba(201,150,44,.3);padding:.65rem 1.5rem;border-radius:8px;font-size:.88rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;}
+    .btn-cancel:hover{border-color:var(--gold);}
+    .btn-submit{
+      background:linear-gradient(135deg,var(--crim2),var(--crim));color:#fff;border:none;
+      padding:.65rem 2rem;border-radius:8px;font-size:.88rem;font-weight:700;cursor:pointer;
+      font-family:'Inter',sans-serif;box-shadow:0 4px 14px rgba(139,26,26,.25);
+    }
+    .btn-submit:hover{background:linear-gradient(135deg,#8B0000,#6B0000);}
+    #m-success{display:none;text-align:center;padding:3rem 2.5rem;}
+    .suc-ring{width:60px;height:60px;background:rgba(201,150,44,.1);border:2px solid var(--gold);color:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin:0 auto 1.2rem;}
+    #m-success h2{font-family:'Cinzel',serif;color:var(--dark);margin-bottom:.5rem;}
+    #m-success p{color:var(--muted);font-size:.9rem;line-height:1.7;max-width:340px;margin:0 auto 1.5rem;}
 
-    @media(max-width:640px){
-      .states-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));}
-      .drawer{max-width:100vw;}
+    @media(max-width:900px){
+      .page-wrap{flex-direction:column;}
+      .sidebar{width:100%;position:static;}
+      .pj-grid{grid-template-columns:1fr;}
       .fr{grid-template-columns:1fr;}
-      .bid-hero h1{font-size:2.1rem;}
+      .hero-container h1{font-size:2.5rem;}
+      .hero-container p{font-size:1rem;}
+      .bid-hero{padding:4rem 1.5rem;min-height:300px;}
     }
   </style>
 </head>
 <body>
 
 <!-- Top Bar -->
-<div class="top-bar">
+<div class="top-bar" style="background:#f8fafc; border-bottom:1px solid #e2e8f0;">
   <div class="top-bar-left">
-    <span class="utility-info"><strong>888-944-6313</strong> &bull; Call in Orders Only &bull; Call 24/7 &bull; Live Operator</span>
+    <span class="utility-info"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="vertical-align:text-bottom;margin-right:4px;color:#cc0000"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"></path></svg><strong style="color:#cc0000">888-944-6313</strong> &bull; Call in Orders Only &bull; Call 24/7 &bull; Live Operator</span>
   </div>
   <div class="top-bar-right">
-    <a href="contact-us.html">Contact</a>
-    <a href="suggest-feature.html">Suggest Feature</a>
-    <a href="sales-login.html" class="sales-login-btn">SALES LOGIN</a>
+    <a href="contact-us.html" style="text-transform:uppercase; font-weight:600; font-size:0.8rem;">CONTACT</a>
+    <a href="suggest-feature.html" style="text-transform:uppercase; font-weight:600; font-size:0.8rem;">SUGGEST FEATURE</a>
+    <a href="sales-login.html" class="sales-login-btn" style="background:#cc0000; color:#fff; padding:0.4rem 1.2rem; border-radius:4px; font-weight:700; text-transform:uppercase; font-size:0.8rem;">SALES LOGIN</a>
   </div>
 </div>
 
-<!-- Nav -->
-<header class="main-header">
-  <div class="header-container">
-    <div class="logo">
-      <a href="index.html"><img src="logo-new.jpeg" alt="KJR Interior Designs Inc."></a>
-    </div>
-    <nav class="secondary-nav">
-      <div class="secondary-nav-container">
-        <ul class="nav-links">
-          <li><a href="index.html">HOME</a></li>
-          <li class="has-dropdown">
-            <a href="#" class="active">WORK FORCE <span class="dropdown-arrow">&#9662;</span></a>
-            <ul class="dropdown-menu">
-              <li><a href="career-move.html">Career Move</a></li>
-              <li><a href="property-mgmt.html">Property Mgmt Crew</a></li>
-              <li><a href="bid-projects.html" class="active">Bid Projects</a></li>
-              <li><a href="work-completed.html">Work Completed by KJRID</a></li>
-            </ul>
-          </li>
-          <li><a href="about-us.html">ABOUT</a></li>
-        </ul>
-      </div>
-    </nav>
-    <div class="header-actions">
-      <a href="index.html#parts" class="parts-highlight">10M+ PARTS</a>
-    </div>
-  </div>
+<!-- Simplified Navigation Header -->
+<header style="background: #fff; padding: 1.5rem 2.5rem; display: flex; align-items: center; justify-content: flex-start; border-bottom: 1px solid #e2e8f0; box-shadow: 0 4px 6px rgba(0,0,0,0.02)">
+  <a href="index.html" style="display: inline-flex; align-items: center; justify-content: center; padding: 0.65rem 1.8rem; color: #cc0000; border: 1.5px solid #cc0000; border-radius: 50px; font-weight: 700; text-decoration: none; font-family: 'Inter', sans-serif; font-size: 0.85rem; letter-spacing: 0.05em; transition: all 0.2s;">
+    &larr; BACK TO HOME
+  </a>
 </header>
 
 <!-- Hero -->
 <section class="bid-hero">
-  <div class="live-badge"><span class="live-dot"></span> Now Accepting Bids</div>
-  <h1>Bid Projects by Location</h1>
-  <p>Select any state to view open bid opportunities &amp; contractor database. Apply directly from the project listing.</p>
+  <video autoplay muted loop playsinline class="hero-bg">
+    <source src="https://res.cloudinary.com/dc8xxhoaf/video/upload/v1767988938/3773486-hd-1920-1080-30fps-tyea3fib-1_3P5aPwyY_online-video-cutter.com_tzwfze.mp4" type="video/mp4">
+  </video>
+  <div class="hero-top-bar"></div>
+  <div class="hero-container">
+    <div class="live-badge">NOW ACCEPTING BIDS</div>
+    <h1>Invitation to Bid</h1>
+    <p>Review current project specifications and submit your proposals to KJR<br>Interior Designs Inc.</p>
+  </div>
 </section>
 
 <!-- Notice -->
 <div class="notice">
-  <strong>Notice:</strong> All items on plans are the responsibility of subcontractors. Bids excluding applicable items will be disqualified. &nbsp;|&nbsp;
-  Submit bids to <a href="mailto:estimating@kjrid.com">estimating@kjrid.com</a> &nbsp;|&nbsp; Estimator: King Mtusa &middot; 803-638-0569
+  <strong>Important Notice:</strong> This invitation is being sent to a pre-set list of contractors. All items on all plans are the responsibility of subcontractors. Subcontractor bids must include all items applicable to your scope. Bids excluding applicable items will be disqualified.
 </div>
 
-<!-- States Grid -->
-<div class="states-section">
-  <div class="sec-top">
-    <div>
-      <h2>All States</h2>
-      <p>States with active bids are highlighted in red &mdash; click any state to explore</p>
+<!-- Page Body -->
+<div class="page-wrap">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-box">
+      <div class="sidebar-title">Select State</div>
+      <div style="padding: 0.5rem 1.25rem; border-bottom: 1px solid var(--border); background: #fafafa;">
+        <input type="text" id="state-search" placeholder="Search state..." onkeyup="searchStates()" style="width:100%; padding:0.4rem 0.6rem; font-size:0.8rem; border:1px solid var(--border); border-radius:6px; box-sizing:border-box; font-family:'Inter',sans-serif; background: #fff;">
+      </div>
+      <button class="state-btn active" id="btn-all" onclick="filterState('all'); clearProjectSearch();">
+        All Projects <span class="sb-count" id="cnt-all">0</span>
+      </button>
+      <div id="state-list"></div>
+      <button class="state-btn" onclick="clearStateSearch()" style="justify-content: center; font-weight: 700; color: var(--crim2); border-bottom: none; border-top: 1px solid var(--border); background: #fafafa;">
+        View All States
+      </button>
     </div>
-    <input class="search-box" type="text" id="stateSearch" placeholder="&#128269; Search state..." oninput="filterStates(this.value)">
-  </div>
-  <div class="states-grid" id="statesGrid"></div>
-</div>
+  </aside>
 
-<!-- ══ Drawer ══ -->
-<div class="drawer-overlay" id="drawerOverlay">
-  <div class="drawer-bg-close" onclick="closeDrawer()"></div>
-  <div class="drawer" id="drawerPanel">
-    <div class="drawer-hdr">
+  <!-- Main -->
+  <main class="main">
+    <div class="main-hdr" style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
       <div>
-        <h2 id="dr-title">State Projects</h2>
-        <p id="dr-sub">Active Invitation to Bid &mdash; KJR Interior Designs Inc.</p>
+        <h2 id="main-title">All Projects</h2>
+        <p id="main-sub"></p>
       </div>
-      <button class="drawer-close" onclick="closeDrawer()">&times;</button>
+      <div style="display: flex; gap: 0.5rem; align-items: center;">
+        <div style="position: relative;">
+          <input type="text" id="project-search" placeholder="Search projects..." onkeyup="searchProjects()" style="padding: 0.6rem 1rem 0.6rem 2.2rem; font-size: 0.9rem; border: 1px solid var(--border); border-radius: 8px; width: 260px; max-width: 100%; box-sizing: border-box; font-family: 'Inter', sans-serif; transition: border-color 0.2s;">
+          <svg style="position: absolute; left: 0.7rem; top: 50%; transform: translateY(-50%); color: var(--muted); width: 16px; height: 16px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        </div>
+        <button onclick="searchProjects()" style="background: var(--dark); color: #fff; border: 1px solid var(--dark); padding: 0.6rem 1.4rem; border-radius: 8px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; font-size: 0.85rem; transition: background 0.2s;">
+          Search
+        </button>
+      </div>
     </div>
-    <div class="drawer-body" id="dr-body"></div>
-  </div>
+    <div id="projects-list"></div>
+  </main>
 </div>
 
-<!-- ══ Apply Modal ══ -->
-<div class="apply-overlay" id="applyModal">
-  <div class="apply-box">
-    <div id="a-form">
-      <div class="ah">
+<!-- Apply Modal -->
+<div class="modal-overlay" id="applyModal">
+  <div class="modal-box">
+    <form action="https://formsubmit.co/suddhajitchowdhury226@gmail.com" method="POST" enctype="multipart/form-data" target="hidden_iframe" id="m-form" onsubmit="window.submittedBid=true;">
+      <input type="hidden" name="_subject" id="bid-subject" value="New Bid Application">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_template" value="box">
+      <input type="hidden" name="Project" id="f-proj" value="">
+      <input type="hidden" name="Project Location" id="f-loc" value="">
+      <div class="mhdr">
         <h3>Apply to Bid</h3>
-        <p id="a-proj-lbl">Project &middot; Location &middot; Due Date</p>
-        <button class="ah-close" onclick="closeApply()">&times;</button>
+        <p id="m-sub">Submit your application for this project</p>
+        <button type="button" class="mhdr-close" onclick="closeApply()">&times;</button>
       </div>
-      <div class="ab">
+      <div class="modal-proj-info" id="m-proj-info"></div>
+      <div class="mbody">
         <div class="fr">
-          <div class="fg"><label>First Name <span class="r">*</span></label><input type="text" id="a-first" placeholder="John"></div>
-          <div class="fg"><label>Last Name <span class="r">*</span></label><input type="text" id="a-last" placeholder="Smith"></div>
+          <div class="fg"><label>First Name <span class="r">*</span></label><input type="text" id="a-first" name="First Name" placeholder="John" required></div>
+          <div class="fg"><label>Last Name <span class="r">*</span></label><input type="text" id="a-last" name="Last Name" placeholder="Smith" required></div>
         </div>
-        <div class="fg"><label>Company Name <span class="r">*</span></label><input type="text" id="a-co" placeholder="Your company name"></div>
+        <div class="fg"><label>Company Name <span class="r">*</span></label><input type="text" id="a-co" name="Company Name" placeholder="Your Company LLC" required></div>
         <div class="fr">
-          <div class="fg"><label>Email <span class="r">*</span></label><input type="email" id="a-email" placeholder="you@company.com"></div>
-          <div class="fg"><label>Phone <span class="r">*</span></label><input type="tel" id="a-phone" placeholder="555-000-0000"></div>
+          <div class="fg"><label>Email <span class="r">*</span></label><input type="email" id="a-email" name="Email" placeholder="you@company.com" required></div>
+          <div class="fg"><label>Phone <span class="r">*</span></label><input type="tel" id="a-phone" name="Phone" placeholder="(555) 555-5555" required></div>
         </div>
         <div class="fg">
-          <label>Trade / Scope <span class="r">*</span></label>
-          <select id="a-trade">
-            <option value="">Select your trade...</option>
+          <label>Trade / Specialty <span class="r">*</span></label>
+          <select id="a-trade" name="Trade" required>
+            <option value="">Select your trade</option>
             <option>Demolition</option><option>Concrete / Masonry</option>
             <option>Structural Steel</option><option>Misc Metals</option>
             <option>Rough Carpentry / Framing</option><option>Finish Carpentry / Millwork</option>
             <option>Roofing</option><option>Aluminum Storefront</option>
             <option>Doors &amp; Hardware</option><option>Drywall</option>
             <option>Flooring (VCT / LVT / Tile)</option>
-            <option>Painting (Interior &amp; Exterior)</option>
+            <option>Painting (INT &amp; EXT)</option>
             <option>Acoustical Ceilings</option><option>Plumbing</option>
             <option>HVAC</option><option>Fire Sprinkler</option>
             <option>Fire Alarm</option><option>Electrical</option>
             <option>Final Clean</option><option>Other / General</option>
           </select>
         </div>
-        <div class="fg"><label>License # (if applicable)</label><input type="text" id="a-lic" placeholder="State contractor license number"></div>
-        <div class="fg"><label>Notes / Questions</label><textarea id="a-notes" rows="3" placeholder="Any additional details for the estimator..."></textarea></div>
+        <div class="fg"><label>License Number</label><input type="text" id="a-lic" name="License Number" placeholder="Optional"></div>
+        <div class="fg"><label>Upload RFP / Documents</label><input type="file" id="a-rfp" name="RFP_Attachment" accept=".pdf,.doc,.docx,.zip,.jpg,.png" style="padding: 0.5rem; background: #fff; cursor: pointer;"></div>
+        <div class="fg"><label>Additional Notes</label><textarea id="a-notes" name="Additional Notes" rows="3" placeholder="Any additional information..."></textarea></div>
       </div>
-      <div class="af">
-        <button class="btn-cancel" onclick="closeApply()">Cancel</button>
-        <button class="btn-submit" onclick="submitApply()">Submit Application &#8594;</button>
+      <div class="mftr">
+        <button type="button" class="btn-cancel" onclick="closeApply()">Cancel</button>
+        <button type="submit" class="btn-submit" id="btn-submit-apply">Submit Application <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:text-bottom;margin-left:4px;"><path d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg></button>
       </div>
-    </div>
-    <div id="a-success">
-      <div class="suc-circle">&#10003;</div>
+    </form>
+    <iframe name="hidden_iframe" style="display:none;" onload="if(window.submittedBid){ document.getElementById('m-form').style.display='none'; document.getElementById('m-success').style.display='block'; window.submittedBid=false; document.getElementById('btn-submit-apply').innerHTML='Submit Application <svg width=\'16\' height=\'16\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' viewBox=\'0 0 24 24\' stroke-linecap=\'round\' stroke-linejoin=\'round\' style=\'vertical-align:text-bottom;margin-left:4px;\'><path d=\'M14 5l7 7m0 0l-7 7m7-7H3\'></path></svg>'; document.getElementById('btn-submit-apply').style.opacity='1';}"></iframe>
+    <script>window.submittedBid = false; document.getElementById('m-form').addEventListener('submit', function() { document.getElementById('btn-submit-apply').innerHTML = 'Sending...'; document.getElementById('btn-submit-apply').style.opacity = '0.7'; });</script>
+    <div id="m-success">
+      <div class="suc-ring"><svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"></path></svg></div>
       <h2>Application Submitted!</h2>
-      <p>Your bid for <strong id="a-suc-name"></strong> has been sent to the KJRID estimating team. You will be contacted within 1&ndash;2 business days.</p>
+      <p>Your bid application has been sent to the KJRID estimating team. You'll be contacted within 1&ndash;2 business days.</p>
       <button class="btn-cancel" onclick="closeApply()">Close</button>
     </div>
   </div>
 </div>
 
-<!-- Footer -->
 <footer>
   <div class="footer-content">
     <div class="footer-brand">
@@ -376,26 +387,21 @@
     <div class="footer-col">
       <h4>INSURANCE REQUIREMENTS</h4>
       <ul class="footer-links">
-        <li><a href="#">Workers Comp</a></li>
-        <li><a href="#">General Liability</a></li>
-        <li><a href="#">Auto Insurance</a></li>
-        <li><a href="#">Vendor Profile</a></li>
+        <li><a href="#">Workers Comp</a></li><li><a href="#">General Liability</a></li>
+        <li><a href="#">Auto Insurance</a></li><li><a href="#">Vendor Profile</a></li>
       </ul>
     </div>
     <div class="footer-col">
       <h4>QUICK LINKS</h4>
       <ul class="footer-links">
-        <li><a href="#">Upload Invoice</a></li>
-        <li><a href="sales-login.html">Sign In</a></li>
-        <li><a href="#">Create Profile</a></li>
-        <li><a href="contact-us.html">Contact Support</a></li>
+        <li><a href="#">Upload Invoice</a></li><li><a href="sales-login.html">Sign In</a></li>
+        <li><a href="#">View Projects</a></li><li><a href="contact-us.html">Contact Us</a></li>
       </ul>
     </div>
     <div class="footer-col">
       <h4>ESTIMATING</h4>
       <p>888-944-6313<br>Open 24/7</p>
       <p style="margin-top:1rem;"><a href="mailto:estimating@kjrid.com" style="color:var(--primary);">estimating@kjrid.com</a></p>
-      <p style="margin-top:0.5rem;"><a href="mailto:mtusa.king@kjrid.com" style="color:var(--primary);">mtusa.king@kjrid.com</a></p>
     </div>
   </div>
   <div class="footer-bottom">
@@ -405,245 +411,397 @@
 </footer>
 
 <script>
-/* ===== DATA ===== */
-var STATES = [
-  {s:"Alabama",e:"&#127963;"},
-  {s:"Alaska",e:"&#127956;"},
-  {s:"Arizona",e:"&#127797;"},
-  {s:"Arkansas",e:"&#127807;"},
-  {s:"California",e:"&#127796;"},
-  {s:"Colorado",e:"&#9968;"},
-  {s:"Connecticut",e:"&#127968;"},
-  {s:"Delaware",e:"&#127970;"},
-  {s:"Florida",e:"&#127774;"},
-  {s:"Georgia",e:"&#129352;"},
-  {s:"Hawaii",e:"&#127978;"},
-  {s:"Idaho",e:"&#127831;"},
-  {s:"Illinois",e:"&#127970;"},
-  {s:"Indiana",e:"&#127955;"},
-  {s:"Iowa",e:"&#127807;"},
-  {s:"Kansas",e:"&#127807;"},
-  {s:"Kentucky",e:"&#127943;"},
-  {s:"Louisiana",e:"&#127925;"},
-  {s:"Maine",e:"&#129436;"},
-  {s:"Maryland",e:"&#129408;"},
-  {s:"Massachusetts",e:"&#127963;"},
-  {s:"Michigan",e:"&#128663;"},
-  {s:"Minnesota",e:"&#10052;"},
-  {s:"Mississippi",e:"&#127925;"},
-  {s:"Missouri",e:"&#9961;"},
-  {s:"Montana",e:"&#127956;"},
-  {s:"Nebraska",e:"&#127807;"},
-  {s:"Nevada",e:"&#127922;"},
-  {s:"New Hampshire",e:"&#127956;"},
-  {s:"New Jersey",e:"&#127970;"},
-  {s:"New Mexico",e:"&#127797;"},
-  {s:"New York",e:"&#128506;"},
-  {s:"North Carolina",e:"&#127795;"},
-  {s:"North Dakota",e:"&#127807;"},
-  {s:"Ohio",e:"&#127970;"},
-  {s:"Oklahoma",e:"&#127786;"},
-  {s:"Oregon",e:"&#127795;"},
-  {s:"Pennsylvania",e:"&#127963;"},
-  {s:"Rhode Island",e:"&#9875;"},
-  {s:"South Carolina",e:"&#127796;"},
-  {s:"South Dakota",e:"&#129413;"},
-  {s:"Tennessee",e:"&#127928;"},
-  {s:"Texas",e:"&#11088;"},
-  {s:"Utah",e:"&#127963;"},
-  {s:"Vermont",e:"&#127809;"},
-  {s:"Virginia",e:"&#127963;"},
-  {s:"Washington",e:"&#127795;"},
-  {s:"West Virginia",e:"&#9968;"},
-  {s:"Wisconsin",e:"&#129472;"},
-  {s:"Wyoming",e:"&#129430;"}
+var PROJECTS = [
+  {
+    id:1, state:"Georgia", stateCode:"ga",
+    title:"Dollar Tree",
+    loc:"Marietta, GA",
+    due:"Monday January 11th @ 2PM EST",
+    email:"estimating@kjrid.com",
+    estimator:"KING MTUSA 803-638-0569",
+    hasDocs:true,
+    codes:[
+      ["02050-000","Demolition"],["03800-000","Mass Concrete"],["05000-000","Misc. Metals / Standards"],
+      ["05100-000","Structural Steel"],["06100-000","Rough Carpentry"],["09310-000","Floorcovering"],
+      ["09510-000","Acoustical Ceilings"],["09900-000","Painting (INT and/or EXT)"],
+      ["15300-001","Fire Alarm"],["15300-001","Fire Sprinklers"],["15400-000","Plumbing"],
+      ["15500-000","HVAC"],["16000-000","Electrical"]
+    ],
+    trades:["Final Clean","Demolition","Concrete - Small pour","Masonry - Small Fixes","Structural Steel","Misc Steel","Carpentry/Wood Framing","Roofing","Storefront","Doors & Hardware","Drywall","Flooring","Painting","Plumbing","HVAC","Fire Sprinkler","Fire Alarm"],
+    notes:["This invitation is being sent to a pre-set list of contractors.","All items on all plans are the responsibility of the subcontractors.","Subcontractor bids must include all items applicable to your scope.","It is assumed that bidders are familiar with all existing visible conditions."]
+  },
+  {
+    id:2, state:"Georgia", stateCode:"ga",
+    title:"AutoZone GA 10597",
+    loc:"S.W. of 12100 GA 144 Richmond Hills, GA 31324",
+    due:"Monday January 11th @ 2PM EST",
+    email:"estimating@kjrid.com",
+    estimator:"KING MTUSA 803-638-0569",
+    hasDocs:true,
+    codes:[
+      ["02050-000","Demolition"],["03800-000","Mass Concrete"],["05000-000","Misc. Metals / Standards"],
+      ["05100-000","Structural Steel"],["06100-000","Rough Carpentry"],["09310-000","Floorcovering"],
+      ["09510-000","Acoustical Ceilings"],["09900-000","Painting (INT and/or EXT)"],
+      ["15300-001","Fire Alarm"],["15300-001","Fire Sprinklers"],["15400-000","Plumbing"],
+      ["15500-000","HVAC"],["16000-000","Electrical"]
+    ],
+    trades:["Final Clean","Demolition","Concrete - Small pour","Masonry - Small Fixes","Structural Steel","Misc Steel","Carpentry/Wood Framing","Roofing","Storefront","Doors & Hardware","Drywall","Flooring","Painting","Plumbing","HVAC","Fire Sprinkler","Fire Alarm"],
+    notes:["This invitation is being sent to a pre-set list of contractors.","All items on all plans are the responsibility of the subcontractors.","Subcontractor bids must include all items applicable to your scope.","It is assumed that bidders are familiar with all existing visible conditions."]
+  },
+  {
+    id:3, state:"Georgia", stateCode:"ga",
+    title:"Walgreens Renovation",
+    loc:"1250 Peachtree St NE, Atlanta, GA 30309",
+    due:"Wednesday January 20th @ 4PM EST",
+    email:"estimating@kjrid.com",
+    estimator:"KING MTUSA 803-638-0569",
+    hasDocs:true,
+    codes:[
+      ["02050-000","Demolition"],["06100-000","Rough Carpentry"],["09310-000","Floorcovering"],
+      ["09900-000","Painting (INT and/or EXT)"],["15400-000","Plumbing"],["15500-000","HVAC"],["16000-000","Electrical"]
+    ],
+    trades:["Demolition","Carpentry/Wood Framing","Flooring","Painting","Plumbing","HVAC","Electrical"],
+    notes:["All items on plans are the responsibility of subcontractors.","Bids excluding applicable items will be disqualified.","Submit bids to estimating@kjrid.com."]
+  },
+  {
+    id:4, state:"Georgia", stateCode:"ga",
+    title:"CVS Pharmacy",
+    loc:"640 Dekalb Industrial Way, Decatur, GA 30033",
+    due:"Friday January 29th @ 3PM EST",
+    email:"estimating@kjrid.com",
+    estimator:"KING MTUSA 803-638-0569",
+    hasDocs:true,
+    codes:[
+      ["02050-000","Demolition"],["06100-000","Rough Carpentry"],["09310-000","Floorcovering"],
+      ["09900-000","Painting (INT and/or EXT)"],["15400-000","Plumbing"],["15500-000","HVAC"],["16000-000","Electrical"]
+    ],
+    trades:["Demolition","Carpentry","Flooring","Painting","Plumbing","HVAC","Electrical"],
+    notes:["All items on plans are the responsibility of subcontractors.","Bids excluding applicable items will be disqualified."]
+  },
+  {
+    id:5, state:"Alabama", stateCode:"al",
+    title:"Family Dollar",
+    loc:"2301 4th Ave N, Birmingham, AL 35203",
+    due:"Tuesday February 2nd @ 2PM CST",
+    email:"estimating@kjrid.com",
+    estimator:"KING MTUSA 803-638-0569",
+    hasDocs:true,
+    codes:[
+      ["02050-000","Demolition"],["06100-000","Rough Carpentry"],["09310-000","Floorcovering"],
+      ["09900-000","Painting (INT and/or EXT)"],["15500-000","HVAC"],["16000-000","Electrical"]
+    ],
+    trades:["Demolition","Carpentry","Flooring","Painting","HVAC","Electrical"],
+    notes:["All items on all plans are the responsibility of the subcontractors.","Submit bids to estimating@kjrid.com."]
+  },
+  {
+    id:6, state:"Alabama", stateCode:"al",
+    title:"O'Reilly Auto Parts",
+    loc:"1800 University Blvd, Tuscaloosa, AL 35401",
+    due:"Thursday February 11th @ 2PM CST",
+    email:"estimating@kjrid.com",
+    estimator:"KING MTUSA 803-638-0569",
+    hasDocs:false,
+    codes:[
+      ["02050-000","Demolition"],["05100-000","Structural Steel"],["06100-000","Rough Carpentry"],
+      ["09310-000","Floorcovering"],["09900-000","Painting (INT and/or EXT)"],["15500-000","HVAC"],["16000-000","Electrical"]
+    ],
+    trades:["Demolition","Structural Steel","Carpentry","Flooring","Painting","HVAC","Electrical"],
+    notes:["All items on plans are the responsibility of subcontractors.","Bids excluding applicable items will be disqualified."]
+  },
+  {
+    id:7, state:"Florida", stateCode:"fl",
+    title:"Advance Auto Parts",
+    loc:"321 Ocean Dr, Jacksonville, FL 32202",
+    due:"Tuesday February 5th @ 3PM EST",
+    email:"estimating@kjrid.com",
+    estimator:"KING MTUSA 803-638-0569",
+    hasDocs:true,
+    codes:[
+      ["02050-000","Demolition"],["03800-000","Mass Concrete"],["05100-000","Structural Steel"],
+      ["06100-000","Rough Carpentry"],["09310-000","Floorcovering"],["09900-000","Painting (INT and/or EXT)"],
+      ["15400-000","Plumbing"],["15500-000","HVAC"],["16000-000","Electrical"]
+    ],
+    trades:["Demolition","Concrete","Structural Steel","Carpentry","Flooring","Painting","Plumbing","HVAC","Electrical"],
+    notes:["All items on all plans are the responsibility of the subcontractors.","Subcontractor bids must include all items applicable to your scope."]
+  },
+  {
+    id:8, state:"Florida", stateCode:"fl",
+    title:"Dollar General",
+    loc:"555 Palm Ave, Miami, FL 33130",
+    due:"Monday February 15th @ 2PM EST",
+    email:"estimating@kjrid.com",
+    estimator:"KING MTUSA 803-638-0569",
+    hasDocs:true,
+    codes:[
+      ["02050-000","Demolition"],["06100-000","Rough Carpentry"],["09310-000","Floorcovering"],
+      ["09900-000","Painting (INT and/or EXT)"],["15500-000","HVAC"],["16000-000","Electrical"]
+    ],
+    trades:["Demolition","Carpentry","Flooring","Painting","HVAC","Electrical"],
+    notes:["All items on plans are the responsibility of subcontractors.","Submit bids to estimating@kjrid.com."]
+  },
+  {
+    id:9, state:"Texas", stateCode:"tx",
+    title:"Tractor Supply Co",
+    loc:"1000 Ranch Rd, Houston, TX 77001",
+    due:"Monday February 15th @ 2PM CST",
+    email:"estimating@kjrid.com",
+    estimator:"KING MTUSA 803-638-0569",
+    hasDocs:true,
+    codes:[
+      ["02050-000","Demolition"],["03800-000","Mass Concrete"],["05100-000","Structural Steel"],
+      ["06100-000","Rough Carpentry"],["09310-000","Floorcovering"],["09900-000","Painting (INT and/or EXT)"],
+      ["15400-000","Plumbing"],["15500-000","HVAC"],["16000-000","Electrical"]
+    ],
+    trades:["Final Clean","Demolition","Concrete","Structural Steel","Carpentry","Flooring","Painting","Plumbing","HVAC","Electrical"],
+    notes:["Large format retail.","Outdoor garden center included.","All items on plans are the responsibility of subcontractors."]
+  },
+  {
+    id:10, state:"Texas", stateCode:"tx",
+    title:"AutoZone TX 5523",
+    loc:"4400 S Lamar Blvd, Austin, TX 78745",
+    due:"Wednesday February 24th @ 2PM CST",
+    email:"estimating@kjrid.com",
+    estimator:"KING MTUSA 803-638-0569",
+    hasDocs:true,
+    codes:[
+      ["02050-000","Demolition"],["05100-000","Structural Steel"],["06100-000","Rough Carpentry"],
+      ["09310-000","Floorcovering"],["09900-000","Painting (INT and/or EXT)"],
+      ["15400-000","Plumbing"],["15500-000","HVAC"],["16000-000","Electrical"]
+    ],
+    trades:["Demolition","Structural Steel","Carpentry","Flooring","Painting","Plumbing","HVAC","Electrical"],
+    notes:["All items on all plans are the responsibility of the subcontractors.","Bids excluding applicable items will be disqualified."]
+  },
+  {
+    id:11, state:"North Carolina", stateCode:"nc",
+    title:"Walgreens Store #4521",
+    loc:"301 N Tryon St, Charlotte, NC 28202",
+    due:"Tuesday February 16th @ 3PM EST",
+    email:"estimating@kjrid.com",
+    estimator:"KING MTUSA 803-638-0569",
+    hasDocs:true,
+    codes:[
+      ["02050-000","Demolition"],["06100-000","Rough Carpentry"],["09310-000","Floorcovering"],
+      ["09900-000","Painting (INT and/or EXT)"],["15400-000","Plumbing"],["15500-000","HVAC"],["16000-000","Electrical"]
+    ],
+    trades:["Demolition","Carpentry","Flooring","Painting","Plumbing","HVAC","Electrical"],
+    notes:["NC state license required.","All items on plans are the responsibility of subcontractors."]
+  },
+  {
+    id:12, state:"South Carolina", stateCode:"sc",
+    title:"CVS Store #8832",
+    loc:"200 King St, Charleston, SC 29401",
+    due:"Wednesday February 24th @ 3PM EST",
+    email:"estimating@kjrid.com",
+    estimator:"KING MTUSA 803-638-0569",
+    hasDocs:true,
+    codes:[
+      ["02050-000","Demolition"],["06100-000","Rough Carpentry"],["09310-000","Floorcovering"],
+      ["09900-000","Painting (INT and/or EXT)"],["15400-000","Plumbing"],["15500-000","HVAC"],["16000-000","Electrical"]
+    ],
+    trades:["Demolition","Carpentry","Flooring","Painting","Plumbing","HVAC","Electrical"],
+    notes:["SC state license required.","All items on plans are the responsibility of subcontractors.","Bids excluding applicable items will be disqualified."]
+  }
 ];
 
-var PROJECTS = {
-  "Georgia": [
-    {title:"Dollar Tree \u2014 Full Retail Retrofit",loc:"Marietta, GA",due:"Jan 25, 2026 @ 2PM EST",
-     scope:"Full interior retrofit of existing retail space. Trades: demolition, concrete repairs, structural steel, carpentry & framing, drywall, acoustical ceilings, VCT flooring, painting (INT & EXT), aluminum storefront, doors & hardware, plumbing, HVAC, fire sprinkler, fire alarm, electrical.",docs:true},
-    {title:"AutoZone GA 10597",loc:"Richmond Hill, GA 31324",due:"Jan 11, 2026 @ 2PM EST",
-     scope:"Small slab pour & ramp, masonry fixes, pipe guards, aluminum platform, structural steel, carpentry & drywall, roofing (flash 3 HVAC curbs), storefront, doors & hardware, flooring, painting, restroom accessories, platform lift, plumbing, HVAC, fire sprinkler, electrical, fire alarm. KJR provides millwork.",docs:true}
-  ],
-  "Florida": [
-    {title:"Walmart Supercenter \u2014 Concrete Resurfacing",loc:"Orlando, FL",due:"Feb 10, 2026",
-     scope:"Specialized concrete resurfacing and exterior masonry for the main entrance and garden center. Includes surface prep, crack repair, polymer coating, and final sealing. Night shift may be required.",docs:false}
-  ],
-  "Texas": [
-    {title:"Target Store Retrofit \u2014 Phase 2",loc:"Austin, TX",due:"Mar 05, 2026",
-     scope:"Phase 2 interior remodel: finish carpentry, VCT & LVT flooring, interior painting, fixture blocking, ceiling tile replacement, and minor MEP modifications. All work after store hours.",docs:true}
-  ],
-  "North Carolina": [
-    {title:"CVS Pharmacy \u2014 Interior Remodel",loc:"Charlotte, NC",due:"Feb 22, 2026",
-     scope:"Complete pharmacy retrofit: secure glass partitions, LED lighting upgrades, LVT flooring, interior painting, pharmacy counter millwork, and restroom upgrades. NC state license required.",docs:true}
-  ],
-  "South Carolina": [
-    {title:"Dollar General \u2014 Store Expansion",loc:"Columbia, SC",due:"Mar 15, 2026",
-     scope:"Store expansion footprint: concrete slab, steel framing, drywall, ceiling, flooring, painting, storefront, and MEP rough-in for expanded retail area.",docs:true}
-  ],
-  "Tennessee": [
-    {title:"Family Dollar \u2014 Interior Refresh",loc:"Nashville, TN",due:"Apr 01, 2026",
-     scope:"Interior refresh: VCT flooring removal & replacement, suspended ceiling tile replacement, interior painting, and LED lighting retrofit throughout the store.",docs:false}
-  ],
-  "Virginia": [
-    {title:"Advance Auto Parts \u2014 Remodel",loc:"Richmond, VA",due:"Mar 28, 2026",
-     scope:"Full interior remodel of 7,000 SF auto parts store: demolition, drywall, flooring, painting, millwork, storefront, and all MEP trades.",docs:true}
-  ]
-};
+var STATE_COLORS = {ga:'',al:'al',fl:'fl',tx:'tx',nc:'nc',sc:'sc'};
+var currentState = 'all';
+var currentApply = null;
 
-/* Excel Sheet Database */
-var DB = {
-  "Georgia":{total:4198,counties:{"Fulton":954,"Gwinnett":555,"Cobb":498,"De Kalb":351,"Forsyth":164,"Cherokee":108,"Hall":88,"Fayette":84,"Henry":74,"Carroll":70,"Paulding":68,"Clarke":55,"Oconee":55,"Bartow":54,"Coweta":53,"Jackson":50,"Barrow":50,"Douglas":48,"Atlanta (City)":43,"Walton":42,"Clayton":41,"Newton":40,"Chatham":36,"Rockdale":33,"Bibb":33,"Spalding":30,"Whitfield":25,"Richmond":23,"Dawson":19,"Morgan":19}},
-  "Florida":{total:312,counties:{"Broward":58,"Miami-Dade":51,"Palm Beach":42,"Orange":38,"Hillsborough":35,"Duval":28,"Pinellas":22,"Seminole":18,"Volusia":12,"Sarasota":8}},
-  "Texas":{total:289,counties:{"Harris":78,"Dallas":65,"Tarrant":42,"Travis":38,"Bexar":28,"Collin":18,"Denton":12,"Fort Bend":8}},
-  "North Carolina":{total:198,counties:{"Mecklenburg":62,"Wake":55,"Guilford":28,"Forsyth":22,"Durham":18,"Cumberland":13}},
-  "South Carolina":{total:156,counties:{"Richland":48,"Greenville":42,"Charleston":35,"Lexington":18,"Spartanburg":13}},
-  "Tennessee":{total:143,counties:{"Shelby":48,"Davidson":38,"Knox":25,"Hamilton":18,"Williamson":14}},
-  "Alabama":{total:132,counties:{"Jefferson":48,"Madison":32,"Montgomery":22,"Shelby":16,"Tuscaloosa":14}},
-  "Virginia":{total:118,counties:{"Fairfax":42,"Chesterfield":22,"Prince William":18,"Loudoun":16,"Henrico":14,"Roanoke":6}},
-  "California":{total:105,counties:{"Los Angeles":38,"San Diego":22,"Orange":18,"Santa Clara":12,"Alameda":8,"Sacramento":7}},
-  "New York":{total:98,counties:{"New York":32,"Kings":18,"Queens":16,"Nassau":12,"Suffolk":10,"Westchester":10}},
-  "Ohio":{total:87,counties:{"Cuyahoga":28,"Franklin":22,"Hamilton":18,"Summit":12,"Montgomery":7}},
-  "Pennsylvania":{total:82,counties:{"Philadelphia":28,"Allegheny":22,"Montgomery":16,"Delaware":10,"Chester":6}},
-  "Illinois":{total:78,counties:{"Cook":48,"Du Page":12,"Lake":8,"Will":6,"Kane":4}},
-  "Michigan":{total:72,counties:{"Wayne":28,"Oakland":18,"Macomb":12,"Kent":8,"Genesee":6}},
-  "Arkansas":{total:48,counties:{"Pulaski":22,"Benton":12,"Sebastian":8,"Faulkner":6}},
-  "Arizona":{total:44,counties:{"Maricopa":32,"Pima":8,"Pinal":4}}
-};
-
-/* ===== RENDER STATES ===== */
-function filterStates(q) {
-  q = (q || '').toLowerCase();
-  document.querySelectorAll('.sc-card').forEach(function(c) {
-    c.style.display = (!q || c.dataset.name.toLowerCase().indexOf(q) > -1) ? '' : 'none';
+function searchStates() {
+  var input = document.getElementById('state-search').value.toLowerCase();
+  var buttons = document.querySelectorAll('#state-list .state-btn');
+  buttons.forEach(function(btn) {
+    if (btn.getAttribute('data-state').toLowerCase().indexOf(input) > -1) {
+      btn.style.display = '';
+    } else {
+      btn.style.display = 'none';
+    }
   });
 }
 
-function buildGrid() {
-  var grid = document.getElementById('statesGrid');
-  grid.innerHTML = '';
-  STATES.forEach(function(st) {
-    var projs = PROJECTS[st.s] || [];
-    var hasBids = projs.length > 0;
-    var card = document.createElement('div');
-    card.className = 'sc-card' + (hasBids ? ' has-bids' : '');
-    card.dataset.name = st.s;
-    var badge = hasBids
-      ? '<div class="bid-badge"><span class="d"></span>' + projs.length + ' Active Bid' + (projs.length > 1 ? 's' : '') + '</div>'
-      : '<span class="no-tag">No active bids</span>';
-    card.innerHTML = '<div class="sc-emoji">' + st.e + '</div><div class="sc-name">' + st.s + '</div>' + badge;
-    (function(name, pr) {
-      card.onclick = function() { openDrawer(name, pr); };
-    })(st.s, projs);
-    grid.appendChild(card);
-  });
+function clearStateSearch() {
+  var inputEl = document.getElementById('state-search');
+  if (inputEl) {
+    inputEl.value = '';
+    searchStates();
+  }
 }
 
-/* ===== DRAWER ===== */
-function openDrawer(stateName, projects) {
-  document.getElementById('dr-title').textContent = stateName + ' \u2014 Bid Projects';
-  var cnt = projects.length;
-  document.getElementById('dr-sub').textContent = cnt > 0
-    ? cnt + ' active project' + (cnt > 1 ? 's' : '') + ' \u2014 Click Apply to submit your bid'
-    : 'No active bids \u2014 contractor database shown below';
+function clearProjectSearch() {
+  var inputEl = document.getElementById('project-search');
+  if (inputEl) {
+    inputEl.value = '';
+    searchProjects();
+  }
+}
+
+function searchProjects() {
+  renderProjects();
+}
+
+function stateCount(s){ return PROJECTS.filter(function(p){return p.state===s;}).length; }
+
+function buildSidebar(){
+  var states = [];
+  PROJECTS.forEach(function(p){
+    if(states.indexOf(p.state)<0) states.push(p.state);
+  });
+  // also add zero-count states
+  var extras = ['California','New York','Tennessee','Virginia'];
+  extras.forEach(function(s){ if(states.indexOf(s)<0) states.push(s); });
 
   var html = '';
+  states.forEach(function(s){
+    var cnt = stateCount(s);
+    html += '<button class="state-btn'+(cnt===0?' zero':'')+'" data-state="'+s+'" onclick="filterState(\''+s+'\')">'
+          + s+'<span class="sb-count">'+cnt+'</span></button>';
+  });
+  document.getElementById('state-list').innerHTML = html;
+  document.getElementById('cnt-all').textContent = PROJECTS.length;
+}
 
-  /* Projects */
-  if (cnt === 0) {
-    html += '<div class="no-proj-box"><h3>No Active Bids in ' + stateName + '</h3>'
-          + '<p>No open bid invitations right now. New projects are added regularly.</p>'
-          + '<button class="btn-apply" style="margin-top:1rem;" onclick="openApply(\'General Profile\',\'' + stateName + '\',\'Ongoing\')">&#10003; Submit General Profile</button></div>';
+function filterState(s){
+  currentState = s;
+  document.querySelectorAll('.state-btn').forEach(function(b){ b.classList.remove('active'); });
+  if(s==='all'){
+    document.getElementById('btn-all').classList.add('active');
+    document.getElementById('main-title').textContent = 'All Projects';
+    document.getElementById('main-sub').textContent = PROJECTS.length+' Active Projects';
   } else {
-    for (var i = 0; i < projects.length; i++) {
-      var p = projects[i];
-      var safeT = p.title.replace(/"/g, '&quot;');
-      var safeL = p.loc.replace(/"/g, '&quot;');
-      var safeD = p.due.replace(/"/g, '&quot;');
-      var docH = p.docs
-        ? '<button class="btn-doc">&#128196; Drawings &amp; Plans</button><button class="btn-doc">&#128196; Specifications</button>'
-        : '<button class="btn-doc" disabled>&#128196; Plans Pending</button>';
-      html += '<div class="pj-card">'
-        + '<div class="pj-hdr">'
-        + '<div class="itb-tag"><span class="itb-d"></span>Active ITB</div>'
-        + '<div class="pj-title">' + p.title + '</div>'
-        + '<div class="pj-loc">&#128205; ' + p.loc + '</div>'
-        + '</div>'
-        + '<div class="pj-due-row">'
-        + '<div><div class="pj-dl">Bids Due</div><div class="pj-dv">' + p.due + '</div></div>'
-        + '<div class="pj-email">Submit to <a href="mailto:estimating@kjrid.com">estimating@kjrid.com</a></div>'
-        + '</div>'
-        + '<div class="pj-body">'
-        + '<div class="pj-scope-lbl">Scope of Work</div>'
-        + '<div class="pj-scope">' + p.scope + '</div>'
-        + '<div class="pj-btns">'
-        + '<button class="btn-apply" onclick="openApply(&quot;' + safeT + '&quot;,&quot;' + safeL + '&quot;,&quot;' + safeD + '&quot;)">&#10003; Apply to Bid</button>'
-        + docH
-        + '</div></div></div>';
-    }
+    var btn = document.querySelector('[data-state="'+s+'"]');
+    if(btn) btn.classList.add('active');
+    document.getElementById('main-title').textContent = s+' Projects';
+    var cnt = stateCount(s);
+    document.getElementById('main-sub').textContent = cnt+' Active Project'+(cnt!==1?'s':'');
+  }
+  renderProjects();
+}
+
+function renderProjects(){
+  var searchStr = document.getElementById('project-search') ? document.getElementById('project-search').value.toLowerCase() : '';
+  var list = currentState==='all' ? PROJECTS : PROJECTS.filter(function(p){return p.state===currentState;});
+  
+  if (searchStr) {
+    list = list.filter(function(p) {
+      return p.title.toLowerCase().indexOf(searchStr) > -1 || 
+             p.loc.toLowerCase().indexOf(searchStr) > -1 || 
+             p.state.toLowerCase().indexOf(searchStr) > -1 || 
+             p.codes.some(function(c) { return c[1].toLowerCase().indexOf(searchStr) > -1; }) || 
+             p.trades.some(function(t) { return t.toLowerCase().indexOf(searchStr) > -1; });
+    });
   }
 
-  /* Contractor DB from Excel */
-  var db = DB[stateName];
-  if (db) {
-    var entries = Object.entries(db.counties);
-    var chips = entries.map(function(e) {
-      return '<div class="county-chip"><span class="county-name">' + e[0] + '</span><span class="county-count">' + e[1] + '</span></div>';
-    }).join('');
-    html += '<div class="db-section">'
-      + '<div class="db-top">'
-      + '<div><div class="db-label">Contractor Database \u2014 From Your Excel Sheet</div>'
-      + '<div class="db-title">' + stateName + ' \u2014 ' + db.total.toLocaleString() + ' Companies Mapped</div></div>'
-      + '<div class="db-badge">6,354 Total Records</div>'
-      + '</div>'
-      + '<div class="county-grid">' + chips + '</div>'
-      + '<div class="db-note">Number of companies per county \u00b7 Source: KJR Excel Database</div>'
-      + '</div>';
+  var html = '';
+  if(!list.length){
+    html = '<div style="text-align:center;padding:3rem;background:#fff;border-radius:16px;border:1px dashed rgba(201,150,44,.3);">'
+         + '<p style="font-size:1.1rem;color:#7A5230;font-weight:600;">No active bids found.</p>'
+         + '<p style="color:#aaa;font-size:.88rem;">Try adjusting your search or state filter.</p></div>';
+  } else {
+    list.forEach(function(p){ html += buildCard(p); });
   }
+  document.getElementById('projects-list').innerHTML = html;
+}
 
-  document.getElementById('dr-body').innerHTML = html;
-  document.getElementById('drawerOverlay').classList.add('open');
+function buildCard(p){
+  var stateClass = 'badge-state '+(STATE_COLORS[p.stateCode]||'');
+  var docsHtml = p.hasDocs
+    ? '<button class="btn-red" onclick="alert(\'Drawings & Plans coming soon.\')"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:text-bottom;"><path d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg> View Drawings/Plans</button>'
+    + '<button class="btn-red" onclick="alert(\'Specifications coming soon.\')"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:text-bottom;"><path d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg> View Specifications</button>'
+    : '<button class="btn-red" disabled style="opacity:.5;cursor:not-allowed;"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:text-bottom;"><path d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg> Plans Pending</button>';
+
+  var codesHtml = p.codes.map(function(c){
+    return '<tr><td>'+c[0]+'</td><td>'+c[1]+'</td></tr>';
+  }).join('');
+  var tradesHtml = p.trades.map(function(t){
+    return '<span class="trade-chip">'+t+'</span>';
+  }).join('');
+  var notesHtml = p.notes.map(function(n){return '<li>'+n+'</li>';}).join('');
+
+  return '<div class="pj-card" id="card-'+p.id+'">'
+    +'<div class="pj-inner">'
+    +'<div class="pj-top">'
+    +'<div class="pj-badges">'
+    +'<span class="badge badge-itb">Invitation to Bid</span>'
+    +'<span class="badge badge-active">Active</span>'
+    +'<span class="badge '+stateClass+'">'+p.state+'</span>'
+    +'</div>'
+    +'<div class="kjr-address"><strong>KJR INTERIOR DESIGNS INC.</strong>3776 Rex Cir Rex GA 30273</div>'
+    +'</div>'
+    +'<div class="pj-title">'+p.title+'</div>'
+    +'<div class="pj-grid">'
+    +'<div class="pj-field"><label><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>Location</label><p>'+p.loc+'</p></div>'
+    +'<div class="pj-field"><label><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Bid Due</label><p><span class="due-chip">'+p.due+'</span></p></div>'
+    +'<div class="pj-field"><label><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>Submit Bids To</label><p><a href="mailto:'+p.email+'">'+p.email+'</a></p></div>'
+    +'<div class="pj-field"><label><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>Estimator</label><p>'+p.estimator+'</p></div>'
+    +'</div>'
+    +'<div class="pj-btns">'
+    + docsHtml
+    +'<button class="btn-green" onclick="openApply('+p.id+')"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:text-bottom;"><path d="M5 13l4 4L19 7"></path></svg> Apply to Bid</button>'
+    +'</div>'
+    +'</div>'
+    +'<button class="scope-toggle" id="tog-'+p.id+'" onclick="toggleScope('+p.id+')">'
+    +'<span class="arr"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:text-bottom;"><path d="M19 9l-7 7-7-7"></path></svg></span> View Full Scope &amp; Cost Codes'
+    +'</button>'
+    +'<div class="scope-body" id="scope-'+p.id+'">'
+    +'<p class="scope-intro">KJR INTERIOR DESIGNS INC. has identified the following scopes of work. Please note that the scope includes, but is not limited to the following items.</p>'
+    +'<div class="cc-title"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:text-bottom;"><path d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg> Cost Codes</div>'
+    +'<table class="cc-table"><thead><tr><th>Cost Code</th><th>Description</th></tr></thead><tbody>'+codesHtml+'</tbody></table>'
+    +'<div class="trades-label">Trades Requested:</div>'
+    +'<div class="trades-wrap">'+tradesHtml+'</div>'
+    +'<div class="notes-label">Notes:</div>'
+    +'<ul class="notes-list">'+notesHtml+'</ul>'
+    +'<div class="scope-footer">'
+    +'<p>Questions? Contact KING at <a href="mailto:mtusa.king@kjrid.com">mtusa.king@kjrid.com</a></p>'
+    +'<button class="btn-green" onclick="openApply('+p.id+')"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:text-bottom;"><path d="M5 13l4 4L19 7"></path></svg> Apply Now</button>'
+    +'</div>'
+    +'</div>'
+    +'</div>';
+}
+
+function toggleScope(id){
+  var body = document.getElementById('scope-'+id);
+  var tog  = document.getElementById('tog-'+id);
+  var isOpen = body.classList.toggle('open');
+  tog.classList.toggle('open', isOpen);
+  tog.innerHTML = (isOpen
+    ? '<span class="arr" style="transform:rotate(180deg)"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:text-bottom;"><path d="M19 9l-7 7-7-7"></path></svg></span> Hide Scope Details'
+    : '<span class="arr"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:text-bottom;"><path d="M19 9l-7 7-7-7"></path></svg></span> View Full Scope &amp; Cost Codes');
+}
+
+function openApply(id){
+  currentApply = PROJECTS.find(function(p){return p.id===id;});
+  if(!currentApply) return;
+  document.getElementById('m-sub').textContent = 'Submit your application for '+currentApply.title;
+  document.getElementById('m-proj-info').innerHTML =
+    '<div class="mpi-item"><label>Project</label><p>'+currentApply.title+'</p></div>'
+    +'<div class="mpi-item"><label>Location</label><p>'+currentApply.loc+'</p></div>'
+    +'<div class="mpi-item"><label>Bid Due</label><p>'+currentApply.due+'</p></div>';
+  document.getElementById('m-form').reset();
+  document.getElementById('f-proj').value = currentApply.title;
+  document.getElementById('f-loc').value = currentApply.loc;
+  document.getElementById('bid-subject').value = 'New Bid Application for ' + currentApply.title;
+
+  document.getElementById('m-form').style.display = '';
+  document.getElementById('m-success').style.display = 'none';
+  document.getElementById('applyModal').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
 
-function closeDrawer() {
-  document.getElementById('drawerOverlay').classList.remove('open');
+function closeApply(){
+  document.getElementById('applyModal').classList.remove('open');
   document.body.style.overflow = '';
 }
 
-/* ===== APPLY MODAL ===== */
-function openApply(proj, loc, due) {
-  document.getElementById('a-proj-lbl').textContent = proj + ' \u00b7 ' + loc + ' \u00b7 Due ' + due;
-  document.getElementById('a-suc-name').textContent = proj;
-  document.getElementById('a-form').style.display = '';
-  document.getElementById('a-success').style.display = 'none';
-  document.getElementById('applyModal').classList.add('open');
-}
-
-function closeApply() {
-  document.getElementById('applyModal').classList.remove('open');
-}
-
-document.getElementById('applyModal').addEventListener('click', function(e) {
-  if (e.target === this) closeApply();
+document.getElementById('applyModal').addEventListener('click', function(e){
+  if(e.target===this) closeApply();
 });
 
-function submitApply() {
-  var first = document.getElementById('a-first').value.trim();
-  var co    = document.getElementById('a-co').value.trim();
-  var email = document.getElementById('a-email').value.trim();
-  var trade = document.getElementById('a-trade').value;
-  if (!first || !co || !email || !trade) {
-    alert('Please fill in all required fields (marked with *).');
-    return;
-  }
-  document.getElementById('a-form').style.display = 'none';
-  document.getElementById('a-success').style.display = 'block';
+function submitApply(){
+  // Kept here so it does not error if there are floating references. The actual submission uses formsubmit and triggers onLoad on hidden iframe
 }
 
-/* ===== INIT ===== */
-buildGrid();
+buildSidebar();
+filterState('all');
 </script>
 </body>
 </html>

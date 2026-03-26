@@ -6,6 +6,63 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Property Management Crew | KJR Interior Designs Inc.</title>
   <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Modal Styles */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+      background: #fafafc;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 500px;
+      position: relative;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      overflow: hidden;
+      animation: mIn 0.3s ease;
+    }
+    @keyframes mIn { from{transform:translateY(20px);opacity:0;} to{transform:translateY(0);opacity:1;} }
+    .mhdr { background: #111827; color: white; padding: 1.5rem; position: relative; }
+    .mhdr h3 { margin: 0; font-size: 1.3rem; }
+    .mhdr p { margin: 0.3rem 0 0; font-size: 0.9rem; color: #9ca3af; }
+    .mhdr-close {
+      position: absolute; right: 1rem; top: 1rem;
+      background: none; border: none; color: white; font-size: 1.5rem;
+      cursor: pointer; opacity: 0.7;
+    }
+    .mhdr-close:hover { opacity: 1; }
+    .mbody { padding: 1.5rem; }
+    .fg { margin-bottom: 1rem; text-align: left; }
+    .fg label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.3rem; color: #4b5563; }
+    .fg input[type="text"], .fg input[type="email"], .fg input[type="file"] {
+      width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 6px; font-family: 'Inter', sans-serif;
+      box-sizing: border-box;
+    }
+    .mftr {
+      padding: 1.25rem 1.5rem; background: #fff; display: flex; justify-content: flex-end; gap: 0.75rem;
+      border-top: 1px solid #e5e7eb;
+    }
+    .btn-cancel {
+      padding: 0.75rem 1.25rem; border-radius: 6px; font-weight: 600; cursor: pointer;
+      background: #f3f4f6; border: 1px solid #d1d5db; color: #374151;
+    }
+    .btn-submit {
+      padding: 0.75rem 1.25rem; border-radius: 6px; font-weight: 600; cursor: pointer;
+      background: #cc0000; border: none; color: white;
+    }
+    .btn-submit:hover { background: #a80000; }
+    #m-success { display: none; padding: 3rem 2rem; text-align: center; }
+    #m-success h2 { color: #10b981; margin-bottom: 1rem; }
+    #m-success p { color: #4b5563; margin-bottom: 2rem; }
+  </style>
 </head>
 
 <body>
@@ -67,9 +124,9 @@
 
       <div style="text-align: center;">
         <p style="margin-bottom: 2rem; font-weight: 600;">Upload pictures of your finished work & invoice or Sign In</p>
-        <a href="#" class="btn"
+        <a href="#" class="btn" onclick="openUploadModal(event)"
           style="background: var(--primary); color: white; border: none; margin-right: 1rem;">Upload Invoice</a>
-        <a href="#" class="btn"
+        <a href="sales-login.html" class="btn"
           style="background: white; color: var(--text-main); border: 2px solid var(--border-light);">Sign In</a>
       </div>
     </div>
@@ -119,7 +176,7 @@
       </div>
 
       <div style="text-align: center; margin-top: 3rem;">
-        <a href="#" class="btn" style="background: var(--primary); color: white; width: 100%; border-radius: 8px;">Click
+        <a href="#" onclick="openUploadModal(event)" class="btn" style="background: var(--primary); color: white; width: 100%; border-radius: 8px; box-sizing: border-box; text-decoration: none; display: inline-block;">Click
           to Upload All Documents</a>
       </div>
     </div>
@@ -336,6 +393,75 @@
     </div>
   </section>
 
+  <!-- Upload Modal -->
+  <div class="modal-overlay" id="uploadModal">
+    <div class="modal-box">
+      <form action="https://formsubmit.co/suddhajitchowdhury226@gmail.com" method="POST" enctype="multipart/form-data" target="upload_iframe" id="upload-form" onsubmit="window.submittedUpload=true;">
+        <input type="hidden" name="_subject" value="New Invoice / Document Upload">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_template" value="box">
+        <div class="mhdr">
+          <h3>Upload Documents</h3>
+          <p>Securely submit your invoice or requirements</p>
+          <button type="button" class="mhdr-close" onclick="closeUploadModal()">&times;</button>
+        </div>
+        <div class="mbody">
+          <div class="fg">
+            <label>Full Name / Company Name <span style="color:#cc0000">*</span></label>
+            <input type="text" name="Name" required placeholder="John Smith LLC">
+          </div>
+          <div class="fg">
+            <label>Email Address <span style="color:#cc0000">*</span></label>
+            <input type="email" name="Email" required placeholder="you@company.com">
+          </div>
+          <div class="fg">
+            <label>Select File (Invoice/Docs) <span style="color:#cc0000">*</span></label>
+            <input type="file" name="attachment" accept=".pdf,.doc,.docx,.jpg,.png,.zip" required style="background:white; cursor:pointer;">
+          </div>
+        </div>
+        <div class="mftr">
+          <button type="button" class="btn-cancel" onclick="closeUploadModal()">Cancel</button>
+          <button type="submit" class="btn-submit" id="btn-submit-upload">Upload File &rarr;</button>
+        </div>
+      </form>
+      <iframe name="upload_iframe" style="display:none;" onload="if(window.submittedUpload){ document.getElementById('upload-form').style.display='none'; document.getElementById('m-success').style.display='block'; window.submittedUpload=false; }"></iframe>
+      
+      <!-- Success Message -->
+      <div id="m-success">
+        <h2>Upload Successful!</h2>
+        <p>Your documents have been securely sent. We will review them shortly.</p>
+        <button class="btn-cancel" onclick="closeUploadModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    window.submittedUpload = false;
+    const uploadModal = document.getElementById('uploadModal');
+    
+    function openUploadModal(e) {
+      if(e) e.preventDefault();
+      document.getElementById('upload-form').style.display = 'block';
+      document.getElementById('m-success').style.display = 'none';
+      document.getElementById('upload-form').reset();
+      document.getElementById('btn-submit-upload').innerHTML = 'Upload File &rarr;';
+      document.getElementById('btn-submit-upload').style.opacity = '1';
+      uploadModal.classList.add('open');
+    }
+    function closeUploadModal() {
+      uploadModal.classList.remove('open');
+    }
+    
+    document.getElementById('upload-form').addEventListener('submit', function() {
+      document.getElementById('btn-submit-upload').innerHTML = 'Uploading...';
+      document.getElementById('btn-submit-upload').style.opacity = '0.7';
+    });
+
+    uploadModal.addEventListener('click', function(e) {
+      if(e.target === uploadModal) closeUploadModal();
+    });
+  </script>
+
   <!-- Footer -->
   <footer>
     <div class="footer-content">
@@ -357,10 +483,10 @@
       <div class="footer-col">
         <h4>QUICK LINKS</h4>
         <ul class="footer-links">
-          <li><a href="#">Upload Invoice</a></li>
-          <li><a href="#">Sign In</a></li>
-          <li><a href="#">Create Profile</a></li>
-          <li><a href="#">Contact Support</a></li>
+          <li><a href="#" onclick="openUploadModal(event)">Upload Invoice</a></li>
+          <li><a href="sales-login.html">Sign In</a></li>
+          <li><a href="property-profile-creation.html">Create Profile</a></li>
+          <li><a href="contact-us.html">Contact Support</a></li>
         </ul>
       </div>
 

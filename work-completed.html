@@ -16,238 +16,41 @@
       font-family: 'Inter', sans-serif;
     }
 
+    /* ── Image Gallery Grid ── */
     .gallery-grid {
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 3.5rem;
-      max-width: 1200px;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      max-width: 1400px;
       margin: 3rem auto 0;
+      padding: 0 1rem;
     }
 
-    
-    /* ── Project Showcase Card ── */
-    .project-showcase {
-      background: white;
-      border-radius: 20px;
+    .gallery-item {
+      border-radius: 12px;
       overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
       transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-      border: 1px solid rgba(0,0,0,0.05);
+      aspect-ratio: 4 / 3;
+      background: #fff;
+      cursor: pointer;
     }
 
-    .project-showcase:hover {
+    .gallery-item:hover {
       transform: translateY(-8px);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.12);
     }
 
-    .project-header {
-      padding: 2rem 2.5rem;
-      background: #111827;
-      color: white;
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 1rem;
-      flex-wrap: wrap;
-      position: relative;
-    }
-
-    .project-header::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, #cc0000, #ff4444);
-    }
-
-    .project-header-text { text-align: left; }
-
-    .project-title {
-      font-size: 1.5rem;
-      font-weight: 800;
-      margin-bottom: 0.4rem;
-      letter-spacing: -0.02em;
-    }
-
-    .project-desc {
-      font-size: 0.95rem;
-      opacity: 0.85;
-      max-width: 600px;
-      line-height: 1.6;
-    }
-
-    .project-tag {
-      background: rgba(255,255,255,0.15);
-      color: white;
-      padding: 0.35rem 0.85rem;
-      border-radius: 50px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      white-space: nowrap;
-      align-self: flex-start;
-      margin-top: 0.2rem;
-    }
-
-    /* ── Side-by-Side Comparison ── */
-    .comparison-container {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-    }
-
-    @media (max-width: 768px) {
-      .comparison-container { grid-template-columns: 1fr; }
-      .project-title { font-size: 1.2rem; }
-    }
-
-    .image-wrapper {
-      position: relative;
-      overflow: hidden;
-    }
-
-    .image-wrapper img {
+    .gallery-item img {
       width: 100%;
-      height: 420px;
+      height: 100%;
       object-fit: cover;
       display: block;
-      transition: transform 0.45s ease;
+      transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
     }
 
-    .image-wrapper:hover img {
-      transform: scale(1.04);
-    }
-
-    /* Divider line in the middle */
-    .comparison-container .image-wrapper:first-child {
-      border-right: 3px solid white;
-    }
-
-    .image-label {
-      position: absolute;
-      top: 1rem;
-      left: 1rem;
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      color: white;
-      padding: 0.45rem 1.25rem;
-      border-radius: 50px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      font-size: 0.8rem;
-      z-index: 2;
-    }
-
-    .image-label.before {
-      background: rgba(15, 15, 15, 0.65);
-      border: 1px solid rgba(255,255,255,0.2);
-    }
-
-    .image-label.after {
-      background: rgba(180, 0, 0, 0.8);
-      border: 1px solid rgba(255,255,255,0.2);
-    }
-
-    /* ── Single-Image Showcase (for one real photo) ── */
-    .single-image-container {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0;
-    }
-
-    @media (max-width: 768px) {
-      .single-image-container { grid-template-columns: 1fr; }
-    }
-
-    .single-image-container .image-wrapper img {
-      height: 460px;
-    }
-
-    .single-image-caption {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 2.5rem 2.5rem;
-      background: #0f172a;
-      color: white;
-      text-align: left;
-    }
-
-    .caption-eyebrow {
-      font-size: 0.7rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      color: #cc5555;
-      margin-bottom: 0.75rem;
-    }
-
-    .caption-title {
-      font-size: 1.6rem;
-      font-weight: 800;
-      color: white;
-      margin-bottom: 1rem;
-      line-height: 1.3;
-      letter-spacing: -0.02em;
-    }
-
-    .caption-body {
-      font-size: 0.95rem;
-      color: #94a3b8;
-      line-height: 1.7;
-      margin-bottom: 1.5rem;
-    }
-
-    .caption-specs {
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-    }
-
-    .spec-row {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      font-size: 0.85rem;
-      color: #cbd5e1;
-    }
-
-    .spec-icon {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      color: #94a3b8;
-      width: 16px;
-      height: 16px;
-    }
-
-    .project-tag {
-      background: rgba(255,255,255,0.15);
-      color: white;
-      padding: 0.35rem 0.85rem;
-      border-radius: 50px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      white-space: nowrap;
-      align-self: flex-start;
-      margin-top: 0.2rem;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-    }
-
-    /* ── Dual Real Photos Grid ── */
-    .dual-image-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-    }
-
-    @media (max-width: 768px) {
-      .dual-image-grid { grid-template-columns: 1fr; }
+    .gallery-item:hover img {
+      transform: scale(1.06);
     }
 
     .dual-image-grid .image-wrapper img {
@@ -312,46 +115,22 @@
 <body>
 
   <!-- Top Utility Bar -->
-  <div class="top-bar">
+  <div class="top-bar" style="background:#f8fafc; border-bottom:1px solid #e2e8f0;">
     <div class="top-bar-left">
-      <span class="utility-info"><strong>888-944-6313</strong> &bull; Call in Orders Only &bull; Call 24/7 &bull; Live Operator</span>
+      <span class="utility-info"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="vertical-align:text-bottom;margin-right:4px;color:#cc0000"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"></path></svg><strong style="color:#cc0000">888-944-6313</strong> &bull; Call in Orders Only &bull; Call 24/7 &bull; Live Operator</span>
     </div>
     <div class="top-bar-right">
-      <a href="contact-us.html">Contact</a>
-      <a href="suggest-feature.html">Suggest Feature</a>
-      <a href="sales-login.html" class="sales-login-btn">SALES LOGIN</a>
+      <a href="contact-us.html" style="text-transform:uppercase; font-weight:600; font-size:0.8rem;">CONTACT</a>
+      <a href="suggest-feature.html" style="text-transform:uppercase; font-weight:600; font-size:0.8rem;">SUGGEST FEATURE</a>
+      <a href="sales-login.html" class="sales-login-btn" style="background:#cc0000; color:#fff; padding:0.4rem 1.2rem; border-radius:4px; font-weight:700; text-transform:uppercase; font-size:0.8rem;">SALES LOGIN</a>
     </div>
   </div>
 
-  <!-- Main Navigation Header -->
-  <header class="main-header">
-    <div class="header-container">
-      <div class="logo">
-        <a href="index.html">
-          <img src="logo-new.jpeg" alt="KJR Interior Designs Inc.">
-        </a>
-      </div>
-      <nav class="secondary-nav">
-        <div class="secondary-nav-container">
-          <ul class="nav-links">
-            <li><a href="index.html">HOME</a></li>
-            <li class="has-dropdown">
-              <a href="#" class="active">WORK FORCE <span class="dropdown-arrow">▾</span></a>
-              <ul class="dropdown-menu">
-                <li><a href="career-move.html">Career Move</a></li>
-                <li><a href="property-mgmt.html">Property Mgmt Crew</a></li>
-                <li><a href="bid-projects.html">Bid Projects</a></li>
-                <li><a href="work-completed.html" class="active">Work Completed by KJRID</a></li>
-              </ul>
-            </li>
-            <li><a href="about-us.html">ABOUT</a></li>
-          </ul>
-        </div>
-      </nav>
-      <div class="header-actions">
-        <a href="index.html#parts" class="parts-highlight">10M+ PARTS</a>
-      </div>
-    </div>
+  <!-- Simplified Navigation Header -->
+  <header style="background: #fff; padding: 1.5rem 2.5rem; display: flex; align-items: center; justify-content: flex-start; border-bottom: 1px solid #e2e8f0; box-shadow: 0 4px 6px rgba(0,0,0,0.02)">
+    <a href="index.html" style="display: inline-flex; align-items: center; justify-content: center; padding: 0.65rem 1.8rem; color: #cc0000; border: 1.5px solid #cc0000; border-radius: 50px; font-weight: 700; text-decoration: none; font-family: 'Inter', sans-serif; font-size: 0.85rem; letter-spacing: 0.05em; transition: all 0.2s;">
+      &larr; BACK TO HOME
+    </a>
   </header>
 
   <!-- Page Hero -->
@@ -395,213 +174,19 @@
       </div>
     </div>
 
-    <div class="gallery-grid">
-<!-- ====== GOMES PROJECT ====== -->
-
-      <div class="project-showcase">
-        <div class="project-header">
-          <div class="project-header-text">
-            <div class="project-title">Gomes Property Renovation</div>
-            <div class="project-desc">Complete exterior renovation and facelift.</div>
-          </div>
-          <span class="project-tag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"></path><circle cx="12" cy="13" r="4"></circle></svg> Before & After</span>
-        </div>
-        <div class="comparison-container">
-          <div class="image-wrapper">
-            <span class="image-label before">Before</span>
-            <img src="Before%20and%20After/Gomes%20Before.jpg" alt="Before Gomes Property Renovation" loading="lazy">
-          </div>
-          <div class="image-wrapper">
-            <span class="image-label after">After</span>
-            <img src="Before%20and%20After/Gomes%20After.jpg" alt="After Gomes Property Renovation" loading="lazy">
-          </div>
-        </div>
-      </div>
-<!-- ====== POND ENCLOSURE ====== -->
-
-      <div class="project-showcase">
-        <div class="project-header">
-          <div class="project-header-text">
-            <div class="project-title">Pond Enclosure Upgrade</div>
-            <div class="project-desc">Repainting, reinforcement, and structural upgrades of the pond enclosure.</div>
-          </div>
-          <span class="project-tag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"></path><circle cx="12" cy="13" r="4"></circle></svg> Complete Renovation</span>
-        </div>
-        <div class="comparison-container">
-          <div class="image-wrapper">
-            <span class="image-label before">Before</span>
-            <img src="Before%20and%20After/Pond%20Enclosure%20Before.jpg" alt="Before Pond Enclosure Upgrade" loading="lazy">
-          </div>
-          <div class="image-wrapper">
-            <span class="image-label after">After (Final)</span>
-            <img src="Before%20and%20After/Pond%20Enclosure%203%20painted%20After.jpg" alt="After Pond Enclosure Upgrade" loading="lazy">
-          </div>
-        </div>
-        <div class="comparison-container" style="border-top: 3px solid white;">
-          <div class="image-wrapper">
-            <span class="image-label after">Progress / Angle 1</span>
-            <img src="Before%20and%20After/Pond%20Enclosure%201%20After.jpg" alt="After Pond Enclosure Upgrade" loading="lazy" style="height:320px;">
-          </div>
-          <div class="image-wrapper">
-            <span class="image-label after">Progress / Angle 2</span>
-            <img src="Before%20and%20After/Pond%20Enclosure%202%20painted%20After.jpg" alt="After Pond Enclosure Upgrade" loading="lazy" style="height:320px;">
-          </div>
-        </div>
-      </div>
-<!-- ====== FRONT EXTERIOR ====== -->
-
-      <div class="project-showcase">
-        <div class="project-header">
-          <div class="project-header-text">
-            <div class="project-title">Front Exterior Renovation</div>
-            <div class="project-desc">Revitalized front entry and architectural elements.</div>
-          </div>
-          <span class="project-tag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"></path><circle cx="12" cy="13" r="4"></circle></svg> Before & After</span>
-        </div>
-        <div class="comparison-container">
-          <div class="image-wrapper">
-            <span class="image-label before">Before</span>
-            <img src="Before%20and%20After/FRONT%20Before.png" alt="Before Front Exterior Renovation" loading="lazy">
-          </div>
-          <div class="image-wrapper">
-            <span class="image-label after">After</span>
-            <img src="Before%20and%20After/FRONT%20After.png" alt="After Front Exterior Renovation" loading="lazy">
-          </div>
-        </div>
-      </div>
-<!-- ====== HAND RAIL 1 ====== -->
-
-      <div class="project-showcase">
-        <div class="project-header">
-          <div class="project-header-text">
-            <div class="project-title">Veranda Hand Rail Installation (Phase 1)</div>
-            <div class="project-desc">New hand rail installation at the Veranda for improved safety and aesthetics.</div>
-          </div>
-          <span class="project-tag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"></path><circle cx="12" cy="13" r="4"></circle></svg> Before & After</span>
-        </div>
-        <div class="comparison-container">
-          <div class="image-wrapper">
-            <span class="image-label before">Before</span>
-            <img src="Before%20and%20After/Hand%20Rail%20%231%20%40%20Veranda%20%28Before%29.jpg" alt="Before Veranda Hand Rail Installation (Phase 1)" loading="lazy">
-          </div>
-          <div class="image-wrapper">
-            <span class="image-label after">After</span>
-            <img src="Before%20and%20After/Hand%20Rail%20%231%20%40%20Veranda%20%28After%29.jpg" alt="After Veranda Hand Rail Installation (Phase 1)" loading="lazy">
-          </div>
-        </div>
-      </div>
-<!-- ====== HAND RAIL 2 ====== -->
-
-      <div class="project-showcase">
-        <div class="project-header">
-          <div class="project-header-text">
-            <div class="project-title">Veranda Hand Rail Installation (Phase 2)</div>
-            <div class="project-desc">Secondary hand rail replacement utilizing modern materials.</div>
-          </div>
-          <span class="project-tag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"></path><circle cx="12" cy="13" r="4"></circle></svg> Before & After</span>
-        </div>
-        <div class="comparison-container">
-          <div class="image-wrapper">
-            <span class="image-label before">Before</span>
-            <img src="Before%20and%20After/Hand%20Rail%20%232%20%40%20Veranda%20%28Before%29.jpg" alt="Before Veranda Hand Rail Installation (Phase 2)" loading="lazy">
-          </div>
-          <div class="image-wrapper">
-            <span class="image-label after">After</span>
-            <img src="Before%20and%20After/Hand%20Rail%20%232%20%40%20Veranda%20%28After%29.jpg" alt="After Veranda Hand Rail Installation (Phase 2)" loading="lazy">
-          </div>
-        </div>
-      </div>
-<!-- ====== FRONT RAIL BALUSTERS ====== -->
-
-      <div class="project-showcase">
-        <div class="project-header">
-          <div class="project-header-text">
-            <div class="project-title">Front Rail Balusters Update</div>
-            <div class="project-desc">Complete replacement of front rail balusters with modern styled spindles.</div>
-          </div>
-          <span class="project-tag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"></path><circle cx="12" cy="13" r="4"></circle></svg> Before & After</span>
-        </div>
-        <div class="comparison-container">
-          <div class="image-wrapper">
-            <span class="image-label before">Before</span>
-            <img src="Before%20and%20After/Front%20RAIL%20Balusters%20Before.png" alt="Before Front Rail Balusters Update" loading="lazy">
-          </div>
-          <div class="image-wrapper">
-            <span class="image-label after">After</span>
-            <img src="Before%20and%20After/Front%20RAIL%20Balusters%20After.png" alt="After Front Rail Balusters Update" loading="lazy">
-          </div>
-        </div>
-      </div>
-<!-- ====== SIDE BROW ====== -->
-
-      <div class="project-showcase">
-        <div class="project-header">
-          <div class="project-header-text">
-            <div class="project-title">Exterior Side Brow Finish</div>
-            <div class="project-desc">Repaired and modernized side brow structures.</div>
-          </div>
-          <span class="project-tag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"></path><circle cx="12" cy="13" r="4"></circle></svg> Before & After</span>
-        </div>
-        <div class="comparison-container">
-          <div class="image-wrapper">
-            <span class="image-label before">Before</span>
-            <img src="Before%20and%20After/Side%20Brow%20Before.png" alt="Before Exterior Side Brow Finish" loading="lazy">
-          </div>
-          <div class="image-wrapper">
-            <span class="image-label after">After</span>
-            <img src="Before%20and%20After/Side%20Brow%20After.png" alt="After Exterior Side Brow Finish" loading="lazy">
-          </div>
-        </div>
-      </div>
-<!-- ====== WINDOW EYE BROW ====== -->
-
-      <div class="project-showcase">
-        <div class="project-header">
-          <div class="project-header-text">
-            <div class="project-title">Window Eye Brow Repair</div>
-            <div class="project-desc">Precision repair and painting of window eye brows.</div>
-          </div>
-          <span class="project-tag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"></path><circle cx="12" cy="13" r="4"></circle></svg> Before & After</span>
-        </div>
-        <div class="comparison-container">
-          <div class="image-wrapper">
-            <span class="image-label before">Before</span>
-            <img src="Before%20and%20After/Window%20Eye%20Brow%20Before.png" alt="Before Window Eye Brow Repair" loading="lazy">
-          </div>
-          <div class="image-wrapper">
-            <span class="image-label after">After</span>
-            <img src="Before%20and%20After/Window%20Eye%20Brow%20After.png" alt="After Window Eye Brow Repair" loading="lazy">
-          </div>
-        </div>
-      </div>
-<!-- ====== THE VERANDA BRICK BED ====== -->
-
-      <div class="project-showcase">
-        <div class="project-header">
-          <div class="project-header-text">
-            <div class="project-title">The Veranda Brick Bed</div>
-            <div class="project-desc">Custom brick laying for family bed area at The Veranda.</div>
-          </div>
-          <span class="project-tag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Completed</span>
-        </div>
-        <div style="width:100%; height:450px; overflow:hidden;">
-            <img src="Before%20and%20After/Brick%20%40%20The%20%20Veranda%20Bed%20Family.jpg" alt="The Veranda Brick Bed" loading="lazy" style="width:100%; height:100%; object-fit:cover; transition: transform 0.45s ease;" onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform='scale(1)'">
-        </div>
-      </div>
-<!-- ====== WALMART RESURFACING ====== -->
-
-      <div class="project-showcase">
-        <div class="project-header">
-          <div class="project-header-text">
-            <div class="project-title">Walmart Resurfacing Project</div>
-            <div class="project-desc">Commercial resurfacing providing a clean, professional concrete floor finish.</div>
-          </div>
-          <span class="project-tag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Completed</span>
-        </div>
-        <div style="width:100%; height:450px; overflow:hidden;">
-            <img src="Before%20and%20After/Walmart%20Resurfacing%202.jpg" alt="Walmart Resurfacing Project" loading="lazy" style="width:100%; height:100%; object-fit:cover; transition: transform 0.45s ease;" onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform='scale(1)'">
-        </div>
-      </div>
+    <div class="gallery-grid" id="main-gallery">
+      <div class="gallery-item"><img src="After/Gomes%20After.jpg" alt="Gomes Property Renovation completed" loading="lazy"></div>
+      <div class="gallery-item"><img src="After/Pond%20Enclosure%203%20painted%20After.jpg" alt="Pond Enclosure Upgrade completed" loading="lazy"></div>
+      <div class="gallery-item"><img src="After/Pond%20Enclosure%201%20After.jpg" alt="Pond Enclosure Upgrade completed 2" loading="lazy"></div>
+      <div class="gallery-item"><img src="After/Pond%20Enclosure%202%20painted%20After.jpg" alt="Pond Enclosure Upgrade completed 3" loading="lazy"></div>
+      <div class="gallery-item"><img src="After/FRONT%20After.png" alt="Front Exterior Renovation completed" loading="lazy"></div>
+      <div class="gallery-item"><img src="After/Hand%20Rail%20%231%20%40%20Veranda%20%28After%29.jpg" alt="Hand Rail completed" loading="lazy"></div>
+      <div class="gallery-item"><img src="After/Hand%20Rail%20%232%20%40%20Veranda%20%28After%29.jpg" alt="Hand Rail completed 2" loading="lazy"></div>
+      <div class="gallery-item"><img src="After/Front%20RAIL%20Balusters%20After.png" alt="Front Rail Balusters completed" loading="lazy"></div>
+      <div class="gallery-item"><img src="After/Side%20Brow%20After.png" alt="Side Brow Finish completed" loading="lazy"></div>
+      <div class="gallery-item"><img src="After/Window%20Eye%20Brow%20After.png" alt="Window Eye Brow Repair completed" loading="lazy"></div>
+      <div class="gallery-item"><img src="After/Brick%20%40%20The%20%20Veranda%20Bed%20Family.jpg" alt="Veranda Brick Bed completed" loading="lazy"></div>
+      <div class="gallery-item"><img src="After/Walmart%20Resurfacing%202.jpg" alt="Walmart Resurfacing Project completed" loading="lazy"></div>
     </div>
   </section>
 
