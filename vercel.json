@@ -28,6 +28,10 @@
     {
       "src": "Before and After/**",
       "use": "@vercel/static"
+    },
+    {
+      "src": "After/**",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
