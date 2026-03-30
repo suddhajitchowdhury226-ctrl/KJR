@@ -302,7 +302,7 @@
         <h2 id="main-title">All Projects</h2>
         <p id="main-sub"></p>
       </div>
-      <div style="display: flex; gap: 0.5rem; align-items: center;">
+      <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
         <div style="position: relative;">
           <input type="text" id="project-search" placeholder="Search projects..." onkeyup="searchProjects()" style="padding: 0.6rem 1rem 0.6rem 2.2rem; font-size: 0.9rem; border: 1px solid var(--border); border-radius: 8px; width: 260px; max-width: 100%; box-sizing: border-box; font-family: 'Inter', sans-serif; transition: border-color 0.2s;">
           <svg style="position: absolute; left: 0.7rem; top: 50%; transform: translateY(-50%); color: var(--muted); width: 16px; height: 16px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
@@ -310,6 +310,9 @@
         <button onclick="searchProjects()" style="background: var(--dark); color: #fff; border: 1px solid var(--dark); padding: 0.6rem 1.4rem; border-radius: 8px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; font-size: 0.85rem; transition: background 0.2s;">
           Search
         </button>
+        <a href="assets/kjr-companies-list.xlsx" download style="background: var(--crim2); color: #fff; border: 1px solid var(--crim2); padding: 0.6rem 1.4rem; border-radius: 8px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; font-size: 0.85rem; text-decoration: none; transition: background 0.2s; white-space: nowrap; display: inline-flex; align-items: center; gap: 0.35rem;">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg> All Projects Options
+        </a>
       </div>
     </div>
     <div id="projects-list"></div>
