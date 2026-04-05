@@ -320,7 +320,7 @@
 <!-- Apply Modal -->
 <div class="modal-overlay" id="applyModal">
   <div class="modal-box">
-    <form action="https://app-server-maaw.onrender.com/api/forms" method="POST" enctype="multipart/form-data" target="hidden_iframe" id="m-form" onsubmit="window.submittedBid=true;">
+    <form action="https://kjr-backend.onrender.com/api/forms" method="POST" enctype="multipart/form-data" target="hidden_iframe" id="m-form" onsubmit="window.submittedBid=true;">
       <input type="hidden" name="_subject" id="bid-subject" value="New Bid Application">
       <input type="hidden" name="_captcha" value="false">
       <input type="hidden" name="_template" value="box">
@@ -419,7 +419,7 @@
 var PROJECTS = [];
 const API_URL = location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.protocol === 'file:' 
   ? 'http://localhost:5001/api' 
-  : 'https://app-server-maaw.onrender.com/api';
+  : 'https://kjr-backend.onrender.com/api';
 
 async function fetchProjects() {
   try {

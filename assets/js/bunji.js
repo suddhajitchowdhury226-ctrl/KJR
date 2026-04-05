@@ -172,7 +172,7 @@
   
   const LOCAL_API = location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.protocol === 'file:' 
       ? 'http://localhost:5001/api/chat/message'
-      : 'https://app-server-maaw.onrender.com/api/chat/message';
+      : 'https://kjr-backend.onrender.com/api/chat/message';
 
   toggleBtn.addEventListener('click', () => {
     chatWindow.classList.add('open');
