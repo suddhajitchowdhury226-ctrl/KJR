@@ -170,7 +170,7 @@
   const sessionId = 'session_' + Math.random().toString(36).substr(2, 9);
   let isInit = false;
   
-  const LOCAL_API = location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.protocol === 'file:' 
+  const LOCAL_API = location.hostname === 'localhost' || location.hostname === '127.0.0.1' 
       ? 'http://localhost:5001/api/chat/message'
       : 'https://kjr-backend.onrender.com/api/chat/message';
 
