@@ -61,8 +61,8 @@
         type="video/mp4">
     </video>
     <div class="hero-content">
-      <h1>🔐 SALES TEAM LOGIN</h1>
-      <p>Secure access for authorized sales personnel</p>
+      <h1>KJR CAREER & PARTNER HUB</h1>
+      <p>Log in to manage employer partnerships or access graduate opportunities</p>
     </div>
   </section>
 
@@ -71,12 +71,50 @@
     <div class="feature-card" style="max-width: 500px;">
 
       <!-- Step 1: Username & Password -->
+      <!-- Step 1: Username & Password -->
       <div id="step1Container">
-        <h2 class="feature-title" style="text-align: center; margin-bottom: 2rem; color: var(--primary);">Step 1: Login
-          Credentials</h2>
+        
+        <!-- Login Type Toggle -->
+        <div style="display: flex; justify-content: center; background: #e9ecef; border-radius: 50px; padding: 0.35rem; margin-bottom: 1.5rem;">
+          <button type="button" id="typeSalesBtn" style="flex: 1; padding: 0.75rem 1rem; background: white; color: var(--primary); border: none; border-radius: 50px; cursor: pointer; font-weight: 700; font-size: 0.95rem; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: all 0.3s ease;">SALES TEAM LOGIN</button>
+          <button type="button" id="typeGradBtn" style="flex: 1; padding: 0.75rem 1rem; background: transparent; color: #666; border: none; border-radius: 50px; cursor: pointer; font-weight: 700; font-size: 0.95rem; transition: all 0.3s ease;">GRADUATE LOGIN</button>
+        </div>
+
+        <!-- Action Toggle (Login / Create) -->
+        <div style="display: flex; justify-content: center; gap: 2rem; margin-bottom: 1.5rem; border-bottom: 2px solid #e0e0e0;">
+          <button type="button" id="actionLoginBtn" style="padding: 0.5rem 1rem; background: none; border: none; border-bottom: 3px solid var(--primary); color: var(--primary); cursor: pointer; font-weight: 700; font-size: 1.1rem; margin-bottom: -2px;">Login</button>
+          <button type="button" id="actionCreateBtn" style="padding: 0.5rem 1rem; background: none; border: none; border-bottom: 3px solid transparent; color: #888; cursor: pointer; font-weight: 700; font-size: 1.1rem; margin-bottom: -2px;">Create Account</button>
+        </div>
+
+        <h2 id="formTitle" class="feature-title" style="text-align: center; margin-bottom: 2rem; color: var(--primary); font-size: 1.5rem;">Step 1: Login Credentials</h2>
 
         <form id="loginStep1Form"
-          style="background: white; padding: 3rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+          style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #f0f0f0;">
+          
+          <div id="emailFieldGroup" style="display: none; margin-bottom: 1.5rem;">
+            <label for="email" style="display: block; margin-bottom: 0.5rem; font-weight: 700; color: var(--text-main);">
+              Email Address <span style="color: var(--primary);">*</span>
+            </label>
+            <input type="email" id="email" name="email"
+              style="width: 100%; padding: 0.75rem; border: 2px solid #e0e0e0; border-radius: 4px; font-family: var(--font-body); font-size: 1rem;">
+          </div>
+
+          <div id="companyFieldGroup" style="display: none; margin-bottom: 1.5rem;">
+            <label for="companyName" style="display: block; margin-bottom: 0.5rem; font-weight: 700; color: var(--text-main);">
+              Company Name <span style="color: var(--primary);">*</span>
+            </label>
+            <input type="text" id="companyName" name="companyName"
+              style="width: 100%; padding: 0.75rem; border: 2px solid #e0e0e0; border-radius: 4px; font-family: var(--font-body); font-size: 1rem;">
+          </div>
+
+          <div id="instructorFieldGroup" style="display: none; margin-bottom: 1.5rem;">
+            <label for="instructorName" style="display: block; margin-bottom: 0.5rem; font-weight: 700; color: var(--text-main);">
+              Instructor Name <span style="color: var(--primary);">*</span>
+            </label>
+            <input type="text" id="instructorName" name="instructorName"
+              style="width: 100%; padding: 0.75rem; border: 2px solid #e0e0e0; border-radius: 4px; font-family: var(--font-body); font-size: 1rem;">
+          </div>
+
           <div style="margin-bottom: 1.5rem;">
             <label for="username"
               style="display: block; margin-bottom: 0.5rem; font-weight: 700; color: var(--text-main);">
@@ -95,7 +133,15 @@
               style="width: 100%; padding: 0.75rem; border: 2px solid #e0e0e0; border-radius: 4px; font-family: var(--font-body); font-size: 1rem;">
           </div>
 
-          <div style="margin-bottom: 1.5rem;">
+          <div id="confirmPasswordFieldGroup" style="display: none; margin-bottom: 1.5rem;">
+            <label for="confirmPassword" style="display: block; margin-bottom: 0.5rem; font-weight: 700; color: var(--text-main);">
+              Confirm Password <span style="color: var(--primary);">*</span>
+            </label>
+            <input type="password" id="confirmPassword" name="confirmPassword"
+              style="width: 100%; padding: 0.75rem; border: 2px solid #e0e0e0; border-radius: 4px; font-family: var(--font-body); font-size: 1rem;">
+          </div>
+
+          <div id="rememberMeGroup" style="margin-bottom: 1.5rem;">
             <label style="display: flex; align-items: center; cursor: pointer;">
               <input type="checkbox" id="rememberMe" name="rememberMe" style="margin-right: 0.5rem;">
               <span style="font-size: 0.9rem; color: var(--text-body);">Remember me</span>
@@ -107,17 +153,14 @@
           </div>
 
           <div style="text-align: center;">
-            <button type="submit" class="btn"
+            <button type="submit" id="mainSubmitBtn" class="btn"
               style="width: 100%; background: var(--primary); color: white; border: none; padding: 1rem; font-size: 1rem; border-radius: 50px; cursor: pointer; box-shadow: 0 4px 15px rgba(204,0,0,0.3); transition: all 0.3s ease;">
               Continue to Verification
             </button>
           </div>
 
-          <div style="text-align: center; margin-top: 1.5rem;">
+          <div id="bottomLinksGroup" style="text-align: center; margin-top: 1.5rem;">
             <a href="#" style="color: var(--primary); font-size: 0.9rem; text-decoration: none;">Forgot password?</a>
-            <span style="margin: 0 0.5rem; color: #ddd;">|</span>
-            <a href="registration.html" style="color: var(--primary); font-size: 0.9rem; text-decoration: none;">Create
-              Account</a>
           </div>
         </form>
       </div>
@@ -218,96 +261,238 @@
   </footer>
 
   <script>
+    // Logic for toggles
+    const typeSalesBtn = document.getElementById('typeSalesBtn');
+    const typeGradBtn = document.getElementById('typeGradBtn');
+    const actionLoginBtn = document.getElementById('actionLoginBtn');
+    const actionCreateBtn = document.getElementById('actionCreateBtn');
+    
+    const emailFieldGroup = document.getElementById('emailFieldGroup');
+    const companyFieldGroup = document.getElementById('companyFieldGroup');
+    const instructorFieldGroup = document.getElementById('instructorFieldGroup');
+    const confirmPasswordFieldGroup = document.getElementById('confirmPasswordFieldGroup');
+    const rememberMeGroup = document.getElementById('rememberMeGroup');
+    const formTitle = document.getElementById('formTitle');
+    const heroTitle = document.querySelector('.hero-content h1');
+    const heroDesc = document.querySelector('.hero-content p');
+    const mainSubmitBtn = document.getElementById('mainSubmitBtn');
+    const bottomLinksGroup = document.getElementById('bottomLinksGroup');
+    
+    let currentLoginType = 'sales';
+    let currentAction = 'login';
+    
+    function updateFormUI() {
+      if (currentAction === 'login') {
+        emailFieldGroup.style.display = 'none';
+        companyFieldGroup.style.display = 'none';
+        instructorFieldGroup.style.display = 'none';
+        confirmPasswordFieldGroup.style.display = 'none';
+        
+        // Remove 'required' when hiding
+        document.getElementById('email').removeAttribute('required');
+        document.getElementById('companyName').removeAttribute('required');
+        document.getElementById('instructorName').removeAttribute('required');
+        document.getElementById('confirmPassword').removeAttribute('required');
+        
+        rememberMeGroup.style.display = 'block';
+        bottomLinksGroup.style.display = 'block';
+        mainSubmitBtn.textContent = 'Continue to Verification';
+        formTitle.textContent = 'Step 1: Login Credentials';
+      } else {
+        emailFieldGroup.style.display = 'block';
+        confirmPasswordFieldGroup.style.display = 'block';
+        
+        if (currentLoginType === 'sales') {
+          companyFieldGroup.style.display = 'block';
+          instructorFieldGroup.style.display = 'none';
+          document.getElementById('companyName').setAttribute('required', 'true');
+          document.getElementById('instructorName').removeAttribute('required');
+        } else {
+          companyFieldGroup.style.display = 'none';
+          instructorFieldGroup.style.display = 'block';
+          document.getElementById('companyName').removeAttribute('required');
+          document.getElementById('instructorName').setAttribute('required', 'true');
+        }
+        
+        // Add 'required' when showing
+        document.getElementById('email').setAttribute('required', 'true');
+        document.getElementById('confirmPassword').setAttribute('required', 'true');
+        
+        rememberMeGroup.style.display = 'none';
+        bottomLinksGroup.style.display = 'none';
+        mainSubmitBtn.textContent = 'Create Account';
+        formTitle.textContent = 'Register New Account';
+      }
+    }
+    
+    typeSalesBtn.addEventListener('click', () => {
+      currentLoginType = 'sales';
+      typeSalesBtn.style.background = 'white';
+      typeSalesBtn.style.color = 'var(--primary)';
+      typeSalesBtn.style.boxShadow = '0 2px 5px rgba(0,0,0,0.1)';
+      typeGradBtn.style.background = 'transparent';
+      typeGradBtn.style.color = '#666';
+      typeGradBtn.style.boxShadow = 'none';
+      
+      heroTitle.textContent = '💼 KJR CAREER & PARTNER HUB';
+      heroDesc.textContent = 'Log in to manage employer partnerships and sales access';
+      updateFormUI();
+    });
+    
+    typeGradBtn.addEventListener('click', () => {
+      currentLoginType = 'grad';
+      typeGradBtn.style.background = 'white';
+      typeGradBtn.style.color = 'var(--primary)';
+      typeGradBtn.style.boxShadow = '0 2px 5px rgba(0,0,0,0.1)';
+      typeSalesBtn.style.background = 'transparent';
+      typeSalesBtn.style.color = '#666';
+      typeSalesBtn.style.boxShadow = 'none';
+      
+      heroTitle.textContent = '🎓 KJR CAREER & PARTNER HUB';
+      heroDesc.textContent = 'Log in to access your graduate career portal and opportunities';
+      updateFormUI();
+    });
+    
+    actionLoginBtn.addEventListener('click', () => {
+      currentAction = 'login';
+      actionLoginBtn.style.borderBottom = '3px solid var(--primary)';
+      actionLoginBtn.style.color = 'var(--primary)';
+      actionCreateBtn.style.borderBottom = '3px solid transparent';
+      actionCreateBtn.style.color = '#888';
+      updateFormUI();
+    });
+    
+    actionCreateBtn.addEventListener('click', () => {
+      currentAction = 'create';
+      actionCreateBtn.style.borderBottom = '3px solid var(--primary)';
+      actionCreateBtn.style.color = 'var(--primary)';
+      actionLoginBtn.style.borderBottom = '3px solid transparent';
+      actionLoginBtn.style.color = '#888';
+      updateFormUI();
+    });
+
     // Two-step authentication logic
     let currentUser = null;
 
+    // Set base API URL
+    const API_URL = location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.protocol === 'file:' 
+      ? 'http://localhost:5001/api' 
+      : 'https://app-server-maaw.onrender.com/api';
+
     // Step 1: Username & Password
-    document.getElementById('loginStep1Form').addEventListener('submit', function (e) {
+    document.getElementById('loginStep1Form').addEventListener('submit', async function (e) {
       e.preventDefault();
+      const submitBtn = document.getElementById('mainSubmitBtn');
+      const errEl = document.getElementById('step1Error');
+      errEl.style.display = 'none';
 
-      const username = document.getElementById('username').value;
-      const password = document.getElementById('password').value;
-      const rememberMe = document.getElementById('rememberMe').checked;
+      try {
+        if (currentAction === 'create') {
+          // --- Handle Create Account ---
+          const password = document.getElementById('password').value;
+          const confirmPassword = document.getElementById('confirmPassword').value;
 
-      // TODO: Send credentials to backend API for verification
-      // For now, simulate authentication
-      console.log('Step 1 - Login attempt:', { username, rememberMe, timestamp: new Date().toISOString() });
+          if (password !== confirmPassword) {
+              errEl.textContent = '❌ Passwords do not match. Please try again.';
+              errEl.style.display = 'block';
+              return;
+          }
 
-      // Simulate API call delay
-      const submitBtn = this.querySelector('button[type="submit"]');
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Verifying...';
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Registering...';
 
-      setTimeout(() => {
-        // Simulate successful step 1
-        // In production, this would be based on actual API response
-        const mockSuccess = true; // Change to false to test error
-
-        if (mockSuccess) {
-          currentUser = {
-            username: username,
-            maskedContact: maskContact(username)
+          const payload = {
+              loginType: currentLoginType,
+              email: document.getElementById('username').value, 
+              username: document.getElementById('username').value.split('@')[0] + Math.floor(Math.random()*100), // temp username gen
+              password: password,
+              companyName: document.getElementById('companyName') ? document.getElementById('companyName').value : '',
+              instructorName: document.getElementById('instructorName') ? document.getElementById('instructorName').value : ''
           };
 
-          // Log successful step 1
-          logTransaction('LOGIN_STEP1_SUCCESS', username);
+          const res = await fetch(`${API_URL}/auth/register`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+          });
+          const data = await res.json();
 
-          // Move to step 2
+          if (!res.ok) {
+              throw new Error(data.errors?.[0]?.msg || 'Registration failed');
+          }
+
+          alert('✓ Account successfully created! Please log in with your new credentials.');
+          document.getElementById('loginStep1Form').reset();
+          actionLoginBtn.click();
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Continue to Verification';
+
+        } else {
+          // --- Handle Login ---
+          const identifier = document.getElementById('username').value;
+          const password = document.getElementById('password').value;
+
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Verifying...';
+
+          const res = await fetch(`${API_URL}/auth/login`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ identifier, password, loginType: currentLoginType })
+          });
+          const data = await res.json();
+
+          if (!res.ok) {
+              throw new Error(data.errors?.[0]?.msg || 'Invalid username or password');
+          }
+
+          // Successfully authenticated!
+          currentUser = {
+            username: data.user.email,
+            token: data.token,
+            maskedContact: maskContact(data.user.email)
+          };
+
+          // Temporarily skip actual 2FA email logic for dev - just move to step 2 visually
           document.getElementById('step1Container').style.display = 'none';
           document.getElementById('step2Container').style.display = 'block';
           document.getElementById('maskedContact').textContent = currentUser.maskedContact;
-
-          // Generate and send verification code (server-side in production)
-          const verificationCode = generateVerificationCode();
-          console.log('Verification code sent:', verificationCode); // In production, this would be sent via SMS/Email
-        } else {
-          // Show error
-          const errorDiv = document.getElementById('step1Error');
-          errorDiv.textContent = '❌ Invalid username or password. Please try again.';
-          errorDiv.style.display = 'block';
-          logTransaction('LOGIN_STEP1_FAILED', username);
+          
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Continue to Verification';
         }
-
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Continue to Verification';
-      }, 1000);
+      } catch (err) {
+          errEl.textContent = `❌ ${err.message}`;
+          errEl.style.display = 'block';
+          submitBtn.disabled = false;
+          submitBtn.textContent = currentAction === 'create' ? 'Create Account' : 'Continue to Verification';
+      }
     });
 
     // Step 2: Verification Code
     document.getElementById('loginStep2Form').addEventListener('submit', function (e) {
       e.preventDefault();
-
       const verificationCode = document.getElementById('verificationCode').value;
-
-      // TODO: Verify code with backend API
-      console.log('Step 2 - Verification attempt:', { username: currentUser.username, code: verificationCode, timestamp: new Date().toISOString() });
-
       const submitBtn = this.querySelector('button[type="submit"]');
+
       submitBtn.disabled = true;
       submitBtn.textContent = 'Verifying...';
 
+      // For Phase 1: We accept any 6 digit code to complete the simulation as user is already authenticated
       setTimeout(() => {
-        // Simulate verification (in production, verify against server-sent code)
-        const mockSuccess = true; // Change to false to test error
-
-        if (mockSuccess) {
-          // Log successful login
-          logTransaction('LOGIN_SUCCESS', currentUser.username);
-
-          // Success - redirect to dashboard
-          alert('✓ Login successful! Redirecting to dashboard...');
-          // window.location.href = 'sales-dashboard.html';
+        if (verificationCode.length === 6) {
+          // Success - store token and redirect
+          localStorage.setItem('kjr_user_token', currentUser.token);
+          alert('✓ Login verified successfully! Redirecting to dashboard...');
+          // window.location.href = 'dashboard.html'; // Future state
         } else {
-          // Show error
           const errorDiv = document.getElementById('step2Error');
           errorDiv.textContent = '❌ Invalid verification code. Please try again.';
           errorDiv.style.display = 'block';
-          logTransaction('LOGIN_STEP2_FAILED', currentUser.username);
-
           submitBtn.disabled = false;
           submitBtn.textContent = 'Verify & Login';
         }
-      }, 1000);
+      }, 800);
     });
 
     // Resend code button
@@ -366,6 +551,6 @@
       logTransaction('LOGOUT', username);
     }
   </script>
+  <script src="assets/js/bunji.js"></script>
 </body>
-
 </html>

@@ -668,25 +668,29 @@
       <div class="sidebar-section">
         <div class="sidebar-section-label">Management</div>
         <div class="nav-item active" data-tab="tab-projects" onclick="switchTab(this, 'tab-projects')">
-          <span class="nav-icon">🏗️</span>Projects
+          <span class="nav-icon"></span>Projects
           <span class="nav-badge" id="badge-projects">—</span>
         </div>
         <div class="nav-item" data-tab="tab-bids" onclick="switchTab(this, 'tab-bids')">
-          <span class="nav-icon">📋</span>Bid Submissions
+          <span class="nav-icon"></span>Bid Submissions
           <span class="nav-badge" id="badge-bids">—</span>
+        </div>
+        <div class="nav-item" data-tab="tab-users" onclick="switchTab(this, 'tab-users')">
+          <span class="nav-icon"></span>Portal Users
+          <span class="nav-badge" id="badge-users">—</span>
         </div>
       </div>
 
       <div class="sidebar-section">
         <div class="sidebar-section-label">Communication</div>
         <div class="nav-item" data-tab="tab-forms" onclick="switchTab(this, 'tab-forms')">
-          <span class="nav-icon">✉️</span>Contact Forms
+          <span class="nav-icon"></span>Contact Forms
         </div>
       </div>
 
       <div class="sidebar-footer">
         <button class="logout-btn" onclick="logout()">
-          <span>🚪</span> Logout
+          <span></span> Logout
         </button>
       </div>
     </aside>
@@ -711,28 +715,28 @@
           <!-- Stats -->
           <div class="stats-row">
             <div class="stat-card">
-              <div class="stat-icon red">🏗️</div>
+              <div class="stat-icon red"></div>
               <div>
                 <div class="stat-value" id="stat-active">—</div>
                 <div class="stat-label">Active Projects</div>
               </div>
             </div>
             <div class="stat-card">
-              <div class="stat-icon yellow">🔒</div>
+              <div class="stat-icon yellow"></div>
               <div>
                 <div class="stat-value" id="stat-closed">—</div>
                 <div class="stat-label">Closed Projects</div>
               </div>
             </div>
             <div class="stat-card">
-              <div class="stat-icon green">📩</div>
+              <div class="stat-icon green"></div>
               <div>
                 <div class="stat-value" id="stat-total-bids">—</div>
                 <div class="stat-label">Total Bids Received</div>
               </div>
             </div>
             <div class="stat-card">
-              <div class="stat-icon blue">📊</div>
+              <div class="stat-icon blue"></div>
               <div>
                 <div class="stat-value" id="stat-total">—</div>
                 <div class="stat-label">Total Projects</div>
@@ -801,6 +805,34 @@
           </div>
         </div>
 
+        <!-- ======== TAB: USERS ======== -->
+        <div id="tab-users" class="tab-pane">
+          <div class="table-card">
+            <div class="table-card-header">
+              <h3>Registered Portal Users</h3>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Username</th>
+                  <th>Email</th>
+                  <th>Company / Instructor</th>
+                  <th>Joined</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="users-tbody">
+                <tr>
+                  <td colspan="6" style="text-align:center; padding: 2rem; color: var(--text-muted);">
+                    Loading<span class="loading-dots"><span></span><span></span><span></span></span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
         <!-- ======== TAB: FORMS ======== -->
         <div id="tab-forms" class="tab-pane">
           <div class="table-card">
@@ -808,7 +840,7 @@
               <h3>Contact Form Submissions</h3>
             </div>
             <div class="empty-state">
-              <div class="empty-icon">✉️</div>
+              <div class="empty-icon"></div>
               <h4>Forms go to your email inbox</h4>
               <p>Contact &amp; suggestion form submissions are sent directly to<br>
                 <strong>info@kjrid.com</strong> and <strong>estimating@kjrid.com</strong><br>
@@ -829,7 +861,7 @@
           <h3 id="modal-title">Create New Bid Project</h3>
           <p>This project will appear on the public Bid Projects page.</p>
         </div>
-        <button class="modal-close" onclick="closeProjectModal()">✕</button>
+        <button class="modal-close" onclick="closeProjectModal()"></button>
       </div>
       <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
         <div class="alert-strip error" id="modal-error"></div>
@@ -843,6 +875,16 @@
           <div class="form-group">
             <label>Location *</label>
             <input type="text" id="p-location" placeholder="e.g. Richmond Hills, GA">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>State *</label>
+            <input type="text" id="p-state" placeholder="e.g. Georgia">
+          </div>
+          <div class="form-group">
+            <label>State Code *</label>
+            <input type="text" id="p-state-code" placeholder="e.g. ga">
           </div>
         </div>
         <div class="form-group">
@@ -873,6 +915,12 @@
             </select>
           </div>
         </div>
+        <div class="form-row" style="align-items: center; margin-bottom: 1.25rem;">
+          <label style="display:flex; align-items:center; gap:0.5rem; font-size: 0.85rem; font-weight:600; cursor:pointer;">
+            <input type="checkbox" id="p-has-docs" style="width:18px;height:18px;cursor:pointer;">
+            Has Documents Available
+          </label>
+        </div>
 
         <p class="section-separator">Documents</p>
         <div class="form-row">
@@ -890,6 +938,10 @@
         <div id="trades-container"></div>
         <button type="button" class="add-row-btn" onclick="addTradeRow()">+ Add Trade</button>
 
+        <p class="section-separator">Notes</p>
+        <div id="notes-container"></div>
+        <button type="button" class="add-row-btn" onclick="addNoteRow()">+ Add Note</button>
+
         <p class="section-separator">Cost Codes</p>
         <div id="cost-codes-container"></div>
         <button type="button" class="add-row-btn" onclick="addCostCodeRow()">+ Add Cost Code</button>
@@ -906,10 +958,10 @@
     <div class="modal-box" style="max-width: 600px;">
       <div class="modal-header">
         <div>
-          <h3>📋 Bid Details</h3>
+          <h3> Bid Details</h3>
           <p id="bid-detail-title">—</p>
         </div>
-        <button class="modal-close" onclick="closeBidDetailModal()">✕</button>
+        <button class="modal-close" onclick="closeBidDetailModal()"></button>
       </div>
       <div class="modal-body" id="bid-detail-content" style="max-height: 70vh; overflow-y: auto;"></div>
     </div>
@@ -935,7 +987,7 @@
     }
 
     async function initDashboard() {
-      await Promise.all([loadProjects(), loadAllBids()]);
+      await Promise.all([loadProjects(), loadAllBids(), loadUsers()]);
     }
 
     // =====================================================
@@ -987,6 +1039,7 @@
     const tabTitles = {
       'tab-projects': 'Manage Projects',
       'tab-bids': 'Bid Submissions',
+      'tab-users': 'Portal Users',
       'tab-forms': 'Contact Forms'
     };
 
@@ -1020,7 +1073,7 @@
     function renderProjectsTable() {
       const tbody = document.getElementById('projects-tbody');
       if (!allProjects.length) {
-        tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="empty-icon">🏗️</div><h4>No projects yet</h4><p>Click "Add New Project" to create your first bid invitation.</p></div></td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="empty-icon"></div><h4>No projects yet</h4><p>Click "Add New Project" to create your first bid invitation.</p></div></td></tr>`;
         return;
       }
 
@@ -1107,18 +1160,27 @@
       document.getElementById('p-title').value = project?.title || '';
       document.getElementById('p-location').value = project?.location || '';
       document.getElementById('p-address').value = project?.address || '';
+      document.getElementById('p-state').value = project?.state || '';
+      document.getElementById('p-state-code').value = project?.stateCode || '';
       document.getElementById('p-date').value = project?.bidDueDate || '';
       document.getElementById('p-estimator').value = project?.estimator || 'KING MTUSA';
       document.getElementById('p-bid-email').value = project?.bidEmail || 'estimating@kjrid.com';
       document.getElementById('p-status').value = project?.status || 'active';
+      document.getElementById('p-has-docs').checked = project?.hasDocs || false;
       document.getElementById('p-drawings').value = project?.drawingsUrl || '';
       document.getElementById('p-specs').value = project?.specificationsUrl || '';
 
       // Rebuild trades
       const tradesContainer = document.getElementById('trades-container');
       tradesContainer.innerHTML = '';
-      const trades = project?.tradesRequested || [''];
+      const trades = project?.tradesRequested && project.tradesRequested.length ? project.tradesRequested : [''];
       trades.forEach(t => addTradeRow(t));
+
+      // Rebuild notes
+      const notesContainer = document.getElementById('notes-container');
+      notesContainer.innerHTML = '';
+      const notes = project?.notes && project.notes.length ? project.notes : [''];
+      notes.forEach(n => addNoteRow(n));
 
       // Rebuild cost codes
       const codesContainer = document.getElementById('cost-codes-container');
@@ -1147,6 +1209,17 @@
       row.className = 'trade-input-row';
       row.innerHTML = `
         <input type="text" placeholder="e.g. Demolition, Electrical, HVAC..." value="${escHtml(value)}">
+        <button type="button" class="trade-remove-btn" onclick="this.parentElement.remove()">×</button>
+      `;
+      container.appendChild(row);
+    }
+    
+    function addNoteRow(value = '') {
+      const container = document.getElementById('notes-container');
+      const row = document.createElement('div');
+      row.className = 'trade-input-row';
+      row.innerHTML = `
+        <input type="text" placeholder="e.g. All items on plans are the responsibility of subcontractors." value="${escHtml(value)}">
         <button type="button" class="trade-remove-btn" onclick="this.parentElement.remove()">×</button>
       `;
       container.appendChild(row);
@@ -1183,6 +1256,10 @@
       const trades = [...document.querySelectorAll('#trades-container .trade-input-row input')]
         .map(i => i.value.trim()).filter(Boolean);
 
+      // Collect notes
+      const notes = [...document.querySelectorAll('#notes-container .trade-input-row input')]
+        .map(i => i.value.trim()).filter(Boolean);
+
       // Collect cost codes
       const costCodeRows = document.querySelectorAll('#cost-codes-container > div');
       const costCodes = [...costCodeRows].map(row => {
@@ -1197,14 +1274,18 @@
       const payload = {
         title,
         location,
+        state: document.getElementById('p-state').value.trim(),
+        stateCode: document.getElementById('p-state-code').value.trim(),
         address: document.getElementById('p-address').value.trim(),
         bidDueDate,
         estimator: document.getElementById('p-estimator').value.trim() || 'KING MTUSA',
         bidEmail: document.getElementById('p-bid-email').value.trim() || 'estimating@kjrid.com',
         status: document.getElementById('p-status').value,
+        hasDocs: document.getElementById('p-has-docs').checked,
         drawingsUrl: document.getElementById('p-drawings').value.trim(),
         specificationsUrl: document.getElementById('p-specs').value.trim(),
         tradesRequested: trades,
+        notes: notes,
         costCodes
       };
 
@@ -1257,7 +1338,7 @@
     function renderBidsTable(bids) {
       const tbody = document.getElementById('bids-tbody');
       if (!bids.length) {
-        tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><div class="empty-icon">📭</div><h4>No bids received yet</h4><p>When contractors submit bids on the public page, they'll appear here.</p></div></td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><div class="empty-icon"></div><h4>No bids received yet</h4><p>When contractors submit bids on the public page, they'll appear here.</p></div></td></tr>`;
         return;
       }
 
@@ -1267,7 +1348,7 @@
           <td>${escHtml(b.companyName)}</td>
           <td>${escHtml(b.contactPerson)}</td>
           <td><a href="mailto:${escHtml(b.emailAddress)}" style="color:var(--primary);">${escHtml(b.emailAddress)}</a></td>
-          <td><span class="badge ${b.bidIntent}">${b.bidIntent === 'yes' ? '✅ YES' : '❌ NO'}</span></td>
+          <td><span class="badge ${b.bidIntent}">${b.bidIntent === 'yes' ? ' YES' : ' NO'}</span></td>
           <td>${b.bidAmount ? '$' + Number(b.bidAmount).toLocaleString() : '—'}</td>
           <td style="white-space:nowrap; font-size:0.8rem; color:var(--text-muted);">${formatDate(b.createdAt)}</td>
           <td>
@@ -1309,8 +1390,8 @@
     function showBidDetail(bid) {
       document.getElementById('bid-detail-title').textContent = `${bid.projectName} — ${bid.companyName}`;
       const intentText = bid.bidIntent === 'yes'
-        ? `<span style="color:var(--green); font-weight:700;">✅ YES — Will Bid</span>${bid.bidAmount ? ` &nbsp;|&nbsp; Estimated: <strong>$${Number(bid.bidAmount).toLocaleString()}</strong>` : ''}`
-        : `<span style="color:var(--red); font-weight:700;">❌ NO — Passing</span>${bid.declineReason ? ` &nbsp;|&nbsp; Reason: ${escHtml(bid.declineReason)}` : ''}`;
+        ? `<span style="color:var(--green); font-weight:700;"> YES — Will Bid</span>${bid.bidAmount ? ` &nbsp;|&nbsp; Estimated: <strong>$${Number(bid.bidAmount).toLocaleString()}</strong>` : ''}`
+        : `<span style="color:var(--red); font-weight:700;"> NO — Passing</span>${bid.declineReason ? ` &nbsp;|&nbsp; Reason: ${escHtml(bid.declineReason)}` : ''}`;
 
       document.getElementById('bid-detail-content').innerHTML = `
         <div style="display:grid; gap:1.25rem;">
@@ -1356,7 +1437,7 @@
 
           <a href="mailto:${escHtml(bid.emailAddress)}?subject=Re: Bid for ${encodeURIComponent(bid.projectName)}"
             class="btn-sm red" style="display:inline-flex; align-items:center; gap:0.4rem; justify-content:center; padding: 0.7rem 1.5rem; text-decoration:none; border-radius:8px; font-size:0.875rem;">
-            ✉️ Reply to ${escHtml(bid.contactPerson)}
+             Reply to ${escHtml(bid.contactPerson)}
           </a>
         </div>
       `;
@@ -1367,6 +1448,46 @@
     function closeBidDetailModal() {
       document.getElementById('bid-detail-modal-overlay').classList.remove('open');
       document.body.style.overflow = '';
+    }
+    
+    // =====================================================
+    // USERS
+    // =====================================================
+    async function loadUsers() {
+      const tbody = document.getElementById('users-tbody');
+      try {
+        const res = await fetch(`${API_URL}/admin/users`, { headers: { 'x-auth-token': token } });
+        if (res.status === 401) { logout(); return; }
+        if (!res.ok) throw new Error();
+
+        const users = await res.json();
+        document.getElementById('badge-users').textContent = users.length;
+        
+        if (!users.length) {
+          tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="empty-icon"></div><h4>No portal users yet</h4><p>Users will appear here when they register off the web portal.</p></div></td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = users.map(u => {
+          const typeBadge = u.loginType === 'sales' 
+            ? `<span class="badge active"> Sales Team</span>`
+            : `<span class="badge closed"> Graduate</span>`;
+          const companyStr = u.loginType === 'sales' ? u.companyName : u.instructorName;
+          
+          return `
+            <tr>
+              <td>${typeBadge}</td>
+              <td><strong>${escHtml(u.username)}</strong></td>
+              <td><a href="mailto:${escHtml(u.email)}" style="color:var(--primary);">${escHtml(u.email)}</a></td>
+              <td>${escHtml(companyStr) || '—'}</td>
+              <td style="white-space:nowrap; font-size:0.8rem; color:var(--text-muted);">${formatDate(u.createdAt)}</td>
+              <td><span class="badge ${u.status === 'active' ? 'active' : 'draft'}">${u.status.toUpperCase()}</span></td>
+            </tr>
+          `;
+        }).join('');
+      } catch {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:2rem;color:#dc2626;">Failed to load users. Is the backend running?</td></tr>`;
+      }
     }
 
     // Close modals on overlay click

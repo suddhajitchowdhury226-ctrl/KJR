@@ -7,12 +7,16 @@ const projectSchema = new mongoose.Schema({
   bidDueDate: { type: String, required: true },
   estimator: { type: String, default: 'KING MTUSA' },
   bidEmail: { type: String, default: 'estimating@kjrid.com' },
+  state: { type: String, default: '' },
+  stateCode: { type: String, default: '' },
   costCodes: [{
     code: String,
     description: String,
     scope: String
   }],
   tradesRequested: [String],
+  notes: [String],
+  hasDocs: { type: Boolean, default: false },
   drawingsUrl: { type: String, default: '' },
   specificationsUrl: { type: String, default: '' },
   status: { type: String, enum: ['active', 'closed', 'draft'], default: 'active' },

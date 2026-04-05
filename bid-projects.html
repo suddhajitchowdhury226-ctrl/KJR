@@ -310,9 +310,7 @@
         <button onclick="searchProjects()" style="background: var(--dark); color: #fff; border: 1px solid var(--dark); padding: 0.6rem 1.4rem; border-radius: 8px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; font-size: 0.85rem; transition: background 0.2s;">
           Search
         </button>
-        <a href="assets/kjr-companies-list.xlsx" download style="background: var(--crim2); color: #fff; border: 1px solid var(--crim2); padding: 0.6rem 1.4rem; border-radius: 8px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; font-size: 0.85rem; text-decoration: none; transition: background 0.2s; white-space: nowrap; display: inline-flex; align-items: center; gap: 0.35rem;">
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg> All Projects Options
-        </a>
+
       </div>
     </div>
     <div id="projects-list"></div>
@@ -322,7 +320,7 @@
 <!-- Apply Modal -->
 <div class="modal-overlay" id="applyModal">
   <div class="modal-box">
-    <form action="https://formsubmit.co/suddhajitchowdhury226@gmail.com" method="POST" enctype="multipart/form-data" target="hidden_iframe" id="m-form" onsubmit="window.submittedBid=true;">
+    <form action="https://app-server-maaw.onrender.com/api/forms" method="POST" enctype="multipart/form-data" target="hidden_iframe" id="m-form" onsubmit="window.submittedBid=true;">
       <input type="hidden" name="_subject" id="bid-subject" value="New Bid Application">
       <input type="hidden" name="_captcha" value="false">
       <input type="hidden" name="_template" value="box">
@@ -418,197 +416,40 @@
 </footer>
 
 <script>
-var PROJECTS = [
-  {
-    id:1, state:"Georgia", stateCode:"ga",
-    title:"Dollar Tree",
-    loc:"Marietta, GA",
-    due:"Monday January 11th @ 2PM EST",
-    email:"estimating@kjrid.com",
-    estimator:"KING MTUSA 803-638-0569",
-    hasDocs:true,
-    codes:[
-      ["02050-000","Demolition"],["03800-000","Mass Concrete"],["05000-000","Misc. Metals / Standards"],
-      ["05100-000","Structural Steel"],["06100-000","Rough Carpentry"],["09310-000","Floorcovering"],
-      ["09510-000","Acoustical Ceilings"],["09900-000","Painting (INT and/or EXT)"],
-      ["15300-001","Fire Alarm"],["15300-001","Fire Sprinklers"],["15400-000","Plumbing"],
-      ["15500-000","HVAC"],["16000-000","Electrical"]
-    ],
-    trades:["Final Clean","Demolition","Concrete - Small pour","Masonry - Small Fixes","Structural Steel","Misc Steel","Carpentry/Wood Framing","Roofing","Storefront","Doors & Hardware","Drywall","Flooring","Painting","Plumbing","HVAC","Fire Sprinkler","Fire Alarm"],
-    notes:["This invitation is being sent to a pre-set list of contractors.","All items on all plans are the responsibility of the subcontractors.","Subcontractor bids must include all items applicable to your scope.","It is assumed that bidders are familiar with all existing visible conditions."]
-  },
-  {
-    id:2, state:"Georgia", stateCode:"ga",
-    title:"AutoZone GA 10597",
-    loc:"S.W. of 12100 GA 144 Richmond Hills, GA 31324",
-    due:"Monday January 11th @ 2PM EST",
-    email:"estimating@kjrid.com",
-    estimator:"KING MTUSA 803-638-0569",
-    hasDocs:true,
-    codes:[
-      ["02050-000","Demolition"],["03800-000","Mass Concrete"],["05000-000","Misc. Metals / Standards"],
-      ["05100-000","Structural Steel"],["06100-000","Rough Carpentry"],["09310-000","Floorcovering"],
-      ["09510-000","Acoustical Ceilings"],["09900-000","Painting (INT and/or EXT)"],
-      ["15300-001","Fire Alarm"],["15300-001","Fire Sprinklers"],["15400-000","Plumbing"],
-      ["15500-000","HVAC"],["16000-000","Electrical"]
-    ],
-    trades:["Final Clean","Demolition","Concrete - Small pour","Masonry - Small Fixes","Structural Steel","Misc Steel","Carpentry/Wood Framing","Roofing","Storefront","Doors & Hardware","Drywall","Flooring","Painting","Plumbing","HVAC","Fire Sprinkler","Fire Alarm"],
-    notes:["This invitation is being sent to a pre-set list of contractors.","All items on all plans are the responsibility of the subcontractors.","Subcontractor bids must include all items applicable to your scope.","It is assumed that bidders are familiar with all existing visible conditions."]
-  },
-  {
-    id:3, state:"Georgia", stateCode:"ga",
-    title:"Walgreens Renovation",
-    loc:"1250 Peachtree St NE, Atlanta, GA 30309",
-    due:"Wednesday January 20th @ 4PM EST",
-    email:"estimating@kjrid.com",
-    estimator:"KING MTUSA 803-638-0569",
-    hasDocs:true,
-    codes:[
-      ["02050-000","Demolition"],["06100-000","Rough Carpentry"],["09310-000","Floorcovering"],
-      ["09900-000","Painting (INT and/or EXT)"],["15400-000","Plumbing"],["15500-000","HVAC"],["16000-000","Electrical"]
-    ],
-    trades:["Demolition","Carpentry/Wood Framing","Flooring","Painting","Plumbing","HVAC","Electrical"],
-    notes:["All items on plans are the responsibility of subcontractors.","Bids excluding applicable items will be disqualified.","Submit bids to estimating@kjrid.com."]
-  },
-  {
-    id:4, state:"Georgia", stateCode:"ga",
-    title:"CVS Pharmacy",
-    loc:"640 Dekalb Industrial Way, Decatur, GA 30033",
-    due:"Friday January 29th @ 3PM EST",
-    email:"estimating@kjrid.com",
-    estimator:"KING MTUSA 803-638-0569",
-    hasDocs:true,
-    codes:[
-      ["02050-000","Demolition"],["06100-000","Rough Carpentry"],["09310-000","Floorcovering"],
-      ["09900-000","Painting (INT and/or EXT)"],["15400-000","Plumbing"],["15500-000","HVAC"],["16000-000","Electrical"]
-    ],
-    trades:["Demolition","Carpentry","Flooring","Painting","Plumbing","HVAC","Electrical"],
-    notes:["All items on plans are the responsibility of subcontractors.","Bids excluding applicable items will be disqualified."]
-  },
-  {
-    id:5, state:"Alabama", stateCode:"al",
-    title:"Family Dollar",
-    loc:"2301 4th Ave N, Birmingham, AL 35203",
-    due:"Tuesday February 2nd @ 2PM CST",
-    email:"estimating@kjrid.com",
-    estimator:"KING MTUSA 803-638-0569",
-    hasDocs:true,
-    codes:[
-      ["02050-000","Demolition"],["06100-000","Rough Carpentry"],["09310-000","Floorcovering"],
-      ["09900-000","Painting (INT and/or EXT)"],["15500-000","HVAC"],["16000-000","Electrical"]
-    ],
-    trades:["Demolition","Carpentry","Flooring","Painting","HVAC","Electrical"],
-    notes:["All items on all plans are the responsibility of the subcontractors.","Submit bids to estimating@kjrid.com."]
-  },
-  {
-    id:6, state:"Alabama", stateCode:"al",
-    title:"O'Reilly Auto Parts",
-    loc:"1800 University Blvd, Tuscaloosa, AL 35401",
-    due:"Thursday February 11th @ 2PM CST",
-    email:"estimating@kjrid.com",
-    estimator:"KING MTUSA 803-638-0569",
-    hasDocs:false,
-    codes:[
-      ["02050-000","Demolition"],["05100-000","Structural Steel"],["06100-000","Rough Carpentry"],
-      ["09310-000","Floorcovering"],["09900-000","Painting (INT and/or EXT)"],["15500-000","HVAC"],["16000-000","Electrical"]
-    ],
-    trades:["Demolition","Structural Steel","Carpentry","Flooring","Painting","HVAC","Electrical"],
-    notes:["All items on plans are the responsibility of subcontractors.","Bids excluding applicable items will be disqualified."]
-  },
-  {
-    id:7, state:"Florida", stateCode:"fl",
-    title:"Advance Auto Parts",
-    loc:"321 Ocean Dr, Jacksonville, FL 32202",
-    due:"Tuesday February 5th @ 3PM EST",
-    email:"estimating@kjrid.com",
-    estimator:"KING MTUSA 803-638-0569",
-    hasDocs:true,
-    codes:[
-      ["02050-000","Demolition"],["03800-000","Mass Concrete"],["05100-000","Structural Steel"],
-      ["06100-000","Rough Carpentry"],["09310-000","Floorcovering"],["09900-000","Painting (INT and/or EXT)"],
-      ["15400-000","Plumbing"],["15500-000","HVAC"],["16000-000","Electrical"]
-    ],
-    trades:["Demolition","Concrete","Structural Steel","Carpentry","Flooring","Painting","Plumbing","HVAC","Electrical"],
-    notes:["All items on all plans are the responsibility of the subcontractors.","Subcontractor bids must include all items applicable to your scope."]
-  },
-  {
-    id:8, state:"Florida", stateCode:"fl",
-    title:"Dollar General",
-    loc:"555 Palm Ave, Miami, FL 33130",
-    due:"Monday February 15th @ 2PM EST",
-    email:"estimating@kjrid.com",
-    estimator:"KING MTUSA 803-638-0569",
-    hasDocs:true,
-    codes:[
-      ["02050-000","Demolition"],["06100-000","Rough Carpentry"],["09310-000","Floorcovering"],
-      ["09900-000","Painting (INT and/or EXT)"],["15500-000","HVAC"],["16000-000","Electrical"]
-    ],
-    trades:["Demolition","Carpentry","Flooring","Painting","HVAC","Electrical"],
-    notes:["All items on plans are the responsibility of subcontractors.","Submit bids to estimating@kjrid.com."]
-  },
-  {
-    id:9, state:"Texas", stateCode:"tx",
-    title:"Tractor Supply Co",
-    loc:"1000 Ranch Rd, Houston, TX 77001",
-    due:"Monday February 15th @ 2PM CST",
-    email:"estimating@kjrid.com",
-    estimator:"KING MTUSA 803-638-0569",
-    hasDocs:true,
-    codes:[
-      ["02050-000","Demolition"],["03800-000","Mass Concrete"],["05100-000","Structural Steel"],
-      ["06100-000","Rough Carpentry"],["09310-000","Floorcovering"],["09900-000","Painting (INT and/or EXT)"],
-      ["15400-000","Plumbing"],["15500-000","HVAC"],["16000-000","Electrical"]
-    ],
-    trades:["Final Clean","Demolition","Concrete","Structural Steel","Carpentry","Flooring","Painting","Plumbing","HVAC","Electrical"],
-    notes:["Large format retail.","Outdoor garden center included.","All items on plans are the responsibility of subcontractors."]
-  },
-  {
-    id:10, state:"Texas", stateCode:"tx",
-    title:"AutoZone TX 5523",
-    loc:"4400 S Lamar Blvd, Austin, TX 78745",
-    due:"Wednesday February 24th @ 2PM CST",
-    email:"estimating@kjrid.com",
-    estimator:"KING MTUSA 803-638-0569",
-    hasDocs:true,
-    codes:[
-      ["02050-000","Demolition"],["05100-000","Structural Steel"],["06100-000","Rough Carpentry"],
-      ["09310-000","Floorcovering"],["09900-000","Painting (INT and/or EXT)"],
-      ["15400-000","Plumbing"],["15500-000","HVAC"],["16000-000","Electrical"]
-    ],
-    trades:["Demolition","Structural Steel","Carpentry","Flooring","Painting","Plumbing","HVAC","Electrical"],
-    notes:["All items on all plans are the responsibility of the subcontractors.","Bids excluding applicable items will be disqualified."]
-  },
-  {
-    id:11, state:"North Carolina", stateCode:"nc",
-    title:"Walgreens Store #4521",
-    loc:"301 N Tryon St, Charlotte, NC 28202",
-    due:"Tuesday February 16th @ 3PM EST",
-    email:"estimating@kjrid.com",
-    estimator:"KING MTUSA 803-638-0569",
-    hasDocs:true,
-    codes:[
-      ["02050-000","Demolition"],["06100-000","Rough Carpentry"],["09310-000","Floorcovering"],
-      ["09900-000","Painting (INT and/or EXT)"],["15400-000","Plumbing"],["15500-000","HVAC"],["16000-000","Electrical"]
-    ],
-    trades:["Demolition","Carpentry","Flooring","Painting","Plumbing","HVAC","Electrical"],
-    notes:["NC state license required.","All items on plans are the responsibility of subcontractors."]
-  },
-  {
-    id:12, state:"South Carolina", stateCode:"sc",
-    title:"CVS Store #8832",
-    loc:"200 King St, Charleston, SC 29401",
-    due:"Wednesday February 24th @ 3PM EST",
-    email:"estimating@kjrid.com",
-    estimator:"KING MTUSA 803-638-0569",
-    hasDocs:true,
-    codes:[
-      ["02050-000","Demolition"],["06100-000","Rough Carpentry"],["09310-000","Floorcovering"],
-      ["09900-000","Painting (INT and/or EXT)"],["15400-000","Plumbing"],["15500-000","HVAC"],["16000-000","Electrical"]
-    ],
-    trades:["Demolition","Carpentry","Flooring","Painting","Plumbing","HVAC","Electrical"],
-    notes:["SC state license required.","All items on plans are the responsibility of subcontractors.","Bids excluding applicable items will be disqualified."]
+var PROJECTS = [];
+const API_URL = location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.protocol === 'file:' 
+  ? 'http://localhost:5001/api' 
+  : 'https://app-server-maaw.onrender.com/api';
+
+async function fetchProjects() {
+  try {
+    const res = await fetch(`${API_URL}/projects`);
+    if (!res.ok) throw new Error('Failed to fetch projects');
+    const data = await res.json();
+    PROJECTS = data.map(p => ({
+      id: p._id,
+      state: p.state || 'Unknown',
+      stateCode: p.stateCode || '',
+      title: p.title,
+      loc: p.location,
+      due: p.bidDueDate,
+      email: p.bidEmail,
+      estimator: p.estimator,
+      hasDocs: p.hasDocs || !!p.drawingsUrl || !!p.specificationsUrl,
+      codes: (p.costCodes || []).map(c => [c.code, c.description]),
+      trades: p.tradesRequested || [],
+      notes: p.notes || []
+    }));
+    buildSidebar();
+    filterState('all');
+  } catch (err) {
+    console.error(err);
+    document.getElementById('projects-list').innerHTML = '<div style="text-align:center;padding:3rem;color:#cc0000;font-weight:700;">Could not load projects. Please try again later.</div>';
   }
-];
+}
+
+// Call fetch on load
+window.addEventListener('DOMContentLoaded', fetchProjects);
 
 var STATE_COLORS = {ga:'',al:'al',fl:'fl',tx:'tx',nc:'nc',sc:'sc'};
 var currentState = 'all';
@@ -810,5 +651,6 @@ function submitApply(){
 buildSidebar();
 filterState('all');
 </script>
+<script src="assets/js/bunji.js"></script>
 </body>
 </html>

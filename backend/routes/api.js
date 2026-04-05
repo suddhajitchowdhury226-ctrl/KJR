@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 const Project = require('../models/Project');
 const Bid = require('../models/Bid');
+const User = require('../models/User');
 const auth = require('../middleware/auth');
 const nodemailer = require('nodemailer');
 
@@ -247,6 +249,139 @@ router.get('/admin/bids/:projectId', auth, async (req, res) => {
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
+  }
+});
+
+
+// @route   POST api/forms
+// @desc    Generic form submission route (replaces FormSubmit)
+// @access  Public
+router.post('/forms', upload.any(), async (req, res) => {
+  try {
+    const transporter = nodemailer.createTransport({
+      host:   process.env.SMTP_HOST || 'smtp.gmail.com',
+      port:   parseInt(process.env.SMTP_PORT) || 587,
+      secure: false,
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS
+      }
+    });
+
+    const notifyEmails = process.env.NOTIFY_EMAILS || 'estimating@kjrid.com';
+    const subject = req.body._subject || 'New Form Submission';
+    
+    // Build HTML body from all form fields
+    let htmlBody = '<div style="font-family: Arial, sans-serif;"><h2>' + subject + '</h2><table border="1" cellpadding="10" style="border-collapse: collapse;">';
+    for (const key in req.body) {
+      if (!key.startsWith('_')) {
+        htmlBody += '<tr><td><strong>' + key + '</strong></td><td>' + req.body[key] + '</td></tr>';
+      }
+    }
+    htmlBody += '</table></div>';
+
+    const attachments = (req.files || []).map(f => ({
+      filename:    f.originalname,
+      content:     f.buffer,
+      contentType: f.mimetype
+    }));
+
+    const mailOptions = {
+      from:        `"KJR Form System" <${process.env.SMTP_USER}>`,
+      to:          notifyEmails,
+      replyTo:     req.body.Email || req.body.email || process.env.SMTP_USER,
+      subject:     subject,
+      html:        htmlBody,
+      attachments
+    };
+
+    await transporter.sendMail(mailOptions);
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Form submission failed:', err.message);
+    res.status(500).json({ error: 'Server Error' });
+  }
+});
+
+
+// --- USER AUTH ROUTES ---
+// @route   POST api/auth/register
+// @desc    Register user (Sales or Grad)
+router.post('/auth/register', async (req, res) => {
+  const { loginType, email, username, password, companyName, instructorName } = req.body;
+  try {
+    let user = await User.findOne({ email });
+    if (user) {
+      return res.status(400).json({ errors: [{ msg: 'User already exists' }] });
+    }
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    
+    user = new User({
+      loginType,
+      email,
+      username,
+      password: hashedPassword,
+      companyName: loginType === 'sales' ? companyName : '',
+      instructorName: loginType === 'grad' ? instructorName : ''
+    });
+    
+    await user.save();
+    
+    const payload = { user: { id: user.id, role: loginType } };
+    jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '24h' }, (err, token) => {
+      if (err) throw err;
+      res.json({ token, user: { id: user.id, username: user.username, email: user.email, loginType }});
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
+
+// @route   POST api/auth/login
+// @desc    Authenticate user (Sales/Grad)
+router.post('/auth/login', async (req, res) => {
+  const { identifier, password, loginType } = req.body;
+  try {
+    const user = await User.findOne({ 
+      $or: [{ email: identifier }, { username: identifier }],
+      loginType 
+    });
+    
+    if (!user) {
+      return res.status(400).json({ errors: [{ msg: 'Invalid Credentials for this account type' }] });
+    }
+    
+    if (user.status !== 'active') {
+      return res.status(403).json({ errors: [{ msg: 'Account is suspended or inactive' }] });
+    }
+    
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ errors: [{ msg: 'Invalid Credentials' }] });
+    }
+    
+    const payload = { user: { id: user.id, role: user.loginType } };
+    jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '24h' }, (err, token) => {
+      if (err) throw err;
+      res.json({ token, user: { id: user.id, username: user.username, email: user.email, loginType: user.loginType }});
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
+
+// @route   GET api/admin/users
+// @desc    Get all registered users for admin
+router.get('/admin/users', auth, async (req, res) => {
+  try {
+    const users = await User.find().select('-password').sort({ createdAt: -1 });
+    res.json(users);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
   }
 });
 

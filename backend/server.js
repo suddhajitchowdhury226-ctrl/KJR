@@ -2,10 +2,12 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const apiRoutes = require('./routes/api');
 
 // Load environment variables
 dotenv.config();
+
+const apiRoutes = require('./routes/api');
+const chatRoutes = require('./routes/chat');
 
 const app = express();
 
@@ -74,6 +76,7 @@ connectDB();
 
 // Routes
 app.use('/api', apiRoutes);
+app.use('/api/chat', chatRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
