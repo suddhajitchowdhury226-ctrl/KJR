@@ -232,4 +232,24 @@
     if (e.key === 'Enter') sendMessage(inputEl.value);
   });
 
+  // Allow external buttons to open and send messages to Bunji
+  window.addEventListener('open-bunji', (e) => {
+    chatWindow.classList.add('open');
+    toggleBtn.style.display = 'none';
+    
+    // Initialize if not already initialized, waiting for the hidden hello to process
+    if (!isInit) {
+      isInit = true;
+      sendMessage('hello', true).then(() => {
+        if (e.detail && e.detail.message) {
+          sendMessage(e.detail.message);
+        }
+      });
+    } else {
+      if (e.detail && e.detail.message) {
+        sendMessage(e.detail.message);
+      }
+    }
+  });
+
 })();
