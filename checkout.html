@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout | KJR Interior Designs Inc.</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #cc0000;
+      --dark: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --bg: #f8fafc;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--dark);
+    }
+
+    .checkout-hero {
+      background: var(--dark);
+      padding: 2.5rem 2rem;
+      text-align: center;
+    }
+
+    .checkout-hero h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .checkout-hero p {
+      color: rgba(255, 255, 255, .6);
+      margin-top: .4rem;
+      font-size: .95rem;
+    }
+
+    .breadcrumb {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: .7rem 2.5rem;
+      font-size: .82rem;
+      color: var(--muted);
+    }
+
+    .breadcrumb a {
+      color: var(--primary);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .breadcrumb span {
+      margin: 0 .4rem;
+    }
+
+    /* ── Steps ── */
+    .steps-bar {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      padding: .75rem 0;
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .5rem 2rem;
+      font-size: .82rem;
+      font-weight: 700;
+      color: var(--muted);
+      position: relative;
+    }
+
+    .step.active {
+      color: var(--primary);
+    }
+
+    .step.done {
+      color: #16a34a;
+    }
+
+    .step-num {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .78rem;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .step.active .step-num {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    .step.done .step-num {
+      background: #16a34a;
+      border-color: #16a34a;
+      color: #fff;
+    }
+
+    .step-arrow {
+      color: var(--border);
+      font-size: 1.1rem;
+    }
+
+    /* ── Layout ── */
+    .checkout-page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 5rem;
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    @media(max-width:780px) {
+      .checkout-page {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ── Cart Table ── */
+    .cart-box {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .cart-box-header {
+      padding: 1.1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cart-box-header h2 {
+      font-size: 1rem;
+      font-weight: 800;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .clear-cart-btn {
+      font-size: .75rem;
+      color: var(--primary);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+    }
+
+    .cart-item {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 1rem;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cart-item:last-child {
+      border-bottom: none;
+    }
+
+    .item-name {
+      font-size: .9rem;
+      font-weight: 700;
+      color: var(--dark);
+    }
+
+    .item-part {
+      font-size: .75rem;
+      color: var(--muted);
+      margin-top: .15rem;
+      font-family: 'Courier New', monospace;
+    }
+
+    .item-price {
+      font-size: .95rem;
+      font-weight: 800;
+      color: var(--primary);
+      white-space: nowrap;
+    }
+
+    .qty-ctrl-sm {
+      display: flex;
+      align-items: center;
+      border: 1.5px solid var(--border);
+      border-radius: 7px;
+      overflow: hidden;
+    }
+
+    .qty-ctrl-sm button {
+      width: 28px;
+      height: 28px;
+      border: none;
+      background: var(--bg);
+      font-size: 1rem;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .qty-ctrl-sm button:hover {
+      background: #e2e8f0;
+    }
+
+    .qty-ctrl-sm input {
+      width: 40px;
+      text-align: center;
+      border: none;
+      border-left: 1.5px solid var(--border);
+      border-right: 1.5px solid var(--border);
+      font-size: .85rem;
+      font-weight: 700;
+      font-family: 'Inter', sans-serif;
+      height: 28px;
+      outline: none;
+    }
+
+    .remove-btn {
+      background: none;
+      border: none;
+      color: #94a3b8;
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 0 .25rem;
+    }
+
+    .remove-btn:hover {
+      color: var(--primary);
+    }
+
+    .empty-cart {
+      padding: 3rem;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .empty-cart .big {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .empty-cart p {
+      font-size: .9rem;
+    }
+
+    .empty-cart a {
+      color: var(--primary);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    /* ── Order Summary ── */
+    .summary-box {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.5rem;
+      position: sticky;
+      top: 1.5rem;
+    }
+
+    .summary-box h3 {
+      font-size: 1rem;
+      font-weight: 800;
+      margin-bottom: 1.25rem;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: .88rem;
+      padding: .45rem 0;
+      border-bottom: 1px solid var(--border);
+      color: var(--dark);
+    }
+
+    .summary-row:last-of-type {
+      border-bottom: none;
+    }
+
+    .summary-row span:last-child {
+      font-weight: 700;
+    }
+
+    .summary-total {
+      display: flex;
+      justify-content: space-between;
+      font-size: 1.1rem;
+      font-weight: 800;
+      padding: .75rem 0 1rem;
+      border-top: 2px solid var(--dark);
+      margin-top: .5rem;
+    }
+
+    .summary-total span:last-child {
+      color: var(--primary);
+    }
+
+    .checkout-btn {
+      width: 100%;
+      padding: 1rem;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: background .2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+    }
+
+    .checkout-btn:hover {
+      background: #aa0000;
+    }
+
+    .checkout-btn:disabled {
+      background: #94a3b8;
+      cursor: default;
+    }
+
+    .continue-btn {
+      width: 100%;
+      padding: .75rem;
+      background: #fff;
+      color: var(--dark);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-size: .88rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      margin-top: .75rem;
+      transition: all .2s;
+      text-align: center;
+      display: block;
+      text-decoration: none;
+    }
+
+    .continue-btn:hover {
+      border-color: var(--dark);
+    }
+
+    .secure-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .4rem;
+      font-size: .75rem;
+      color: var(--muted);
+      margin-top: .85rem;
+    }
+
+    .promo-row {
+      display: flex;
+      gap: .5rem;
+      margin: 1rem 0;
+    }
+
+    .promo-row input {
+      flex: 1;
+      padding: .55rem .85rem;
+      border: 1.5px solid var(--border);
+      border-radius: 7px;
+      font-size: .82rem;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+    }
+
+    .promo-row input:focus {
+      border-color: var(--primary);
+    }
+
+    .promo-row button {
+      padding: .55rem 1rem;
+      background: var(--dark);
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      font-size: .82rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .call-bar {
+      background: #f1f5f9;
+      border-radius: 10px;
+      padding: .85rem 1rem;
+      font-size: .8rem;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    .call-bar strong {
+      color: var(--dark);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div class="top-bar-left">
+      <span class="utility-info">📞 <strong>888-944-6313</strong> • Call in Orders Only • Call 24/7 • Live
+        Operator</span>
+    </div>
+    <div class="top-bar-right">
+      <a href="contact-us.html">Contact</a>
+      <a href="sales-login.html" class="sales-login-btn">SALES LOGIN</a>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="main-header">
+    <div class="header-container">
+      <div class="logo">
+        <a href="index.html"><img src="logo-new.jpeg" alt="KJR Interior Designs Inc."></a>
+      </div>
+      <nav class="secondary-nav">
+        <div class="secondary-nav-container">
+          <ul class="nav-links">
+            <li><a href="index.html">HOME</a></li>
+            <li><a href="products.html">PRODUCTS</a></li>
+            <li><a href="about-us.html">ABOUT</a></li>
+          </ul>
+        </div>
+      </nav>
+      <div class="header-actions">
+        <a href="Lot-categories.html" class="parts-highlight"
+          style="background:var(--primary);color:#fff;padding:0.4rem 1rem;border-radius:4px;">PARTS CATEGORIES</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <div class="checkout-hero">
+    <h1>🛒 Your Cart</h1>
+    <p>Review your items, then proceed to payment</p>
+  </div>
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <a href="index.html">Home</a><span>›</span>
+    <a href="products.html">Products</a><span>›</span>
+    Checkout
+  </div>
+
+  <!-- Steps -->
+  <div class="steps-bar">
+    <div class="step active">
+      <span class="step-num">1</span> Cart
+    </div>
+    <span class="step-arrow">›</span>
+    <div class="step">
+      <span class="step-num">2</span> Payment
+    </div>
+    <span class="step-arrow">›</span>
+    <div class="step">
+      <span class="step-num">3</span> Confirmation
+    </div>
+  </div>
+
+  <!-- Page -->
+  <div class="checkout-page">
+
+    <!-- Cart Items -->
+    <div class="cart-box">
+      <div class="cart-box-header">
+        <h2>Cart Items (<span id="itemCount">0</span>)</h2>
+        <button class="clear-cart-btn" onclick="clearCart()">Clear Cart</button>
+      </div>
+      <div id="cartItems">
+        <div class="empty-cart">
+          <div class="big">🛒</div>
+          <p>Your cart is empty. <a href="products.html">Browse products →</a></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Order Summary -->
+    <div class="summary-box">
+      <h3>Order Summary</h3>
+
+      <div class="summary-row"><span>Subtotal (<span id="qtyTotal">0</span> items)</span><span
+          id="subtotalAmt">$0.00</span></div>
+      <div class="summary-row"><span>Shipping</span><span>Calculated at payment</span></div>
+      <div class="summary-row"><span>Tax (est.)</span><span id="taxAmt">$0.00</span></div>
+      <div class="summary-total">
+        <span>Total</span>
+        <span id="totalAmt">$0.00</span>
+      </div>
+
+      <div class="promo-row">
+        <input type="text" id="promoInput" placeholder="Promo code">
+        <button onclick="applyPromo()">Apply</button>
+      </div>
+
+      <button class="checkout-btn" id="checkoutBtn" onclick="goToPayment()" disabled>
+        💳 Proceed to Payment
+      </button>
+      <a href="products.html" class="continue-btn">← Continue Shopping</a>
+
+      <div class="secure-badge">🔒 Secure & Encrypted Checkout</div>
+
+      <div class="call-bar">
+        Prefer to order by phone?<br>
+        Call <strong>888-944-6313</strong> — 24/7 Live Operator
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    let cart = JSON.parse(localStorage.getItem('kjr_cart') || '[]');
+    let promoDiscount = 0;
+
+    function parsePrice(str) {
+      if (!str) return 0;
+      return parseFloat(str.replace(/[^0-9.]/g, '')) || 0;
+    }
+
+    function saveCart() {
+      localStorage.setItem('kjr_cart', JSON.stringify(cart));
+    }
+
+    function render() {
+      const container = document.getElementById('cartItems');
+      const itemCount = document.getElementById('itemCount');
+      const qtyTotal = document.getElementById('qtyTotal');
+      const subtotalEl = document.getElementById('subtotalAmt');
+      const taxEl = document.getElementById('taxAmt');
+      const totalEl = document.getElementById('totalAmt');
+      const btn = document.getElementById('checkoutBtn');
+
+      if (cart.length === 0) {
+        container.innerHTML = `<div class="empty-cart">
+          <div class="big">🛒</div>
+          <p>Your cart is empty. <a href="products.html">Browse products →</a></p>
+        </div>`;
+        itemCount.textContent = '0';
+        qtyTotal.textContent = '0';
+        subtotalEl.textContent = '$0.00';
+        taxEl.textContent = '$0.00';
+        totalEl.textContent = '$0.00';
+        btn.disabled = true;
+        return;
+      }
+
+      let html = '';
+      let subtotal = 0;
+      let totalQty = 0;
+
+      cart.forEach((item, i) => {
+        const unitPrice = parsePrice(item.price);
+        const lineTotal = unitPrice * item.qty;
+        subtotal += lineTotal;
+        totalQty += item.qty;
+
+        html += `<div class="cart-item">
+          <div>
+            <div class="item-name">${item.name}</div>
+            <div class="item-part">Part# ${item.part || 'N/A'}</div>
+          </div>
+          <div class="qty-ctrl-sm">
+            <button onclick="changeQty(${i}, -1)">−</button>
+            <input type="number" value="${item.qty}" min="1" max="999"
+              onchange="setQty(${i}, this.value)">
+            <button onclick="changeQty(${i}, 1)">+</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:.75rem;">
+            <div>
+              <div class="item-price">$${lineTotal.toFixed(2)}</div>
+              <div style="font-size:.72rem;color:var(--muted);">$${unitPrice.toFixed(2)} each</div>
+            </div>
+            <button class="remove-btn" onclick="removeItem(${i})" title="Remove">✕</button>
+          </div>
+        </div>`;
+      });
+
+      container.innerHTML = html;
+      itemCount.textContent = cart.length;
+      qtyTotal.textContent = totalQty;
+
+      subtotal = subtotal - promoDiscount;
+      if (subtotal < 0) subtotal = 0;
+      const tax = subtotal * 0.08;
+      const total = subtotal + tax;
+
+      subtotalEl.textContent = '$' + subtotal.toFixed(2);
+      taxEl.textContent = '$' + tax.toFixed(2);
+      totalEl.textContent = '$' + total.toFixed(2);
+      btn.disabled = false;
+    }
+
+    function changeQty(i, delta) {
+      cart[i].qty = Math.max(1, Math.min(999, (cart[i].qty || 1) + delta));
+      saveCart();
+      render();
+    }
+
+    function setQty(i, val) {
+      cart[i].qty = Math.max(1, Math.min(999, parseInt(val) || 1));
+      saveCart();
+      render();
+    }
+
+    function removeItem(i) {
+      cart.splice(i, 1);
+      saveCart();
+      render();
+    }
+
+    function clearCart() {
+      if (!confirm('Remove all items from cart?')) return;
+      cart = [];
+      saveCart();
+      render();
+    }
+
+    function applyPromo() {
+      const code = document.getElementById('promoInput').value.trim().toUpperCase();
+      if (code === 'KJR10') {
+        promoDiscount = 10;
+        alert('Promo code applied! $10.00 off your order.');
+      } else if (code === 'HVAC5') {
+        promoDiscount = 5;
+        alert('Promo code applied! $5.00 off your order.');
+      } else {
+        promoDiscount = 0;
+        alert('Invalid promo code. Try KJR10 for $10 off.');
+      }
+      render();
+    }
+
+    function goToPayment() {
+      if (cart.length === 0) return;
+      window.location.href = 'payment.html';
+    }
+
+    // Init
+    render();
+  </script>
+
+</body>
+
+</html>

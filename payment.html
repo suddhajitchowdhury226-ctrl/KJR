@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment | KJR Interior Designs Inc.</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #cc0000;
+      --dark: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --bg: #f8fafc;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--dark);
+    }
+
+    .pay-hero {
+      background: var(--dark);
+      padding: 2.5rem 2rem;
+      text-align: center;
+    }
+
+    .pay-hero h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .pay-hero p {
+      color: rgba(255, 255, 255, .6);
+      margin-top: .4rem;
+      font-size: .95rem;
+    }
+
+    .breadcrumb {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: .7rem 2.5rem;
+      font-size: .82rem;
+      color: var(--muted);
+    }
+
+    .breadcrumb a {
+      color: var(--primary);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .breadcrumb span {
+      margin: 0 .4rem;
+    }
+
+    .steps-bar {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      padding: .75rem 0;
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .5rem 2rem;
+      font-size: .82rem;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .step.active {
+      color: var(--primary);
+    }
+
+    .step.done {
+      color: #16a34a;
+    }
+
+    .step-num {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .78rem;
+      font-weight: 800;
+    }
+
+    .step.active .step-num {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    .step.done .step-num {
+      background: #16a34a;
+      border-color: #16a34a;
+      color: #fff;
+    }
+
+    .step-arrow {
+      color: var(--border);
+      font-size: 1.1rem;
+    }
+
+    .pay-page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 5rem;
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    @media(max-width:780px) {
+      .pay-page {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ── Form ── */
+    .pay-form-box {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .form-section {
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .form-section:last-child {
+      border-bottom: none;
+    }
+
+    .form-section h3 {
+      font-size: .95rem;
+      font-weight: 800;
+      margin-bottom: 1.1rem;
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: .85rem;
+      margin-bottom: .85rem;
+    }
+
+    .form-row.full {
+      grid-template-columns: 1fr;
+    }
+
+    .form-row.three {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .field label {
+      display: block;
+      font-size: .75rem;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: .35rem;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: .65rem .9rem;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: .9rem;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      background: #fff;
+      transition: border-color .15s;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      border-color: var(--primary);
+    }
+
+    /* ── Card input styling ── */
+    .card-brands {
+      display: flex;
+      gap: .4rem;
+      margin-bottom: .85rem;
+    }
+
+    .card-brands img {
+      height: 28px;
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 2px 5px;
+      background: #fff;
+    }
+
+    .card-input-wrap {
+      position: relative;
+    }
+
+    .card-input-wrap input {
+      padding-right: 3rem;
+    }
+
+    .card-icon {
+      position: absolute;
+      right: .9rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.2rem;
+    }
+
+    /* ── Pay button ── */
+    .pay-btn {
+      width: 100%;
+      padding: 1.1rem;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: background .2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .6rem;
+    }
+
+    .pay-btn:hover {
+      background: #aa0000;
+    }
+
+    .back-btn {
+      width: 100%;
+      padding: .8rem;
+      background: #fff;
+      color: var(--dark);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-size: .88rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      margin-top: .75rem;
+      text-align: center;
+      display: block;
+      text-decoration: none;
+      transition: all .2s;
+    }
+
+    .back-btn:hover {
+      border-color: var(--dark);
+    }
+
+    .secure-note {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .4rem;
+      font-size: .75rem;
+      color: var(--muted);
+      margin-top: .85rem;
+    }
+
+    /* ── Order Summary ── */
+    .summary-box {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.5rem;
+      position: sticky;
+      top: 1.5rem;
+    }
+
+    .summary-box h3 {
+      font-size: 1rem;
+      font-weight: 800;
+      margin-bottom: 1.1rem;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .order-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: .6rem 0;
+      border-bottom: 1px solid var(--border);
+      gap: 1rem;
+    }
+
+    .order-item:last-of-type {
+      border-bottom: none;
+    }
+
+    .order-item-name {
+      font-size: .82rem;
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    .order-item-sub {
+      font-size: .72rem;
+      color: var(--muted);
+      margin-top: .1rem;
+    }
+
+    .order-item-price {
+      font-size: .88rem;
+      font-weight: 800;
+      color: var(--primary);
+      white-space: nowrap;
+    }
+
+    .summary-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: .75rem 0;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: .85rem;
+      padding: .3rem 0;
+      color: var(--dark);
+    }
+
+    .summary-row span:last-child {
+      font-weight: 700;
+    }
+
+    .summary-total {
+      display: flex;
+      justify-content: space-between;
+      font-size: 1.1rem;
+      font-weight: 800;
+      padding: .75rem 0 0;
+      border-top: 2px solid var(--dark);
+      margin-top: .4rem;
+    }
+
+    .summary-total span:last-child {
+      color: var(--primary);
+    }
+
+    /* ── Success overlay ── */
+    #successOverlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .65);
+      backdrop-filter: blur(6px);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .success-box {
+      background: #fff;
+      border-radius: 20px;
+      padding: 3rem 2.5rem;
+      max-width: 480px;
+      width: 92vw;
+      text-align: center;
+      animation: popIn .3s ease;
+    }
+
+    @keyframes popIn {
+      from {
+        opacity: 0;
+        transform: scale(.9)
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1)
+      }
+    }
+
+    .success-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+
+    .success-box h2 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--dark);
+      margin-bottom: .5rem;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .success-box p {
+      color: var(--muted);
+      font-size: .92rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .order-num {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: .6rem 1rem;
+      font-family: 'Courier New', monospace;
+      font-weight: 800;
+      font-size: 1rem;
+      color: var(--dark);
+      margin-bottom: 1.5rem;
+    }
+
+    .success-box a {
+      display: inline-block;
+      padding: .8rem 2rem;
+      background: var(--primary);
+      color: #fff;
+      border-radius: 8px;
+      font-weight: 800;
+      text-decoration: none;
+      font-size: .9rem;
+    }
+
+    .success-box a:hover {
+      background: #aa0000;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div class="top-bar-left">
+      <span class="utility-info">📞 <strong>888-944-6313</strong> • Call in Orders Only • Call 24/7 • Live
+        Operator</span>
+    </div>
+    <div class="top-bar-right">
+      <a href="contact-us.html">Contact</a>
+      <a href="sales-login.html" class="sales-login-btn">SALES LOGIN</a>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="main-header">
+    <div class="header-container">
+      <div class="logo"><a href="index.html"><img src="logo-new.jpeg" alt="KJR Interior Designs Inc."></a></div>
+      <nav class="secondary-nav">
+        <div class="secondary-nav-container">
+          <ul class="nav-links">
+            <li><a href="index.html">HOME</a></li>
+            <li><a href="products.html">PRODUCTS</a></li>
+            <li><a href="about-us.html">ABOUT</a></li>
+          </ul>
+        </div>
+      </nav>
+      <div class="header-actions">
+        <a href="Lot-categories.html" class="parts-highlight"
+          style="background:var(--primary);color:#fff;padding:0.4rem 1rem;border-radius:4px;">PARTS CATEGORIES</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <div class="pay-hero">
+    <h1>💳 Payment</h1>
+    <p>Enter your details to complete your order securely</p>
+  </div>
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <a href="index.html">Home</a><span>›</span>
+    <a href="products.html">Products</a><span>›</span>
+    <a href="checkout.html">Cart</a><span>›</span>
+    Payment
+  </div>
+
+  <!-- Steps -->
+  <div class="steps-bar">
+    <div class="step done"><span class="step-num">✓</span> Cart</div>
+    <span class="step-arrow">›</span>
+    <div class="step active"><span class="step-num">2</span> Payment</div>
+    <span class="step-arrow">›</span>
+    <div class="step"><span class="step-num">3</span> Confirmation</div>
+  </div>
+
+  <!-- Page -->
+  <div class="pay-page">
+
+    <!-- Payment Form -->
+    <div class="pay-form-box">
+
+      <!-- Contact Info -->
+      <div class="form-section">
+        <h3>📋 Contact Information</h3>
+        <div class="form-row">
+          <div class="field"><label>First Name *</label><input type="text" id="firstName" placeholder="John" required>
+          </div>
+          <div class="field"><label>Last Name *</label><input type="text" id="lastName" placeholder="Smith" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field"><label>Email Address *</label><input type="email" id="email" placeholder="john@example.com"
+              required></div>
+          <div class="field"><label>Phone Number *</label><input type="tel" id="phone" placeholder="(555) 000-0000"
+              required></div>
+        </div>
+        <div class="form-row full">
+          <div class="field"><label>Company Name (Optional)</label><input type="text" id="company"
+              placeholder="Your Company LLC"></div>
+        </div>
+      </div>
+
+      <!-- Shipping Address -->
+      <div class="form-section">
+        <h3>🚚 Shipping Address</h3>
+        <div class="form-row full">
+          <div class="field"><label>Street Address *</label><input type="text" id="address"
+              placeholder="123 Main Street" required></div>
+        </div>
+        <div class="form-row full">
+          <div class="field"><label>Apartment / Suite / Unit</label><input type="text" id="address2"
+              placeholder="Apt 4B (optional)"></div>
+        </div>
+        <div class="form-row three">
+          <div class="field"><label>City *</label><input type="text" id="city" placeholder="Nashville" required></div>
+          <div class="field"><label>State *</label>
+            <select id="state">
+              <option value="">Select…</option>
+              <option>AL</option>
+              <option>AK</option>
+              <option>AZ</option>
+              <option>AR</option>
+              <option>CA</option>
+              <option>CO</option>
+              <option>CT</option>
+              <option>DE</option>
+              <option>FL</option>
+              <option>GA</option>
+              <option>HI</option>
+              <option>ID</option>
+              <option>IL</option>
+              <option>IN</option>
+              <option>IA</option>
+              <option>KS</option>
+              <option>KY</option>
+              <option>LA</option>
+              <option>ME</option>
+              <option>MD</option>
+              <option>MA</option>
+              <option>MI</option>
+              <option>MN</option>
+              <option>MS</option>
+              <option>MO</option>
+              <option>MT</option>
+              <option>NE</option>
+              <option>NV</option>
+              <option>NH</option>
+              <option>NJ</option>
+              <option>NM</option>
+              <option>NY</option>
+              <option>NC</option>
+              <option>ND</option>
+              <option>OH</option>
+              <option>OK</option>
+              <option>OR</option>
+              <option>PA</option>
+              <option>RI</option>
+              <option>SC</option>
+              <option>SD</option>
+              <option selected>TN</option>
+              <option>TX</option>
+              <option>UT</option>
+              <option>VT</option>
+              <option>VA</option>
+              <option>WA</option>
+              <option>WV</option>
+              <option>WI</option>
+              <option>WY</option>
+            </select>
+          </div>
+          <div class="field"><label>ZIP Code *</label><input type="text" id="zip" placeholder="37201" maxlength="10"
+              required></div>
+        </div>
+        <div class="form-row full">
+          <div class="field"><label>Special Delivery Instructions</label><input type="text" id="notes"
+              placeholder="Leave at dock, call on arrival, etc."></div>
+        </div>
+      </div>
+
+      <!-- Payment Details -->
+      <div class="form-section">
+        <h3>💳 Payment Details</h3>
+        <div class="card-brands">
+          <img src="https://img.icons8.com/color/48/visa.png" alt="Visa">
+          <img src="https://img.icons8.com/color/48/mastercard.png" alt="Mastercard">
+          <img src="https://img.icons8.com/color/48/amex.png" alt="Amex">
+          <img src="https://img.icons8.com/color/48/discover.png" alt="Discover">
+        </div>
+        <div class="form-row full">
+          <div class="field">
+            <label>Card Number *</label>
+            <div class="card-input-wrap">
+              <input type="text" id="cardNum" placeholder="1234 5678 9012 3456" maxlength="19"
+                oninput="formatCard(this)" required>
+              <span class="card-icon" id="cardIcon">💳</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-row full">
+          <div class="field"><label>Cardholder Name *</label><input type="text" id="cardName" placeholder="JOHN SMITH"
+              required></div>
+        </div>
+        <div class="form-row">
+          <div class="field"><label>Expiry Date *</label><input type="text" id="cardExp" placeholder="MM / YY"
+              maxlength="7" oninput="formatExpiry(this)" required></div>
+          <div class="field"><label>CVV *</label><input type="text" id="cardCVV" placeholder="123" maxlength="4"
+              required></div>
+        </div>
+      </div>
+
+      <!-- Billing -->
+      <div class="form-section">
+        <h3>🏠 Billing Address</h3>
+        <div style="margin-bottom:1rem;">
+          <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer;font-size:.88rem;font-weight:600;">
+            <input type="checkbox" id="sameAsBilling" checked onchange="toggleBilling()">
+            Same as shipping address
+          </label>
+        </div>
+        <div id="billingFields" style="display:none;">
+          <div class="form-row full">
+            <div class="field"><label>Billing Street *</label><input type="text" id="billAddr"
+                placeholder="123 Billing Street"></div>
+          </div>
+          <div class="form-row three">
+            <div class="field"><label>City *</label><input type="text" id="billCity" placeholder="City"></div>
+            <div class="field"><label>State *</label><input type="text" id="billState" placeholder="TN"></div>
+            <div class="field"><label>ZIP *</label><input type="text" id="billZip" placeholder="37201"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <div class="form-section">
+        <button class="pay-btn" onclick="submitPayment()">
+          🔒 Place Order &amp; Pay
+        </button>
+        <a href="checkout.html" class="back-btn">← Back to Cart</a>
+        <div class="secure-note">🔒 256-bit SSL encryption · PCI-DSS Compliant · Secure checkout</div>
+      </div>
+
+    </div>
+
+    <!-- Order Summary -->
+    <div class="summary-box">
+      <h3>Order Summary</h3>
+      <div id="orderLines"></div>
+      <hr class="summary-divider">
+      <div class="summary-row"><span>Subtotal</span><span id="paySubtotal">$0.00</span></div>
+      <div class="summary-row"><span>Shipping</span><span id="payShipping">TBD</span></div>
+      <div class="summary-row"><span>Tax (8%)</span><span id="payTax">$0.00</span></div>
+      <div class="summary-total"><span>Total</span><span id="payTotal">$0.00</span></div>
+      <div
+        style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:.75rem;font-size:.78rem;color:#16a34a;font-weight:600;margin-top:1rem;text-align:center;">
+        🎉 You're saving <span id="savingsAmt">$0.00</span> on this order!
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Success Overlay -->
+  <div id="successOverlay"
+    style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(6px);z-index:9999;align-items:center;justify-content:center;">
+    <div class="success-box">
+      <div class="success-icon">🎉</div>
+      <h2>Order Placed Successfully!</h2>
+      <p>Thank you for your order. You'll receive a confirmation email shortly. A KJR representative will contact you to
+        confirm shipping details.</p>
+      <div class="order-num" id="orderNum">Order #KJR-000000</div>
+      <p style="font-size:.82rem;margin-bottom:1.25rem;">Questions? Call <strong>888-944-6313</strong> — 24/7</p>
+      <a href="products.html" onclick="clearCartOnSuccess()">Continue Shopping →</a>
+    </div>
+  </div>
+  <script>
+    const cart = JSON.parse(localStorage.getItem('kjr_cart') || '[]');
+
+    function parsePrice(str) {
+      return parseFloat((str || '0').replace(/[^0-9.]/g, '')) || 0;
+    }
+
+    // ── Render order summary ──────────────────────────────────────────────
+    function renderSummary() {
+      if (cart.length === 0) {
+        window.location.href = 'checkout.html';
+        return;
+      }
+      let subtotal = 0, savings = 0;
+      let html = '';
+      cart.forEach(item => {
+        const unit = parsePrice(item.price);
+        const line = unit * item.qty;
+        subtotal += line;
+        savings += (unit * 0.1) * item.qty; // approx savings vs list
+        html += `<div class="order-item">
+          <div>
+            <div class="order-item-name">${item.name}</div>
+            <div class="order-item-sub">Part# ${item.part || 'N/A'} &nbsp;×&nbsp; ${item.qty}</div>
+          </div>
+          <div class="order-item-price">$${line.toFixed(2)}</div>
+        </div>`;
+      });
+      document.getElementById('orderLines').innerHTML = html;
+      const tax = subtotal * 0.08;
+      const total = subtotal + tax;
+      document.getElementById('paySubtotal').textContent = '$' + subtotal.toFixed(2);
+      document.getElementById('payTax').textContent = '$' + tax.toFixed(2);
+      document.getElementById('payTotal').textContent = '$' + total.toFixed(2);
+      document.getElementById('savingsAmt').textContent = '$' + savings.toFixed(2);
+    }
+
+    // ── Card formatting ───────────────────────────────────────────────────
+    function formatCard(input) {
+      let v = input.value.replace(/\D/g, '').substring(0, 16);
+      input.value = v.replace(/(.{4})/g, '$1 ').trim();
+      const icon = document.getElementById('cardIcon');
+      if (v.startsWith('4')) icon.textContent = '💙'; // Visa
+      else if (v.startsWith('5')) icon.textContent = '🟠'; // MC
+      else if (v.startsWith('3')) icon.textContent = '🟢'; // Amex
+      else icon.textContent = '💳';
+    }
+
+    function formatExpiry(input) {
+      let v = input.value.replace(/\D/g, '').substring(0, 4);
+      if (v.length >= 2) v = v.substring(0, 2) + ' / ' + v.substring(2);
+      input.value = v;
+    }
+
+    function toggleBilling() {
+      const same = document.getElementById('sameAsBilling').checked;
+      document.getElementById('billingFields').style.display = same ? 'none' : 'block';
+    }
+
+    // ── Validation ────────────────────────────────────────────────────────
+    function validate() {
+      const required = [
+        ['firstName', 'First name'], ['lastName', 'Last name'],
+        ['email', 'Email'], ['phone', 'Phone'],
+        ['address', 'Street address'], ['city', 'City'],
+        ['zip', 'ZIP code'], ['cardNum', 'Card number'],
+        ['cardName', 'Cardholder name'], ['cardExp', 'Expiry date'], ['cardCVV', 'CVV']
+      ];
+      for (const [id, label] of required) {
+        const el = document.getElementById(id);
+        if (!el || !el.value.trim()) {
+          el && el.focus();
+          alert(label + ' is required.');
+          return false;
+        }
+      }
+      const state = document.getElementById('state').value;
+      if (!state) { alert('Please select a state.'); return false; }
+      // Basic card number check
+      const raw = document.getElementById('cardNum').value.replace(/\s/g, '');
+      if (raw.length < 15) { alert('Please enter a valid card number.'); return false; }
+      // Expiry
+      const exp = document.getElementById('cardExp').value;
+      if (!exp.includes('/') || exp.length < 5) { alert('Please enter a valid expiry date (MM/YY).'); return false; }
+      return true;
+    }
+
+    // ── Submit ────────────────────────────────────────────────────────────
+    function submitPayment() {
+      if (!validate()) return;
+
+      const btn = document.querySelector('.pay-btn');
+      btn.textContent = '⏳ Processing…';
+      btn.disabled = true;
+
+      // Simulate payment processing delay
+      setTimeout(() => {
+        const orderNum = 'KJR-' + String(Math.floor(100000 + Math.random() * 900000));
+        document.getElementById('orderNum').textContent = 'Order #' + orderNum;
+        document.getElementById('successOverlay').style.display = 'flex';
+
+        // Send email summary via bunji chat (if available)
+        const name = document.getElementById('firstName').value + ' ' + document.getElementById('lastName').value;
+        const email = document.getElementById('email').value;
+        const total = document.getElementById('payTotal').textContent;
+        const items = cart.map(c => c.name + ' x' + c.qty).join(', ');
+        if (window.dispatchEvent) {
+          window.dispatchEvent(new CustomEvent('open-bunji', {
+            detail: { message: `New order placed! Order ${orderNum} by ${name} (${email}). Items: ${items}. Total: ${total}` }
+          }));
+        }
+      }, 2200);
+    }
+
+    function clearCartOnSuccess() {
+      localStorage.removeItem('kjr_cart');
+    }
+
+    // Init
+    renderSummary();
+  </script>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-brand">
+        <img src="logo-new.jpeg" alt="KJR Interior Designs Inc." style="height:70px;margin-bottom:1.5rem;">
+        <p>A massive supplier for home appliances, electronics, HVAC, and more. BBB Accredited since 2014.</p>
+      </div>
+      <div class="footer-col">
+        <h4>QUICK LINKS</h4>
+        <ul class="footer-links">
+          <li><a href="products.html">All Products</a></li>
+          <li><a href="Lot-categories.html">Parts Categories</a></li>
+          <li><a href="contact-us.html">Contact Support</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>CONTACT</h4>
+        <p><a href="tel:888-944-6313" style="color:inherit;text-decoration:none;">888-944-6313</a><br>Open 24/7</p>
+        <p style="margin-top:1rem;">1420 Industrial Park Road<br>Paris, TN 38242</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>&copy; 2024 KJR Interior Designs Inc. All rights reserved.</div>
+      <div><a href="#">Privacy Policy</a> &nbsp;|&nbsp; <a href="#">Terms of Service</a></div>
+    </div>
+  </footer>
+
+</body>
+
+</html>
