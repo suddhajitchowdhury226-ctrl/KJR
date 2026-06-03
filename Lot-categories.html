@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parts Categories | KJR Interior Designs Inc.</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #cc0000;
+      --dark: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --icon-bg: #f1f5f9;
+      --icon-stroke: #334155;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #fff;
+      color: var(--dark);
+    }
+
+    /* ── HERO ── */
+    .cat-hero {
+      position: relative;
+      min-height: 320px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+      background: var(--dark);
+    }
+
+    .cat-hero video.hero-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+
+    .cat-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(160deg, rgba(15, 23, 42, .75) 0%, rgba(10, 15, 20, .65) 100%);
+      z-index: 1;
+    }
+
+    .cat-hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 3rem 2rem;
+    }
+
+    .cat-hero-content h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+
+    .cat-hero-content p {
+      color: rgba(255, 255, 255, .8);
+      font-size: 1.1rem;
+      max-width: 560px;
+      margin: 0 auto 1.5rem;
+    }
+
+    .hero-search {
+      display: flex;
+      gap: 0.5rem;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .hero-search input {
+      flex: 1;
+      padding: 0.85rem 1.25rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+    }
+
+    .hero-search button {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.85rem 1.5rem;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: background 0.2s;
+    }
+
+    .hero-search button:hover {
+      background: #aa0000;
+    }
+
+    /* ── BREADCRUMB ── */
+    .breadcrumb {
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 2.5rem;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .breadcrumb a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .breadcrumb a:hover {
+      text-decoration: underline;
+    }
+
+    .breadcrumb span {
+      margin: 0 0.4rem;
+    }
+
+    /* ── MAIN LAYOUT ── */
+    .cat-page {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 3rem 2rem 5rem;
+    }
+
+    .cat-page-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .cat-page-header h2 {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--dark);
+      margin-bottom: 0.4rem;
+    }
+
+    .cat-page-header p {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    /* ── CATEGORY GRID ── */
+    .cat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+    }
+
+    @media (max-width: 1100px) {
+      .cat-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 760px) {
+      .cat-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .cat-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ── CATEGORY CARD ── */
+    .cat-card {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: var(--card-bg);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.25rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .cat-card:hover {
+      border-color: var(--primary);
+      box-shadow: 0 4px 20px rgba(204, 0, 0, .1);
+      transform: translateY(-2px);
+    }
+
+    .cat-card:hover .cat-icon-wrap {
+      background: rgba(204, 0, 0, .08);
+    }
+
+    .cat-card:hover .cat-icon-wrap svg {
+      stroke: var(--primary);
+    }
+
+    .cat-icon-wrap {
+      width: 56px;
+      height: 56px;
+      flex-shrink: 0;
+      background: var(--icon-bg);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+
+    .cat-icon-wrap svg {
+      width: 30px;
+      height: 30px;
+      stroke: var(--icon-stroke);
+      fill: none;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: stroke 0.2s;
+    }
+
+    .cat-label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--dark);
+      line-height: 1.3;
+    }
+
+    .cat-count {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 0.15rem;
+      font-weight: 400;
+    }
+
+    /* ── SECTION DIVIDER ── */
+    .cat-section-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      margin: 2.5rem 0 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ── CTA BANNER ── */
+    .cta-banner {
+      background: linear-gradient(135deg, var(--dark) 0%, #1e293b 100%);
+      border-radius: 16px;
+      padding: 2.5rem 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+      margin-top: 3.5rem;
+      flex-wrap: wrap;
+    }
+
+    .cta-banner h3 {
+      color: #fff;
+      font-size: 1.4rem;
+      font-weight: 800;
+      margin-bottom: 0.4rem;
+    }
+
+    .cta-banner p {
+      color: rgba(255, 255, 255, .65);
+      font-size: 0.9rem;
+    }
+
+    .cta-banner a {
+      background: var(--primary);
+      color: #fff;
+      padding: 0.85rem 2rem;
+      border-radius: 8px;
+      font-weight: 700;
+      text-decoration: none;
+      font-size: 0.9rem;
+      white-space: nowrap;
+      transition: background 0.2s;
+      flex-shrink: 0;
+    }
+
+    .cta-banner a:hover {
+      background: #aa0000;
+    }
+
+    /* ── FILTER BAR ── */
+    .filter-bar {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+      align-items: center;
+    }
+
+    .filter-btn {
+      padding: 0.45rem 1rem;
+      border: 1.5px solid var(--border);
+      border-radius: 50px;
+      background: #fff;
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.15s;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    .filter-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--muted);
+      margin-right: 0.25rem;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Top Utility Bar -->
+  <div class="top-bar">
+    <div class="top-bar-left">
+      <span class="utility-info">📞 <strong>888-944-6313</strong> • Call in Orders Only • Call 24/7 • Live
+        Operator</span>
+    </div>
+    <div class="top-bar-right">
+      <a href="contact-us.html">Contact</a>
+      <a href="suggest-feature.html">Suggest Feature</a>
+      <a href="sales-login.html" class="sales-login-btn">SALES LOGIN</a>
+    </div>
+  </div>
+
+  <!-- Main Navigation Header -->
+  <header class="main-header">
+    <div class="header-container">
+      <div class="logo">
+        <a href="index.html">
+          <img src="logo-new.jpeg" alt="KJR Interior Designs Inc.">
+        </a>
+      </div>
+      <nav class="secondary-nav">
+        <div class="secondary-nav-container">
+          <ul class="nav-links">
+            <li><a href="index.html">HOME</a></li>
+            <li class="has-dropdown">
+              <a href="#">WORK FORCE <span class="dropdown-arrow">▾</span></a>
+              <ul class="dropdown-menu">
+                <li><a href="career-move.html">Career Move</a></li>
+                <li><a href="property-mgmt.html">Property Mgmt Crew</a></li>
+                <li><a href="bid-projects.html">Bid Projects</a></li>
+                <li><a href="work-completed.html">Work Completed by KJRID</a></li>
+              </ul>
+            </li>
+            <li><a href="about-us.html">ABOUT</a></li>
+          </ul>
+        </div>
+      </nav>
+      <div class="header-actions">
+        <a href="categories.html" class="parts-highlight"
+          style="background:var(--primary);color:#fff;padding:0.4rem 1rem;border-radius:4px;">PARTS CATEGORIES</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="cat-hero">
+    <video autoplay muted loop playsinline class="hero-bg">
+      <source
+        src="https://res.cloudinary.com/dc8xxhoaf/video/upload/v1767988938/3773486-hd-1920-1080-30fps-tyea3fib-1_3P5aPwyY_online-video-cutter.com_tzwfze.mp4"
+        type="video/mp4">
+    </video>
+    <div class="cat-hero-content">
+      <h1>Parts Categories</h1>
+      <p>Browse 10M+ genuine OEM parts across 350+ brands and 20+ product categories</p>
+      <div class="hero-search">
+        <input type="text" id="heroSearch" placeholder="Search categories..." oninput="filterCards(this.value)">
+        <button onclick="filterCards(document.getElementById('heroSearch').value)">Search</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <a href="index.html">Home</a>
+    <span>›</span>
+    <a href="index.html#parts">Parts & Supply</a>
+    <span>›</span>
+    Categories
+  </div>
+
+  <!-- Main Content -->
+  <div class="cat-page">
+
+    <div class="cat-page-header">
+      <h2>All Product Categories</h2>
+      <p>Select a category to explore available parts — call <strong>888-944-6313</strong> to place your order</p>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+      <span class="filter-label">Filter:</span>
+      <button class="filter-btn active" onclick="setFilter('all', this)">All Categories</button>
+      <button class="filter-btn" onclick="setFilter('appliance', this)">Appliances</button>
+      <button class="filter-btn" onclick="setFilter('electronics', this)">Electronics</button>
+      <button class="filter-btn" onclick="setFilter('hvac', this)">HVAC & Plumbing</button>
+      <button class="filter-btn" onclick="setFilter('hvac-supply', this)">HVAC Supply</button>
+      <button class="filter-btn" onclick="setFilter('outdoor', this)">Outdoor & Garden</button>
+      <button class="filter-btn" onclick="setFilter('tools', this)">Tools & Maintenance</button>
+      <button class="filter-btn" onclick="setFilter('personal', this)">Personal & Health</button>
+    </div>
+
+    <!-- Category Grid -->
+    <div class="cat-grid" id="catGrid">
+
+      <!-- Auto & Garage -->
+      <a href="#" class="cat-card" data-group="outdoor tools" data-name="auto garage"
+        onclick="openBunji(event,'Auto & Garage parts')">
+        <div class="cat-icon-wrap">
+          <svg viewBox="0 0 24 24">
+            <path d="M3 9l1-4h16l1 4" />
+            <rect x="2" y="9" width="20" height="8" rx="1" />
+            <circle cx="7" cy="17" r="2" />
+            <circle cx="17" cy="17" r="2" />
+            <path d="M2 13h20" />
+          </svg>
+        </div>
+        <div>
+          <div class="cat-label">Auto & Garage</div>
+          <div class="cat-count">Parts & Accessories</div>
+        </div>
+      </a>
+
+      <!-- Grills & Outdoor Kitchen -->
+      <a href="#" class="cat-card" data-group="outdoor" data-name="grills outdoor kitchen"
+        onclick="openBunji(event,'Grills & Outdoor Kitchen parts')">
+        <div class="cat-icon-wrap">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="10" r="6" />
+            <path d="M12 16v6M8 22h8" />
+            <path d="M9 7h6M9 10h6M9 13h6" />
+            <path d="M6 4l-2-2M18 4l2-2" />
+          </svg>
+        </div>
+        <div>
+          <div class="cat-label">Grills & Outdoor Kitchen</div>
+          <div class="cat-count">Burners, Grates & More</div>
+        </div>
+      </a>
+
+      <!-- Consumer Electronics -->
+      <a href="#" class="cat-card" data-group="electronics" data-name="consumer electronics tv audio"
+        onclick="openBunji(event,'Consumer Electronics parts')">
+        <div class="cat-icon-wrap">
+          <svg viewBox="0 0 24 24">
+            <rect x="2" y="3" width="20" height="14" rx="2" />
+            <path d="M8 21h8M12 17v4" />
+            <path d="M6 8h4M6 11h8" />
+          </svg>
+        </div>
+        <div>
+          <div class="cat-label">Consumer Electronics</div>
+          <div class="cat-count">TV, Audio & Video</div>
+        </div>
+      </a>
+
+      <!-- Commercial Appliance -->
+      <a href="#" class="cat-card" data-group="appliance" data-name="commercial appliance"
+        onclick="openBunji(event,'Commercial Appliance parts')">
+        <div class="cat-icon-wrap">
+          <svg viewBox="0 0 24 24">
+            <rect x="3" y="2" width="18" height="20" rx="2" />
+            <path d="M3 8h18" />
+            <circle cx="8" cy="5" r="1" />
+            <circle cx="12" cy="5" r="1" />
+            <rect x="7" y="12" width="10" height="6" rx="1" />
+          </svg>
+        </div>
+        <div>
+          <div class="cat-label">Commercial Appliance</div>
+          <div class="cat-count">Restaurant & Industrial</div>
+        </div>
+      </a>
+
+      <!-- Coffee & Small Appliance -->
+      <a href="#" class="cat-card" data-group="appliance" data-name="coffee small appliance"
+        onclick="openBunji(event,'Coffee & Small Appliance parts')">
+        <div class="cat-icon-wrap">
+          <svg viewBox="0 0 24 24">
+            <path d="M6 2v4M10 2v4M14 2v4" />
+            <path d="M4 6h12l-1.5 10H5.5L4 6z" />
+            <path d="M16 8h2a2 2 0 010 4h-2" />
+            <path d="M2 20h16" />
+          </svg>
+        </div>
+        <div>
+          <div class="cat-label">Coffee & Small Appliance</div>
+          <div class="cat-count">Brewers, Blenders & More</div>
+        </div>
+      </a>
+
+      <!-- Computer & Tablet -->
+      <a href="#" class="cat-card" data-group="electronics" data-name="computer tablet"
+        onclick="openBunji(event,'Computer & Tablet parts')">
+        <div class="cat-icon-wrap">
+          <svg viewBox="0 0 24 24">
+            <rect x="2" y="4" width="14" height="10" rx="1" />
+            <path d="M8 14v4M5 18h6" />
+            <rect x="17" y="4" width="5" height="8" rx="1" />
+            <path d="M19 12v2" />
+          </svg>
+        </div>
+        <div>
+          <div class="cat-label">Computer & Tablet</div>
+          <div class="cat-count">Screens, Keyboards & Parts</div>
+        </div>
+      </a>
+
+      <!-- HVAC -->
+      <a href="#" class="cat-card" data-group="hvac" data-name="hvac air conditioning heating"
+        onclick="openBunji(event,'HVAC parts')">
+        <div class="cat-icon-wrap">
+          <svg viewBox="0 0 24 24">
+            <rect x="3" y="6" width="18" height="12" rx="2" />
+            <circle cx="12" cy="12" r="3" />
+            <path d="M12 3v3M12 18v3M3 12H1M23 12h-2" />
+            <path d="M5.6 5.6l1.4 1.4M16.9 16.9l1.5 1.5M5.6 18.4l1.4-1.4M16.9 7.1l1.5-1.5" />
+          </svg>
+        </div>
+        <div>
+          <div class="cat-label">HVAC</div>
+          <div class="cat-count">Filters, Motors & Controls</div>
+        </div>
+      </a>
+
+      <!-- Home Appliances -->
+      <a href="#" class="cat-card" data-group="appliance" data-name="home appliances washer dryer refrigerator"
+        onclick="openBunji(event,'Home Appliance parts')">
+        <div class="cat-icon-wrap">
+          <svg viewBox="0 0 24 24">
+            <rect x="3" y="3" width="8" height="10" rx="1" />
+            <rect x="13" y="3" width="8" height="10" rx="1" />
+            <rect x="3" y="15" width="18" height="6" rx="1" />
+            <circle cx="7" cy="8" r="2" />
+            <path d="M14 6h5M14 9h3" />
+          </svg>
+        </div>
+        <div>
+          <div class="cat-label">Home Appliances</div>
+          <div class="cat-count">Washer, Dryer, Fridge & More</div>
+        </div>
+      </a>
+
+      <!-- Health & Wellness -->
+      <a href="#" class="cat-card" data-group="personal" data-name="health wellness"
+        onclick="openBunji(event,'Health & Wellness parts')">
+        <div class="cat-icon-wrap">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 21C12 21 4 13.5 4 8a4 4 0 018 0 4 4 0 018 0c0 5.5-8 13-8 13z" />
+            <path d="M9 8h6M12 5v6" />
+          </svg>
+        </div>
+        <div>
+          <div class="cat-label">Health & Wellness</div>
+          <div class="cat-count">Medical & Fitness Parts</div>
+        </div>
+      </a>
+
+      <!-- Lawn & Garden -->
+      <a href="#" class="cat-card" data-group="outdoor" data-name="lawn garden landscaping"
+        onclick="openBunji(event,'Lawn & Garden parts')">
+        <div class="cat-icon-wrap">
+          <svg viewBox="0 0 24 24">
+            <path d="M3 20h18" />
+            <path d="M5 20V10l7-7 7 7v10" />
+            <path d="M9 20v-5h6v5" />
+          </svg>
+        </div>
+        <div>
+          <div class="cat-label">Lawn & Garden</div>
+          <div class="cat-count">Mowers, Trimmers & More</div>
+        </div>
+      </a>
+
+      <!-- Mobile -->
+      <a href="#" class="cat-card" data-group="electronics" data-name="mobile phone accessories"
+        onclick="openBunji(event,'Mobile Parts & Accessories')">
+        <div class="cat-icon-wrap">
+          <svg viewBox="0 0 24 24">
+            <rect x="5" y="2" width="14" height="20" rx="2" />
+            <path d="M12 18h.01" />
+            <path d="M9 6h6" />
+          </svg>
+        </div>
+        <div>
+          <div class="cat-label">Mobile</div>
+          <div class="cat-count">Parts & Accessories</div>
+        </div>
+      </a>
+
+      <!-- Power Tool Parts -->
+      <a href="#" class="cat-card" data-group="tools" data-name="power tools drill saw"
+        onclick="openBunji(event,'Power Tool Parts')">
+        <div class="cat-icon-wrap">
+          <svg viewBox="0 0 24 24">
+            <path d="M14.5 2.5l7 7-10 10-7-7 10-10z" />
+            <path d="M2 22l4-4" />
+            <path d="M7 17l-5 5" />
+            <circle cx="14" cy="10" r="2" />
+          </svg>
+        </div>
+        <div>
+          <div class="cat-label">Power Tool Parts</div>
+          <div class="cat-count">Blades, Motors & Switches</div>
+        </div>
+      </a>
+
+      <!-- Personal Care -->
+      <a href="#" class="cat-card" data-group="personal" data-name="personal care grooming"
+        onclick="openBunji(event,'Personal Care parts')">
+        <div class="cat-icon-wrap">
+          <svg viewBox="0 0 24 24">
+            <path d="M5 3h14v4a7 7 0 01-14 0V3z" />
+            <path d="M12 10v11" />
+            <path d="M8 21h8" />
+            <path d="M5 7H3M21 7h-2" />
+          </svg>
+        </div>
+        <div>
+          <div class="cat-label">Personal Care</div>
+          <div class="cat-count">Shavers, Dryers & More</div>
+        </div>
+      </a>
+
+      <!-- Plumbing -->
+      <a href="#" class="cat-card" data-group="hvac" data-name="plumbing pipes faucets"
+        onclick="openBunji(event,'Plumbing parts')">
+        <div class="cat-icon-wrap">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 2v6M12 8a4 4 0 100 8 4 4 0 000-8z" />
+            <path d="M12 16v6" />
+            <path d="M8 12H2M22 12h-6" />
+          </svg>
+        </div>
+        <div>
+          <div class="cat-label">Plumbing</div>
+          <div class="cat-count">Valves, Faucets & Pipes</div>
+        </div>
+      </a>
+
+      <!-- Print & Imaging -->
+      <a href="#" class="cat-card" data-group="electronics" data-name="print imaging printer"
+        onclick="openBunji(event,'Print & Imaging parts')">
+        <div class="cat-icon-wrap">
+          <svg viewBox="0 0 24 24">
+            <rect x="6" y="2" width="12" height="8" rx="1" />
+            <path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" />
+            <rect x="6" y="14" width="12" height="8" rx="1" />
+            <path d="M6 9h.01M18 9h.01" />
+          </svg>
+        </div>
+        <div>
+          <div class="cat-label">Print & Imaging</div>
+          <div class="cat-count">Ink, Toner & Printer Parts</div>
+        </div>
+      </a>
+
+      <!-- Pool & Spa -->
+      <a href="#" class="cat-card" data-group="outdoor" data-name="pool spa water"
+        onclick="openBunji(event,'Pool & Spa parts')">
+        <div class="cat-icon-wrap">
+          <svg viewBox="0 0 24 24">
+            <path d="M2 12c1.5-2 3-2 4.5 0s3 2 4.5 0 3-2 4.5 0 3 2 4.5 0" />
+            <path d="M2 17c1.5-2 3-2 4.5 0s3 2 4.5 0 3-2 4.5 0 3 2 4.5 0" />
+            <path d="M8 7V4M16 7V4M8 4h8" />
+          </svg>
+        </div>
+        <div>
+          <div class="cat-label">Pool & Spa</div>
+          <div class="cat-count">Pumps, Filters & Heaters</div>
+        </div>
+      </a>
+
+      <!-- Service Aids & Tools -->
+      <a href="#" class="cat-card" data-group="tools" data-name="service aids tools repair"
+        onclick="openBunji(event,'Service Aids & Tools')">
+        <div class="cat-icon-wrap">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" />
+          </svg>
+        </div>
+        <div>
+          <div class="cat-label">Service Aids & Tools</div>
+          <div class="cat-count">Repair Kits & Supplies</div>
+        </div>
+      </a>
+
+      <!-- Vacuum -->
+      <a href="#" class="cat-card" data-group="appliance" data-name="vacuum cleaner"
+        onclick="openBunji(event,'Vacuum parts')">
+        <div class="cat-icon-wrap">
+          <svg viewBox="0 0 24 24">
+            <path d="M3 20l5-5" />
+            <circle cx="10" cy="13" r="3" />
+            <path d="M13 10l5-5a2 2 0 012.8 2.8L16 12" />
+            <path d="M8 15l-5 5" />
+          </svg>
+        </div>
+        <div>
+          <div class="cat-label">Vacuum</div>
+          <div class="cat-count">Belts, Filters & Motors</div>
+        </div>
+      </a>
+
+      <!-- HVAC Truck Stock -->
+      <a href="#" class="cat-card" data-group="hvac" data-name="hvac truck stock"
+        onclick="openBunji(event,'HVAC Truck Stock parts')">
+        <div class="cat-icon-wrap">
+          <svg viewBox="0 0 24 24">
+            <rect x="1" y="3" width="15" height="13" rx="1" />
+            <path d="M16 8h4l3 3v5h-7V8z" />
+            <circle cx="5.5" cy="18.5" r="2.5" />
+            <circle cx="18.5" cy="18.5" r="2.5" />
+          </svg>
+        </div>
+        <div>
+          <div class="cat-label">HVAC Truck Stock</div>
+          <div class="cat-count">Field Service Inventory</div>
+        </div>
+      </a>
+
+      <!-- Installation Supplies -->
+      <a href="#" class="cat-card" data-group="tools" data-name="installation supplies hardware"
+        onclick="openBunji(event,'Installation Supplies')">
+        <div class="cat-icon-wrap">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 002 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" />
+            <path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12" />
+          </svg>
+        </div>
+        <div>
+          <div class="cat-label">Installation Supplies</div>
+          <div class="cat-count">Brackets, Fasteners & Kits</div>
+        </div>
+      </a>
+
+      <!-- Home Maintenance -->
+      <a href="#" class="cat-card" data-group="tools" data-name="home maintenance repair"
+        onclick="openBunji(event,'Home Maintenance parts')">
+        <div class="cat-icon-wrap">
+          <svg viewBox="0 0 24 24">
+            <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+            <polyline points="9 22 9 12 15 12 15 22" />
+          </svg>
+        </div>
+        <div>
+          <div class="cat-label">Home Maintenance</div>
+          <div class="cat-count">Repair & Upkeep Supplies</div>
+        </div>
+      </a>
+
+      <!-- Fitness -->
+      <a href="#" class="cat-card" data-group="personal" data-name="fitness exercise equipment"
+        onclick="openBunji(event,'Fitness equipment parts')">
+        <div class="cat-icon-wrap">
+          <svg viewBox="0 0 24 24">
+            <path d="M6 4v16M18 4v16M2 8h4M18 8h4M2 16h4M18 16h4M6 12h12" />
+          </svg>
+        </div>
+        <div>
+          <div class="cat-label">Fitness</div>
+          <div class="cat-count">Treadmill, Bike & Gym Parts</div>
+        </div>
+      </a>
+
+      <!-- Accessories -->
+      <a href="#" class="cat-card" data-group="electronics" data-name="accessories cables connectors"
+        onclick="openBunji(event,'Accessories & Cables')">
+        <div class="cat-icon-wrap">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="3" />
+            <path
+              d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12" />
+          </svg>
+        </div>
+        <div>
+          <div class="cat-label">Accessories</div>
+          <div class="cat-count">Cables, Remotes & Add-ons</div>
+        </div>
+      </a>
+
+      <!-- Household Cleaners -->
+      <a href="#" class="cat-card" data-group="tools" data-name="household cleaners cleaning"
+        onclick="openBunji(event,'Household Cleaners')">
+        <div class="cat-icon-wrap">
+          <svg viewBox="0 0 24 24">
+            <path d="M9 3h6l1 5H8L9 3z" />
+            <path d="M8 8v13a1 1 0 001 1h6a1 1 0 001-1V8" />
+            <path d="M10 12h4M10 16h4" />
+          </svg>
+        </div>
+        <div>
+          <div class="cat-label">Household Cleaners</div>
+          <div class="cat-count">Cleaning Supplies & Agents</div>
+        </div>
+      </a>
+
+      <!-- Repair & Return Service -->
+      <a href="#" class="cat-card" data-group="tools" data-name="repair return service"
+        onclick="openBunji(event,'Repair and Return Service')">
+        <div class="cat-icon-wrap">
+          <svg viewBox="0 0 24 24">
+            <path d="M3 12a9 9 0 109-9 9 9 0 00-9 9" />
+            <path d="M3 3v6h6" />
+            <path d="M12 7v5l3 3" />
+          </svg>
+        </div>
+        <div>
+          <div class="cat-label">Repair & Return Service</div>
+          <div class="cat-count">Send-In Repair Programs</div>
+        </div>
+      </a>
+
+    </div><!-- /cat-grid -->
+
+    <!-- No results message -->
+    <div id="noResults" style="display:none; text-align:center; padding:3rem; color:var(--muted);">
+      <div style="font-size:2.5rem; margin-bottom:1rem;">🔍</div>
+      <h4 style="font-size:1.1rem; color:var(--dark); margin-bottom:0.4rem;">No categories found</h4>
+      <p style="font-size:0.9rem;">Try a different search term or <a href="#" onclick="clearSearch()"
+          style="color:var(--primary);">view all categories</a></p>
+    </div>
+
+    <!-- CTA Banner -->
+    <div class="cta-banner">
+      <div>
+        <h3>Ready to Order Parts?</h3>
+        <p>Browse all subcategories with full part lists, or call our 24/7 live operator to place your order</p>
+      </div>
+      <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+        <a href="all-parts.html"
+          style="background:#fff;color:var(--dark);padding:.85rem 1.75rem;border-radius:8px;font-weight:700;text-decoration:none;font-size:.88rem;white-space:nowrap;">Browse
+          All Parts →</a>
+        <a href="products.html"
+          style="background:#fff;color:var(--dark);padding:.85rem 1.75rem;border-radius:8px;font-weight:700;text-decoration:none;font-size:.88rem;white-space:nowrap;">View
+          All Products →</a>
+        <a href="tel:8889446313">📞 Call 888-944-6313</a>
+      </div>
+    </div>
+
+  </div><!-- /cat-page -->
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-brand">
+        <img src="logo-new.jpeg" alt="KJR Interior Designs Inc." style="height:70px;margin-bottom:1.5rem;">
+        <p>A massive supplier for home appliances, electronics, HVAC, and more. BBB Accredited since 2014.</p>
+      </div>
+      <div class="footer-col">
+        <h4>INSURANCE REQUIREMENTS</h4>
+        <ul class="footer-links">
+          <li><a href="property-mgmt.html">Workers Comp</a></li>
+          <li><a href="property-mgmt.html">General Liability</a></li>
+          <li><a href="property-mgmt.html">Auto Insurance</a></li>
+          <li><a href="property-profile-creation.html">Vendor Profile</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>QUICK LINKS</h4>
+        <ul class="footer-links">
+          <li><a href="property-mgmt.html">Upload Invoice</a></li>
+          <li><a href="sales-login.html">Sign In</a></li>
+          <li><a href="registration.html">Create Profile</a></li>
+          <li><a href="contact-us.html">Contact Support</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>CONTACT</h4>
+        <p><a href="tel:888-944-6313" style="color:inherit;text-decoration:none;">888-944-6313</a><br>Open 24/7</p>
+        <p style="margin-top:1rem;"><a href="https://maps.google.com/?q=1420+Industrial+Park+Road,+Paris,+TN+38242"
+            target="_blank" style="color:inherit;text-decoration:none;">1420 Industrial Park Road<br>Paris, TN 38242</a>
+        </p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>&copy; 2024 KJR Interior Designs Inc. All rights reserved.</div>
+      <div><a href="#">Privacy Policy</a> &nbsp;|&nbsp; <a href="#">Terms of Service</a></div>
+    </div>
+  </footer>
+
+  <script src="assets/js/bunji.js"></script>
+  <script>
+    // ── Open Bunji with a pre-filled message ──
+    function openBunji(e, categoryName) {
+      e.preventDefault();
+      window.dispatchEvent(new CustomEvent('open-bunji', {
+        detail: { message: 'I am looking for ' + categoryName }
+      }));
+    }
+
+    // ── Search / filter cards ──
+    function filterCards(query) {
+      const q = query.toLowerCase().trim();
+      const cards = document.querySelectorAll('.cat-card');
+      let visible = 0;
+
+      cards.forEach(card => {
+        const name = card.getAttribute('data-name') || '';
+        const label = card.querySelector('.cat-label').textContent.toLowerCase();
+        const match = !q || name.includes(q) || label.includes(q);
+        card.style.display = match ? '' : 'none';
+        if (match) visible++;
+      });
+
+      document.getElementById('noResults').style.display = visible === 0 ? 'block' : 'none';
+    }
+
+    // ── Filter by group ──
+    function setFilter(group, btn) {
+      // Update active button
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      // Clear search
+      document.getElementById('heroSearch').value = '';
+
+      const cards = document.querySelectorAll('.cat-card');
+      let visible = 0;
+
+      cards.forEach(card => {
+        const cardGroup = card.getAttribute('data-group') || '';
+        const show = group === 'all' || cardGroup.includes(group);
+        card.style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
+
+      document.getElementById('noResults').style.display = visible === 0 ? 'block' : 'none';
+    }
+
+    // ── Clear search ──
+    function clearSearch() {
+      document.getElementById('heroSearch').value = '';
+      filterCards('');
+      document.querySelectorAll('.filter-btn').forEach((b, i) => {
+        b.classList.toggle('active', i === 0);
+      });
+    }
+  </script>
+</body>
+
+</html>

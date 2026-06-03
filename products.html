@@ -1,0 +1,1525 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Products | KJR Interior Designs Inc.</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #cc0000;
+      --dark: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--dark);
+    }
+
+    /* ── HERO ── */
+    .prod-hero {
+      background: var(--dark);
+      padding: 3.5rem 2rem 3rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .prod-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(204, 0, 0, .18) 0%, transparent 60%);
+    }
+
+    .prod-hero h1 {
+      font-family: 'Inter', sans-serif;
+      font-size: 2.6rem;
+      font-weight: 800;
+      color: #fff;
+      position: relative;
+      letter-spacing: -.02em;
+      margin-bottom: .6rem;
+    }
+
+    .prod-hero p {
+      color: rgba(255, 255, 255, .7);
+      font-size: 1rem;
+      position: relative;
+      margin-bottom: 1.75rem;
+    }
+
+    /* ── SEARCH BAR ── */
+    .search-wrap {
+      max-width: 620px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .search-wrap input {
+      width: 100%;
+      padding: .95rem 1.25rem .95rem 3rem;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, .18);
+    }
+
+    .search-wrap .search-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 1.1rem;
+      pointer-events: none;
+    }
+
+    .search-wrap .clear-btn {
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      font-size: 1.1rem;
+      cursor: pointer;
+      color: var(--muted);
+      display: none;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .search-meta {
+      color: rgba(255, 255, 255, .55);
+      font-size: .82rem;
+      margin-top: .75rem;
+      position: relative;
+    }
+
+    /* ── BREADCRUMB ── */
+    .breadcrumb {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: .7rem 2.5rem;
+      font-size: .82rem;
+      color: var(--muted);
+    }
+
+    .breadcrumb a {
+      color: var(--primary);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .breadcrumb a:hover {
+      text-decoration: underline;
+    }
+
+    .breadcrumb span {
+      margin: 0 .4rem;
+    }
+
+    /* ── LAYOUT ── */
+    .page-body {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 5rem;
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    @media (max-width: 860px) {
+      .page-body {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        display: none;
+      }
+
+      .sidebar.open {
+        display: block;
+      }
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.25rem;
+      position: sticky;
+      top: 1.5rem;
+    }
+
+    .sidebar h3 {
+      font-family: 'Inter', sans-serif;
+      font-size: .72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--muted);
+      margin-bottom: 1rem;
+      padding-bottom: .5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sidebar-search {
+      width: 100%;
+      padding: .5rem .75rem;
+      border: 1.5px solid var(--border);
+      border-radius: 7px;
+      font-size: .82rem;
+      font-family: 'Inter', sans-serif;
+      margin-bottom: .75rem;
+      outline: none;
+    }
+
+    .sidebar-search:focus {
+      border-color: var(--primary);
+    }
+
+    .cat-list {
+      list-style: none;
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+
+    .cat-list::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .cat-list::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 2px;
+    }
+
+    .cat-list li {
+      padding: .45rem .6rem;
+      border-radius: 7px;
+      font-size: .83rem;
+      cursor: pointer;
+      color: var(--dark);
+      transition: all .15s;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cat-list li:hover {
+      background: var(--bg);
+      color: var(--primary);
+    }
+
+    .cat-list li.active {
+      background: rgba(204, 0, 0, .08);
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .cat-list li .cnt {
+      font-size: .72rem;
+      color: var(--muted);
+      background: var(--bg);
+      padding: .1rem .45rem;
+      border-radius: 20px;
+    }
+
+    .cat-list li.active .cnt {
+      background: rgba(204, 0, 0, .12);
+      color: var(--primary);
+    }
+
+    /* ── MAIN CONTENT ── */
+    .main-content {
+      min-width: 0;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      flex-wrap: wrap;
+    }
+
+    .result-count {
+      font-size: .88rem;
+      color: var(--muted);
+    }
+
+    .result-count strong {
+      color: var(--dark);
+    }
+
+    .mobile-filter-btn {
+      display: none;
+      padding: .45rem 1rem;
+      background: var(--dark);
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      font-size: .82rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+    }
+
+    @media (max-width: 860px) {
+      .mobile-filter-btn {
+        display: block;
+      }
+    }
+
+    .sort-select {
+      padding: .45rem .9rem;
+      border: 1.5px solid var(--border);
+      border-radius: 7px;
+      font-size: .82rem;
+      font-family: 'Inter', sans-serif;
+      background: #fff;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .active-cat-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      padding: .35rem .8rem;
+      background: rgba(204, 0, 0, .08);
+      color: var(--primary);
+      border-radius: 20px;
+      font-size: .78rem;
+      font-weight: 600;
+    }
+
+    .active-cat-tag button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--primary);
+      font-size: .9rem;
+      line-height: 1;
+      padding: 0;
+    }
+
+    /* ── PRODUCT GRID ── */
+    .prod-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 1.1rem;
+    }
+
+    /* ── PRODUCT CARD ── */
+    .prod-card {
+      background: #fff;
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all .2s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .prod-card:hover {
+      border-color: var(--primary);
+      box-shadow: 0 6px 24px rgba(204, 0, 0, .1);
+      transform: translateY(-2px);
+    }
+
+    .prod-img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .prod-img-placeholder {
+      width: 100%;
+      aspect-ratio: 1;
+      background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: .4rem;
+    }
+
+    .prod-img-placeholder svg {
+      width: 40px;
+      height: 40px;
+      stroke: #94a3b8;
+      fill: none;
+      stroke-width: 1.5;
+    }
+
+    .prod-img-placeholder span {
+      font-size: .7rem;
+      color: #94a3b8;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .prod-body {
+      padding: .9rem 1rem 1rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .prod-cat-tag {
+      font-size: .68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--primary);
+      margin-bottom: .35rem;
+    }
+
+    .prod-name {
+      font-size: .88rem;
+      font-weight: 700;
+      color: var(--dark);
+      line-height: 1.35;
+      margin-bottom: .3rem;
+      flex: 1;
+    }
+
+    .prod-part {
+      font-size: .75rem;
+      color: var(--muted);
+      margin-bottom: .6rem;
+      font-family: 'Courier New', monospace;
+    }
+
+    .prod-part span {
+      background: var(--bg);
+      padding: .15rem .45rem;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+    }
+
+    .prod-price-row {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      margin-bottom: .75rem;
+    }
+
+    .prod-price {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .prod-was {
+      font-size: .78rem;
+      color: var(--muted);
+      text-decoration: line-through;
+    }
+
+    .prod-btn {
+      width: 100%;
+      padding: .6rem;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      font-size: .82rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: background .2s;
+    }
+
+    .prod-btn:hover {
+      background: #aa0000;
+    }
+
+    /* ── NO RESULTS ── */
+    .no-results {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--muted);
+    }
+
+    .no-results .emoji {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .no-results h3 {
+      color: var(--dark);
+      font-family: 'Inter', sans-serif;
+      font-size: 1.1rem;
+      margin-bottom: .4rem;
+    }
+
+    .no-results p {
+      font-size: .9rem;
+    }
+
+    .no-results a {
+      color: var(--primary);
+      cursor: pointer;
+    }
+
+    /* ── PAGINATION ── */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: .5rem;
+      margin-top: 2.5rem;
+      flex-wrap: wrap;
+    }
+
+    .page-btn {
+      padding: .5rem .9rem;
+      border: 1.5px solid var(--border);
+      border-radius: 7px;
+      background: #fff;
+      font-size: .82rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      color: var(--dark);
+      transition: all .15s;
+      min-width: 38px;
+      text-align: center;
+    }
+
+    .page-btn:hover,
+    .page-btn.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    .page-btn:disabled {
+      opacity: .4;
+      cursor: default;
+    }
+
+    /* ── LOAD INDICATOR ── */
+    .loading {
+      text-align: center;
+      padding: 3rem;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    /* ── VIEW DETAILS BUTTON ── */
+    .view-btn {
+      background: var(--dark) !important;
+    }
+
+    .view-btn:hover {
+      background: #1e293b !important;
+    }
+
+    /* ── PRODUCT MODAL ── */
+    .modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, .65);
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-box {
+      position: relative;
+      background: #fff;
+      border-radius: 18px;
+      width: 92vw;
+      max-width: 980px;
+      max-height: 92vh;
+      overflow-y: auto;
+      z-index: 1;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, .35);
+      animation: modalIn .22s ease;
+    }
+
+    @keyframes modalIn {
+      from {
+        opacity: 0;
+        transform: translateY(30px) scale(.97);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border);
+      background: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background .15s;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .modal-close:hover {
+      background: #fee2e2;
+      border-color: var(--primary);
+    }
+
+    .modal-inner {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      min-height: 500px;
+    }
+
+    @media (max-width: 720px) {
+      .modal-inner {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Image side */
+    .modal-img-side {
+      background: var(--bg);
+      border-right: 1px solid var(--border);
+      border-radius: 18px 0 0 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 2rem;
+      min-height: 340px;
+    }
+
+    @media (max-width: 720px) {
+      .modal-img-side {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        border-radius: 18px 18px 0 0;
+        min-height: 200px;
+      }
+    }
+
+    .modal-main-img {
+      width: 100%;
+      max-height: 320px;
+      object-fit: contain;
+      border-radius: 10px;
+    }
+
+    .modal-img-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .75rem;
+      color: #94a3b8;
+    }
+
+    .modal-img-placeholder span {
+      font-size: .82rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .modal-badge {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      background: var(--primary);
+      color: #fff;
+      font-size: .72rem;
+      font-weight: 800;
+      padding: .25rem .65rem;
+      border-radius: 20px;
+      letter-spacing: .05em;
+    }
+
+    /* Detail side */
+    .modal-detail-side {
+      padding: 2rem 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: .85rem;
+    }
+
+    .modal-cat-tag {
+      font-size: .68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--primary);
+    }
+
+    .modal-title {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--dark);
+      line-height: 1.3;
+      margin: 0;
+    }
+
+    .modal-part-row {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      flex-wrap: wrap;
+    }
+
+    .modal-part-label {
+      font-size: .78rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .modal-part-val {
+      font-size: .82rem;
+      font-family: 'Courier New', monospace;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: .2rem .55rem;
+      border-radius: 5px;
+      color: var(--dark);
+      font-weight: 700;
+    }
+
+    .copy-btn {
+      font-size: .72rem;
+      padding: .2rem .6rem;
+      border: 1.5px solid var(--border);
+      border-radius: 5px;
+      background: #fff;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      color: var(--muted);
+      transition: all .15s;
+      font-weight: 600;
+    }
+
+    .copy-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .modal-price-block {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      flex-wrap: wrap;
+    }
+
+    .modal-price {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .modal-was {
+      font-size: 1rem;
+      color: var(--muted);
+      text-decoration: line-through;
+    }
+
+    .modal-save {
+      font-size: .75rem;
+      font-weight: 700;
+      background: #dcfce7;
+      color: #16a34a;
+      padding: .2rem .6rem;
+      border-radius: 20px;
+    }
+
+    .modal-avail {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      font-size: .82rem;
+      color: #16a34a;
+      font-weight: 600;
+    }
+
+    .avail-dot {
+      width: 8px;
+      height: 8px;
+      background: #16a34a;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .modal-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: .2rem 0;
+    }
+
+    .modal-qty-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .qty-label {
+      font-size: .85rem;
+      font-weight: 700;
+      color: var(--dark);
+    }
+
+    .qty-ctrl {
+      display: flex;
+      align-items: center;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .qty-ctrl button {
+      width: 36px;
+      height: 36px;
+      border: none;
+      background: var(--bg);
+      font-size: 1.1rem;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      color: var(--dark);
+      transition: background .15s;
+    }
+
+    .qty-ctrl button:hover {
+      background: #e2e8f0;
+    }
+
+    .qty-ctrl input {
+      width: 52px;
+      text-align: center;
+      border: none;
+      border-left: 1.5px solid var(--border);
+      border-right: 1.5px solid var(--border);
+      font-size: .9rem;
+      font-weight: 700;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      height: 36px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: .75rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-cart {
+      flex: 1;
+      padding: .85rem 1.25rem;
+      background: var(--dark);
+      color: #fff;
+      border: none;
+      border-radius: 9px;
+      font-size: .9rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: background .2s;
+      min-width: 140px;
+    }
+
+    .btn-cart:hover {
+      background: #1e293b;
+    }
+
+    .btn-order {
+      flex: 1;
+      padding: .85rem 1.25rem;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 9px;
+      font-size: .9rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: background .2s;
+      min-width: 140px;
+    }
+
+    .btn-order:hover {
+      background: #aa0000;
+    }
+
+    .modal-specs {
+      background: var(--bg);
+      border-radius: 10px;
+      padding: .85rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: .4rem;
+    }
+
+    .spec-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: .8rem;
+      gap: 1rem;
+    }
+
+    .spec-row span:first-child {
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .spec-row span:last-child {
+      color: var(--dark);
+      font-weight: 700;
+      text-align: right;
+    }
+
+    .modal-call-bar {
+      background: var(--dark);
+      color: rgba(255, 255, 255, .85);
+      border-radius: 9px;
+      padding: .75rem 1rem;
+      font-size: .82rem;
+      text-align: center;
+    }
+
+    .modal-call-bar strong {
+      color: #fff;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Top Utility Bar -->
+  <div class="top-bar">
+    <div class="top-bar-left">
+      <span class="utility-info">📞 <strong>888-944-6313</strong> • Call in Orders Only • Call 24/7 • Live
+        Operator</span>
+    </div>
+    <div class="top-bar-right">
+      <a href="contact-us.html">Contact</a>
+      <a href="suggest-feature.html">Suggest Feature</a>
+      <a href="sales-login.html" class="sales-login-btn">SALES LOGIN</a>
+    </div>
+  </div>
+
+  <!-- Main Navigation Header -->
+  <header class="main-header">
+    <div class="header-container">
+      <div class="logo">
+        <a href="index.html">
+          <img src="logo-new.jpeg" alt="KJR Interior Designs Inc.">
+        </a>
+      </div>
+      <nav class="secondary-nav">
+        <div class="secondary-nav-container">
+          <ul class="nav-links">
+            <li><a href="index.html">HOME</a></li>
+            <li class="has-dropdown">
+              <a href="#">WORK FORCE <span class="dropdown-arrow">▾</span></a>
+              <ul class="dropdown-menu">
+                <li><a href="career-move.html">Career Move</a></li>
+                <li><a href="property-mgmt.html">Property Mgmt Crew</a></li>
+                <li><a href="bid-projects.html">Bid Projects</a></li>
+                <li><a href="work-completed.html">Work Completed by KJRID</a></li>
+              </ul>
+            </li>
+            <li><a href="about-us.html">ABOUT</a></li>
+          </ul>
+        </div>
+      </nav>
+      <div class="header-actions">
+        <a href="Lot-categories.html" class="parts-highlight"
+          style="background:var(--primary);color:#fff;padding:0.4rem 1rem;border-radius:4px;">PARTS CATEGORIES</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="prod-hero">
+    <h1>All Products</h1>
+    <p>Search by product name, model number, or part number — call <strong>888-944-6313</strong> to order</p>
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="mainSearch" placeholder="Search by name, model or part number…" autocomplete="off">
+      <button class="clear-btn" id="clearBtn" onclick="clearSearch()">✕</button>
+    </div>
+    <div class="search-meta" id="searchMeta" style="display:none"></div>
+  </section>
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <a href="index.html">Home</a>
+    <span>›</span>
+    <a href="Lot-categories.html">Parts Categories</a>
+    <span>›</span>
+    All Products
+  </div>
+
+  <!-- Page Body -->
+  <div class="page-body">
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <h3>Categories</h3>
+      <input type="text" class="sidebar-search" id="catSearch" placeholder="Filter categories…"
+        oninput="filterSidebarCats(this.value)">
+      <ul class="cat-list" id="catList"></ul>
+    </aside>
+
+    <!-- Main -->
+    <div class="main-content">
+      <div class="toolbar">
+        <div class="toolbar-left">
+          <button class="mobile-filter-btn" onclick="toggleSidebar()">☰ Categories</button>
+          <div class="result-count" id="resultCount" style="display:none"></div>
+          <div id="activeCatTag"></div>
+        </div>
+        <select class="sort-select" id="sortSelect" onchange="renderPage(1)">
+          <option value="default">Sort: Default</option>
+          <option value="az">Name: A → Z</option>
+          <option value="za">Name: Z → A</option>
+          <option value="price-asc">Price: Low → High</option>
+          <option value="price-desc">Price: High → Low</option>
+        </select>
+      </div>
+
+      <div class="prod-grid" id="prodGrid"></div>
+      <div class="pagination" id="pagination"></div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-brand">
+        <img src="logo-new.jpeg" alt="KJR Interior Designs Inc." style="height:70px;margin-bottom:1.5rem;">
+        <p>A massive supplier for home appliances, electronics, HVAC, and more. BBB Accredited since 2014.</p>
+      </div>
+      <div class="footer-col">
+        <h4>INSURANCE REQUIREMENTS</h4>
+        <ul class="footer-links">
+          <li><a href="property-mgmt.html">Workers Comp</a></li>
+          <li><a href="property-mgmt.html">General Liability</a></li>
+          <li><a href="property-mgmt.html">Auto Insurance</a></li>
+          <li><a href="property-profile-creation.html">Vendor Profile</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>QUICK LINKS</h4>
+        <ul class="footer-links">
+          <li><a href="property-mgmt.html">Upload Invoice</a></li>
+          <li><a href="sales-login.html">Sign In</a></li>
+          <li><a href="registration.html">Create Profile</a></li>
+          <li><a href="contact-us.html">Contact Support</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>CONTACT</h4>
+        <p><a href="tel:888-944-6313" style="color:inherit;text-decoration:none;">888-944-6313</a><br>Open 24/7</p>
+        <p style="margin-top:1rem;">
+          <a href="https://maps.google.com/?q=1420+Industrial+Park+Road,+Paris,+TN+38242" target="_blank"
+            style="color:inherit;text-decoration:none;">1420 Industrial Park Road<br>Paris, TN 38242</a>
+        </p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>&copy; 2024 KJR Interior Designs Inc. All rights reserved.</div>
+      <div><a href="#">Privacy Policy</a> &nbsp;|&nbsp; <a href="#">Terms of Service</a></div>
+    </div>
+  </footer>
+
+  <!-- Product Detail Modal -->
+  <div id="prodModal"
+    style="display:none;position:fixed;inset:0;z-index:9999;align-items:center;justify-content:center;"></div>
+
+  <!-- Cart Toast -->
+  <div id="cartBar" style="position:fixed;bottom:80px;right:20px;z-index:10001;display:none;">
+    <a href="#" onclick="showCart(event)"
+      style="background:#0f172a;color:#fff;padding:.7rem 1.25rem;border-radius:10px;font-size:.85rem;font-weight:700;text-decoration:none;display:flex;align-items:center;gap:.6rem;box-shadow:0 4px 20px rgba(0,0,0,.3);">
+      🛒 Cart
+      <span id="cartBadge"
+        style="background:var(--primary);color:#fff;border-radius:50%;width:20px;height:20px;display:none;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;"></span>
+    </a>
+  </div>
+
+  <script src="assets/js/products-data.js"></script>
+  <script src="assets/js/bunji.js"></script>
+
+  <script>
+    // ─── CONFIG ──────────────────────────────────────────────────────────────
+    const PER_PAGE = 48;
+    let currentPage = 1;
+    let activeCategory = 'all';
+    let searchQuery = '';
+
+    // ─── BUILD MASTER PRODUCT LIST FROM bunji.js CATEGORY_PRODUCTS ──────────
+    // KJR_CATEGORY_PRODUCTS is exposed on window by bunji.js (loaded above).
+    // We flatten it into allProducts[] with a `category` field added.
+    const allProducts = [];
+
+    function buildAllProducts() {
+      const src = window.KJR_CATEGORY_PRODUCTS || {};
+      Object.entries(src).forEach(([cat, items]) => {
+        items.forEach(p => allProducts.push({ ...p, category: cat }));
+      });
+    }
+
+    // ─── CATEGORY COUNTS ─────────────────────────────────────────────────────
+    function getCategoryCounts(products) {
+      const map = {};
+      products.forEach(p => {
+        map[p.category] = (map[p.category] || 0) + 1;
+      });
+      return map;
+    }
+
+    // ─── FILTER & SORT ───────────────────────────────────────────────────────
+    function getFiltered() {
+      const q = searchQuery.toLowerCase().trim();
+      let list = allProducts.filter(p => {
+        const catMatch = activeCategory === 'all' || p.category === activeCategory;
+        if (!catMatch) return false;
+        if (!q) return true;
+        return (
+          p.name.toLowerCase().includes(q) ||
+          (p.part && p.part.toLowerCase().includes(q)) ||
+          p.category.toLowerCase().includes(q)
+        );
+      });
+
+      const sort = document.getElementById('sortSelect').value;
+      if (sort === 'az') list.sort((a, b) => a.name.localeCompare(b.name));
+      else if (sort === 'za') list.sort((a, b) => b.name.localeCompare(a.name));
+      else if (sort === 'price-asc') list.sort((a, b) => parsePrice(a.price) - parsePrice(b.price));
+      else if (sort === 'price-desc') list.sort((a, b) => parsePrice(b.price) - parsePrice(a.price));
+      return list;
+    }
+
+    function parsePrice(str) {
+      if (!str) return 0;
+      return parseFloat(str.replace(/[^0-9.]/g, '')) || 0;
+    }
+
+    // ─── RENDER SIDEBAR ──────────────────────────────────────────────────────
+    function renderSidebar(filterText) {
+      const catList = document.getElementById('catList');
+      const ft = (filterText || '').toLowerCase();
+
+      // Build sorted category list from all products
+      const cats = [...new Set(allProducts.map(p => p.category))].sort((a, b) => a.localeCompare(b));
+
+      let html = `<li class="${activeCategory === 'all' ? 'active' : ''}" onclick="setCategory('all')">All Products</li>`;
+
+      cats.forEach(cat => {
+        if (ft && !cat.toLowerCase().includes(ft)) return;
+        const active = activeCategory === cat ? 'active' : '';
+        html += `<li class="${active}" onclick="setCategory('${cat.replace(/'/g, "\\'")}')">
+          ${cat}</li>`;
+      });
+
+      catList.innerHTML = html;
+    }
+
+    function filterSidebarCats(val) {
+      renderSidebar(val);
+    }
+
+    // ─── RENDER PRODUCTS ─────────────────────────────────────────────────────
+    function renderPage(page) {
+      currentPage = page;
+      const filtered = getFiltered();
+      const total = filtered.length;
+      const totalPages = Math.max(1, Math.ceil(total / PER_PAGE));
+      if (currentPage > totalPages) currentPage = totalPages;
+
+      const start = (currentPage - 1) * PER_PAGE;
+      const slice = filtered.slice(start, start + PER_PAGE);
+
+      // Result count
+      document.getElementById('resultCount').innerHTML =
+        `<strong>${total.toLocaleString()}</strong> product${total !== 1 ? 's' : ''}`;
+
+      // Active category tag
+      const tagEl = document.getElementById('activeCatTag');
+      if (activeCategory !== 'all') {
+        tagEl.innerHTML = `<span class="active-cat-tag">${activeCategory}
+          <button onclick="setCategory('all')">✕</button></span>`;
+      } else {
+        tagEl.innerHTML = '';
+      }
+
+      // Search meta
+      const q = searchQuery.trim();
+      const meta = document.getElementById('searchMeta');
+      if (q) {
+        meta.textContent = `Found ${total.toLocaleString()} result${total !== 1 ? 's' : ''} for "${q}"`;
+      } else if (activeCategory !== 'all') {
+        meta.textContent = `Showing ${total.toLocaleString()} products in "${activeCategory}"`;
+      } else {
+        meta.textContent = `Showing all ${total.toLocaleString()} products`;
+      }
+
+      // Cards
+      const grid = document.getElementById('prodGrid');
+      if (slice.length === 0) {
+        grid.innerHTML = `<div class="no-results">
+          <div class="emoji">🔍</div>
+          <h3>No products found</h3>
+          <p>Try a different name or part number, or <a onclick="clearSearch()">view all products</a>.</p>
+        </div>`;
+      } else {
+        grid.innerHTML = slice.map(p => cardHTML(p)).join('');
+      }
+
+      // Pagination
+      renderPagination(currentPage, totalPages);
+
+      // Scroll to top of grid on page change
+      if (page > 1) {
+        document.querySelector('.main-content').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    function cardHTML(p) {
+      const idx = allProducts.indexOf(p);
+      const imgPart = p.img
+        ? `<img class="prod-img" src="${p.img}" alt="${p.name}" loading="lazy"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+        : '';
+      const placeholder = `<div class="prod-img-placeholder" ${p.img ? 'style="display:none"' : ''}>
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/>
+          <circle cx="8.5" cy="8.5" r="1.5"/>
+          <polyline points="21 15 16 10 5 21"/>
+        </svg>
+        <span>No Image</span>
+      </div>`;
+
+      return `<div class="prod-card" onclick="openProductModal(${idx})" style="cursor:pointer">
+        ${imgPart}${placeholder}
+        <div class="prod-body">
+          <div class="prod-cat-tag">${p.category}</div>
+          <div class="prod-name">${p.name}</div>
+          <div class="prod-part">Part# <span>${p.part || 'N/A'}</span></div>
+          <div class="prod-price-row">
+            <span class="prod-price">${p.price || 'Call'}</span>
+            ${p.was ? `<span class="prod-was">${p.was}</span>` : ''}
+          </div>
+          <button class="prod-btn view-btn" onclick="event.stopPropagation();openProductModal(${idx})">
+            🔍 View Details
+          </button>
+        </div>
+      </div>`;
+    }
+
+    // ─── PRODUCT MODAL ────────────────────────────────────────────────────────
+    let cart = JSON.parse(localStorage.getItem('kjr_cart') || '[]');
+
+    function openProductModal(idx) {
+      const p = allProducts[idx];
+      if (!p) return;
+
+      const discount = p.was && p.price
+        ? Math.round((1 - parsePrice(p.price) / parsePrice(p.was)) * 100)
+        : 0;
+
+      const inCart = cart.find(c => c.part === p.part);
+      const cartQty = inCart ? inCart.qty : 0;
+
+      document.getElementById('prodModal').innerHTML = `
+        <div class="modal-backdrop" onclick="closeModal()"></div>
+        <div class="modal-box">
+          <button class="modal-close" onclick="closeModal()">✕</button>
+
+          <div class="modal-inner">
+            <!-- Image side -->
+            <div class="modal-img-side">
+              ${p.img
+          ? `<img src="${p.img}" alt="${p.name}" onerror="this.src=''" class="modal-main-img">`
+          : `<div class="modal-img-placeholder">
+                    <svg viewBox="0 0 24 24" stroke="#94a3b8" fill="none" stroke-width="1.5" width="80" height="80">
+                      <rect x="3" y="3" width="18" height="18" rx="2"/>
+                      <circle cx="8.5" cy="8.5" r="1.5"/>
+                      <polyline points="21 15 16 10 5 21"/>
+                    </svg>
+                    <span>No Image Available</span>
+                  </div>`}
+              ${discount > 0 ? `<div class="modal-badge">-${discount}% OFF</div>` : ''}
+            </div>
+
+            <!-- Detail side -->
+            <div class="modal-detail-side">
+              <div class="modal-cat-tag">${p.category}</div>
+              <h2 class="modal-title">${p.name}</h2>
+
+              <div class="modal-part-row">
+                <span class="modal-part-label">Part Number:</span>
+                <span class="modal-part-val">${p.part || 'N/A'}</span>
+                <button class="copy-btn" onclick="copyPart('${(p.part || '').replace(/'/g, "\\'")}')">Copy</button>
+              </div>
+
+              <div class="modal-price-block">
+                <span class="modal-price">${p.price || 'Call for Price'}</span>
+                ${p.was ? `<span class="modal-was">${p.was}</span>` : ''}
+                ${discount > 0 ? `<span class="modal-save">Save ${discount}%</span>` : ''}
+              </div>
+
+              <div class="modal-avail">
+                <span class="avail-dot"></span> In Stock — Call to Confirm Availability
+              </div>
+
+              <div class="modal-divider"></div>
+
+              <!-- Qty + Cart -->
+              <div class="modal-qty-row">
+                <label class="qty-label">Qty:</label>
+                <div class="qty-ctrl">
+                  <button onclick="adjustQty(-1)">−</button>
+                  <input type="number" id="modalQty" value="1" min="1" max="999">
+                  <button onclick="adjustQty(1)">+</button>
+                </div>
+              </div>
+
+              <div class="modal-actions">
+                <button class="btn-cart" onclick="addToCart(${idx})">
+                  🛒 Add to Cart${cartQty > 0 ? ' (' + cartQty + ' in cart)' : ''}
+                </button>
+                <button class="btn-order" onclick="buyNow(${idx})">
+                  � Buy Now
+                </button>
+              </div>
+
+              <div class="modal-divider"></div>
+
+              <div class="modal-specs">
+                <div class="spec-row"><span>Category</span><span>${p.category}</span></div>
+                <div class="spec-row"><span>Part #</span><span>${p.part || '—'}</span></div>
+                <div class="spec-row"><span>List Price</span><span>${p.was || p.price || '—'}</span></div>
+                <div class="spec-row"><span>Sale Price</span><span>${p.price || '—'}</span></div>
+                <div class="spec-row"><span>Availability</span><span>Call 888-944-6313</span></div>
+                <div class="spec-row"><span>Shipping</span><span>Call for Freight Quote</span></div>
+              </div>
+
+              <div class="modal-call-bar">
+                📞 <strong>888-944-6313</strong> &nbsp;·&nbsp; 24/7 Live Operator &nbsp;·&nbsp; Call-in Orders Only
+              </div>
+            </div>
+          </div>
+        </div>`;
+
+      document.getElementById('prodModal').style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('prodModal').style.display = 'none';
+      document.body.style.overflow = '';
+    }
+
+    function adjustQty(delta) {
+      const input = document.getElementById('modalQty');
+      if (!input) return;
+      let v = parseInt(input.value) + delta;
+      if (v < 1) v = 1;
+      if (v > 999) v = 999;
+      input.value = v;
+    }
+
+    function addToCart(idx) {
+      const p = allProducts[idx];
+      if (!p) return;
+      const qty = parseInt(document.getElementById('modalQty').value) || 1;
+      const existing = cart.find(c => c.part === p.part);
+      if (existing) { existing.qty += qty; }
+      else { cart.push({ name: p.name, part: p.part, price: p.price, qty }); }
+      localStorage.setItem('kjr_cart', JSON.stringify(cart));
+      updateCartBadge();
+      const btn = document.querySelector('.btn-cart');
+      if (btn) {
+        btn.textContent = '✅ Added!';
+        btn.style.background = '#16a34a';
+        setTimeout(() => {
+          const inCart = cart.find(c => c.part === p.part);
+          btn.textContent = '🛒 Add to Cart' + (inCart ? ' (' + inCart.qty + ' in cart)' : '');
+          btn.style.background = '';
+        }, 1500);
+      }
+    }
+
+    function buyNow(idx) {
+      // Add to cart then go straight to checkout
+      const p = allProducts[idx];
+      if (!p) return;
+      const qty = parseInt(document.getElementById('modalQty').value) || 1;
+      const existing = cart.find(c => c.part === p.part);
+      if (existing) { existing.qty += qty; }
+      else { cart.push({ name: p.name, part: p.part, price: p.price, qty }); }
+      localStorage.setItem('kjr_cart', JSON.stringify(cart));
+      window.location.href = 'checkout.html';
+    }
+
+    function updateCartBadge() {
+      const total = cart.reduce((n, c) => n + c.qty, 0);
+      const badge = document.getElementById('cartBadge');
+      if (badge) { badge.textContent = total; badge.style.display = total > 0 ? 'flex' : 'none'; }
+    }
+
+    function copyPart(part) {
+      navigator.clipboard.writeText(part).then(() => {
+        const btn = document.querySelector('.copy-btn');
+        if (btn) { btn.textContent = 'Copied!'; setTimeout(() => btn.textContent = 'Copy', 1500); }
+      });
+    }
+
+    // Close modal on Escape
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    // ─── PAGINATION ──────────────────────────────────────────────────────────
+    function renderPagination(cur, total) {
+      const el = document.getElementById('pagination');
+      if (total <= 1) { el.innerHTML = ''; return; }
+
+      let html = `<button class="page-btn" onclick="renderPage(${cur - 1})" ${cur === 1 ? 'disabled' : ''}>← Prev</button>`;
+
+      const range = paginationRange(cur, total);
+      range.forEach(p => {
+        if (p === '…') {
+          html += `<span style="padding:.5rem .4rem;color:var(--muted)">…</span>`;
+        } else {
+          html += `<button class="page-btn ${p === cur ? 'active' : ''}" onclick="renderPage(${p})">${p}</button>`;
+        }
+      });
+
+      html += `<button class="page-btn" onclick="renderPage(${cur + 1})" ${cur === total ? 'disabled' : ''}>Next →</button>`;
+      el.innerHTML = html;
+    }
+
+    function paginationRange(cur, total) {
+      if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+      const pages = [];
+      pages.push(1);
+      if (cur > 3) pages.push('…');
+      for (let i = Math.max(2, cur - 1); i <= Math.min(total - 1, cur + 1); i++) pages.push(i);
+      if (cur < total - 2) pages.push('…');
+      pages.push(total);
+      return pages;
+    }
+
+    // ─── INTERACTIONS ────────────────────────────────────────────────────────
+    function setCategory(cat) {
+      activeCategory = cat;
+      currentPage = 1;
+      renderSidebar(document.getElementById('catSearch').value);
+      renderPage(1);
+    }
+
+    function clearSearch() {
+      document.getElementById('mainSearch').value = '';
+      searchQuery = '';
+      document.getElementById('clearBtn').style.display = 'none';
+      document.getElementById('catSearch').value = '';
+      renderSidebar('');
+      renderPage(1);
+    }
+
+    function orderProduct(name, part) {
+      const msg = part
+        ? `I would like to order: ${name} (Part# ${part})`
+        : `I would like to order: ${name}`;
+      window.dispatchEvent(new CustomEvent('open-bunji', { detail: { message: msg } }));
+    }
+
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+    }
+
+    // ─── SEARCH INPUT ────────────────────────────────────────────────────────
+    let searchTimer;
+    document.getElementById('mainSearch').addEventListener('input', function () {
+      searchQuery = this.value;
+      document.getElementById('clearBtn').style.display = this.value ? 'block' : 'none';
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(() => {
+        activeCategory = 'all';
+        renderSidebar('');
+        renderPage(1);
+      }, 220);
+    });
+
+    // Support Enter key
+    document.getElementById('mainSearch').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        clearTimeout(searchTimer);
+        activeCategory = 'all';
+        renderSidebar('');
+        renderPage(1);
+      }
+    });
+
+    // ─── INIT ────────────────────────────────────────────────────────────────
+    window.addEventListener('DOMContentLoaded', () => {
+      buildAllProducts();
+      renderSidebar('');
+      renderPage(1);
+      // Show cart bar if items exist
+      updateCartBadge();
+      const cartBar = document.getElementById('cartBar');
+      if (cartBar) cartBar.style.display = 'block';
+    });
+
+    function showCart(e) {
+      e.preventDefault();
+      if (cart.length === 0) { alert('Your cart is empty.'); return; }
+      const lines = cart.map(c => `• ${c.name} (Part# ${c.part}) × ${c.qty} — ${c.price}`).join('\n');
+      const total = cart.reduce((n, c) => n + parsePrice(c.price) * c.qty, 0);
+      if (confirm('CART ITEMS:\n\n' + lines + '\n\nTotal: $' + total.toFixed(2) + '\n\nCall 888-944-6313 to place your order.\n\nClick OK to clear cart.')) {
+        cart = [];
+        localStorage.removeItem('kjr_cart');
+        updateCartBadge();
+      }
+    }
+  </script>
+</body>
+
+</html>
