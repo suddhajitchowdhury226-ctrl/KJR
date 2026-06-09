@@ -931,15 +931,14 @@
     // ─────────────────────────────────────────────────────────────────────────
     const API_BASE = (
       window.location.hostname === 'localhost' ||
-      window.location.hostname === '127.0.0.1' ||
-      window.location.protocol === 'file:'
-    ) ? 'http://localhost:5001/api' : '/api';
+      window.location.hostname === '127.0.0.1'
+    ) ? 'http://localhost:5001/api' : 'https://kjr-backend.onrender.com/api';
 
     const cart = JSON.parse(localStorage.getItem('kjr_cart') || '[]');
 
     // Hardcoded production credentials — refreshed from backend when served
     let acceptAuthData = {
-      clientKey:  '5pg7V9Q99T4GTnu9rWKGen384Gyg7H3frMnFgNfBByN9pTcMZreJeM22fy56LnRd',
+      clientKey: '5pg7V9Q99T4GTnu9rWKGen384Gyg7H3frMnFgNfBByN9pTcMZreJeM22fy56LnRd',
       apiLoginID: '9s47Tn5Mh'
     };
     let acceptEnvironment = 'PRODUCTION';
@@ -954,19 +953,17 @@
       }
       renderSummary();
 
-      // Skip config fetch when opened as a local file — avoids 404 noise
-      if (window.location.protocol !== 'file:') {
-        try {
-          const resp = await fetch(API_BASE + '/payment/config');
-          if (resp.ok) {
-            const cfg = await resp.json();
-            if (cfg.publicClientKey) {
-              acceptAuthData = { clientKey: cfg.publicClientKey, apiLoginID: cfg.apiLoginId };
-            }
-            acceptEnvironment = cfg.environment || 'PRODUCTION';
+      // Always fetch config — API_BASE now always points to a real server
+      try {
+        const resp = await fetch(API_BASE + '/payment/config');
+        if (resp.ok) {
+          const cfg = await resp.json();
+          if (cfg.publicClientKey) {
+            acceptAuthData = { clientKey: cfg.publicClientKey, apiLoginID: cfg.apiLoginId };
           }
-        } catch (_) { /* fall back to hardcoded credentials */ }
-      }
+          acceptEnvironment = cfg.environment || 'PRODUCTION';
+        }
+      } catch (_) { /* fall back to hardcoded credentials */ }
 
       if (window.Accept) {
         console.log('[Payment] Accept.js ready — environment:', acceptEnvironment);
@@ -993,7 +990,7 @@
         const unit = parsePrice(item.price);
         const line = unit * item.qty;
         subtotal += line;
-        savings  += unit * 0.10 * item.qty;
+        savings += unit * 0.10 * item.qty;
         html += '<div class="order-item">'
           + '<div>'
           + '<div class="order-item-name">' + escHtml(item.name) + '</div>'
@@ -1003,18 +1000,18 @@
           + '</div>';
       });
       document.getElementById('orderLines').innerHTML = html;
-      const tax   = subtotal * 0.08;
+      const tax = subtotal * 0.08;
       const total = subtotal + tax;
       document.getElementById('paySubtotal').textContent = '$' + subtotal.toFixed(2);
-      document.getElementById('payTax').textContent      = '$' + tax.toFixed(2);
-      document.getElementById('payTotal').textContent    = '$' + total.toFixed(2);
-      document.getElementById('savingsAmt').textContent  = '$' + savings.toFixed(2);
+      document.getElementById('payTax').textContent = '$' + tax.toFixed(2);
+      document.getElementById('payTotal').textContent = '$' + total.toFixed(2);
+      document.getElementById('savingsAmt').textContent = '$' + savings.toFixed(2);
     }
 
     function escHtml(str) {
       return String(str)
-        .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-        .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -1043,10 +1040,10 @@
     // ─────────────────────────────────────────────────────────────────────────
     function validateForm() {
       const fields = [
-        ['firstName','First name'], ['lastName','Last name'],
-        ['email','Email address'],  ['phone','Phone number'],
-        ['address','Street address'],['city','City'],
-        ['zip','ZIP code'],          ['cardName','Cardholder name']
+        ['firstName', 'First name'], ['lastName', 'Last name'],
+        ['email', 'Email address'], ['phone', 'Phone number'],
+        ['address', 'Street address'], ['city', 'City'],
+        ['zip', 'ZIP code'], ['cardName', 'Cardholder name']
       ];
       for (const [id, label] of fields) {
         const el = document.getElementById(id);
@@ -1084,8 +1081,8 @@
 
       // Read card fields (already in the visible form)
       const cardNumVal = document.getElementById('cardNumber').value.replace(/\s/g, '');
-      const expRaw     = document.getElementById('expDate').value.replace(/[\s\/]/g, '');
-      const cvvVal     = document.getElementById('cvvNumber').value.trim();
+      const expRaw = document.getElementById('expDate').value.replace(/[\s\/]/g, '');
+      const cvvVal = document.getElementById('cvvNumber').value.trim();
 
       if (cardNumVal.length < 13) {
         document.getElementById('cardNumber').classList.add('is-invalid');
@@ -1101,25 +1098,25 @@
       }
 
       const btn = document.getElementById('payBtn');
-      btn.disabled    = true;
+      btn.disabled = true;
       btn.textContent = '⏳ Securing card data…';
 
       // Parse expiry into month + 4-digit year for Accept.js
       const expMonth = expRaw.substring(0, 2);
-      let   expYear  = expRaw.substring(2);
+      let expYear = expRaw.substring(2);
       if (expYear.length === 2) expYear = '20' + expYear;
 
       const secureData = {
         authData: acceptAuthData,
         cardData: {
           cardNumber: cardNumVal,
-          month:      expMonth,
-          year:       expYear,
-          cardCode:   cvvVal,
-          fullName:   document.getElementById('cardName').value.trim(),
+          month: expMonth,
+          year: expYear,
+          cardCode: cvvVal,
+          fullName: document.getElementById('cardName').value.trim(),
           zip: document.getElementById('sameAsBilling').checked
-                 ? document.getElementById('zip').value.trim()
-                 : document.getElementById('billZip').value.trim()
+            ? document.getElementById('zip').value.trim()
+            : document.getElementById('billZip').value.trim()
         }
       };
 
@@ -1134,7 +1131,7 @@
 
       // Accept.js reported a card-level error
       if (response.messages.resultCode === 'Error') {
-        btn.disabled    = false;
+        btn.disabled = false;
         btn.textContent = '🔒 Place Order & Pay';
         const errText = response.messages.message.map(m => m.text).join(' ');
         showPayError('Card error: ' + errText);
@@ -1146,70 +1143,58 @@
 
       const opaqueData = response.opaqueData;
       const invoiceNum = 'KJR-' + String(Math.floor(100000 + Math.random() * 900000));
-      const sameShip   = document.getElementById('sameAsBilling').checked;
+      const sameShip = document.getElementById('sameAsBilling').checked;
 
       const payload = {
         opaqueDataDescriptor: opaqueData.dataDescriptor,
-        opaqueDataValue:      opaqueData.dataValue,
-        amount:      getTotal(),
-        firstName:   document.getElementById('firstName').value.trim(),
-        lastName:    document.getElementById('lastName').value.trim(),
-        email:       document.getElementById('email').value.trim(),
-        phone:       document.getElementById('phone').value.trim(),
-        company:     document.getElementById('company').value.trim(),
-        address:     sameShip ? document.getElementById('address').value.trim()  : document.getElementById('billAddr').value.trim(),
-        city:        sameShip ? document.getElementById('city').value.trim()     : document.getElementById('billCity').value.trim(),
-        state:       sameShip ? document.getElementById('state').value           : document.getElementById('billState').value.trim(),
-        zip:         sameShip ? document.getElementById('zip').value.trim()      : document.getElementById('billZip').value.trim(),
+        opaqueDataValue: opaqueData.dataValue,
+        amount: getTotal(),
+        firstName: document.getElementById('firstName').value.trim(),
+        lastName: document.getElementById('lastName').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        phone: document.getElementById('phone').value.trim(),
+        company: document.getElementById('company').value.trim(),
+        address: sameShip ? document.getElementById('address').value.trim() : document.getElementById('billAddr').value.trim(),
+        city: sameShip ? document.getElementById('city').value.trim() : document.getElementById('billCity').value.trim(),
+        state: sameShip ? document.getElementById('state').value : document.getElementById('billState').value.trim(),
+        zip: sameShip ? document.getElementById('zip').value.trim() : document.getElementById('billZip').value.trim(),
         invoiceNumber: invoiceNum,
-        description:   'KJR Interior Designs Product Order',
-        cartItems:     cart
+        description: 'KJR Interior Designs Product Order',
+        cartItems: cart
       };
 
-      // Guard: if backend isn\'t reachable (file:// or server down) tell the user clearly
-      if (window.location.protocol === 'file:') {
-        document.getElementById('processingOverlay').classList.remove('show');
-        btn.disabled    = false;
-        btn.textContent = '🔒 Place Order & Pay';
-        showPayError(
-          'To process live payments the KJR backend server must be running. ' +
-          'Start it with: cd backend && npm start  — then open this page via http://localhost:5001'
-        );
-        return;
-      }
-
       fetch(API_BASE + '/payment/charge', {
-        method:  'POST',
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify(payload)
+        body: JSON.stringify(payload)
       })
-      .then(async r => {
-        // Always try to parse JSON; if server returned HTML (404/500) surface a clean error
-        const text = await r.text();
-        try { return JSON.parse(text); }
-        catch (_) {
-          throw new Error('Server error (' + r.status + '). Make sure the KJR backend is running.');
-        }
-      })
-      .then(data => {
-        document.getElementById('processingOverlay').classList.remove('show');
-        if (data.success) {
-          document.getElementById('orderNum').textContent = 'Order #' + (data.invoiceNumber || invoiceNum);
-          document.getElementById('txDetail').textContent =
-            'Transaction ID: ' + data.transactionId + '  ·  Auth Code: ' + data.authCode;
-          document.getElementById('successOverlay').classList.add('show');
-        } else {
-          btn.disabled    = false;
+        .then(async r => {
+          // Always try to parse JSON; if server returned HTML (404/500) surface a clean error
+          const text = await r.text();
+          try { return JSON.parse(text); }
+          catch (_) {
+            throw new Error('Server error (' + r.status + '). Make sure the KJR backend is running.');
+          }
+        })
+        .then(data => {
+          document.getElementById('processingOverlay').classList.remove('show');
+          if (data.success) {
+            document.getElementById('orderNum').textContent = 'Order #' + (data.invoiceNumber || invoiceNum);
+            document.getElementById('txDetail').textContent =
+              'Transaction ID: ' + data.transactionId + '  ·  Auth Code: ' + data.authCode;
+            document.getElementById('successOverlay').classList.add('show');
+          } else {
+            btn.disabled = false;
+            btn.textContent = '🔒 Place Order & Pay';
+            showPayError('Payment declined: ' + (data.message || 'Please check your card details and try again.'));
+          }
+        })
+        .catch(err => {
+          document.getElementById('processingOverlay').classList.remove('show');
+          btn.disabled = false;
           btn.textContent = '🔒 Place Order & Pay';
-          showPayError('Payment declined: ' + (data.message || 'Please check your card details and try again.'));
-        }
-      })
-      .catch(err => {
-        document.getElementById('processingOverlay').classList.remove('show');
-        btn.disabled    = false;
-        btn.textContent = '🔒 Place Order & Pay';
-        showPayError(err.message || 'Connection error. Please check your internet and try again.');
-      });
+          showPayError(err.message || 'Connection error. Please check your internet and try again.');
+        });
     }
 
     function clearCartOnSuccess() {
@@ -1217,7 +1202,7 @@
     }
   </script>
 
-    <!-- ── Card input formatting & payment submission ── -->
+  <!-- ── Card input formatting & payment submission ── -->
   <script>
     // Auto-format card number  4-4-4-4
     document.getElementById('cardNumber').addEventListener('input', function () {
@@ -1246,4 +1231,5 @@
   </script>
 
 </body>
+
 </html>
