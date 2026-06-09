@@ -953,7 +953,9 @@
       }
       renderSummary();
 
-      // Always fetch config — API_BASE now always points to a real server
+      // Refresh credentials from backend if available.
+      // NOTE: acceptEnvironment stays PRODUCTION regardless — Accept.js is
+      // loaded from the production CDN in <head> and cannot be changed at runtime.
       try {
         const resp = await fetch(API_BASE + '/payment/config');
         if (resp.ok) {
@@ -961,7 +963,8 @@
           if (cfg.publicClientKey) {
             acceptAuthData = { clientKey: cfg.publicClientKey, apiLoginID: cfg.apiLoginId };
           }
-          acceptEnvironment = cfg.environment || 'PRODUCTION';
+          // Do NOT override acceptEnvironment from cfg — it must stay PRODUCTION
+          // to match the Accept.js script already loaded from js.authorize.net
         }
       } catch (_) { /* fall back to hardcoded credentials */ }
 
