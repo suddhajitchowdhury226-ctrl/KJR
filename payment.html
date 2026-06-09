@@ -4,9 +4,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Payment | KJR Interior Designs Inc.</title>
+  <title>Secure Payment | KJR Interior Designs Inc.</title>
   <link rel="stylesheet" href="styles.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Authorize.net Accept.js — tokenises card data client-side (PCI-compliant) -->
+  <!-- NOTE: This src switches automatically based on the environment we detect from /api/payment/config -->
+  <script id="acceptjs-script"></script>
+
   <style>
     :root {
       --primary: #cc0000;
@@ -14,9 +19,12 @@
       --muted: #64748b;
       --border: #e2e8f0;
       --bg: #f8fafc;
+      --success: #16a34a;
     }
 
-    * {
+    *,
+    *::before,
+    *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
@@ -28,6 +36,7 @@
       color: var(--dark);
     }
 
+    /* ── Hero ── */
     .pay-hero {
       background: var(--dark);
       padding: 2.5rem 2rem;
@@ -38,7 +47,6 @@
       font-size: 2rem;
       font-weight: 800;
       color: #fff;
-      font-family: 'Inter', sans-serif;
     }
 
     .pay-hero p {
@@ -47,6 +55,7 @@
       font-size: .95rem;
     }
 
+    /* ── Breadcrumb ── */
     .breadcrumb {
       background: #fff;
       border-bottom: 1px solid var(--border);
@@ -65,12 +74,12 @@
       margin: 0 .4rem;
     }
 
+    /* ── Steps ── */
     .steps-bar {
       background: #fff;
       border-bottom: 1px solid var(--border);
       display: flex;
       justify-content: center;
-      gap: 0;
       padding: .75rem 0;
     }
 
@@ -89,7 +98,7 @@
     }
 
     .step.done {
-      color: #16a34a;
+      color: var(--success);
     }
 
     .step-num {
@@ -112,8 +121,8 @@
     }
 
     .step.done .step-num {
-      background: #16a34a;
-      border-color: #16a34a;
+      background: var(--success);
+      border-color: var(--success);
       color: #fff;
     }
 
@@ -122,6 +131,7 @@
       font-size: 1.1rem;
     }
 
+    /* ── Layout ── */
     .pay-page {
       max-width: 1100px;
       margin: 0 auto;
@@ -132,13 +142,13 @@
       align-items: start;
     }
 
-    @media(max-width:780px) {
+    @media(max-width: 780px) {
       .pay-page {
         grid-template-columns: 1fr;
       }
     }
 
-    /* ── Form ── */
+    /* ── Form card ── */
     .pay-form-box {
       background: #fff;
       border: 1px solid var(--border);
@@ -159,12 +169,12 @@
       font-size: .95rem;
       font-weight: 800;
       margin-bottom: 1.1rem;
-      font-family: 'Inter', sans-serif;
       display: flex;
       align-items: center;
       gap: .5rem;
     }
 
+    /* ── Fields ── */
     .form-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -178,6 +188,10 @@
 
     .form-row.three {
       grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .form-row:last-child {
+      margin-bottom: 0;
     }
 
     .field label {
@@ -208,38 +222,58 @@
       border-color: var(--primary);
     }
 
-    /* ── Card input styling ── */
+    .field input.is-invalid,
+    .field select.is-invalid {
+      border-color: #dc2626;
+    }
+
+    /* ── Accept.js hosted fields container ── */
+    .accept-hosted-wrap {
+      background: #f8fafc;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: .15rem 0;
+      overflow: hidden;
+    }
+
+    /* The iframe Authorize.net injects respects these CSS vars via the style payload */
+
+    /* ── Card brand logos ── */
     .card-brands {
       display: flex;
       gap: .4rem;
       margin-bottom: .85rem;
+      flex-wrap: wrap;
     }
 
     .card-brands img {
       height: 28px;
       border: 1px solid var(--border);
       border-radius: 5px;
-      padding: 2px 5px;
+      padding: 2px 6px;
       background: #fff;
     }
 
-    .card-input-wrap {
-      position: relative;
+    /* ── Authorizenet badge ── */
+    .anet-badge {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      font-size: .75rem;
+      color: var(--muted);
+      margin-top: .75rem;
     }
 
-    .card-input-wrap input {
-      padding-right: 3rem;
+    .anet-badge img {
+      height: 22px;
     }
 
-    .card-icon {
-      position: absolute;
-      right: .9rem;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 1.2rem;
+    /* ── Billing toggle ── */
+    #billingFields {
+      display: none;
     }
 
-    /* ── Pay button ── */
+    /* ── Buttons ── */
     .pay-btn {
       width: 100%;
       padding: 1.1rem;
@@ -258,8 +292,13 @@
       gap: .6rem;
     }
 
-    .pay-btn:hover {
+    .pay-btn:hover:not(:disabled) {
       background: #aa0000;
+    }
+
+    .pay-btn:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
     }
 
     .back-btn {
@@ -292,6 +331,165 @@
       font-size: .75rem;
       color: var(--muted);
       margin-top: .85rem;
+      flex-wrap: wrap;
+    }
+
+    /* ── Error banner ── */
+    .error-banner {
+      display: none;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-radius: 8px;
+      padding: .85rem 1rem;
+      font-size: .85rem;
+      color: #dc2626;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .error-banner.show {
+      display: block;
+    }
+
+    /* ── Processing overlay ── */
+    #processingOverlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, .7);
+      backdrop-filter: blur(6px);
+      z-index: 9998;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #processingOverlay.show {
+      display: flex;
+    }
+
+    .processing-box {
+      background: #fff;
+      border-radius: 16px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      max-width: 360px;
+      width: 90vw;
+    }
+
+    .spinner {
+      width: 52px;
+      height: 52px;
+      border: 5px solid var(--border);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1.25rem;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .processing-box h3 {
+      font-size: 1.1rem;
+      font-weight: 800;
+      margin-bottom: .5rem;
+    }
+
+    .processing-box p {
+      font-size: .85rem;
+      color: var(--muted);
+    }
+
+    /* ── Success overlay ── */
+    #successOverlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .65);
+      backdrop-filter: blur(6px);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #successOverlay.show {
+      display: flex;
+    }
+
+    .success-box {
+      background: #fff;
+      border-radius: 20px;
+      padding: 3rem 2.5rem;
+      max-width: 500px;
+      width: 92vw;
+      text-align: center;
+      animation: popIn .3s ease;
+    }
+
+    @keyframes popIn {
+      from {
+        opacity: 0;
+        transform: scale(.9);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .success-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+
+    .success-box h2 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: .5rem;
+    }
+
+    .success-box p {
+      color: var(--muted);
+      font-size: .92rem;
+      line-height: 1.6;
+      margin-bottom: 1.25rem;
+    }
+
+    .order-num {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: .6rem 1rem;
+      font-family: 'Courier New', monospace;
+      font-weight: 800;
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+      display: inline-block;
+    }
+
+    .tx-detail {
+      font-size: .82rem;
+      color: var(--muted);
+      margin-bottom: 1.25rem;
+    }
+
+    .success-box a.cta {
+      display: inline-block;
+      padding: .8rem 2rem;
+      background: var(--primary);
+      color: #fff;
+      border-radius: 8px;
+      font-weight: 800;
+      text-decoration: none;
+      font-size: .9rem;
+    }
+
+    .success-box a.cta:hover {
+      background: #aa0000;
     }
 
     /* ── Order Summary ── */
@@ -308,7 +506,6 @@
       font-size: 1rem;
       font-weight: 800;
       margin-bottom: 1.1rem;
-      font-family: 'Inter', sans-serif;
     }
 
     .order-item {
@@ -327,7 +524,6 @@
     .order-item-name {
       font-size: .82rem;
       font-weight: 600;
-      color: var(--dark);
     }
 
     .order-item-sub {
@@ -354,7 +550,6 @@
       justify-content: space-between;
       font-size: .85rem;
       padding: .3rem 0;
-      color: var(--dark);
     }
 
     .summary-row span:last-child {
@@ -375,85 +570,16 @@
       color: var(--primary);
     }
 
-    /* ── Success overlay ── */
-    #successOverlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, .65);
-      backdrop-filter: blur(6px);
-      z-index: 9999;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .success-box {
-      background: #fff;
-      border-radius: 20px;
-      padding: 3rem 2.5rem;
-      max-width: 480px;
-      width: 92vw;
+    .savings-badge {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 8px;
+      padding: .75rem;
+      font-size: .78rem;
+      color: var(--success);
+      font-weight: 600;
+      margin-top: 1rem;
       text-align: center;
-      animation: popIn .3s ease;
-    }
-
-    @keyframes popIn {
-      from {
-        opacity: 0;
-        transform: scale(.9)
-      }
-
-      to {
-        opacity: 1;
-        transform: scale(1)
-      }
-    }
-
-    .success-icon {
-      font-size: 4rem;
-      margin-bottom: 1rem;
-    }
-
-    .success-box h2 {
-      font-size: 1.5rem;
-      font-weight: 800;
-      color: var(--dark);
-      margin-bottom: .5rem;
-      font-family: 'Inter', sans-serif;
-    }
-
-    .success-box p {
-      color: var(--muted);
-      font-size: .92rem;
-      line-height: 1.6;
-      margin-bottom: 1.5rem;
-    }
-
-    .order-num {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: .6rem 1rem;
-      font-family: 'Courier New', monospace;
-      font-weight: 800;
-      font-size: 1rem;
-      color: var(--dark);
-      margin-bottom: 1.5rem;
-    }
-
-    .success-box a {
-      display: inline-block;
-      padding: .8rem 2rem;
-      background: var(--primary);
-      color: #fff;
-      border-radius: 8px;
-      font-weight: 800;
-      text-decoration: none;
-      font-size: .9rem;
-    }
-
-    .success-box a:hover {
-      background: #aa0000;
     }
   </style>
 </head>
@@ -494,8 +620,8 @@
 
   <!-- Hero -->
   <div class="pay-hero">
-    <h1>💳 Payment</h1>
-    <p>Enter your details to complete your order securely</p>
+    <h1>🔒 Secure Payment</h1>
+    <p>Your card details are encrypted by Authorize.net — they never touch our servers</p>
   </div>
 
   <!-- Breadcrumb -->
@@ -508,55 +634,58 @@
 
   <!-- Steps -->
   <div class="steps-bar">
-    <div class="step done"><span class="step-num">✓</span> Cart</div>
+    <div class="step done"><span class="step-num">✓</span>&nbsp;Cart</div>
     <span class="step-arrow">›</span>
-    <div class="step active"><span class="step-num">2</span> Payment</div>
+    <div class="step active"><span class="step-num">2</span>&nbsp;Payment</div>
     <span class="step-arrow">›</span>
-    <div class="step"><span class="step-num">3</span> Confirmation</div>
+    <div class="step"><span class="step-num">3</span>&nbsp;Confirmation</div>
   </div>
 
-  <!-- Page -->
+  <!-- ══ MAIN PAGE ══ -->
   <div class="pay-page">
 
-    <!-- Payment Form -->
+    <!-- ── Payment Form ── -->
     <div class="pay-form-box">
 
-      <!-- Contact Info -->
+      <!-- Contact -->
       <div class="form-section">
         <h3>📋 Contact Information</h3>
+        <div class="error-banner" id="formError"></div>
         <div class="form-row">
-          <div class="field"><label>First Name *</label><input type="text" id="firstName" placeholder="John" required>
-          </div>
-          <div class="field"><label>Last Name *</label><input type="text" id="lastName" placeholder="Smith" required>
-          </div>
+          <div class="field"><label>First Name *</label><input type="text" id="firstName" placeholder="John" required
+              autocomplete="given-name"></div>
+          <div class="field"><label>Last Name *</label><input type="text" id="lastName" placeholder="Smith" required
+              autocomplete="family-name"></div>
         </div>
         <div class="form-row">
           <div class="field"><label>Email Address *</label><input type="email" id="email" placeholder="john@example.com"
-              required></div>
+              required autocomplete="email"></div>
           <div class="field"><label>Phone Number *</label><input type="tel" id="phone" placeholder="(555) 000-0000"
-              required></div>
+              required autocomplete="tel"></div>
         </div>
         <div class="form-row full">
           <div class="field"><label>Company Name (Optional)</label><input type="text" id="company"
-              placeholder="Your Company LLC"></div>
+              placeholder="Your Company LLC" autocomplete="organization"></div>
         </div>
       </div>
 
-      <!-- Shipping Address -->
+      <!-- Shipping -->
       <div class="form-section">
         <h3>🚚 Shipping Address</h3>
         <div class="form-row full">
           <div class="field"><label>Street Address *</label><input type="text" id="address"
-              placeholder="123 Main Street" required></div>
+              placeholder="123 Main Street" required autocomplete="address-line1"></div>
         </div>
         <div class="form-row full">
           <div class="field"><label>Apartment / Suite / Unit</label><input type="text" id="address2"
-              placeholder="Apt 4B (optional)"></div>
+              placeholder="Apt 4B (optional)" autocomplete="address-line2"></div>
         </div>
         <div class="form-row three">
-          <div class="field"><label>City *</label><input type="text" id="city" placeholder="Nashville" required></div>
-          <div class="field"><label>State *</label>
-            <select id="state">
+          <div class="field"><label>City *</label><input type="text" id="city" placeholder="Nashville" required
+              autocomplete="address-level2"></div>
+          <div class="field">
+            <label>State *</label>
+            <select id="state" required autocomplete="address-level1">
               <option value="">Select…</option>
               <option>AL</option>
               <option>AK</option>
@@ -611,7 +740,7 @@
             </select>
           </div>
           <div class="field"><label>ZIP Code *</label><input type="text" id="zip" placeholder="37201" maxlength="10"
-              required></div>
+              required autocomplete="postal-code"></div>
         </div>
         <div class="form-row full">
           <div class="field"><label>Special Delivery Instructions</label><input type="text" id="notes"
@@ -619,71 +748,98 @@
         </div>
       </div>
 
-      <!-- Payment Details -->
+      <!-- Payment — Accept.js hosted fields -->
       <div class="form-section">
-        <h3>💳 Payment Details</h3>
+        <h3>💳 Card Details</h3>
+
         <div class="card-brands">
           <img src="https://img.icons8.com/color/48/visa.png" alt="Visa">
           <img src="https://img.icons8.com/color/48/mastercard.png" alt="Mastercard">
-          <img src="https://img.icons8.com/color/48/amex.png" alt="Amex">
+          <img src="https://img.icons8.com/color/48/amex.png" alt="American Express">
           <img src="https://img.icons8.com/color/48/discover.png" alt="Discover">
         </div>
+
+        <!--
+          Accept.js injects hosted iframes into these divs.
+          We keep them in a styled wrapper so the design stays consistent.
+        -->
+        <div class="form-row full">
+          <div class="field">
+            <label>Cardholder Name *</label>
+            <input type="text" id="cardName" placeholder="JOHN SMITH" required autocomplete="cc-name">
+          </div>
+        </div>
+
         <div class="form-row full">
           <div class="field">
             <label>Card Number *</label>
-            <div class="card-input-wrap">
-              <input type="text" id="cardNum" placeholder="1234 5678 9012 3456" maxlength="19"
-                oninput="formatCard(this)" required>
-              <span class="card-icon" id="cardIcon">💳</span>
+            <div class="accept-hosted-wrap">
+              <div id="cardNumber"></div>
             </div>
           </div>
         </div>
-        <div class="form-row full">
-          <div class="field"><label>Cardholder Name *</label><input type="text" id="cardName" placeholder="JOHN SMITH"
-              required></div>
-        </div>
+
         <div class="form-row">
-          <div class="field"><label>Expiry Date *</label><input type="text" id="cardExp" placeholder="MM / YY"
-              maxlength="7" oninput="formatExpiry(this)" required></div>
-          <div class="field"><label>CVV *</label><input type="text" id="cardCVV" placeholder="123" maxlength="4"
-              required></div>
+          <div class="field">
+            <label>Expiry Date *</label>
+            <div class="accept-hosted-wrap">
+              <div id="expDate"></div>
+            </div>
+          </div>
+          <div class="field">
+            <label>CVV *</label>
+            <div class="accept-hosted-wrap">
+              <div id="cvvNumber"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="anet-badge">
+          🔒 Card data handled securely by
+          <strong>Authorize.net</strong> · PCI-DSS Level 1
         </div>
       </div>
 
-      <!-- Billing -->
+      <!-- Billing Address -->
       <div class="form-section">
         <h3>🏠 Billing Address</h3>
-        <div style="margin-bottom:1rem;">
-          <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer;font-size:.88rem;font-weight:600;">
-            <input type="checkbox" id="sameAsBilling" checked onchange="toggleBilling()">
-            Same as shipping address
-          </label>
-        </div>
-        <div id="billingFields" style="display:none;">
+        <label
+          style="display:flex;align-items:center;gap:.5rem;cursor:pointer;font-size:.88rem;font-weight:600;margin-bottom:1rem;">
+          <input type="checkbox" id="sameAsBilling" checked onchange="toggleBilling()">
+          Same as shipping address
+        </label>
+        <div id="billingFields">
           <div class="form-row full">
             <div class="field"><label>Billing Street *</label><input type="text" id="billAddr"
-                placeholder="123 Billing Street"></div>
+                placeholder="123 Billing Street" autocomplete="billing address-line1"></div>
           </div>
           <div class="form-row three">
-            <div class="field"><label>City *</label><input type="text" id="billCity" placeholder="City"></div>
-            <div class="field"><label>State *</label><input type="text" id="billState" placeholder="TN"></div>
-            <div class="field"><label>ZIP *</label><input type="text" id="billZip" placeholder="37201"></div>
+            <div class="field"><label>City *</label><input type="text" id="billCity" placeholder="City"
+                autocomplete="billing address-level2"></div>
+            <div class="field"><label>State *</label><input type="text" id="billState" placeholder="TN" maxlength="2"
+                autocomplete="billing address-level1"></div>
+            <div class="field"><label>ZIP *</label><input type="text" id="billZip" placeholder="37201"
+                autocomplete="billing postal-code"></div>
           </div>
         </div>
       </div>
 
       <!-- Submit -->
       <div class="form-section">
-        <button class="pay-btn" onclick="submitPayment()">
+        <div class="error-banner" id="payError"></div>
+        <button class="pay-btn" id="payBtn" onclick="initiatePayment()">
           🔒 Place Order &amp; Pay
         </button>
         <a href="checkout.html" class="back-btn">← Back to Cart</a>
-        <div class="secure-note">🔒 256-bit SSL encryption · PCI-DSS Compliant · Secure checkout</div>
+        <div class="secure-note">
+          🔒 256-bit TLS encryption &nbsp;·&nbsp; PCI-DSS Compliant &nbsp;·&nbsp;
+          Powered by <strong>Authorize.net</strong>
+        </div>
       </div>
 
-    </div>
+    </div><!-- /.pay-form-box -->
 
-    <!-- Order Summary -->
+    <!-- ── Order Summary ── -->
     <div class="summary-box">
       <h3>Order Summary</h3>
       <div id="orderLines"></div>
@@ -692,150 +848,36 @@
       <div class="summary-row"><span>Shipping</span><span id="payShipping">TBD</span></div>
       <div class="summary-row"><span>Tax (8%)</span><span id="payTax">$0.00</span></div>
       <div class="summary-total"><span>Total</span><span id="payTotal">$0.00</span></div>
-      <div
-        style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:.75rem;font-size:.78rem;color:#16a34a;font-weight:600;margin-top:1rem;text-align:center;">
-        🎉 You're saving <span id="savingsAmt">$0.00</span> on this order!
-      </div>
+      <div class="savings-badge">🎉 You're saving <span id="savingsAmt">$0.00</span> on this order!</div>
     </div>
 
+  </div><!-- /.pay-page -->
+
+  <!-- ── Processing Overlay ── -->
+  <div id="processingOverlay">
+    <div class="processing-box">
+      <div class="spinner"></div>
+      <h3>Processing Payment…</h3>
+      <p>Please do not close or refresh this page.</p>
+    </div>
   </div>
 
-  <!-- Success Overlay -->
-  <div id="successOverlay"
-    style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(6px);z-index:9999;align-items:center;justify-content:center;">
+  <!-- ── Success Overlay ── -->
+  <div id="successOverlay">
     <div class="success-box">
       <div class="success-icon">🎉</div>
-      <h2>Order Placed Successfully!</h2>
-      <p>Thank you for your order. You'll receive a confirmation email shortly. A KJR representative will contact you to
+      <h2>Payment Successful!</h2>
+      <p>Thank you for your order. A confirmation email will be sent shortly. A KJR representative will contact you to
         confirm shipping details.</p>
       <div class="order-num" id="orderNum">Order #KJR-000000</div>
-      <p style="font-size:.82rem;margin-bottom:1.25rem;">Questions? Call <strong>888-944-6313</strong> — 24/7</p>
-      <a href="products.html" onclick="clearCartOnSuccess()">Continue Shopping →</a>
+      <div class="tx-detail" id="txDetail"></div>
+      <p style="font-size:.82rem;margin-bottom:1.5rem;">Questions? Call <strong>888-944-6313</strong> — 24/7 Live
+        Operator</p>
+      <a href="products.html" class="cta" onclick="clearCartOnSuccess()">Continue Shopping →</a>
     </div>
   </div>
-  <script>
-    const cart = JSON.parse(localStorage.getItem('kjr_cart') || '[]');
 
-    function parsePrice(str) {
-      return parseFloat((str || '0').replace(/[^0-9.]/g, '')) || 0;
-    }
-
-    // ── Render order summary ──────────────────────────────────────────────
-    function renderSummary() {
-      if (cart.length === 0) {
-        window.location.href = 'checkout.html';
-        return;
-      }
-      let subtotal = 0, savings = 0;
-      let html = '';
-      cart.forEach(item => {
-        const unit = parsePrice(item.price);
-        const line = unit * item.qty;
-        subtotal += line;
-        savings += (unit * 0.1) * item.qty; // approx savings vs list
-        html += `<div class="order-item">
-          <div>
-            <div class="order-item-name">${item.name}</div>
-            <div class="order-item-sub">Part# ${item.part || 'N/A'} &nbsp;×&nbsp; ${item.qty}</div>
-          </div>
-          <div class="order-item-price">$${line.toFixed(2)}</div>
-        </div>`;
-      });
-      document.getElementById('orderLines').innerHTML = html;
-      const tax = subtotal * 0.08;
-      const total = subtotal + tax;
-      document.getElementById('paySubtotal').textContent = '$' + subtotal.toFixed(2);
-      document.getElementById('payTax').textContent = '$' + tax.toFixed(2);
-      document.getElementById('payTotal').textContent = '$' + total.toFixed(2);
-      document.getElementById('savingsAmt').textContent = '$' + savings.toFixed(2);
-    }
-
-    // ── Card formatting ───────────────────────────────────────────────────
-    function formatCard(input) {
-      let v = input.value.replace(/\D/g, '').substring(0, 16);
-      input.value = v.replace(/(.{4})/g, '$1 ').trim();
-      const icon = document.getElementById('cardIcon');
-      if (v.startsWith('4')) icon.textContent = '💙'; // Visa
-      else if (v.startsWith('5')) icon.textContent = '🟠'; // MC
-      else if (v.startsWith('3')) icon.textContent = '🟢'; // Amex
-      else icon.textContent = '💳';
-    }
-
-    function formatExpiry(input) {
-      let v = input.value.replace(/\D/g, '').substring(0, 4);
-      if (v.length >= 2) v = v.substring(0, 2) + ' / ' + v.substring(2);
-      input.value = v;
-    }
-
-    function toggleBilling() {
-      const same = document.getElementById('sameAsBilling').checked;
-      document.getElementById('billingFields').style.display = same ? 'none' : 'block';
-    }
-
-    // ── Validation ────────────────────────────────────────────────────────
-    function validate() {
-      const required = [
-        ['firstName', 'First name'], ['lastName', 'Last name'],
-        ['email', 'Email'], ['phone', 'Phone'],
-        ['address', 'Street address'], ['city', 'City'],
-        ['zip', 'ZIP code'], ['cardNum', 'Card number'],
-        ['cardName', 'Cardholder name'], ['cardExp', 'Expiry date'], ['cardCVV', 'CVV']
-      ];
-      for (const [id, label] of required) {
-        const el = document.getElementById(id);
-        if (!el || !el.value.trim()) {
-          el && el.focus();
-          alert(label + ' is required.');
-          return false;
-        }
-      }
-      const state = document.getElementById('state').value;
-      if (!state) { alert('Please select a state.'); return false; }
-      // Basic card number check
-      const raw = document.getElementById('cardNum').value.replace(/\s/g, '');
-      if (raw.length < 15) { alert('Please enter a valid card number.'); return false; }
-      // Expiry
-      const exp = document.getElementById('cardExp').value;
-      if (!exp.includes('/') || exp.length < 5) { alert('Please enter a valid expiry date (MM/YY).'); return false; }
-      return true;
-    }
-
-    // ── Submit ────────────────────────────────────────────────────────────
-    function submitPayment() {
-      if (!validate()) return;
-
-      const btn = document.querySelector('.pay-btn');
-      btn.textContent = '⏳ Processing…';
-      btn.disabled = true;
-
-      // Simulate payment processing delay
-      setTimeout(() => {
-        const orderNum = 'KJR-' + String(Math.floor(100000 + Math.random() * 900000));
-        document.getElementById('orderNum').textContent = 'Order #' + orderNum;
-        document.getElementById('successOverlay').style.display = 'flex';
-
-        // Send email summary via bunji chat (if available)
-        const name = document.getElementById('firstName').value + ' ' + document.getElementById('lastName').value;
-        const email = document.getElementById('email').value;
-        const total = document.getElementById('payTotal').textContent;
-        const items = cart.map(c => c.name + ' x' + c.qty).join(', ');
-        if (window.dispatchEvent) {
-          window.dispatchEvent(new CustomEvent('open-bunji', {
-            detail: { message: `New order placed! Order ${orderNum} by ${name} (${email}). Items: ${items}. Total: ${total}` }
-          }));
-        }
-      }, 2200);
-    }
-
-    function clearCartOnSuccess() {
-      localStorage.removeItem('kjr_cart');
-    }
-
-    // Init
-    renderSummary();
-  </script>
-
-  <!-- Footer -->
+  <!-- ── Footer ── -->
   <footer>
     <div class="footer-content">
       <div class="footer-brand">
@@ -861,6 +903,430 @@
       <div><a href="#">Privacy Policy</a> &nbsp;|&nbsp; <a href="#">Terms of Service</a></div>
     </div>
   </footer>
+
+  <!-- ════════════════════════════════════════════════════════════════════════
+       JavaScript
+  ════════════════════════════════════════════════════════════════════════ -->
+  <script>
+    // ── Config ──────────────────────────────────────────────────────────────
+    const API_BASE = (
+      window.location.hostname === 'localhost' ||
+      window.location.hostname === '127.0.0.1' ||
+      window.location.protocol === 'file:'
+    ) ? 'http://localhost:5001/api' : '/api';
+
+    // Accept.js URL differs between sandbox and production
+    const ANET_ACCEPT_SANDBOX = 'https://jstest.authorize.net/v1/Accept.js';
+    const ANET_ACCEPT_PRODUCTION = 'https://js.authorize.net/v1/Accept.js';
+
+    // Cart from localStorage
+    const cart = JSON.parse(localStorage.getItem('kjr_cart') || '[]');
+
+    // Accept.js auth data — populated once /config responds
+    let acceptAuthData = null;
+    let acceptEnvironment = 'PRODUCTION';
+
+    // ── Boot sequence ───────────────────────────────────────────────────────
+    (async function boot() {
+      if (cart.length === 0) {
+        window.location.href = 'checkout.html';
+        return;
+      }
+
+      renderSummary();
+
+      try {
+        const resp = await fetch(`${API_BASE}/payment/config`);
+        const cfg = await resp.json();
+
+        acceptEnvironment = cfg.environment || 'PRODUCTION';
+        acceptAuthData = {
+          clientKey: cfg.publicClientKey,
+          apiLoginID: cfg.apiLoginId
+        };
+
+        // Dynamically load the correct Accept.js based on environment
+        const script = document.getElementById('acceptjs-script');
+        script.src = acceptEnvironment === 'PRODUCTION' ? ANET_ACCEPT_PRODUCTION : ANET_ACCEPT_SANDBOX;
+        script.charset = 'utf-8';
+        script.onload = initAcceptJs;
+        script.onerror = () => showPayError('Payment system failed to load. Please refresh and try again.');
+
+      } catch (err) {
+        console.error('Config fetch failed:', err);
+        showPayError('Could not connect to payment system. Please refresh.');
+      }
+    })();
+
+    // ── Initialise Accept.js hosted fields ──────────────────────────────────
+    function initAcceptJs() {
+      if (!window.Accept) {
+        showPayError('Authorize.net Accept.js not available. Please disable any ad-blockers and refresh.');
+        return;
+      }
+      console.log('[Payment] Accept.js loaded — environment:', acceptEnvironment);
+    }
+
+    // ── Order Summary ────────────────────────────────────────────────────────
+    function parsePrice(str) {
+      return parseFloat((str || '0').replace(/[^0-9.]/g, '')) || 0;
+    }
+
+    function renderSummary() {
+      let subtotal = 0, savings = 0, html = '';
+      cart.forEach(item => {
+        const unit = parsePrice(item.price);
+        const line = unit * item.qty;
+        subtotal += line;
+        savings += unit * 0.10 * item.qty;
+        html += `<div class="order-item">
+          <div>
+            <div class="order-item-name">${escHtml(item.name)}</div>
+            <div class="order-item-sub">Part# ${escHtml(item.part || 'N/A')} &nbsp;×&nbsp; ${item.qty}</div>
+          </div>
+          <div class="order-item-price">$${line.toFixed(2)}</div>
+        </div>`;
+      });
+      document.getElementById('orderLines').innerHTML = html;
+      const tax = subtotal * 0.08;
+      const total = subtotal + tax;
+      document.getElementById('paySubtotal').textContent = '$' + subtotal.toFixed(2);
+      document.getElementById('payTax').textContent = '$' + tax.toFixed(2);
+      document.getElementById('payTotal').textContent = '$' + total.toFixed(2);
+      document.getElementById('savingsAmt').textContent = '$' + savings.toFixed(2);
+    }
+
+    function getTotal() {
+      const subtotal = cart.reduce((s, i) => s + parsePrice(i.price) * i.qty, 0);
+      return (subtotal * 1.08).toFixed(2);
+    }
+
+    // ── Helpers ──────────────────────────────────────────────────────────────
+    function escHtml(str) {
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function toggleBilling() {
+      document.getElementById('billingFields').style.display =
+        document.getElementById('sameAsBilling').checked ? 'none' : 'block';
+    }
+
+    function showPayError(msg) {
+      const el = document.getElementById('payError');
+      el.textContent = msg;
+      el.classList.add('show');
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function clearPayError() {
+      const el = document.getElementById('payError');
+      el.textContent = '';
+      el.classList.remove('show');
+    }
+
+    // ── Validation ────────────────────────────────────────────────────────────
+    function validateForm() {
+      const required = [
+        ['firstName', 'First name'],
+        ['lastName', 'Last name'],
+        ['email', 'Email address'],
+        ['phone', 'Phone number'],
+        ['address', 'Street address'],
+        ['city', 'City'],
+        ['zip', 'ZIP code'],
+        ['cardName', 'Cardholder name']
+      ];
+
+      for (const [id, label] of required) {
+        const el = document.getElementById(id);
+        if (!el.value.trim()) {
+          el.classList.add('is-invalid');
+          el.focus();
+          showPayError(`${label} is required.`);
+          return false;
+        }
+        el.classList.remove('is-invalid');
+      }
+
+      const state = document.getElementById('state').value;
+      if (!state) {
+        document.getElementById('state').classList.add('is-invalid');
+        showPayError('Please select a state.');
+        return false;
+      }
+
+      const emailVal = document.getElementById('email').value;
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
+        document.getElementById('email').classList.add('is-invalid');
+        showPayError('Please enter a valid email address.');
+        return false;
+      }
+
+      if (!window.Accept) {
+        showPayError('Payment form is not ready yet. Please wait a moment and try again.');
+        return false;
+      }
+
+      return true;
+    }
+
+    // ── Step 1: Click "Place Order" → tokenise with Accept.js ───────────────
+    function initiatePayment() {
+      clearPayError();
+      if (!validateForm()) return;
+
+      const btn = document.getElementById('payBtn');
+      btn.disabled = true;
+      btn.textContent = '⏳ Preparing…';
+
+      // Build the Accept.js dispatch data
+      const secureData = {
+        authData: acceptAuthData,
+        cardData: {
+          cardNumber: document.getElementById('cardNumber')?.value?.replace(/\s/g, '') || '',
+          month: '',
+          year: '',
+          cardCode: document.getElementById('cvvNumber')?.value || '',
+          fullName: document.getElementById('cardName').value.trim(),
+          zip: document.getElementById('sameAsBilling').checked
+            ? document.getElementById('zip').value
+            : document.getElementById('billZip').value,
+          cardNumericZip: document.getElementById('sameAsBilling').checked
+            ? document.getElementById('zip').value
+            : document.getElementById('billZip').value
+        }
+      };
+
+      // Accept.js requires the card fields to be in standard HTML inputs named
+      // "cardNumber", "expMonth"/"expYear" (or "expDate"), and "cardCode"
+      // For the Accept.js inline flow we use dispatchData with the form fields
+      Accept.dispatchData(secureData, handleAcceptResponse);
+    }
+
+    // ── Step 2: Accept.js callback → charge the token on our server ─────────
+    function handleAcceptResponse(response) {
+      const btn = document.getElementById('payBtn');
+
+      if (response.messages.resultCode === 'Error') {
+        btn.disabled = false;
+        btn.textContent = '🔒 Place Order & Pay';
+        const errMsgs = response.messages.message
+          .map(m => m.text)
+          .join(' ');
+        showPayError('Card error: ' + errMsgs);
+        return;
+      }
+
+      // Token received — show processing overlay and charge server-side
+      document.getElementById('processingOverlay').classList.add('show');
+
+      const opaqueData = response.opaqueData;
+      const invoiceNum = 'KJR-' + String(Math.floor(100000 + Math.random() * 900000));
+      const sameShip = document.getElementById('sameAsBilling').checked;
+
+      const payload = {
+        opaqueDataDescriptor: opaqueData.dataDescriptor,
+        opaqueDataValue: opaqueData.dataValue,
+        amount: getTotal(),
+        firstName: document.getElementById('firstName').value.trim(),
+        lastName: document.getElementById('lastName').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        phone: document.getElementById('phone').value.trim(),
+        company: document.getElementById('company').value.trim(),
+        address: sameShip
+          ? document.getElementById('address').value.trim()
+          : document.getElementById('billAddr').value.trim(),
+        city: sameShip
+          ? document.getElementById('city').value.trim()
+          : document.getElementById('billCity').value.trim(),
+        state: sameShip
+          ? document.getElementById('state').value
+          : document.getElementById('billState').value.trim(),
+        zip: sameShip
+          ? document.getElementById('zip').value.trim()
+          : document.getElementById('billZip').value.trim(),
+        invoiceNumber: invoiceNum,
+        description: 'KJR Interior Designs Product Order',
+        cartItems: cart
+      };
+
+      fetch(`${API_BASE}/payment/charge`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+        .then(r => r.json())
+        .then(data => {
+          document.getElementById('processingOverlay').classList.remove('show');
+
+          if (data.success) {
+            // Show success overlay
+            document.getElementById('orderNum').textContent = 'Order #' + (data.invoiceNumber || invoiceNum);
+            document.getElementById('txDetail').textContent =
+              `Transaction ID: ${data.transactionId}  ·  Auth Code: ${data.authCode}`;
+            document.getElementById('successOverlay').classList.add('show');
+          } else {
+            btn.disabled = false;
+            btn.textContent = '🔒 Place Order & Pay';
+            showPayError('Payment declined: ' + (data.message || 'Please check your card details and try again.'));
+          }
+        })
+        .catch(err => {
+          document.getElementById('processingOverlay').classList.remove('show');
+          btn.disabled = false;
+          btn.textContent = '🔒 Place Order & Pay';
+          console.error('[Payment] Fetch error:', err);
+          showPayError('Connection error. Please check your internet and try again.');
+        });
+    }
+
+    function clearCartOnSuccess() {
+      localStorage.removeItem('kjr_cart');
+    }
+  </script>
+
+  <!--
+    ══════════════════════════════════════════════════════════════════════════
+    IMPORTANT: Accept.js requires the card input fields to be regular HTML
+    inputs in a <form> with specific name attributes so it can read & tokenise
+    them. We overlay them on the styled divs above using a hidden form.
+    ══════════════════════════════════════════════════════════════════════════
+  -->
+  <form id="paymentForm" method="POST" style="display:none;">
+    <input type="text" id="cardNumber" name="cardNumber" data-accept-attr="cardNumber">
+    <input type="text" id="expDate" name="expDate" data-accept-attr="expDate">
+    <input type="text" id="cvvNumber" name="cardCode" data-accept-attr="cardCode">
+  </form>
+
+  <script>
+    // ── Wire Accept.js to the hidden form fields and style the visible wrapper ──
+    // Accept.js inline mode: we pass the field IDs directly in dispatchData.
+    // Override initiatePayment once DOM is settled to read the hidden form values.
+    // (The hidden inputs above collect card data; Accept.js tokenises them.)
+
+    function initiatePayment() {
+      clearPayError();
+      if (!validateForm()) return;
+
+      const cardNumVal = document.getElementById('cardNumber').value.replace(/\s/g, '');
+      const expVal = document.getElementById('expDate').value.replace(/\s/g, '');
+      const cvvVal = document.getElementById('cvvNumber').value;
+
+      if (!cardNumVal || cardNumVal.length < 13) {
+        return showPayError('Please enter a valid card number.');
+      }
+      if (!expVal || expVal.length < 4) {
+        return showPayError('Please enter a valid expiry date (MM/YYYY or MMYYYY).');
+      }
+      if (!cvvVal || cvvVal.length < 3) {
+        return showPayError('Please enter the 3 or 4 digit CVV on your card.');
+      }
+
+      const btn = document.getElementById('payBtn');
+      btn.disabled = true;
+      btn.textContent = '⏳ Securing card data…';
+
+      // Parse expiry — Accept.js wants month & year separately
+      let expMonth = '', expYear = '';
+      if (expVal.includes('/')) {
+        [expMonth, expYear] = expVal.split('/').map(s => s.trim());
+      } else {
+        expMonth = expVal.substring(0, 2);
+        expYear = expVal.substring(2);
+      }
+      // Normalise 2-digit year to 4-digit
+      if (expYear.length === 2) expYear = '20' + expYear;
+
+      const secureData = {
+        authData: acceptAuthData,
+        cardData: {
+          cardNumber: cardNumVal,
+          month: expMonth,
+          year: expYear,
+          cardCode: cvvVal,
+          fullName: document.getElementById('cardName').value.trim(),
+          zip: document.getElementById('sameAsBilling').checked
+            ? document.getElementById('zip').value.trim()
+            : document.getElementById('billZip').value.trim()
+        }
+      };
+
+      if (!window.Accept) {
+        btn.disabled = false;
+        btn.textContent = '🔒 Place Order & Pay';
+        return showPayError('Payment system not ready. Please refresh the page.');
+      }
+
+      Accept.dispatchData(secureData, handleAcceptResponse);
+    }
+
+    // ── Format helpers for the visible card inputs ──────────────────────────
+    const cardNumInput = document.getElementById('cardNumber');
+    const expInput = document.getElementById('expDate');
+
+    // Make the hidden form inputs look like real fields by showing them in
+    // the styled placeholder divs
+    (function showFieldsInUI() {
+      const cardDiv = document.querySelector('#cardNumber').parentElement;
+      const expDiv = document.querySelector('#expDate').parentElement;
+      const cvvDiv = document.querySelector('#cvvNumber').parentElement;
+
+      // Remove the hidden form and re-create visible styled inputs inside the wrappers
+      const makeInput = (id, placeholder, maxlen, type) => {
+        const inp = document.createElement('input');
+        inp.type = type || 'text';
+        inp.id = id + '_vis';
+        inp.placeholder = placeholder;
+        if (maxlen) inp.maxLength = maxlen;
+        inp.autocomplete = 'off';
+        inp.style.cssText = 'width:100%;padding:.65rem .9rem;border:none;outline:none;font-size:.9rem;font-family:Inter,sans-serif;background:transparent;';
+        return inp;
+      };
+
+      // We'll use the actual hidden inputs for Accept.js but style them visibly
+      // Simply un-hide and style them inside their wrapper divs
+      [cardNumInput, expInput, document.getElementById('cvvNumber')].forEach(inp => {
+        inp.removeAttribute('style');
+        inp.style.cssText = 'width:100%;padding:.65rem .9rem;border:none;outline:none;font-size:.9rem;font-family:Inter,sans-serif;background:transparent;display:block;';
+      });
+      cardNumInput.placeholder = '1234 5678 9012 3456';
+      cardNumInput.maxLength = 19;
+      expInput.placeholder = 'MM / YYYY';
+      expInput.maxLength = 9;
+      document.getElementById('cvvNumber').placeholder = '123';
+      document.getElementById('cvvNumber').maxLength = 4;
+
+      // Move them out of the hidden form into their visual parent wrappers
+      document.querySelector('.accept-hosted-wrap:nth-of-type(1)') &&
+        cardDiv.appendChild(cardNumInput);
+
+      // Re-parent via DOM
+      document.querySelectorAll('.accept-hosted-wrap').forEach((wrap, i) => {
+        if (i === 0) wrap.appendChild(cardNumInput);
+        if (i === 1) wrap.appendChild(expInput);
+        if (i === 2) wrap.appendChild(document.getElementById('cvvNumber'));
+      });
+    })();
+
+    // Auto-format card number with spaces
+    document.getElementById('cardNumber').addEventListener('input', function () {
+      let v = this.value.replace(/\D/g, '').substring(0, 16);
+      this.value = v.replace(/(.{4})/g, '$1 ').trim();
+    });
+
+    // Auto-format expiry MM / YYYY
+    document.getElementById('expDate').addEventListener('input', function () {
+      let v = this.value.replace(/\D/g, '').substring(0, 6);
+      if (v.length >= 2) v = v.substring(0, 2) + ' / ' + v.substring(2);
+      this.value = v;
+    });
+
+    // Remove error highlight on input
+    document.querySelectorAll('.field input, .field select').forEach(el => {
+      el.addEventListener('input', () => el.classList.remove('is-invalid'));
+      el.addEventListener('change', () => el.classList.remove('is-invalid'));
+    });
+  </script>
 
 </body>
 

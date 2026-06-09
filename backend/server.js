@@ -8,6 +8,7 @@ dotenv.config();
 
 const apiRoutes = require('./routes/api');
 const chatRoutes = require('./routes/chat');
+const paymentRoutes = require('./routes/payment');
 
 const app = express();
 
@@ -56,7 +57,7 @@ async function connectDB() {
       console.warn('⚠️  Atlas connection failed:', err.message);
       console.warn('⚡ Falling back to in-memory MongoDB for local development...');
       // Disconnect any partial connection
-      try { await mongoose.disconnect(); } catch {}
+      try { await mongoose.disconnect(); } catch { }
     }
   }
 
@@ -77,6 +78,7 @@ connectDB();
 // Routes
 app.use('/api', apiRoutes);
 app.use('/api/chat', chatRoutes);
+app.use('/api/payment', paymentRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
