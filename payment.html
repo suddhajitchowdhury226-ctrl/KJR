@@ -226,16 +226,25 @@
       border-color: #dc2626;
     }
 
-    /* ── Accept.js hosted fields container ── */
+    /* ── Card field wrappers — inputs sit directly inside these ── */
     .accept-hosted-wrap {
-      background: #f8fafc;
-      border: 1.5px solid var(--border);
       border-radius: 8px;
-      padding: .15rem 0;
       overflow: hidden;
     }
-
-    /* The iframe Authorize.net injects respects these CSS vars via the style payload */
+    .accept-hosted-wrap input {
+      width: 100%;
+      padding: .65rem .9rem;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: .9rem;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      background: #fff;
+      transition: border-color .15s;
+      display: block;
+    }
+    .accept-hosted-wrap input:focus  { border-color: var(--primary); }
+    .accept-hosted-wrap input.is-invalid { border-color: #dc2626; }
 
     /* ── Card brand logos ── */
     .card-brands {
@@ -773,7 +782,9 @@
           <div class="field">
             <label>Card Number *</label>
             <div class="accept-hosted-wrap">
-              <div id="cardNumber"></div>
+              <input type="text" id="cardNumber" name="cardNumber"
+                placeholder="1234 5678 9012 3456" maxlength="19"
+                autocomplete="cc-number" inputmode="numeric">
             </div>
           </div>
         </div>
@@ -782,13 +793,17 @@
           <div class="field">
             <label>Expiry Date *</label>
             <div class="accept-hosted-wrap">
-              <div id="expDate"></div>
+              <input type="text" id="expDate" name="expDate"
+                placeholder="MM / YYYY" maxlength="9"
+                autocomplete="cc-exp" inputmode="numeric">
             </div>
           </div>
           <div class="field">
             <label>CVV *</label>
             <div class="accept-hosted-wrap">
-              <div id="cvvNumber"></div>
+              <input type="text" id="cvvNumber" name="cardCode"
+                placeholder="123" maxlength="4"
+                autocomplete="cc-csc" inputmode="numeric">
             </div>
           </div>
         </div>
@@ -1180,149 +1195,87 @@
     }
   </script>
 
-  <!--
-    ══════════════════════════════════════════════════════════════════════════
-    IMPORTANT: Accept.js requires the card input fields to be regular HTML
-    inputs in a <form> with specific name attributes so it can read & tokenise
-    them. We overlay them on the styled divs above using a hidden form.
-    ══════════════════════════════════════════════════════════════════════════
-  -->
-  <form id="paymentForm" method="POST" style="display:none;">
-    <input type="text" id="cardNumber" name="cardNumber" data-accept-attr="cardNumber">
-    <input type="text" id="expDate" name="expDate" data-accept-attr="expDate">
-    <input type="text" id="cvvNumber" name="cardCode" data-accept-attr="cardCode">
-  </form>
-
+  <!-- ── Card input formatting & payment submission ── -->
   <script>
-    // ── Wire Accept.js to the hidden form fields and style the visible wrapper ──
-    // Accept.js inline mode: we pass the field IDs directly in dispatchData.
-    // Override initiatePayment once DOM is settled to read the hidden form values.
-    // (The hidden inputs above collect card data; Accept.js tokenises them.)
+    // Auto-format card number  4-4-4-4
+    document.getElementById('cardNumber').addEventListener('input', function () {
+      let v = this.value.replace(/\D/g, '').substring(0, 16);
+      this.value = v.replace(/(\d{4})(?=\d)/g, '$1 ').trim();
+    });
 
+    // Auto-format expiry  MM / YYYY
+    document.getElementById('expDate').addEventListener('input', function () {
+      let raw = this.value.replace(/\D/g, '').substring(0, 6);
+      if (raw.length >= 3) raw = raw.substring(0, 2) + ' / ' + raw.substring(2);
+      this.value = raw;
+    });
+
+    // Digits only for CVV
+    document.getElementById('cvvNumber').addEventListener('input', function () {
+      this.value = this.value.replace(/\D/g, '').substring(0, 4);
+    });
+
+    // Remove invalid highlight on typing
+    document.querySelectorAll('.field input, .field select').forEach(el => {
+      el.addEventListener('input',  () => el.classList.remove('is-invalid'));
+      el.addEventListener('change', () => el.classList.remove('is-invalid'));
+    });
+
+    // ── Main submit — overrides the stub in the first script block ──────────
     function initiatePayment() {
       clearPayError();
       if (!validateForm()) return;
 
       const cardNumVal = document.getElementById('cardNumber').value.replace(/\s/g, '');
-      const expVal = document.getElementById('expDate').value.replace(/\s/g, '');
-      const cvvVal = document.getElementById('cvvNumber').value;
+      const expRaw     = document.getElementById('expDate').value.replace(/\s/g, '').replace('/', '');
+      const cvvVal     = document.getElementById('cvvNumber').value.trim();
 
-      if (!cardNumVal || cardNumVal.length < 13) {
-        return showPayError('Please enter a valid card number.');
+      if (cardNumVal.length < 13) {
+        document.getElementById('cardNumber').classList.add('is-invalid');
+        return showPayError('Please enter a valid card number (13–16 digits).');
       }
-      if (!expVal || expVal.length < 4) {
-        return showPayError('Please enter a valid expiry date (MM/YYYY or MMYYYY).');
+      if (expRaw.length < 5) {
+        document.getElementById('expDate').classList.add('is-invalid');
+        return showPayError('Please enter a valid expiry date (MM / YYYY).');
       }
-      if (!cvvVal || cvvVal.length < 3) {
-        return showPayError('Please enter the 3 or 4 digit CVV on your card.');
+      if (cvvVal.length < 3) {
+        document.getElementById('cvvNumber').classList.add('is-invalid');
+        return showPayError('Please enter the 3 or 4 digit security code (CVV).');
+      }
+
+      if (!window.Accept) {
+        return showPayError(
+          'Secure payment could not load. ' +
+          'Please make sure you are online, disable any ad-blockers, and refresh.'
+        );
       }
 
       const btn = document.getElementById('payBtn');
-      btn.disabled = true;
+      btn.disabled    = true;
       btn.textContent = '⏳ Securing card data…';
 
-      // Parse expiry — Accept.js wants month & year separately
-      let expMonth = '', expYear = '';
-      if (expVal.includes('/')) {
-        [expMonth, expYear] = expVal.split('/').map(s => s.trim());
-      } else {
-        expMonth = expVal.substring(0, 2);
-        expYear = expVal.substring(2);
-      }
-      // Normalise 2-digit year to 4-digit
+      // Accept.js expects month and 4-digit year separately
+      let expMonth = expRaw.substring(0, 2);
+      let expYear  = expRaw.substring(2);
       if (expYear.length === 2) expYear = '20' + expYear;
 
       const secureData = {
         authData: acceptAuthData,
         cardData: {
           cardNumber: cardNumVal,
-          month: expMonth,
-          year: expYear,
-          cardCode: cvvVal,
-          fullName: document.getElementById('cardName').value.trim(),
-          zip: document.getElementById('sameAsBilling').checked
-            ? document.getElementById('zip').value.trim()
-            : document.getElementById('billZip').value.trim()
+          month:      expMonth,
+          year:       expYear,
+          cardCode:   cvvVal,
+          fullName:   document.getElementById('cardName').value.trim(),
+          zip:        document.getElementById('sameAsBilling').checked
+                        ? document.getElementById('zip').value.trim()
+                        : document.getElementById('billZip').value.trim()
         }
       };
 
-      if (!window.Accept) {
-        btn.disabled = false;
-        btn.textContent = '🔒 Place Order & Pay';
-        return showPayError('Payment system not ready. Please refresh the page.');
-      }
-
       Accept.dispatchData(secureData, handleAcceptResponse);
     }
-
-    // ── Format helpers for the visible card inputs ──────────────────────────
-    const cardNumInput = document.getElementById('cardNumber');
-    const expInput = document.getElementById('expDate');
-
-    // Make the hidden form inputs look like real fields by showing them in
-    // the styled placeholder divs
-    (function showFieldsInUI() {
-      const cardDiv = document.querySelector('#cardNumber').parentElement;
-      const expDiv = document.querySelector('#expDate').parentElement;
-      const cvvDiv = document.querySelector('#cvvNumber').parentElement;
-
-      // Remove the hidden form and re-create visible styled inputs inside the wrappers
-      const makeInput = (id, placeholder, maxlen, type) => {
-        const inp = document.createElement('input');
-        inp.type = type || 'text';
-        inp.id = id + '_vis';
-        inp.placeholder = placeholder;
-        if (maxlen) inp.maxLength = maxlen;
-        inp.autocomplete = 'off';
-        inp.style.cssText = 'width:100%;padding:.65rem .9rem;border:none;outline:none;font-size:.9rem;font-family:Inter,sans-serif;background:transparent;';
-        return inp;
-      };
-
-      // We'll use the actual hidden inputs for Accept.js but style them visibly
-      // Simply un-hide and style them inside their wrapper divs
-      [cardNumInput, expInput, document.getElementById('cvvNumber')].forEach(inp => {
-        inp.removeAttribute('style');
-        inp.style.cssText = 'width:100%;padding:.65rem .9rem;border:none;outline:none;font-size:.9rem;font-family:Inter,sans-serif;background:transparent;display:block;';
-      });
-      cardNumInput.placeholder = '1234 5678 9012 3456';
-      cardNumInput.maxLength = 19;
-      expInput.placeholder = 'MM / YYYY';
-      expInput.maxLength = 9;
-      document.getElementById('cvvNumber').placeholder = '123';
-      document.getElementById('cvvNumber').maxLength = 4;
-
-      // Move them out of the hidden form into their visual parent wrappers
-      document.querySelector('.accept-hosted-wrap:nth-of-type(1)') &&
-        cardDiv.appendChild(cardNumInput);
-
-      // Re-parent via DOM
-      document.querySelectorAll('.accept-hosted-wrap').forEach((wrap, i) => {
-        if (i === 0) wrap.appendChild(cardNumInput);
-        if (i === 1) wrap.appendChild(expInput);
-        if (i === 2) wrap.appendChild(document.getElementById('cvvNumber'));
-      });
-    })();
-
-    // Auto-format card number with spaces
-    document.getElementById('cardNumber').addEventListener('input', function () {
-      let v = this.value.replace(/\D/g, '').substring(0, 16);
-      this.value = v.replace(/(.{4})/g, '$1 ').trim();
-    });
-
-    // Auto-format expiry MM / YYYY
-    document.getElementById('expDate').addEventListener('input', function () {
-      let v = this.value.replace(/\D/g, '').substring(0, 6);
-      if (v.length >= 2) v = v.substring(0, 2) + ' / ' + v.substring(2);
-      this.value = v;
-    });
-
-    // Remove error highlight on input
-    document.querySelectorAll('.field input, .field select').forEach(el => {
-      el.addEventListener('input', () => el.classList.remove('is-invalid'));
-      el.addEventListener('change', () => el.classList.remove('is-invalid'));
-    });
   </script>
 
 </body>
-
 </html>
