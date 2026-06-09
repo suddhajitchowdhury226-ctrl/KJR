@@ -8,9 +8,8 @@
   <link rel="stylesheet" href="styles.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Authorize.net Accept.js — tokenises card data client-side (PCI-compliant) -->
-  <!-- NOTE: This src switches automatically based on the environment we detect from /api/payment/config -->
-  <script id="acceptjs-script"></script>
+  <!-- Authorize.net Accept.js — PRODUCTION — tokenises card data client-side (PCI-compliant) -->
+  <script src="https://js.authorize.net/v1/Accept.js" charset="utf-8"></script>
 
   <style>
     :root {
@@ -915,15 +914,15 @@
       window.location.protocol === 'file:'
     ) ? 'http://localhost:5001/api' : '/api';
 
-    // Accept.js URL differs between sandbox and production
-    const ANET_ACCEPT_SANDBOX = 'https://jstest.authorize.net/v1/Accept.js';
-    const ANET_ACCEPT_PRODUCTION = 'https://js.authorize.net/v1/Accept.js';
-
     // Cart from localStorage
     const cart = JSON.parse(localStorage.getItem('kjr_cart') || '[]');
 
-    // Accept.js auth data — populated once /config responds
-    let acceptAuthData = null;
+    // Accept.js auth data — hardcoded known production credentials.
+    // Optionally refreshed from backend /api/payment/config when server is running.
+    let acceptAuthData = {
+      clientKey:  '5pg7V9Q99T4GTnu9rWKGen384Gyg7H3frMnFgNfBByN9pTcMZreJeM22fy56LnRd',
+      apiLoginID: '9s47Tn5Mh'
+    };
     let acceptEnvironment = 'PRODUCTION';
 
     // ── Boot sequence ───────────────────────────────────────────────────────
@@ -935,37 +934,30 @@
 
       renderSummary();
 
+      // Try to refresh credentials from the backend (works when server is running).
+      // If it fails we fall back to the hardcoded credentials above — no error shown.
       try {
         const resp = await fetch(`${API_BASE}/payment/config`);
-        const cfg = await resp.json();
+        if (resp.ok) {
+          const cfg = await resp.json();
+          if (cfg.publicClientKey) {
+            acceptAuthData = {
+              clientKey:  cfg.publicClientKey,
+              apiLoginID: cfg.apiLoginId
+            };
+          }
+          acceptEnvironment = cfg.environment || 'PRODUCTION';
+        }
+      } catch (_) {
+        console.info('[Payment] Backend unreachable — using built-in credentials.');
+      }
 
-        acceptEnvironment = cfg.environment || 'PRODUCTION';
-        acceptAuthData = {
-          clientKey: cfg.publicClientKey,
-          apiLoginID: cfg.apiLoginId
-        };
-
-        // Dynamically load the correct Accept.js based on environment
-        const script = document.getElementById('acceptjs-script');
-        script.src = acceptEnvironment === 'PRODUCTION' ? ANET_ACCEPT_PRODUCTION : ANET_ACCEPT_SANDBOX;
-        script.charset = 'utf-8';
-        script.onload = initAcceptJs;
-        script.onerror = () => showPayError('Payment system failed to load. Please refresh and try again.');
-
-      } catch (err) {
-        console.error('Config fetch failed:', err);
-        showPayError('Could not connect to payment system. Please refresh.');
+      if (window.Accept) {
+        console.log('[Payment] Accept.js ready — environment:', acceptEnvironment);
+      } else {
+        console.warn('[Payment] Accept.js not yet available — likely blocked by an extension.');
       }
     })();
-
-    // ── Initialise Accept.js hosted fields ──────────────────────────────────
-    function initAcceptJs() {
-      if (!window.Accept) {
-        showPayError('Authorize.net Accept.js not available. Please disable any ad-blockers and refresh.');
-        return;
-      }
-      console.log('[Payment] Accept.js loaded — environment:', acceptEnvironment);
-    }
 
     // ── Order Summary ────────────────────────────────────────────────────────
     function parsePrice(str) {
@@ -1063,7 +1055,10 @@
       }
 
       if (!window.Accept) {
-        showPayError('Payment form is not ready yet. Please wait a moment and try again.');
+        showPayError(
+          'Secure payment could not load. ' +
+          'Please make sure you are online, disable any ad-blockers, and refresh the page.'
+        );
         return false;
       }
 
