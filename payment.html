@@ -1183,13 +1183,16 @@
           document.getElementById('processingOverlay').classList.remove('show');
           if (data.success) {
             document.getElementById('orderNum').textContent = 'Order #' + (data.invoiceNumber || invoiceNum);
-            document.getElementById('txDetail').textContent =
-              'Transaction ID: ' + data.transactionId + '  ·  Auth Code: ' + data.authCode;
+            document.getElementById('txDetail').textContent = data.testMode
+              ? '⚠️ TEST MODE — No real charge was made. Disable test mode in your Authorize.net account to go live.'
+              : 'Transaction ID: ' + data.transactionId + '  ·  Auth Code: ' + data.authCode;
             document.getElementById('successOverlay').classList.add('show');
           } else {
             btn.disabled = false;
             btn.textContent = '🔒 Place Order & Pay';
-            showPayError('Payment declined: ' + (data.message || 'Please check your card details and try again.'));
+            // Give a clear action if test mode is the issue
+            const msg = data.message || 'Please check your card details and try again.';
+            showPayError(msg);
           }
         })
         .catch(err => {
