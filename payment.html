@@ -231,6 +231,7 @@
       border-radius: 8px;
       overflow: hidden;
     }
+
     .accept-hosted-wrap input {
       width: 100%;
       padding: .65rem .9rem;
@@ -243,8 +244,14 @@
       transition: border-color .15s;
       display: block;
     }
-    .accept-hosted-wrap input:focus  { border-color: var(--primary); }
-    .accept-hosted-wrap input.is-invalid { border-color: #dc2626; }
+
+    .accept-hosted-wrap input:focus {
+      border-color: var(--primary);
+    }
+
+    .accept-hosted-wrap input.is-invalid {
+      border-color: #dc2626;
+    }
 
     /* ── Card brand logos ── */
     .card-brands {
@@ -782,8 +789,7 @@
           <div class="field">
             <label>Card Number *</label>
             <div class="accept-hosted-wrap">
-              <input type="text" id="cardNumber" name="cardNumber"
-                placeholder="1234 5678 9012 3456" maxlength="19"
+              <input type="text" id="cardNumber" name="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19"
                 autocomplete="cc-number" inputmode="numeric">
             </div>
           </div>
@@ -793,17 +799,15 @@
           <div class="field">
             <label>Expiry Date *</label>
             <div class="accept-hosted-wrap">
-              <input type="text" id="expDate" name="expDate"
-                placeholder="MM / YYYY" maxlength="9"
-                autocomplete="cc-exp" inputmode="numeric">
+              <input type="text" id="expDate" name="expDate" placeholder="MM / YYYY" maxlength="9" autocomplete="cc-exp"
+                inputmode="numeric">
             </div>
           </div>
           <div class="field">
             <label>CVV *</label>
             <div class="accept-hosted-wrap">
-              <input type="text" id="cvvNumber" name="cardCode"
-                placeholder="123" maxlength="4"
-                autocomplete="cc-csc" inputmode="numeric">
+              <input type="text" id="cvvNumber" name="cardCode" placeholder="123" maxlength="4" autocomplete="cc-csc"
+                inputmode="numeric">
             </div>
           </div>
         </div>
@@ -935,7 +939,7 @@
     // Accept.js auth data — hardcoded known production credentials.
     // Optionally refreshed from backend /api/payment/config when server is running.
     let acceptAuthData = {
-      clientKey:  '5pg7V9Q99T4GTnu9rWKGen384Gyg7H3frMnFgNfBByN9pTcMZreJeM22fy56LnRd',
+      clientKey: '5pg7V9Q99T4GTnu9rWKGen384Gyg7H3frMnFgNfBByN9pTcMZreJeM22fy56LnRd',
       apiLoginID: '9s47Tn5Mh'
     };
     let acceptEnvironment = 'PRODUCTION';
@@ -949,22 +953,26 @@
 
       renderSummary();
 
-      // Try to refresh credentials from the backend (works when server is running).
-      // If it fails we fall back to the hardcoded credentials above — no error shown.
-      try {
-        const resp = await fetch(`${API_BASE}/payment/config`);
-        if (resp.ok) {
-          const cfg = await resp.json();
-          if (cfg.publicClientKey) {
-            acceptAuthData = {
-              clientKey:  cfg.publicClientKey,
-              apiLoginID: cfg.apiLoginId
-            };
+      // Only attempt to refresh credentials from the backend when actually
+      // running through a server (not file://).  This prevents the 404 noise
+      // in the browser console when the page is opened as a local file.
+      const isServed = window.location.protocol !== 'file:';
+      if (isServed) {
+        try {
+          const resp = await fetch(`${API_BASE}/payment/config`);
+          if (resp.ok) {
+            const cfg = await resp.json();
+            if (cfg.publicClientKey) {
+              acceptAuthData = {
+                clientKey: cfg.publicClientKey,
+                apiLoginID: cfg.apiLoginId
+              };
+            }
+            acceptEnvironment = cfg.environment || 'PRODUCTION';
           }
-          acceptEnvironment = cfg.environment || 'PRODUCTION';
+        } catch (_) {
+          // Server reachable but config failed — fall back to built-in credentials silently.
         }
-      } catch (_) {
-        console.info('[Payment] Backend unreachable — using built-in credentials.');
       }
 
       if (window.Accept) {
@@ -1217,7 +1225,7 @@
 
     // Remove invalid highlight on typing
     document.querySelectorAll('.field input, .field select').forEach(el => {
-      el.addEventListener('input',  () => el.classList.remove('is-invalid'));
+      el.addEventListener('input', () => el.classList.remove('is-invalid'));
       el.addEventListener('change', () => el.classList.remove('is-invalid'));
     });
 
@@ -1227,8 +1235,8 @@
       if (!validateForm()) return;
 
       const cardNumVal = document.getElementById('cardNumber').value.replace(/\s/g, '');
-      const expRaw     = document.getElementById('expDate').value.replace(/\s/g, '').replace('/', '');
-      const cvvVal     = document.getElementById('cvvNumber').value.trim();
+      const expRaw = document.getElementById('expDate').value.replace(/\s/g, '').replace('/', '');
+      const cvvVal = document.getElementById('cvvNumber').value.trim();
 
       if (cardNumVal.length < 13) {
         document.getElementById('cardNumber').classList.add('is-invalid');
@@ -1251,25 +1259,25 @@
       }
 
       const btn = document.getElementById('payBtn');
-      btn.disabled    = true;
+      btn.disabled = true;
       btn.textContent = '⏳ Securing card data…';
 
       // Accept.js expects month and 4-digit year separately
       let expMonth = expRaw.substring(0, 2);
-      let expYear  = expRaw.substring(2);
+      let expYear = expRaw.substring(2);
       if (expYear.length === 2) expYear = '20' + expYear;
 
       const secureData = {
         authData: acceptAuthData,
         cardData: {
           cardNumber: cardNumVal,
-          month:      expMonth,
-          year:       expYear,
-          cardCode:   cvvVal,
-          fullName:   document.getElementById('cardName').value.trim(),
-          zip:        document.getElementById('sameAsBilling').checked
-                        ? document.getElementById('zip').value.trim()
-                        : document.getElementById('billZip').value.trim()
+          month: expMonth,
+          year: expYear,
+          cardCode: cvvVal,
+          fullName: document.getElementById('cardName').value.trim(),
+          zip: document.getElementById('sameAsBilling').checked
+            ? document.getElementById('zip').value.trim()
+            : document.getElementById('billZip').value.trim()
         }
       };
 
@@ -1278,4 +1286,5 @@
   </script>
 
 </body>
+
 </html>
