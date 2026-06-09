@@ -38,3 +38,8 @@ Thumbs.db
 
 # Coverage
 /coverage
+
+# Large data files — too big for GitHub (> 100MB)
+# bid-projects.html contains 6M lines of embedded state/county data
+# It is auto-generated and should NOT be committed
+bid-projects.html
