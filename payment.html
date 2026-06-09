@@ -926,65 +926,65 @@
        JavaScript
   ════════════════════════════════════════════════════════════════════════ -->
   <script>
-    // ── Config ──────────────────────────────────────────────────────────────
+    // ─────────────────────────────────────────────────────────────────────────
+    // CONFIG
+    // ─────────────────────────────────────────────────────────────────────────
     const API_BASE = (
       window.location.hostname === 'localhost' ||
       window.location.hostname === '127.0.0.1' ||
       window.location.protocol === 'file:'
     ) ? 'http://localhost:5001/api' : '/api';
 
-    // Cart from localStorage
     const cart = JSON.parse(localStorage.getItem('kjr_cart') || '[]');
 
-    // Accept.js auth data — hardcoded known production credentials.
-    // Optionally refreshed from backend /api/payment/config when server is running.
+    // Hardcoded production credentials — refreshed from backend when served
     let acceptAuthData = {
-      clientKey: '5pg7V9Q99T4GTnu9rWKGen384Gyg7H3frMnFgNfBByN9pTcMZreJeM22fy56LnRd',
+      clientKey:  '5pg7V9Q99T4GTnu9rWKGen384Gyg7H3frMnFgNfBByN9pTcMZreJeM22fy56LnRd',
       apiLoginID: '9s47Tn5Mh'
     };
     let acceptEnvironment = 'PRODUCTION';
 
-    // ── Boot sequence ───────────────────────────────────────────────────────
+    // ─────────────────────────────────────────────────────────────────────────
+    // BOOT
+    // ─────────────────────────────────────────────────────────────────────────
     (async function boot() {
       if (cart.length === 0) {
         window.location.href = 'checkout.html';
         return;
       }
-
       renderSummary();
 
-      // Only attempt to refresh credentials from the backend when actually
-      // running through a server (not file://).  This prevents the 404 noise
-      // in the browser console when the page is opened as a local file.
-      const isServed = window.location.protocol !== 'file:';
-      if (isServed) {
+      // Skip config fetch when opened as a local file — avoids 404 noise
+      if (window.location.protocol !== 'file:') {
         try {
-          const resp = await fetch(`${API_BASE}/payment/config`);
+          const resp = await fetch(API_BASE + '/payment/config');
           if (resp.ok) {
             const cfg = await resp.json();
             if (cfg.publicClientKey) {
-              acceptAuthData = {
-                clientKey: cfg.publicClientKey,
-                apiLoginID: cfg.apiLoginId
-              };
+              acceptAuthData = { clientKey: cfg.publicClientKey, apiLoginID: cfg.apiLoginId };
             }
             acceptEnvironment = cfg.environment || 'PRODUCTION';
           }
-        } catch (_) {
-          // Server reachable but config failed — fall back to built-in credentials silently.
-        }
+        } catch (_) { /* fall back to hardcoded credentials */ }
       }
 
       if (window.Accept) {
         console.log('[Payment] Accept.js ready — environment:', acceptEnvironment);
       } else {
-        console.warn('[Payment] Accept.js not yet available — likely blocked by an extension.');
+        console.warn('[Payment] Accept.js not available — check ad-blockers.');
       }
     })();
 
-    // ── Order Summary ────────────────────────────────────────────────────────
+    // ─────────────────────────────────────────────────────────────────────────
+    // ORDER SUMMARY
+    // ─────────────────────────────────────────────────────────────────────────
     function parsePrice(str) {
       return parseFloat((str || '0').replace(/[^0-9.]/g, '')) || 0;
+    }
+
+    function getTotal() {
+      const sub = cart.reduce((s, i) => s + parsePrice(i.price) * i.qty, 0);
+      return (sub * 1.08).toFixed(2);
     }
 
     function renderSummary() {
@@ -993,34 +993,33 @@
         const unit = parsePrice(item.price);
         const line = unit * item.qty;
         subtotal += line;
-        savings += unit * 0.10 * item.qty;
-        html += `<div class="order-item">
-          <div>
-            <div class="order-item-name">${escHtml(item.name)}</div>
-            <div class="order-item-sub">Part# ${escHtml(item.part || 'N/A')} &nbsp;×&nbsp; ${item.qty}</div>
-          </div>
-          <div class="order-item-price">$${line.toFixed(2)}</div>
-        </div>`;
+        savings  += unit * 0.10 * item.qty;
+        html += '<div class="order-item">'
+          + '<div>'
+          + '<div class="order-item-name">' + escHtml(item.name) + '</div>'
+          + '<div class="order-item-sub">Part# ' + escHtml(item.part || 'N/A') + ' &nbsp;×&nbsp; ' + item.qty + '</div>'
+          + '</div>'
+          + '<div class="order-item-price">$' + line.toFixed(2) + '</div>'
+          + '</div>';
       });
       document.getElementById('orderLines').innerHTML = html;
-      const tax = subtotal * 0.08;
+      const tax   = subtotal * 0.08;
       const total = subtotal + tax;
       document.getElementById('paySubtotal').textContent = '$' + subtotal.toFixed(2);
-      document.getElementById('payTax').textContent = '$' + tax.toFixed(2);
-      document.getElementById('payTotal').textContent = '$' + total.toFixed(2);
-      document.getElementById('savingsAmt').textContent = '$' + savings.toFixed(2);
+      document.getElementById('payTax').textContent      = '$' + tax.toFixed(2);
+      document.getElementById('payTotal').textContent    = '$' + total.toFixed(2);
+      document.getElementById('savingsAmt').textContent  = '$' + savings.toFixed(2);
     }
 
-    function getTotal() {
-      const subtotal = cart.reduce((s, i) => s + parsePrice(i.price) * i.qty, 0);
-      return (subtotal * 1.08).toFixed(2);
-    }
-
-    // ── Helpers ──────────────────────────────────────────────────────────────
     function escHtml(str) {
-      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      return String(str)
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
 
+    // ─────────────────────────────────────────────────────────────────────────
+    // UI HELPERS
+    // ─────────────────────────────────────────────────────────────────────────
     function toggleBilling() {
       document.getElementById('billingFields').style.display =
         document.getElementById('sameAsBilling').checked ? 'none' : 'block';
@@ -1039,163 +1038,178 @@
       el.classList.remove('show');
     }
 
-    // ── Validation ────────────────────────────────────────────────────────────
+    // ─────────────────────────────────────────────────────────────────────────
+    // VALIDATION
+    // ─────────────────────────────────────────────────────────────────────────
     function validateForm() {
-      const required = [
-        ['firstName', 'First name'],
-        ['lastName', 'Last name'],
-        ['email', 'Email address'],
-        ['phone', 'Phone number'],
-        ['address', 'Street address'],
-        ['city', 'City'],
-        ['zip', 'ZIP code'],
-        ['cardName', 'Cardholder name']
+      const fields = [
+        ['firstName','First name'], ['lastName','Last name'],
+        ['email','Email address'],  ['phone','Phone number'],
+        ['address','Street address'],['city','City'],
+        ['zip','ZIP code'],          ['cardName','Cardholder name']
       ];
-
-      for (const [id, label] of required) {
+      for (const [id, label] of fields) {
         const el = document.getElementById(id);
         if (!el.value.trim()) {
           el.classList.add('is-invalid');
           el.focus();
-          showPayError(`${label} is required.`);
+          showPayError(label + ' is required.');
           return false;
         }
         el.classList.remove('is-invalid');
       }
-
-      const state = document.getElementById('state').value;
-      if (!state) {
+      if (!document.getElementById('state').value) {
         document.getElementById('state').classList.add('is-invalid');
         showPayError('Please select a state.');
         return false;
       }
-
-      const emailVal = document.getElementById('email').value;
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(document.getElementById('email').value)) {
         document.getElementById('email').classList.add('is-invalid');
         showPayError('Please enter a valid email address.');
         return false;
       }
-
       if (!window.Accept) {
-        showPayError(
-          'Secure payment could not load. ' +
-          'Please make sure you are online, disable any ad-blockers, and refresh the page.'
-        );
+        showPayError('Secure payment could not load. Please disable any ad-blockers and refresh.');
         return false;
       }
-
       return true;
     }
 
-    // ── Step 1: Click "Place Order" → tokenise with Accept.js ───────────────
+    // ─────────────────────────────────────────────────────────────────────────
+    // STEP 1 — Button click: validate → tokenise with Accept.js
+    // ─────────────────────────────────────────────────────────────────────────
     function initiatePayment() {
       clearPayError();
       if (!validateForm()) return;
 
-      const btn = document.getElementById('payBtn');
-      btn.disabled = true;
-      btn.textContent = '⏳ Preparing…';
+      // Read card fields (already in the visible form)
+      const cardNumVal = document.getElementById('cardNumber').value.replace(/\s/g, '');
+      const expRaw     = document.getElementById('expDate').value.replace(/[\s\/]/g, '');
+      const cvvVal     = document.getElementById('cvvNumber').value.trim();
 
-      // Build the Accept.js dispatch data
+      if (cardNumVal.length < 13) {
+        document.getElementById('cardNumber').classList.add('is-invalid');
+        return showPayError('Please enter a valid card number (13–16 digits).');
+      }
+      if (expRaw.length < 5) {
+        document.getElementById('expDate').classList.add('is-invalid');
+        return showPayError('Please enter a valid expiry date (MM / YYYY).');
+      }
+      if (cvvVal.length < 3) {
+        document.getElementById('cvvNumber').classList.add('is-invalid');
+        return showPayError('Please enter the 3 or 4 digit security code (CVV).');
+      }
+
+      const btn = document.getElementById('payBtn');
+      btn.disabled    = true;
+      btn.textContent = '⏳ Securing card data…';
+
+      // Parse expiry into month + 4-digit year for Accept.js
+      const expMonth = expRaw.substring(0, 2);
+      let   expYear  = expRaw.substring(2);
+      if (expYear.length === 2) expYear = '20' + expYear;
+
       const secureData = {
         authData: acceptAuthData,
         cardData: {
-          cardNumber: document.getElementById('cardNumber')?.value?.replace(/\s/g, '') || '',
-          month: '',
-          year: '',
-          cardCode: document.getElementById('cvvNumber')?.value || '',
-          fullName: document.getElementById('cardName').value.trim(),
+          cardNumber: cardNumVal,
+          month:      expMonth,
+          year:       expYear,
+          cardCode:   cvvVal,
+          fullName:   document.getElementById('cardName').value.trim(),
           zip: document.getElementById('sameAsBilling').checked
-            ? document.getElementById('zip').value
-            : document.getElementById('billZip').value,
-          cardNumericZip: document.getElementById('sameAsBilling').checked
-            ? document.getElementById('zip').value
-            : document.getElementById('billZip').value
+                 ? document.getElementById('zip').value.trim()
+                 : document.getElementById('billZip').value.trim()
         }
       };
 
-      // Accept.js requires the card fields to be in standard HTML inputs named
-      // "cardNumber", "expMonth"/"expYear" (or "expDate"), and "cardCode"
-      // For the Accept.js inline flow we use dispatchData with the form fields
       Accept.dispatchData(secureData, handleAcceptResponse);
     }
 
-    // ── Step 2: Accept.js callback → charge the token on our server ─────────
+    // ─────────────────────────────────────────────────────────────────────────
+    // STEP 2 — Accept.js callback: token received → charge server-side
+    // ─────────────────────────────────────────────────────────────────────────
     function handleAcceptResponse(response) {
       const btn = document.getElementById('payBtn');
 
+      // Accept.js reported a card-level error
       if (response.messages.resultCode === 'Error') {
-        btn.disabled = false;
+        btn.disabled    = false;
         btn.textContent = '🔒 Place Order & Pay';
-        const errMsgs = response.messages.message
-          .map(m => m.text)
-          .join(' ');
-        showPayError('Card error: ' + errMsgs);
+        const errText = response.messages.message.map(m => m.text).join(' ');
+        showPayError('Card error: ' + errText);
         return;
       }
 
-      // Token received — show processing overlay and charge server-side
+      // Got a token — show processing spinner
       document.getElementById('processingOverlay').classList.add('show');
 
       const opaqueData = response.opaqueData;
       const invoiceNum = 'KJR-' + String(Math.floor(100000 + Math.random() * 900000));
-      const sameShip = document.getElementById('sameAsBilling').checked;
+      const sameShip   = document.getElementById('sameAsBilling').checked;
 
       const payload = {
         opaqueDataDescriptor: opaqueData.dataDescriptor,
-        opaqueDataValue: opaqueData.dataValue,
-        amount: getTotal(),
-        firstName: document.getElementById('firstName').value.trim(),
-        lastName: document.getElementById('lastName').value.trim(),
-        email: document.getElementById('email').value.trim(),
-        phone: document.getElementById('phone').value.trim(),
-        company: document.getElementById('company').value.trim(),
-        address: sameShip
-          ? document.getElementById('address').value.trim()
-          : document.getElementById('billAddr').value.trim(),
-        city: sameShip
-          ? document.getElementById('city').value.trim()
-          : document.getElementById('billCity').value.trim(),
-        state: sameShip
-          ? document.getElementById('state').value
-          : document.getElementById('billState').value.trim(),
-        zip: sameShip
-          ? document.getElementById('zip').value.trim()
-          : document.getElementById('billZip').value.trim(),
+        opaqueDataValue:      opaqueData.dataValue,
+        amount:      getTotal(),
+        firstName:   document.getElementById('firstName').value.trim(),
+        lastName:    document.getElementById('lastName').value.trim(),
+        email:       document.getElementById('email').value.trim(),
+        phone:       document.getElementById('phone').value.trim(),
+        company:     document.getElementById('company').value.trim(),
+        address:     sameShip ? document.getElementById('address').value.trim()  : document.getElementById('billAddr').value.trim(),
+        city:        sameShip ? document.getElementById('city').value.trim()     : document.getElementById('billCity').value.trim(),
+        state:       sameShip ? document.getElementById('state').value           : document.getElementById('billState').value.trim(),
+        zip:         sameShip ? document.getElementById('zip').value.trim()      : document.getElementById('billZip').value.trim(),
         invoiceNumber: invoiceNum,
-        description: 'KJR Interior Designs Product Order',
-        cartItems: cart
+        description:   'KJR Interior Designs Product Order',
+        cartItems:     cart
       };
 
-      fetch(`${API_BASE}/payment/charge`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      })
-        .then(r => r.json())
-        .then(data => {
-          document.getElementById('processingOverlay').classList.remove('show');
+      // Guard: if backend isn\'t reachable (file:// or server down) tell the user clearly
+      if (window.location.protocol === 'file:') {
+        document.getElementById('processingOverlay').classList.remove('show');
+        btn.disabled    = false;
+        btn.textContent = '🔒 Place Order & Pay';
+        showPayError(
+          'To process live payments the KJR backend server must be running. ' +
+          'Start it with: cd backend && npm start  — then open this page via http://localhost:5001'
+        );
+        return;
+      }
 
-          if (data.success) {
-            // Show success overlay
-            document.getElementById('orderNum').textContent = 'Order #' + (data.invoiceNumber || invoiceNum);
-            document.getElementById('txDetail').textContent =
-              `Transaction ID: ${data.transactionId}  ·  Auth Code: ${data.authCode}`;
-            document.getElementById('successOverlay').classList.add('show');
-          } else {
-            btn.disabled = false;
-            btn.textContent = '🔒 Place Order & Pay';
-            showPayError('Payment declined: ' + (data.message || 'Please check your card details and try again.'));
-          }
-        })
-        .catch(err => {
-          document.getElementById('processingOverlay').classList.remove('show');
-          btn.disabled = false;
+      fetch(API_BASE + '/payment/charge', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(payload)
+      })
+      .then(async r => {
+        // Always try to parse JSON; if server returned HTML (404/500) surface a clean error
+        const text = await r.text();
+        try { return JSON.parse(text); }
+        catch (_) {
+          throw new Error('Server error (' + r.status + '). Make sure the KJR backend is running.');
+        }
+      })
+      .then(data => {
+        document.getElementById('processingOverlay').classList.remove('show');
+        if (data.success) {
+          document.getElementById('orderNum').textContent = 'Order #' + (data.invoiceNumber || invoiceNum);
+          document.getElementById('txDetail').textContent =
+            'Transaction ID: ' + data.transactionId + '  ·  Auth Code: ' + data.authCode;
+          document.getElementById('successOverlay').classList.add('show');
+        } else {
+          btn.disabled    = false;
           btn.textContent = '🔒 Place Order & Pay';
-          console.error('[Payment] Fetch error:', err);
-          showPayError('Connection error. Please check your internet and try again.');
-        });
+          showPayError('Payment declined: ' + (data.message || 'Please check your card details and try again.'));
+        }
+      })
+      .catch(err => {
+        document.getElementById('processingOverlay').classList.remove('show');
+        btn.disabled    = false;
+        btn.textContent = '🔒 Place Order & Pay';
+        showPayError(err.message || 'Connection error. Please check your internet and try again.');
+      });
     }
 
     function clearCartOnSuccess() {
@@ -1203,7 +1217,7 @@
     }
   </script>
 
-  <!-- ── Card input formatting & payment submission ── -->
+    <!-- ── Card input formatting & payment submission ── -->
   <script>
     // Auto-format card number  4-4-4-4
     document.getElementById('cardNumber').addEventListener('input', function () {
@@ -1229,62 +1243,7 @@
       el.addEventListener('change', () => el.classList.remove('is-invalid'));
     });
 
-    // ── Main submit — overrides the stub in the first script block ──────────
-    function initiatePayment() {
-      clearPayError();
-      if (!validateForm()) return;
-
-      const cardNumVal = document.getElementById('cardNumber').value.replace(/\s/g, '');
-      const expRaw = document.getElementById('expDate').value.replace(/\s/g, '').replace('/', '');
-      const cvvVal = document.getElementById('cvvNumber').value.trim();
-
-      if (cardNumVal.length < 13) {
-        document.getElementById('cardNumber').classList.add('is-invalid');
-        return showPayError('Please enter a valid card number (13–16 digits).');
-      }
-      if (expRaw.length < 5) {
-        document.getElementById('expDate').classList.add('is-invalid');
-        return showPayError('Please enter a valid expiry date (MM / YYYY).');
-      }
-      if (cvvVal.length < 3) {
-        document.getElementById('cvvNumber').classList.add('is-invalid');
-        return showPayError('Please enter the 3 or 4 digit security code (CVV).');
-      }
-
-      if (!window.Accept) {
-        return showPayError(
-          'Secure payment could not load. ' +
-          'Please make sure you are online, disable any ad-blockers, and refresh.'
-        );
-      }
-
-      const btn = document.getElementById('payBtn');
-      btn.disabled = true;
-      btn.textContent = '⏳ Securing card data…';
-
-      // Accept.js expects month and 4-digit year separately
-      let expMonth = expRaw.substring(0, 2);
-      let expYear = expRaw.substring(2);
-      if (expYear.length === 2) expYear = '20' + expYear;
-
-      const secureData = {
-        authData: acceptAuthData,
-        cardData: {
-          cardNumber: cardNumVal,
-          month: expMonth,
-          year: expYear,
-          cardCode: cvvVal,
-          fullName: document.getElementById('cardName').value.trim(),
-          zip: document.getElementById('sameAsBilling').checked
-            ? document.getElementById('zip').value.trim()
-            : document.getElementById('billZip').value.trim()
-        }
-      };
-
-      Accept.dispatchData(secureData, handleAcceptResponse);
-    }
   </script>
 
 </body>
-
 </html>
