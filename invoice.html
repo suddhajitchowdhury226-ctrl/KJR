@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invoice | KJR Interior Designs Inc.</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #cc0000;
+      --dark: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --bg: #f8fafc;
+      --success: #16a34a;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--dark);
+    }
+
+    /* ── Page hero ── */
+    .inv-hero {
+      background: var(--dark);
+      padding: 2.5rem 2rem;
+      text-align: center;
+    }
+
+    .inv-hero h1 {
+      font-size: 1.9rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .inv-hero p {
+      color: rgba(255, 255, 255, .6);
+      margin-top: .4rem;
+      font-size: .9rem;
+    }
+
+    /* ── Breadcrumb ── */
+    .breadcrumb {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: .7rem 2.5rem;
+      font-size: .82rem;
+      color: var(--muted);
+    }
+
+    .breadcrumb a {
+      color: var(--primary);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .breadcrumb span {
+      margin: 0 .4rem;
+    }
+
+    /* ── Lookup bar ── */
+    .lookup-bar {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: center;
+      gap: .75rem;
+      flex-wrap: wrap;
+    }
+
+    .lookup-bar input {
+      padding: .65rem 1.1rem;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: .9rem;
+      font-family: 'Inter', sans-serif;
+      width: 280px;
+      outline: none;
+    }
+
+    .lookup-bar input:focus {
+      border-color: var(--primary);
+    }
+
+    .lookup-bar button {
+      padding: .65rem 1.5rem;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: .88rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .lookup-bar button:hover {
+      background: #aa0000;
+    }
+
+    /* ── Main wrap ── */
+    .page-wrap {
+      max-width: 900px;
+      margin: 2rem auto 5rem;
+      padding: 0 1.5rem;
+    }
+
+    /* ── States ── */
+    .state-box {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 3rem;
+      text-align: center;
+    }
+
+    .state-box .icon {
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .state-box h3 {
+      font-size: 1.1rem;
+      font-weight: 800;
+      margin-bottom: .5rem;
+    }
+
+    .state-box p {
+      font-size: .9rem;
+      color: var(--muted);
+    }
+
+    /* ── Invoice card ── */
+    .inv-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, .07);
+    }
+
+    /* Header band */
+    .inv-header {
+      background: var(--dark);
+      padding: 2rem 2.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .inv-header .brand-name {
+      color: #fff;
+      font-size: 1.3rem;
+      font-weight: 800;
+    }
+
+    .inv-header .brand-sub {
+      color: rgba(255, 255, 255, .5);
+      font-size: .78rem;
+      margin-top: .2rem;
+    }
+
+    .inv-header .inv-label {
+      color: var(--primary);
+      font-size: .65rem;
+      font-weight: 800;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      margin-bottom: .3rem;
+    }
+
+    .inv-header .inv-num {
+      color: #fff;
+      font-size: 1.2rem;
+      font-weight: 800;
+    }
+
+    .inv-header .inv-date {
+      color: rgba(255, 255, 255, .5);
+      font-size: .78rem;
+      margin-top: .25rem;
+    }
+
+    .paid-badge {
+      display: inline-block;
+      background: var(--success);
+      color: #fff;
+      font-size: .7rem;
+      font-weight: 800;
+      padding: .28rem .75rem;
+      border-radius: 20px;
+      letter-spacing: .08em;
+      margin-bottom: .5rem;
+    }
+
+    /* Info row */
+    .inv-info-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    @media(max-width:640px) {
+      .inv-info-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .inv-info-cell {
+      padding: 1.5rem 2rem;
+      border-right: 1px solid var(--border);
+    }
+
+    .inv-info-cell:last-child {
+      border-right: none;
+    }
+
+    .inv-info-cell .cell-label {
+      font-size: .62rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .15em;
+      color: var(--muted);
+      margin-bottom: .6rem;
+    }
+
+    .inv-info-cell .cell-name {
+      font-weight: 700;
+      color: var(--dark);
+      font-size: .92rem;
+    }
+
+    .inv-info-cell .cell-line {
+      font-size: .82rem;
+      color: #475569;
+      margin-top: .15rem;
+    }
+
+    .inv-info-cell .cell-paid {
+      font-size: .82rem;
+      color: var(--success);
+      font-weight: 700;
+      margin-top: .15rem;
+    }
+
+    /* Line items */
+    .inv-items {
+      padding: 1.75rem 2rem;
+    }
+
+    .inv-items table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .87rem;
+    }
+
+    .inv-items thead tr {
+      background: var(--dark);
+    }
+
+    .inv-items thead th {
+      padding: .65rem .85rem;
+      color: #e2e8f0;
+      font-size: .67rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      text-align: left;
+    }
+
+    .inv-items thead th.right {
+      text-align: right;
+    }
+
+    .inv-items thead th.center {
+      text-align: center;
+    }
+
+    .inv-items tbody tr:nth-child(even) {
+      background: #f8fafc;
+    }
+
+    .inv-items tbody td {
+      padding: .65rem .85rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--dark);
+    }
+
+    .inv-items tbody td.right {
+      text-align: right;
+    }
+
+    .inv-items tbody td.center {
+      text-align: center;
+    }
+
+    .inv-items tbody td.part {
+      font-size: .75rem;
+      color: var(--muted);
+      font-family: 'Courier New', monospace;
+    }
+
+    .inv-items tbody td.bold {
+      font-weight: 700;
+    }
+
+    /* Totals */
+    .inv-totals {
+      margin-top: 1.25rem;
+      margin-left: auto;
+      max-width: 280px;
+    }
+
+    .tot-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: .87rem;
+      padding: .38rem 0;
+      color: #475569;
+    }
+
+    .tot-row span:last-child {
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    .tot-grand {
+      display: flex;
+      justify-content: space-between;
+      font-size: 1.1rem;
+      font-weight: 800;
+      padding: .7rem 0 0;
+      margin-top: .4rem;
+      border-top: 2px solid var(--dark);
+      color: var(--dark);
+    }
+
+    .tot-grand span:last-child {
+      color: var(--primary);
+    }
+
+    /* Footer note */
+    .inv-footer {
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+      padding: 1.25rem 2rem;
+      text-align: center;
+      font-size: .8rem;
+      color: var(--muted);
+    }
+
+    .inv-footer a {
+      color: var(--primary);
+    }
+
+    /* Action buttons */
+    .inv-actions {
+      display: flex;
+      gap: .75rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .btn-print {
+      padding: .65rem 1.4rem;
+      background: var(--dark);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: .85rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+    }
+
+    .btn-print:hover {
+      background: #1e293b;
+    }
+
+    .btn-shop {
+      padding: .65rem 1.4rem;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: .85rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+    }
+
+    .btn-shop:hover {
+      background: #aa0000;
+    }
+
+    /* Tax breakdown callout */
+    .tax-callout {
+      margin-top: 1.5rem;
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      font-size: .82rem;
+      color: #92400e;
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+    }
+
+    .tax-callout strong {
+      color: #78350f;
+    }
+
+    /* Print styles */
+    @media print {
+
+      .top-bar,
+      .main-header,
+      .inv-hero,
+      .breadcrumb,
+      .lookup-bar,
+      .inv-actions,
+      .tax-callout,
+      footer {
+        display: none !important;
+      }
+
+      body {
+        background: #fff;
+      }
+
+      .page-wrap {
+        margin: 0;
+        padding: 0;
+        max-width: 100%;
+      }
+
+      .inv-card {
+        box-shadow: none;
+        border: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div class="top-bar-left">
+      <span class="utility-info">📞 <strong>888-944-6313</strong> • Call in Orders Only • Call 24/7 • Live
+        Operator</span>
+    </div>
+    <div class="top-bar-right">
+      <a href="contact-us.html">Contact</a>
+      <a href="suggest-feature.html">Suggest Feature</a>
+      <a href="sales-login.html" class="sales-login-btn">SALES LOGIN</a>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="main-header">
+    <div class="header-container">
+      <div class="logo">
+        <a href="index.html"><img src="logo-new.jpeg" alt="KJR Interior Designs Inc."></a>
+      </div>
+      <nav class="secondary-nav">
+        <div class="secondary-nav-container">
+          <ul class="nav-links">
+            <li><a href="index.html">HOME</a></li>
+            <li><a href="products.html">PRODUCTS</a></li>
+            <li><a href="about-us.html">ABOUT</a></li>
+          </ul>
+        </div>
+      </nav>
+      <div class="header-actions">
+        <a href="Lot-categories.html" class="parts-highlight"
+          style="background:var(--primary);color:#fff;padding:0.4rem 1rem;border-radius:4px;">PARTS CATEGORIES</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <div class="inv-hero">
+    <h1>🧾 Invoice</h1>
+    <p>Enter your invoice number below to view or print your receipt</p>
+  </div>
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <a href="index.html">Home</a><span>›</span>
+    <a href="products.html">Products</a><span>›</span>
+    Invoice
+  </div>
+
+  <!-- Lookup bar -->
+  <div class="lookup-bar">
+    <input type="text" id="invInput" placeholder="Invoice # e.g. KJR-1749876543210"
+      oninput="this.value = this.value.toUpperCase()">
+    <button onclick="lookupInvoice()">Look Up Invoice</button>
+  </div>
+
+  <!-- Content area -->
+  <div class="page-wrap">
+    <!-- Initial prompt -->
+    <div id="statePrompt" class="state-box">
+      <div class="icon">🧾</div>
+      <h3>Find Your Invoice</h3>
+      <p>Enter the invoice number from your confirmation email above, or paste the link from your email to load it
+        automatically.</p>
+    </div>
+
+    <!-- Loading -->
+    <div id="stateLoading" class="state-box" style="display:none;">
+      <div class="icon">⏳</div>
+      <h3>Loading invoice…</h3>
+      <p>Please wait a moment.</p>
+    </div>
+
+    <!-- Not found -->
+    <div id="stateNotFound" class="state-box" style="display:none;">
+      <div class="icon">🔍</div>
+      <h3>Invoice Not Found</h3>
+      <p>No invoice matches that number. Check the number and try again, or call <strong>888-944-6313</strong>.</p>
+    </div>
+
+    <!-- Error -->
+    <div id="stateError" class="state-box" style="display:none;">
+      <div class="icon">⚠️</div>
+      <h3>Could Not Load Invoice</h3>
+      <p id="stateErrorMsg">There was a problem connecting. Please try again.</p>
+    </div>
+
+    <!-- Invoice display -->
+    <div id="stateInvoice" style="display:none;">
+      <div id="invCard" class="inv-card"></div>
+
+      <div class="tax-callout">
+        📋 <span><strong>Tax Note:</strong> Sales tax of 8% has been applied to your order total as required by
+          Tennessee state law. This invoice serves as your official tax receipt.</span>
+      </div>
+
+      <div class="inv-actions">
+        <button class="btn-print" onclick="window.print()">🖨️ Print / Save PDF</button>
+        <a href="products.html" class="btn-shop">🛒 Continue Shopping</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-brand">
+        <img src="logo-new.jpeg" alt="KJR Interior Designs Inc." style="height:70px;margin-bottom:1.5rem;">
+        <p>A massive supplier for home appliances, electronics, HVAC, and more. BBB Accredited since 2014.</p>
+      </div>
+      <div class="footer-col">
+        <h4>QUICK LINKS</h4>
+        <ul class="footer-links">
+          <li><a href="products.html">All Products</a></li>
+          <li><a href="Lot-categories.html">Parts Categories</a></li>
+          <li><a href="contact-us.html">Contact Support</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>CONTACT</h4>
+        <p><a href="tel:888-944-6313" style="color:inherit;text-decoration:none;">888-944-6313</a><br>Open 24/7</p>
+        <p style="margin-top:1rem;">1420 Industrial Park Road<br>Paris, TN 38242</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>&copy; 2024 KJR Interior Designs Inc. All rights reserved.</div>
+      <div><a href="#">Privacy Policy</a> &nbsp;|&nbsp; <a href="#">Terms of Service</a></div>
+    </div>
+  </footer>
+
+  <script>
+    const API_BASE = (
+      window.location.hostname === 'localhost' ||
+      window.location.hostname === '127.0.0.1'
+    ) ? 'http://localhost:5001/api' : 'https://kjr-backend.onrender.com/api';
+
+    // ── State helpers ─────────────────────────────────────────────────────
+    function showState(id) {
+      ['statePrompt', 'stateLoading', 'stateNotFound', 'stateError', 'stateInvoice']
+        .forEach(s => document.getElementById(s).style.display = s === id ? 'block' : 'none');
+    }
+
+    function esc(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function fmt(n) { return '$' + parseFloat(n || 0).toFixed(2); }
+
+    // ── Render invoice ────────────────────────────────────────────────────
+    function renderInvoice(inv) {
+      const date = new Date(inv.createdAt).toLocaleDateString('en-US',
+        { year: 'numeric', month: 'long', day: 'numeric' });
+
+      const itemRows = (inv.items || []).map(it => `
+        <tr>
+          <td>${esc(it.name)}</td>
+          <td class="part">${esc(it.part || '—')}</td>
+          <td class="center">${it.qty}</td>
+          <td class="right">${fmt(it.unitPrice)}</td>
+          <td class="right bold">${fmt(it.lineTotal)}</td>
+        </tr>`).join('');
+
+      const taxPct = Math.round((inv.taxRate || 0.08) * 100);
+
+      document.getElementById('invCard').innerHTML = `
+        <!-- Header band -->
+        <div class="inv-header">
+          <div>
+            <div style="color:var(--primary);font-size:.65rem;font-weight:800;letter-spacing:.2em;
+                        text-transform:uppercase;margin-bottom:.3rem;">TAX INVOICE</div>
+            <div class="brand-name">KJIR Interior Designs Inc.</div>
+            <div class="brand-sub">1420 Industrial Park Road, Paris, TN 38242</div>
+            <div class="brand-sub">888-944-6313 &bull; info@kjrid.com</div>
+          </div>
+          <div style="text-align:right;">
+            <div class="paid-badge">✓ PAID</div>
+            <div class="inv-label">Invoice Number</div>
+            <div class="inv-num">#${esc(inv.invoiceNumber)}</div>
+            <div class="inv-date">${date}</div>
+          </div>
+        </div>
+
+        <!-- Info row -->
+        <div class="inv-info-row">
+          <div class="inv-info-cell">
+            <div class="cell-label">Bill To</div>
+            <div class="cell-name">${esc(inv.firstName)} ${esc(inv.lastName)}</div>
+            ${inv.company ? `<div class="cell-line">${esc(inv.company)}</div>` : ''}
+            <div class="cell-line">${esc(inv.email)}</div>
+            ${inv.phone ? `<div class="cell-line">${esc(inv.phone)}</div>` : ''}
+          </div>
+          <div class="inv-info-cell">
+            <div class="cell-label">Ship To</div>
+            <div class="cell-name">${esc(inv.firstName)} ${esc(inv.lastName)}</div>
+            <div class="cell-line">${esc(inv.address)} ${esc(inv.address2 || '')}</div>
+            <div class="cell-line">${esc(inv.city)}, ${esc(inv.state)} ${esc(inv.zip)}</div>
+            ${inv.notes ? `<div class="cell-line" style="margin-top:.4rem;font-style:italic;">${esc(inv.notes)}</div>` : ''}
+          </div>
+          <div class="inv-info-cell">
+            <div class="cell-label">Payment Info</div>
+            <div class="cell-line">Transaction ID: <strong>${esc(inv.transactionId || '—')}</strong></div>
+            <div class="cell-line">Auth Code: <strong>${esc(inv.authCode || '—')}</strong></div>
+            <div class="cell-line">Method: Credit Card</div>
+            <div class="cell-paid">Status: PAID ✓</div>
+          </div>
+        </div>
+
+        <!-- Line items -->
+        <div class="inv-items">
+          <table>
+            <thead>
+              <tr>
+                <th>Item Description</th>
+                <th>Part #</th>
+                <th class="center">Qty</th>
+                <th class="right">Unit Price</th>
+                <th class="right">Line Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${itemRows || '<tr><td colspan="5" style="text-align:center;padding:1rem;color:var(--muted);">No items</td></tr>'}
+            </tbody>
+          </table>
+
+          <!-- Totals -->
+          <div class="inv-totals">
+            <div class="tot-row"><span>Subtotal</span><span>${fmt(inv.subtotal)}</span></div>
+            <div class="tot-row"><span>Tax (${taxPct}%)</span><span>${fmt(inv.taxAmount)}</span></div>
+            <div class="tot-row"><span>Shipping</span><span style="color:var(--muted);">TBD</span></div>
+            <div class="tot-grand"><span>Total Paid</span><span>${fmt(inv.total)}</span></div>
+          </div>
+        </div>
+
+        <!-- Footer note -->
+        <div class="inv-footer">
+          Thank you for your order! Questions? Call <strong>888-944-6313</strong> (24/7) or
+          <a href="mailto:info@kjrid.com">info@kjrid.com</a>
+        </div>`;
+
+      showState('stateInvoice');
+    }
+
+    // ── Lookup ────────────────────────────────────────────────────────────
+    async function lookupInvoice(num) {
+      const invNum = (num || document.getElementById('invInput').value).trim().toUpperCase();
+      if (!invNum) return;
+
+      // Update input field
+      document.getElementById('invInput').value = invNum;
+      showState('stateLoading');
+
+      try {
+        const res = await fetch(`${API_BASE}/payment/invoice/${encodeURIComponent(invNum)}`);
+        if (res.status === 404) { showState('stateNotFound'); return; }
+        if (!res.ok) throw new Error(`Server error ${res.status}`);
+        const inv = await res.json();
+        renderInvoice(inv);
+      } catch (err) {
+        document.getElementById('stateErrorMsg').textContent = err.message;
+        showState('stateError');
+      }
+    }
+
+    // ── Auto-load from URL ?id=KJR-XXXX ──────────────────────────────────
+    (function autoLoad() {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id') || params.get('invoice');
+      if (id) {
+        document.getElementById('invInput').value = id.toUpperCase();
+        lookupInvoice(id.toUpperCase());
+      }
+    })();
+
+    // ── Enter key on input ─────────────────────────────────────────────────
+    document.getElementById('invInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') lookupInvoice();
+    });
+  </script>
+</body>
+
+</html>

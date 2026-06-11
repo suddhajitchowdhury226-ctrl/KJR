@@ -12,6 +12,8 @@
 const express = require('express');
 const router = express.Router();
 const AuthorizenetSDK = require('authorizenet');
+const nodemailer = require('nodemailer');
+const Invoice = require('../models/Invoice');
 
 const ApiContracts = AuthorizenetSDK.APIContracts;
 const ApiControllers = AuthorizenetSDK.APIControllers;
@@ -150,7 +152,7 @@ router.post('/charge', async (req, res) => {
   ctrl.setEnvironment(getEnvironment());
 
   return new Promise((resolve) => {
-    ctrl.execute(() => {
+    ctrl.execute(async () => {
       try {
         const apiResponse = ctrl.getResponse();
         const response = new ApiContracts.CreateTransactionResponse(apiResponse);
@@ -176,12 +178,189 @@ router.post('/charge', async (req, res) => {
 
             console.log(`[Payment] ✅ Approved — TransID: ${transId}  AuthCode: ${authCode}  Msg: ${msgCode} – ${msgText}`);
 
+            // ── Build invoice data ────────────────────────────────────────
+            const finalInvoiceNumber = invoiceNumber || `KJR-${Date.now()}`;
+            const TAX_RATE = 0.08;
+
+            const items = Array.isArray(cartItems) ? cartItems.map(item => {
+              const unitPrice = parseFloat((item.price || '0').replace(/[^0-9.]/g, '')) || 0;
+              const qty = parseInt(item.qty) || 1;
+              return {
+                name: item.name || 'Item',
+                part: item.part || '',
+                qty,
+                unitPrice,
+                lineTotal: parseFloat((unitPrice * qty).toFixed(2))
+              };
+            }) : [];
+
+            const subtotal = parseFloat(items.reduce((s, i) => s + i.lineTotal, 0).toFixed(2));
+            const taxAmount = parseFloat((subtotal * TAX_RATE).toFixed(2));
+            const total = parseFloat((subtotal + taxAmount).toFixed(2));
+
+            // ── Save invoice to DB ────────────────────────────────────────
+            let savedInvoice = null;
+            try {
+              savedInvoice = await new Invoice({
+                invoiceNumber: finalInvoiceNumber,
+                transactionId: transId,
+                authCode,
+                firstName, lastName, email, phone,
+                company: company || '',
+                address: address || '',
+                address2: req.body.address2 || '',
+                city: city || '',
+                state: state || '',
+                zip: zip || '',
+                notes: req.body.notes || '',
+                items,
+                subtotal,
+                taxRate: TAX_RATE,
+                taxAmount,
+                shipping: 0,
+                total,
+                status: 'paid'
+              }).save();
+              console.log(`[Invoice] Saved: ${finalInvoiceNumber}`);
+            } catch (dbErr) {
+              console.error('[Invoice] DB save failed (payment still OK):', dbErr.message);
+            }
+
+            // ── Send invoice email ────────────────────────────────────────
+            try {
+              const transporter = nodemailer.createTransport({
+                host: process.env.SMTP_HOST || 'smtp.gmail.com',
+                port: parseInt(process.env.SMTP_PORT) || 587,
+                secure: false,
+                auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS }
+              });
+
+              const itemRows = items.map(it => `
+                <tr>
+                  <td style="padding:.6rem .8rem;border-bottom:1px solid #eee;">${it.name}</td>
+                  <td style="padding:.6rem .8rem;border-bottom:1px solid #eee;color:#64748b;font-size:.82rem;">${it.part || '—'}</td>
+                  <td style="padding:.6rem .8rem;border-bottom:1px solid #eee;text-align:center;">${it.qty}</td>
+                  <td style="padding:.6rem .8rem;border-bottom:1px solid #eee;text-align:right;">$${it.unitPrice.toFixed(2)}</td>
+                  <td style="padding:.6rem .8rem;border-bottom:1px solid #eee;text-align:right;font-weight:700;">$${it.lineTotal.toFixed(2)}</td>
+                </tr>`).join('');
+
+              const invoiceDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+              const htmlInvoice = `
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#f8fafc;font-family:'Helvetica Neue',Arial,sans-serif;">
+  <div style="max-width:700px;margin:2rem auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.1);">
+
+    <!-- Header -->
+    <div style="background:#0f172a;padding:2rem 2.5rem;display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <div style="color:#cc0000;font-size:.7rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;margin-bottom:.3rem;">TAX INVOICE</div>
+        <div style="color:#fff;font-size:1.5rem;font-weight:800;">KJIR Interior Designs Inc.</div>
+        <div style="color:rgba(255,255,255,.55);font-size:.82rem;margin-top:.25rem;">1420 Industrial Park Road, Paris, TN 38242</div>
+        <div style="color:rgba(255,255,255,.55);font-size:.82rem;">888-944-6313 &bull; info@kjrid.com</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="background:#cc0000;color:#fff;padding:.4rem 1rem;border-radius:6px;font-size:.75rem;font-weight:800;letter-spacing:.08em;margin-bottom:.75rem;">PAID ✓</div>
+        <div style="color:#fff;font-size:1.1rem;font-weight:800;">#${finalInvoiceNumber}</div>
+        <div style="color:rgba(255,255,255,.55);font-size:.78rem;margin-top:.25rem;">${invoiceDate}</div>
+      </div>
+    </div>
+
+    <!-- Bill To / Ship To -->
+    <div style="display:flex;gap:2rem;padding:1.75rem 2.5rem;border-bottom:1px solid #e2e8f0;background:#f8fafc;">
+      <div style="flex:1;">
+        <div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.15em;color:#64748b;margin-bottom:.6rem;">Bill To</div>
+        <div style="font-weight:700;color:#0f172a;">${firstName} ${lastName}</div>
+        ${company ? `<div style="color:#475569;font-size:.88rem;">${company}</div>` : ''}
+        <div style="color:#475569;font-size:.88rem;">${email}</div>
+        ${phone ? `<div style="color:#475569;font-size:.88rem;">${phone}</div>` : ''}
+      </div>
+      <div style="flex:1;">
+        <div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.15em;color:#64748b;margin-bottom:.6rem;">Ship To</div>
+        <div style="font-weight:700;color:#0f172a;">${firstName} ${lastName}</div>
+        <div style="color:#475569;font-size:.88rem;">${address || ''} ${req.body.address2 || ''}</div>
+        <div style="color:#475569;font-size:.88rem;">${city || ''}, ${state || ''} ${zip || ''}</div>
+      </div>
+      <div style="flex:1;">
+        <div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.15em;color:#64748b;margin-bottom:.6rem;">Payment Info</div>
+        <div style="color:#475569;font-size:.88rem;">Transaction ID: <strong>${transId}</strong></div>
+        <div style="color:#475569;font-size:.88rem;">Auth Code: <strong>${authCode}</strong></div>
+        <div style="color:#475569;font-size:.88rem;">Method: Credit Card</div>
+        <div style="color:#16a34a;font-size:.88rem;font-weight:700;">Status: PAID</div>
+      </div>
+    </div>
+
+    <!-- Line Items -->
+    <div style="padding:1.75rem 2.5rem;">
+      <table style="width:100%;border-collapse:collapse;font-size:.88rem;">
+        <thead>
+          <tr style="background:#0f172a;">
+            <th style="padding:.65rem .8rem;text-align:left;color:#e2e8f0;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;">Item</th>
+            <th style="padding:.65rem .8rem;text-align:left;color:#e2e8f0;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;">Part #</th>
+            <th style="padding:.65rem .8rem;text-align:center;color:#e2e8f0;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;">Qty</th>
+            <th style="padding:.65rem .8rem;text-align:right;color:#e2e8f0;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;">Unit Price</th>
+            <th style="padding:.65rem .8rem;text-align:right;color:#e2e8f0;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;">Total</th>
+          </tr>
+        </thead>
+        <tbody>${itemRows}</tbody>
+      </table>
+
+      <!-- Totals -->
+      <div style="margin-top:1.5rem;border-top:2px solid #e2e8f0;padding-top:1rem;max-width:280px;margin-left:auto;">
+        <div style="display:flex;justify-content:space-between;padding:.35rem 0;font-size:.88rem;color:#475569;">
+          <span>Subtotal</span><span>$${subtotal.toFixed(2)}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:.35rem 0;font-size:.88rem;color:#475569;">
+          <span>Tax (8%)</span><span>$${taxAmount.toFixed(2)}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:.35rem 0;font-size:.88rem;color:#475569;">
+          <span>Shipping</span><span>TBD</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:.65rem 0;font-size:1.1rem;font-weight:800;color:#0f172a;border-top:2px solid #0f172a;margin-top:.35rem;">
+          <span>Total Paid</span><span style="color:#cc0000;">$${total.toFixed(2)}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div style="background:#f8fafc;border-top:1px solid #e2e8f0;padding:1.25rem 2.5rem;text-align:center;">
+      <p style="color:#64748b;font-size:.8rem;margin:0;">Thank you for your order! Questions? Call <strong>888-944-6313</strong> (24/7 Live Operator) or email <a href="mailto:info@kjrid.com" style="color:#cc0000;">info@kjrid.com</a></p>
+      <p style="color:#94a3b8;font-size:.72rem;margin:.5rem 0 0;">View your invoice online at: <a href="https://kjr.vercel.app/invoice.html?id=${finalInvoiceNumber}" style="color:#cc0000;">kjr.vercel.app/invoice.html?id=${finalInvoiceNumber}</a></p>
+    </div>
+  </div>
+</body>
+</html>`;
+
+              // Send to customer
+              await transporter.sendMail({
+                from: `"KJR Interior Designs" <${process.env.SMTP_USER}>`,
+                to: email,
+                subject: `Your Invoice #${finalInvoiceNumber} — KJR Interior Designs`,
+                html: htmlInvoice
+              });
+
+              // Send copy to KJR team
+              await transporter.sendMail({
+                from: `"KJR Invoice System" <${process.env.SMTP_USER}>`,
+                to: process.env.NOTIFY_EMAILS || 'estimating@kjrid.com',
+                subject: `New Order Invoice #${finalInvoiceNumber} — ${firstName} ${lastName}`,
+                html: htmlInvoice
+              });
+
+              console.log(`[Invoice] Email sent to: ${email}`);
+            } catch (emailErr) {
+              console.error('[Invoice] Email failed (payment+DB still OK):', emailErr.message);
+            }
+
             res.json({
               success: true,
               transactionId: transId,
               authCode,
               message: msgText,
-              invoiceNumber: invoiceNumber || `KJR-${Date.now()}`
+              invoiceNumber: finalInvoiceNumber,
+              invoiceId: savedInvoice ? savedInvoice._id : null
             });
           } else {
             // ResultCode OK but transaction declined
@@ -218,6 +397,35 @@ router.get('/config', (req, res) => {
     publicClientKey: process.env.AUTHORIZENET_PUBLIC_CLIENT_KEY,
     environment: (process.env.AUTHORIZENET_ENVIRONMENT || 'SANDBOX').toUpperCase()
   });
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// GET /api/payment/invoice/:invoiceNumber
+// Returns invoice data for the public invoice page
+// ─────────────────────────────────────────────────────────────────────────────
+router.get('/invoice/:invoiceNumber', async (req, res) => {
+  try {
+    const invoice = await Invoice.findOne({ invoiceNumber: req.params.invoiceNumber });
+    if (!invoice) return res.status(404).json({ error: 'Invoice not found' });
+    res.json(invoice);
+  } catch (err) {
+    console.error('[Invoice] Lookup error:', err.message);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// GET /api/payment/invoices  (admin)
+// Returns all invoices
+// ─────────────────────────────────────────────────────────────────────────────
+const auth = require('../middleware/auth');
+router.get('/invoices', auth, async (req, res) => {
+  try {
+    const invoices = await Invoice.find().sort({ createdAt: -1 });
+    res.json(invoices);
+  } catch (err) {
+    res.status(500).json({ error: 'Server error' });
+  }
 });
 
 module.exports = router;

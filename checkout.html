@@ -672,6 +672,24 @@
       window.location.href = 'payment.html';
     }
 
+    // ── Check for returning from payment with invoice number ──────────────
+    (function checkReturnFromPayment() {
+      const params = new URLSearchParams(window.location.search);
+      const inv = params.get('invoice');
+      if (inv) {
+        // Payment was completed — show invoice link prominently
+        const summaryBox = document.querySelector('.summary-box');
+        if (summaryBox) {
+          const banner = document.createElement('div');
+          banner.style.cssText = 'background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:1rem;margin-top:1rem;text-align:center;';
+          banner.innerHTML = `<div style="color:#16a34a;font-weight:800;margin-bottom:.5rem;">✓ Payment Successful!</div>
+            <a href="invoice.html?id=${encodeURIComponent(inv)}" style="display:inline-block;background:#0f172a;color:#fff;padding:.6rem 1.25rem;border-radius:8px;font-size:.85rem;font-weight:700;text-decoration:none;margin-right:.5rem;">🧾 View Invoice</a>
+            <a href="products.html" style="display:inline-block;background:#cc0000;color:#fff;padding:.6rem 1.25rem;border-radius:8px;font-size:.85rem;font-weight:700;text-decoration:none;">🛒 Shop More</a>`;
+          summaryBox.appendChild(banner);
+        }
+      }
+    })();
+
     // Init
     render();
   </script>

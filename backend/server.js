@@ -9,6 +9,7 @@ dotenv.config();
 const apiRoutes = require('./routes/api');
 const chatRoutes = require('./routes/chat');
 const paymentRoutes = require('./routes/payment');
+const bunjiRoutes = require('./routes/bunji');
 
 const app = express();
 
@@ -79,6 +80,7 @@ connectDB();
 app.use('/api', apiRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/payment', paymentRoutes);
+app.use('/api', bunjiRoutes);   // bunji product endpoints: /api/products/...
 
 // Health check endpoint
 app.get('/health', (req, res) => {

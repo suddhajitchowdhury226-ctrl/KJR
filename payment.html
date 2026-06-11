@@ -885,13 +885,20 @@
     <div class="success-box">
       <div class="success-icon">🎉</div>
       <h2>Payment Successful!</h2>
-      <p>Thank you for your order. A confirmation email will be sent shortly. A KJR representative will contact you to
+      <p>Thank you for your order. Your invoice has been emailed to you. A KJR representative will contact you to
         confirm shipping details.</p>
       <div class="order-num" id="orderNum">Order #KJR-000000</div>
       <div class="tx-detail" id="txDetail"></div>
       <p style="font-size:.82rem;margin-bottom:1.5rem;">Questions? Call <strong>888-944-6313</strong> — 24/7 Live
         Operator</p>
-      <a href="products.html" class="cta" onclick="clearCartOnSuccess()">Continue Shopping →</a>
+      <div style="display:flex;gap:.75rem;flex-wrap:wrap;justify-content:center;margin-bottom:.75rem;">
+        <a id="viewInvoiceBtn" href="invoice.html" class="cta"
+          style="background:#0f172a;display:flex;align-items:center;gap:.4rem;">
+          🧾 View Invoice
+        </a>
+        <a id="continueShoppingBtn" href="products.html" class="cta"
+          onclick="clearCartOnSuccess(window._lastInvoiceNum)">🛒 Continue Shopping</a>
+      </div>
     </div>
   </div>
 
@@ -1158,9 +1165,11 @@
         phone: document.getElementById('phone').value.trim(),
         company: document.getElementById('company').value.trim(),
         address: sameShip ? document.getElementById('address').value.trim() : document.getElementById('billAddr').value.trim(),
+        address2: document.getElementById('address2').value.trim(),
         city: sameShip ? document.getElementById('city').value.trim() : document.getElementById('billCity').value.trim(),
         state: sameShip ? document.getElementById('state').value : document.getElementById('billState').value.trim(),
         zip: sameShip ? document.getElementById('zip').value.trim() : document.getElementById('billZip').value.trim(),
+        notes: document.getElementById('notes').value.trim(),
         invoiceNumber: invoiceNum,
         description: 'KJR Interior Designs Product Order',
         cartItems: cart
@@ -1182,10 +1191,14 @@
         .then(data => {
           document.getElementById('processingOverlay').classList.remove('show');
           if (data.success) {
-            document.getElementById('orderNum').textContent = 'Order #' + (data.invoiceNumber || invoiceNum);
+            const finalInvoiceNum = data.invoiceNumber || invoiceNum;
+            window._lastInvoiceNum = finalInvoiceNum;  // store for clearCartOnSuccess
+            document.getElementById('orderNum').textContent = 'Order #' + finalInvoiceNum;
             document.getElementById('txDetail').textContent = data.testMode
               ? '⚠️ TEST MODE — No real charge was made. Disable test mode in your Authorize.net account to go live.'
               : 'Transaction ID: ' + data.transactionId + '  ·  Auth Code: ' + data.authCode;
+            // Wire up the View Invoice button
+            document.getElementById('viewInvoiceBtn').href = 'invoice.html?id=' + encodeURIComponent(finalInvoiceNum);
             document.getElementById('successOverlay').classList.add('show');
           } else {
             btn.disabled = false;
@@ -1203,8 +1216,12 @@
         });
     }
 
-    function clearCartOnSuccess() {
+    function clearCartOnSuccess(invoiceNum) {
       localStorage.removeItem('kjr_cart');
+      if (invoiceNum) {
+        window.location.href = 'checkout.html?invoice=' + encodeURIComponent(invoiceNum);
+        return false; // prevent anchor href
+      }
     }
   </script>
 
