@@ -1691,9 +1691,9 @@
         const res = await fetch(`${API_URL}/admin/products?limit=500`, { headers: { 'x-auth-token': token } });
         if (res.status === 401) { alert('Session expired.'); logout(); return; }
 
-        const text = await res.text();
+        const loadRespText = await res.text();
         let data = {};
-        try { data = JSON.parse(text); } catch {
+        try { data = JSON.parse(loadRespText); } catch {
           tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:2rem;color:var(--red);">
             Backend not deployed with product routes yet (${res.status}). Deploy the latest backend first.</td></tr>`;
           return;
@@ -1884,9 +1884,9 @@
         const res = await fetch(url, { method, headers: { 'x-auth-token': token }, body: formData });
 
         // Safe JSON parse — server might return HTML on 404/502
-        const text = await res.text();
+        const saveRespText = await res.text();
         let data = {};
-        try { data = JSON.parse(text); } catch {
+        try { data = JSON.parse(saveRespText); } catch {
           if (!res.ok) throw new Error(`Server error ${res.status}: ${res.statusText}. Make sure the backend is deployed with the latest product routes.`);
         }
         if (!res.ok) throw new Error(data.error || `Save failed (${res.status})`);
@@ -1926,9 +1926,9 @@
           headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
           body: JSON.stringify({ products })
         });
-        const text = await res.text();
+        const bulkRespText = await res.text();
         let data = {};
-        try { data = JSON.parse(text); } catch {
+        try { data = JSON.parse(bulkRespText); } catch {
           throw new Error(`Server error ${res.status}. Make sure the backend has the latest product routes deployed.`);
         }
         if (!res.ok) throw new Error(data.error || 'Import failed');
