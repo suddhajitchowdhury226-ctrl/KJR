@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const Project = require('../models/Project');
 const Bid = require('../models/Bid');
 const User = require('../models/User');
+const Product = require('../models/Product');
 const auth = require('../middleware/auth');
 const nodemailer = require('nodemailer');
 
@@ -396,6 +397,159 @@ router.get('/admin/users', auth, async (req, res) => {
     console.error(err.message);
     res.status(500).send('Server error');
   }
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PRODUCT MANAGEMENT ROUTES
+// ─────────────────────────────────────────────────────────────────────────────
+
+const multerProd = require('multer');
+const path = require('path');
+
+// Memory storage — image stored as base64 in DB for portability
+const uploadProd = multerProd({
+  storage: multerProd.memoryStorage(),
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+  fileFilter: (req, file, cb) => {
+    const allowed = /jpeg|jpg|png|gif|webp|avif/;
+    cb(null, allowed.test(path.extname(file.originalname).toLowerCase()) && allowed.test(file.mimetype));
+  }
+});
+
+// @route   GET api/admin/products  — all products (admin)
+router.get('/admin/products', auth, async (req, res) => {
+  try {
+    const { search, category, status, page = 1, limit = 50 } = req.query;
+    const query = {};
+    if (status) query.status = status;
+    if (category) query.category = category;
+    if (search) {
+      const re = new RegExp(search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+      query.$or = [{ name: re }, { part: re }, { brand: re }, { category: re }];
+    }
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+    const [products, total] = await Promise.all([
+      Product.find(query).sort({ createdAt: -1 }).skip(skip).limit(parseInt(limit)),
+      Product.countDocuments(query)
+    ]);
+    res.json({ products, total, page: parseInt(page), pages: Math.ceil(total / limit) });
+  } catch (err) { console.error(err.message); res.status(500).send('Server Error'); }
+});
+
+// @route   GET api/products  — active products (public)
+router.get('/products', async (req, res) => {
+  try {
+    const { search, category, brand, vertical, page = 1, limit = 48 } = req.query;
+    const query = { status: 'active' };
+    if (category) query.category = category;
+    if (brand) query.brand = new RegExp('^' + brand.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '$', 'i');
+    if (vertical) query.vertical = new RegExp('^' + vertical.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '$', 'i');
+    if (search) {
+      const re = new RegExp(search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+      query.$or = [{ name: re }, { part: re }, { brand: re }, { category: re }];
+    }
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+    const [products, total] = await Promise.all([
+      Product.find(query).sort({ createdAt: -1 }).skip(skip).limit(parseInt(limit)),
+      Product.countDocuments(query)
+    ]);
+    res.json({ products, total, page: parseInt(page), pages: Math.ceil(total / parseInt(limit)), hasMore: skip + products.length < total });
+  } catch (err) { console.error(err.message); res.status(500).send('Server Error'); }
+});
+
+// @route   GET api/categories-db  — distinct categories (public)
+router.get('/categories-db', async (req, res) => {
+  try {
+    const cats = await Product.aggregate([
+      { $match: { status: 'active' } },
+      { $group: { _id: '$category', count: { $sum: 1 }, vertical: { $first: '$vertical' } } },
+      { $sort: { _id: 1 } }
+    ]);
+    res.json({ total: await Product.countDocuments({ status: 'active' }), categories: cats.map(c => ({ name: c._id, count: c.count, vertical: c.vertical })) });
+  } catch (err) { console.error(err.message); res.status(500).send('Server Error'); }
+});
+
+// @route   POST api/admin/products  — create product
+router.post('/admin/products', auth, uploadProd.single('image'), async (req, res) => {
+  try {
+    const { name, part, category, brand, vertical, price, was, inStock, featured, status } = req.body;
+    if (!name || !category) return res.status(400).json({ error: 'Name and category are required.' });
+
+    let imgData = req.body.img || '';
+    if (req.file) {
+      imgData = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
+    }
+
+    const product = await new Product({
+      name, part: part || '', category, brand: brand || '',
+      vertical: vertical || '', price: price || '', was: was || '',
+      img: imgData,
+      inStock: inStock !== 'false',
+      featured: featured === 'true',
+      status: status || 'active'
+    }).save();
+
+    res.json({ success: true, product });
+  } catch (err) { console.error(err.message); res.status(500).send('Server Error'); }
+});
+
+// @route   PUT api/admin/products/:id  — update product
+router.put('/admin/products/:id', auth, uploadProd.single('image'), async (req, res) => {
+  try {
+    const prod = await Product.findById(req.params.id);
+    if (!prod) return res.status(404).json({ error: 'Product not found' });
+
+    const fields = ['name', 'part', 'category', 'brand', 'vertical', 'price', 'was', 'status'];
+    fields.forEach(f => { if (req.body[f] !== undefined) prod[f] = req.body[f]; });
+    if (req.body.inStock !== undefined) prod.inStock = req.body.inStock !== 'false';
+    if (req.body.featured !== undefined) prod.featured = req.body.featured === 'true';
+
+    if (req.file) {
+      prod.img = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
+    } else if (req.body.img !== undefined) {
+      prod.img = req.body.img;
+    }
+
+    prod.updatedAt = new Date();
+    await prod.save();
+    res.json({ success: true, product: prod });
+  } catch (err) { console.error(err.message); res.status(500).send('Server Error'); }
+});
+
+// @route   DELETE api/admin/products/:id  — delete product
+router.delete('/admin/products/:id', auth, async (req, res) => {
+  try {
+    const prod = await Product.findById(req.params.id);
+    if (!prod) return res.status(404).json({ error: 'Product not found' });
+    await prod.deleteOne();
+    res.json({ success: true });
+  } catch (err) { console.error(err.message); res.status(500).send('Server Error'); }
+});
+
+// @route   POST api/admin/products/bulk  — bulk import JSON array
+router.post('/admin/products/bulk', auth, async (req, res) => {
+  try {
+    const items = req.body.products;
+    if (!Array.isArray(items) || items.length === 0)
+      return res.status(400).json({ error: 'products array required' });
+
+    const docs = items.map(p => ({
+      name: p.name || 'Unnamed',
+      part: p.part || '',
+      category: p.category || 'Uncategorized',
+      brand: p.brand || '',
+      vertical: p.vertical || '',
+      price: p.price || '',
+      was: p.was || '',
+      img: p.img || '',
+      inStock: p.inStock !== false,
+      featured: p.featured === true,
+      status: p.status || 'active'
+    }));
+
+    const result = await Product.insertMany(docs, { ordered: false });
+    res.json({ success: true, inserted: result.length });
+  } catch (err) { console.error(err.message); res.status(500).json({ error: err.message }); }
 });
 
 module.exports = router;

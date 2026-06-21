@@ -886,6 +886,10 @@
 
       <div class="sidebar-section">
         <div class="sidebar-section-label">Commerce</div>
+        <div class="nav-item" data-tab="tab-products" onclick="switchTab(this, 'tab-products')">
+          <span class="nav-icon">🛍️</span>Products
+          <span class="nav-badge" id="badge-products">—</span>
+        </div>
         <div class="nav-item" data-tab="tab-invoices" onclick="switchTab(this, 'tab-invoices')">
           <span class="nav-icon">🧾</span>Invoices
           <span class="nav-badge" id="badge-invoices">—</span>
@@ -1056,6 +1060,247 @@
                 <strong>info@kjrid.com</strong> and <strong>estimating@kjrid.com</strong><br>
                 via <a href="https://formsubmit.co" target="_blank" style="color:var(--primary);">FormSubmit.co</a>
               </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ======== TAB: PRODUCTS ======== -->
+        <div id="tab-products" class="tab-pane">
+
+          <!-- Stats row -->
+          <div class="stats-row">
+            <div class="stat-card">
+              <div class="stat-icon green">📦</div>
+              <div>
+                <div class="stat-value" id="stat-prod-total">—</div>
+                <div class="stat-label">Total Products</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon blue">✅</div>
+              <div>
+                <div class="stat-value" id="stat-prod-active">—</div>
+                <div class="stat-label">Active</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon yellow">🏷️</div>
+              <div>
+                <div class="stat-value" id="stat-prod-cats">—</div>
+                <div class="stat-label">Categories</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#fdf4ff;color:#6a0dad;">⭐</div>
+              <div>
+                <div class="stat-value" id="stat-prod-featured">—</div>
+                <div class="stat-label">Featured</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Toolbar -->
+          <div
+            style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:.75rem;">
+            <div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;">
+              <input id="prod-search" type="text" placeholder="Search name, part#, brand…"
+                style="padding:.5rem .9rem;border:1.5px solid var(--border);border-radius:8px;font-size:.85rem;width:240px;outline:none;"
+                oninput="filterProducts()">
+              <select id="prod-filter-cat" onchange="filterProducts()"
+                style="padding:.5rem .9rem;border:1.5px solid var(--border);border-radius:8px;font-size:.85rem;outline:none;">
+                <option value="">All Categories</option>
+              </select>
+              <select id="prod-filter-status" onchange="filterProducts()"
+                style="padding:.5rem .9rem;border:1.5px solid var(--border);border-radius:8px;font-size:.85rem;outline:none;">
+                <option value="">All Status</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
+            <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
+              <button class="btn-primary" onclick="openProductModal()">+ Add Product</button>
+              <label class="btn-primary" style="cursor:pointer;margin:0;">
+                Bulk Import JSON
+                <input type="file" id="bulk-json-input" accept=".json" style="display:none"
+                  onchange="bulkImportJSON(event)">
+              </label>
+            </div>
+          </div>
+
+          <!-- Table -->
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th style="width:60px;">Image</th>
+                  <th>Name</th>
+                  <th>Part #</th>
+                  <th>Category</th>
+                  <th>Brand</th>
+                  <th>Price</th>
+                  <th>Was</th>
+                  <th>Status</th>
+                  <th style="width:110px;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="products-tbody">
+                <tr>
+                  <td colspan="9" style="text-align:center;padding:2rem;color:var(--text-muted);">Loading products…</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination -->
+          <div id="prod-pagination"
+            style="display:flex;justify-content:center;gap:.4rem;margin-top:1rem;flex-wrap:wrap;"></div>
+        </div>
+
+        <!-- ======== PRODUCT MODAL ======== -->
+        <div id="prod-modal"
+          style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);z-index:9999;align-items:center;justify-content:center;overflow-y:auto;padding:1rem;">
+          <div
+            style="background:#fff;border-radius:16px;width:100%;max-width:680px;box-shadow:0 24px 80px rgba(0,0,0,.25);position:relative;margin:auto;">
+            <!-- Header -->
+            <div
+              style="background:linear-gradient(135deg,#cc0000,#6a0dad);padding:1.25rem 1.75rem;border-radius:16px 16px 0 0;display:flex;justify-content:space-between;align-items:center;">
+              <h3 style="color:#fff;font-size:1.1rem;font-weight:700;margin:0;" id="prod-modal-title">Add New Product
+              </h3>
+              <button onclick="closeProductModal()"
+                style="background:none;border:none;color:#fff;font-size:1.5rem;cursor:pointer;line-height:1;">&times;</button>
+            </div>
+            <!-- Body -->
+            <div style="padding:1.75rem;display:grid;grid-template-columns:1fr 1fr;gap:1rem;" id="prod-modal-body">
+
+              <!-- Image upload -->
+              <div style="grid-column:1/-1;">
+                <label
+                  style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#64748b;display:block;margin-bottom:.4rem;">Product
+                  Image</label>
+                <div style="display:flex;align-items:center;gap:1rem;">
+                  <div id="prod-img-preview"
+                    style="width:80px;height:80px;border-radius:10px;background:#f1f5f9;border:1.5px dashed #e2e8f0;display:flex;align-items:center;justify-content:center;font-size:.7rem;color:#94a3b8;overflow:hidden;">
+                    No Image
+                  </div>
+                  <div>
+                    <label
+                      style="display:inline-block;padding:.5rem 1rem;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:8px;cursor:pointer;font-size:.82rem;font-weight:600;">
+                      Choose Image
+                      <input type="file" id="prod-img-input" accept="image/*" style="display:none"
+                        onchange="previewProdImage(event)">
+                    </label>
+                    <p style="font-size:.72rem;color:#94a3b8;margin-top:.35rem;">JPG, PNG, WebP — max 5MB</p>
+                    <input type="text" id="prod-img-url" placeholder="Or paste image URL"
+                      style="margin-top:.4rem;padding:.45rem .75rem;border:1.5px solid #e2e8f0;border-radius:7px;font-size:.82rem;width:100%;outline:none;"
+                      oninput="previewProdURL(this.value)">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Name -->
+              <div style="grid-column:1/-1;">
+                <label
+                  style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#64748b;display:block;margin-bottom:.4rem;">Product
+                  Name <span style="color:#cc0000;">*</span></label>
+                <input type="text" id="prod-name" placeholder="e.g. Rheem VA-35-6S Accumulator"
+                  style="width:100%;padding:.65rem .9rem;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.9rem;outline:none;">
+              </div>
+
+              <!-- Part # -->
+              <div>
+                <label
+                  style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#64748b;display:block;margin-bottom:.4rem;">Part
+                  Number</label>
+                <input type="text" id="prod-part" placeholder="e.g. VA-35-6S"
+                  style="width:100%;padding:.65rem .9rem;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.9rem;outline:none;">
+              </div>
+
+              <!-- Category -->
+              <div>
+                <label
+                  style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#64748b;display:block;margin-bottom:.4rem;">Category
+                  <span style="color:#cc0000;">*</span></label>
+                <input type="text" id="prod-category" placeholder="e.g. Accumulators & Receivers"
+                  style="width:100%;padding:.65rem .9rem;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.9rem;outline:none;"
+                  list="cat-datalist">
+                <datalist id="cat-datalist"></datalist>
+              </div>
+
+              <!-- Brand -->
+              <div>
+                <label
+                  style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#64748b;display:block;margin-bottom:.4rem;">Brand</label>
+                <input type="text" id="prod-brand" placeholder="e.g. Rheem"
+                  style="width:100%;padding:.65rem .9rem;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.9rem;outline:none;">
+              </div>
+
+              <!-- Vertical -->
+              <div>
+                <label
+                  style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#64748b;display:block;margin-bottom:.4rem;">Vertical
+                  / Department</label>
+                <input type="text" id="prod-vertical" placeholder="e.g. HVAC"
+                  style="width:100%;padding:.65rem .9rem;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.9rem;outline:none;">
+              </div>
+
+              <!-- Sale Price -->
+              <div>
+                <label
+                  style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#64748b;display:block;margin-bottom:.4rem;">Sale
+                  Price</label>
+                <input type="text" id="prod-price" placeholder="e.g. $109.95"
+                  style="width:100%;padding:.65rem .9rem;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.9rem;outline:none;">
+              </div>
+
+              <!-- List Price -->
+              <div>
+                <label
+                  style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#64748b;display:block;margin-bottom:.4rem;">List
+                  Price (Was)</label>
+                <input type="text" id="prod-was" placeholder="e.g. $120.95"
+                  style="width:100%;padding:.65rem .9rem;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.9rem;outline:none;">
+              </div>
+
+              <!-- Status -->
+              <div>
+                <label
+                  style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#64748b;display:block;margin-bottom:.4rem;">Status</label>
+                <select id="prod-status"
+                  style="width:100%;padding:.65rem .9rem;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.9rem;outline:none;">
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+              </div>
+
+              <!-- Toggles -->
+              <div style="display:flex;gap:1.5rem;align-items:center;">
+                <label
+                  style="display:flex;align-items:center;gap:.5rem;font-size:.85rem;font-weight:600;cursor:pointer;">
+                  <input type="checkbox" id="prod-instock" checked> In Stock
+                </label>
+                <label
+                  style="display:flex;align-items:center;gap:.5rem;font-size:.85rem;font-weight:600;cursor:pointer;">
+                  <input type="checkbox" id="prod-featured"> Featured
+                </label>
+              </div>
+
+              <!-- Error -->
+              <div id="prod-modal-error"
+                style="grid-column:1/-1;display:none;background:#fef2f2;border:1px solid #fca5a5;color:#dc2626;padding:.6rem .9rem;border-radius:7px;font-size:.83rem;">
+              </div>
+
+              <!-- Actions -->
+              <div style="grid-column:1/-1;display:flex;gap:.75rem;justify-content:flex-end;margin-top:.5rem;">
+                <button onclick="closeProductModal()"
+                  style="padding:.7rem 1.5rem;border:1.5px solid #e2e8f0;border-radius:8px;background:#fff;font-size:.88rem;font-weight:600;cursor:pointer;">
+                  Cancel
+                </button>
+                <button id="prod-save-btn" onclick="saveProduct()"
+                  style="padding:.7rem 1.75rem;border:none;border-radius:8px;background:linear-gradient(135deg,#cc0000,#6a0dad);color:#fff;font-size:.88rem;font-weight:700;cursor:pointer;">
+                  Save Product
+                </button>
+              </div>
+
             </div>
           </div>
         </div>
@@ -1418,6 +1663,7 @@
       'tab-bids': 'Bid Submissions',
       'tab-users': 'Portal Users',
       'tab-forms': 'Contact Forms',
+      'tab-products': 'Product Catalog',
       'tab-invoices': 'Invoices & Revenue',
       'tab-orders': 'Order Tracking'
     };
@@ -1428,6 +1674,268 @@
       document.getElementById(tabId).classList.add('active');
       el.classList.add('active');
       document.getElementById('page-title').textContent = tabTitles[tabId];
+      if (tabId === 'tab-products') loadProducts();
+    }
+
+    // =====================================================
+    // PRODUCTS
+    // =====================================================
+    let allProducts = [], filteredProducts = [], editingProductId = null;
+    let prodPage = 1;
+    const PROD_PER_PAGE = 20;
+
+    async function loadProducts() {
+      const tbody = document.getElementById('products-tbody');
+      tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:2rem;color:var(--text-muted);">Loading…</td></tr>';
+      try {
+        const res = await fetch(`${API_URL}/admin/products?limit=500`, { headers: { 'x-auth-token': token } });
+        if (res.status === 401) { alert('Session expired.'); logout(); return; }
+
+        const text = await res.text();
+        let data = {};
+        try { data = JSON.parse(text); } catch {
+          tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:2rem;color:var(--red);">
+            Backend not deployed with product routes yet (${res.status}). Deploy the latest backend first.</td></tr>`;
+          return;
+        }
+        allProducts = data.products || [];
+        filteredProducts = [...allProducts];
+
+        // Populate category filter
+        const cats = [...new Set(allProducts.map(p => p.category))].sort();
+        const catSel = document.getElementById('prod-filter-cat');
+        catSel.innerHTML = '<option value="">All Categories</option>' + cats.map(c => `<option value="${c}">${c}</option>`).join('');
+
+        // Datalist for modal
+        const dl = document.getElementById('cat-datalist');
+        if (dl) dl.innerHTML = cats.map(c => `<option value="${c}">`).join('');
+
+        // Stats
+        document.getElementById('stat-prod-total').textContent = allProducts.length;
+        document.getElementById('stat-prod-active').textContent = allProducts.filter(p => p.status === 'active').length;
+        document.getElementById('stat-prod-cats').textContent = cats.length;
+        document.getElementById('stat-prod-featured').textContent = allProducts.filter(p => p.featured).length;
+        document.getElementById('badge-products').textContent = allProducts.length;
+
+        prodPage = 1;
+        renderProductsTable();
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:2rem;color:var(--red);">Error loading products: ${err.message}</td></tr>`;
+      }
+    }
+
+    function filterProducts() {
+      const q = document.getElementById('prod-search').value.toLowerCase().trim();
+      const cat = document.getElementById('prod-filter-cat').value;
+      const status = document.getElementById('prod-filter-status').value;
+      filteredProducts = allProducts.filter(p => {
+        const matchQ = !q || p.name.toLowerCase().includes(q) || (p.part || '').toLowerCase().includes(q) || (p.brand || '').toLowerCase().includes(q);
+        const matchCat = !cat || p.category === cat;
+        const matchStatus = !status || p.status === status;
+        return matchQ && matchCat && matchStatus;
+      });
+      prodPage = 1;
+      renderProductsTable();
+    }
+
+    function renderProductsTable() {
+      const tbody = document.getElementById('products-tbody');
+      const total = filteredProducts.length;
+      const pages = Math.max(1, Math.ceil(total / PROD_PER_PAGE));
+      if (prodPage > pages) prodPage = pages;
+      const slice = filteredProducts.slice((prodPage - 1) * PROD_PER_PAGE, prodPage * PROD_PER_PAGE);
+
+      if (!slice.length) {
+        tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:2rem;color:var(--text-muted);">No products found.</td></tr>';
+      } else {
+        tbody.innerHTML = slice.map(p => `
+          <tr>
+            <td>
+              ${p.img ? `<img src="${p.img}" alt="${p.name}" style="width:48px;height:48px;object-fit:cover;border-radius:6px;border:1px solid #e2e8f0;">` : `<div style="width:48px;height:48px;border-radius:6px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:.65rem;color:#94a3b8;">No Img</div>`}
+            </td>
+            <td style="font-weight:600;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${p.name}">${p.name}</td>
+            <td style="font-family:monospace;font-size:.82rem;color:#64748b;">${p.part || '—'}</td>
+            <td><span style="font-size:.75rem;background:#f1f5f9;padding:.2rem .5rem;border-radius:4px;">${p.category}</span></td>
+            <td style="font-size:.85rem;">${p.brand || '—'}</td>
+            <td style="color:#cc0000;font-weight:700;">${p.price || '—'}</td>
+            <td style="color:#94a3b8;text-decoration:line-through;font-size:.82rem;">${p.was || '—'}</td>
+            <td><span style="font-size:.72rem;font-weight:700;padding:.2rem .6rem;border-radius:20px;background:${p.status === 'active' ? '#dcfce7' : '#fee2e2'};color:${p.status === 'active' ? '#16a34a' : '#dc2626'};">${p.status}</span></td>
+            <td>
+              <button onclick="openProductModal('${p._id}')" style="padding:.3rem .7rem;border:1px solid #e2e8f0;border-radius:6px;background:#fff;cursor:pointer;font-size:.78rem;margin-right:.25rem;">Edit</button>
+              <button onclick="deleteProduct('${p._id}')" style="padding:.3rem .7rem;border:none;border-radius:6px;background:#fee2e2;color:#dc2626;cursor:pointer;font-size:.78rem;font-weight:600;">Del</button>
+            </td>
+          </tr>`).join('');
+      }
+
+      // Pagination
+      const pg = document.getElementById('prod-pagination');
+      if (pages <= 1) { pg.innerHTML = ''; return; }
+      let html = `<button onclick="prodPageGo(${prodPage - 1})" ${prodPage === 1 ? 'disabled' : ''} style="padding:.4rem .75rem;border:1.5px solid #e2e8f0;border-radius:6px;background:#fff;cursor:pointer;font-size:.8rem;">Prev</button>`;
+      for (let i = 1; i <= pages; i++) {
+        html += `<button onclick="prodPageGo(${i})" style="padding:.4rem .65rem;border:1.5px solid ${i === prodPage ? '#cc0000' : '#e2e8f0'};border-radius:6px;background:${i === prodPage ? '#cc0000' : '#fff'};color:${i === prodPage ? '#fff' : 'inherit'};cursor:pointer;font-size:.8rem;">${i}</button>`;
+      }
+      html += `<button onclick="prodPageGo(${prodPage + 1})" ${prodPage === pages ? 'disabled' : ''} style="padding:.4rem .75rem;border:1.5px solid #e2e8f0;border-radius:6px;background:#fff;cursor:pointer;font-size:.8rem;">Next</button>`;
+      pg.innerHTML = html;
+    }
+
+    function prodPageGo(p) { prodPage = p; renderProductsTable(); }
+
+    let prodImgData = '';
+
+    function openProductModal(id) {
+      editingProductId = id || null;
+      prodImgData = '';
+      document.getElementById('prod-modal-error').style.display = 'none';
+      document.getElementById('prod-modal-title').textContent = id ? 'Edit Product' : 'Add New Product';
+      document.getElementById('prod-img-preview').innerHTML = 'No Image';
+      document.getElementById('prod-img-url').value = '';
+
+      if (id) {
+        const p = allProducts.find(x => x._id === id);
+        if (!p) return;
+        document.getElementById('prod-name').value = p.name || '';
+        document.getElementById('prod-part').value = p.part || '';
+        document.getElementById('prod-category').value = p.category || '';
+        document.getElementById('prod-brand').value = p.brand || '';
+        document.getElementById('prod-vertical').value = p.vertical || '';
+        document.getElementById('prod-price').value = p.price || '';
+        document.getElementById('prod-was').value = p.was || '';
+        document.getElementById('prod-status').value = p.status || 'active';
+        document.getElementById('prod-instock').checked = p.inStock !== false;
+        document.getElementById('prod-featured').checked = !!p.featured;
+        if (p.img) {
+          document.getElementById('prod-img-preview').innerHTML = `<img src="${p.img}" style="width:100%;height:100%;object-fit:cover;">`;
+          prodImgData = p.img;
+          if (p.img.startsWith('http')) document.getElementById('prod-img-url').value = p.img;
+        }
+      } else {
+        ['prod-name', 'prod-part', 'prod-category', 'prod-brand', 'prod-vertical', 'prod-price', 'prod-was'].forEach(id => document.getElementById(id).value = '');
+        document.getElementById('prod-status').value = 'active';
+        document.getElementById('prod-instock').checked = true;
+        document.getElementById('prod-featured').checked = false;
+      }
+
+      const modal = document.getElementById('prod-modal');
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeProductModal() {
+      document.getElementById('prod-modal').style.display = 'none';
+      document.body.style.overflow = '';
+      document.getElementById('prod-img-input').value = '';
+      prodImgData = '';
+    }
+
+    function previewProdImage(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = ev => {
+        prodImgData = ev.target.result;
+        document.getElementById('prod-img-preview').innerHTML = `<img src="${prodImgData}" style="width:100%;height:100%;object-fit:cover;">`;
+        document.getElementById('prod-img-url').value = '';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function previewProdURL(url) {
+      if (!url) { document.getElementById('prod-img-preview').innerHTML = 'No Image'; prodImgData = ''; return; }
+      prodImgData = url;
+      document.getElementById('prod-img-preview').innerHTML = `<img src="${url}" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.innerHTML='Bad URL'">`;
+    }
+
+    async function saveProduct() {
+      const name = document.getElementById('prod-name').value.trim();
+      const category = document.getElementById('prod-category').value.trim();
+      const errEl = document.getElementById('prod-modal-error');
+
+      if (!name || !category) {
+        errEl.textContent = 'Product Name and Category are required.';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      const btn = document.getElementById('prod-save-btn');
+      btn.textContent = 'Saving…'; btn.disabled = true;
+
+      const formData = new FormData();
+      formData.append('name', name);
+      formData.append('part', document.getElementById('prod-part').value.trim());
+      formData.append('category', category);
+      formData.append('brand', document.getElementById('prod-brand').value.trim());
+      formData.append('vertical', document.getElementById('prod-vertical').value.trim());
+      formData.append('price', document.getElementById('prod-price').value.trim());
+      formData.append('was', document.getElementById('prod-was').value.trim());
+      formData.append('status', document.getElementById('prod-status').value);
+      formData.append('inStock', document.getElementById('prod-instock').checked ? 'true' : 'false');
+      formData.append('featured', document.getElementById('prod-featured').checked ? 'true' : 'false');
+
+      const fileInput = document.getElementById('prod-img-input');
+      if (fileInput.files[0]) {
+        formData.append('image', fileInput.files[0]);
+      } else if (prodImgData) {
+        formData.append('img', prodImgData);
+      }
+
+      try {
+        const url = editingProductId ? `${API_URL}/admin/products/${editingProductId}` : `${API_URL}/admin/products`;
+        const method = editingProductId ? 'PUT' : 'POST';
+        const res = await fetch(url, { method, headers: { 'x-auth-token': token }, body: formData });
+
+        // Safe JSON parse — server might return HTML on 404/502
+        const text = await res.text();
+        let data = {};
+        try { data = JSON.parse(text); } catch {
+          if (!res.ok) throw new Error(`Server error ${res.status}: ${res.statusText}. Make sure the backend is deployed with the latest product routes.`);
+        }
+        if (!res.ok) throw new Error(data.error || `Save failed (${res.status})`);
+
+        closeProductModal();
+        loadProducts();
+      } catch (err) {
+        errEl.textContent = err.message;
+        errEl.style.display = 'block';
+      } finally {
+        btn.textContent = 'Save Product'; btn.disabled = false;
+      }
+    }
+
+    async function deleteProduct(id) {
+      if (!confirm('Delete this product? This cannot be undone.')) return;
+      try {
+        const res = await fetch(`${API_URL}/admin/products/${id}`, { method: 'DELETE', headers: { 'x-auth-token': token } });
+        if (!res.ok) throw new Error('Delete failed');
+        loadProducts();
+      } catch (err) { alert('Error: ' + err.message); }
+    }
+
+    async function bulkImportJSON(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      try {
+        const text = await file.text();
+        const json = JSON.parse(text);
+        const products = Array.isArray(json) ? json : json.products;
+        if (!products) throw new Error('JSON must be an array or { products: [] }');
+
+        if (!confirm(`Import ${products.length} products?`)) return;
+
+        const res = await fetch(`${API_URL}/admin/products/bulk`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+          body: JSON.stringify({ products })
+        });
+        const text = await res.text();
+        let data = {};
+        try { data = JSON.parse(text); } catch {
+          throw new Error(`Server error ${res.status}. Make sure the backend has the latest product routes deployed.`);
+        }
+        if (!res.ok) throw new Error(data.error || 'Import failed');
+        alert(`Successfully imported ${data.inserted} products.`);
+        loadProducts();
+      } catch (err) { alert('Import error: ' + err.message); }
+      event.target.value = '';
     }
 
     // =====================================================
