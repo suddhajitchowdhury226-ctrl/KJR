@@ -890,6 +890,10 @@
           <span class="nav-icon">🧾</span>Invoices
           <span class="nav-badge" id="badge-invoices">—</span>
         </div>
+        <div class="nav-item" data-tab="tab-orders" onclick="switchTab(this, 'tab-orders')">
+          <span class="nav-icon">📦</span>Order Tracking
+          <span class="nav-badge" id="badge-orders">—</span>
+        </div>
       </div>
 
       <div class="sidebar-footer">
@@ -1135,6 +1139,92 @@
             </table>
           </div>
         </div>
+        <!-- ======== TAB: ORDERS ======== -->
+        <div id="tab-orders" class="tab-pane">
+          <!-- Order Status Stats -->
+          <div class="stats-row">
+            <div class="stat-card">
+              <div class="stat-icon blue">📦</div>
+              <div>
+                <div class="stat-value" id="stat-ord-total">—</div>
+                <div class="stat-label">Total Orders</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon yellow">🚚</div>
+              <div>
+                <div class="stat-value" id="stat-ord-shipped">—</div>
+                <div class="stat-label">Shipped</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon green">✅</div>
+              <div>
+                <div class="stat-value" id="stat-ord-delivered">—</div>
+                <div class="stat-label">Delivered</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon red">⚙️</div>
+              <div>
+                <div class="stat-value" id="stat-ord-processing">—</div>
+                <div class="stat-label">Processing</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Filters -->
+          <div style="display:flex; gap:.75rem; margin-bottom:1.25rem; flex-wrap:wrap; align-items:center;">
+            <input type="text" id="ord-search" placeholder="Search by name, email, order #…" oninput="filterOrders()"
+              style="flex:1; min-width:220px; padding:.6rem 1rem; border:1.5px solid var(--border);
+                     border-radius:8px; font-size:.875rem; font-family:'Inter',sans-serif; outline:none;">
+            <select id="ord-status-filter" onchange="filterOrders()" style="padding:.6rem 1rem; border:1.5px solid var(--border); border-radius:8px;
+                     font-size:.875rem; font-family:'Inter',sans-serif; background:#fff;">
+              <option value="">All Statuses</option>
+              <option value="confirmed">Confirmed</option>
+              <option value="processing">Processing</option>
+              <option value="packed">Packed</option>
+              <option value="shipped">Shipped</option>
+              <option value="out_for_delivery">Out for Delivery</option>
+              <option value="delivered">Delivered</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+            <button class="btn-sm ghost" onclick="loadOrders()" style="white-space:nowrap;">↻ Refresh</button>
+          </div>
+
+          <!-- Orders Table -->
+          <div class="table-card">
+            <div class="table-card-header">
+              <h3>All Orders</h3>
+              <span id="ord-count-label" style="font-size:.82rem; color:var(--text-muted);"></span>
+            </div>
+            <div style="overflow-x:auto;">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Order #</th>
+                    <th>Customer</th>
+                    <th>Ship To</th>
+                    <th>Items</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Tracking #</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="orders-tbody">
+                  <tr>
+                    <td colspan="9" style="text-align:center; padding:3rem; color:var(--text-muted);">
+                      Loading<span class="loading-dots"><span></span><span></span><span></span></span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
       </div>
     </main>
   </div>
@@ -1274,7 +1364,7 @@
     }
 
     async function initDashboard() {
-      await Promise.all([loadProjects(), loadAllBids(), loadUsers(), loadInvoices()]);
+      await Promise.all([loadProjects(), loadAllBids(), loadUsers(), loadInvoices(), loadOrders()]);
     }
 
     // =====================================================
@@ -1328,7 +1418,8 @@
       'tab-bids': 'Bid Submissions',
       'tab-users': 'Portal Users',
       'tab-forms': 'Contact Forms',
-      'tab-invoices': 'Invoices & Revenue'
+      'tab-invoices': 'Invoices & Revenue',
+      'tab-orders': 'Order Tracking'
     };
 
     function switchTab(el, tabId) {
@@ -1996,6 +2087,221 @@
       return String(str)
         .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    // =====================================================
+    // ORDERS
+    // =====================================================
+    let allOrders = [];
+
+    const ORDER_STATUS_LABELS = {
+      confirmed: { label: 'Confirmed', color: '#2563eb', bg: '#eff6ff' },
+      processing: { label: 'Processing', color: '#d97706', bg: '#fffbeb' },
+      packed: { label: 'Packed', color: '#d97706', bg: '#fffbeb' },
+      shipped: { label: 'Shipped', color: '#2563eb', bg: '#eff6ff' },
+      out_for_delivery: { label: 'Out for Delivery', color: '#d97706', bg: '#fffbeb' },
+      delivered: { label: 'Delivered', color: '#16a34a', bg: '#f0fdf4' },
+      cancelled: { label: 'Cancelled', color: '#cc0000', bg: '#fff1f1' },
+    };
+
+    async function loadOrders() {
+      const tbody = document.getElementById('orders-tbody');
+      try {
+        const res = await fetch(`${API_URL}/payment/invoices`, { headers: { 'x-auth-token': token } });
+        if (res.status === 401) { logout(); return; }
+        if (!res.ok) throw new Error(`Server error ${res.status}`);
+        allOrders = await res.json();
+        updateOrderStats();
+        filterOrders();
+      } catch (err) {
+        if (tbody) tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:2rem;color:#dc2626;">
+          Failed to load orders. Is the backend running?</td></tr>`;
+      }
+    }
+
+    function updateOrderStats() {
+      document.getElementById('stat-ord-total').textContent = allOrders.length;
+      document.getElementById('stat-ord-shipped').textContent = allOrders.filter(o => o.orderStatus === 'shipped' || o.orderStatus === 'out_for_delivery').length;
+      document.getElementById('stat-ord-delivered').textContent = allOrders.filter(o => o.orderStatus === 'delivered').length;
+      document.getElementById('stat-ord-processing').textContent = allOrders.filter(o => o.orderStatus === 'confirmed' || o.orderStatus === 'processing' || o.orderStatus === 'packed').length;
+      document.getElementById('badge-orders').textContent = allOrders.length;
+    }
+
+    function filterOrders() {
+      const q = (document.getElementById('ord-search').value || '').toLowerCase();
+      const status = document.getElementById('ord-status-filter').value;
+
+      let list = allOrders.filter(o => {
+        const matchStatus = !status || o.orderStatus === status;
+        const matchQ = !q || (
+          (o.invoiceNumber || '').toLowerCase().includes(q) ||
+          (o.email || '').toLowerCase().includes(q) ||
+          ((o.firstName || '') + ' ' + (o.lastName || '')).toLowerCase().includes(q) ||
+          (o.trackingNumber || '').toLowerCase().includes(q)
+        );
+        return matchStatus && matchQ;
+      });
+
+      document.getElementById('ord-count-label').textContent =
+        `${list.length} order${list.length !== 1 ? 's' : ''}`;
+      renderOrdersTable(list);
+    }
+
+    function renderOrdersTable(orders) {
+      const tbody = document.getElementById('orders-tbody');
+      if (!orders.length) {
+        tbody.innerHTML = `<tr><td colspan="9"><div class="empty-state">
+          <div class="empty-icon">📦</div>
+          <h4>No orders found</h4>
+          <p>Orders appear here automatically when customers complete payment.</p>
+        </div></td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = orders.map(o => {
+        const sc = ORDER_STATUS_LABELS[o.orderStatus] || ORDER_STATUS_LABELS.confirmed;
+        const badge = `<span style="background:${sc.bg};color:${sc.color};border:1px solid;
+          border-color:${sc.color}30;padding:.22rem .6rem;border-radius:20px;font-size:.7rem;
+          font-weight:700;white-space:nowrap;">${sc.label}</span>`;
+        const name = escHtml((o.firstName || '') + ' ' + (o.lastName || ''));
+        const dest = `${escHtml(o.city || '')}${o.city && o.state ? ', ' : ''}${escHtml(o.state || '')}`;
+        const trackCell = o.trackingNumber
+          ? `<span style="font-family:'Courier New',monospace;font-size:.78rem;">${escHtml(o.trackingNumber)}</span>
+             ${o.trackingCarrier ? `<br><span style="font-size:.7rem;color:var(--text-muted);">${escHtml(o.trackingCarrier)}</span>` : ''}`
+          : `<span style="color:var(--text-muted);font-size:.78rem;">—</span>`;
+
+        return `<tr>
+          <td style="font-family:'Courier New',monospace;font-weight:700;font-size:.82rem;">
+            <a href="../order-tracking.html?id=${encodeURIComponent(o.invoiceNumber)}" target="_blank"
+               style="color:var(--primary);text-decoration:none;">#${escHtml(o.invoiceNumber)}</a>
+          </td>
+          <td><strong>${name.trim() || '—'}</strong>
+            ${o.email ? `<div style="font-size:.75rem;color:var(--text-muted);">${escHtml(o.email)}</div>` : ''}
+          </td>
+          <td style="font-size:.82rem;">${dest || '—'}</td>
+          <td style="text-align:center;">${(o.items || []).length}</td>
+          <td style="font-weight:700;color:var(--primary);">$${(o.total || 0).toFixed(2)}</td>
+          <td>${badge}</td>
+          <td>${trackCell}</td>
+          <td style="white-space:nowrap;font-size:.78rem;color:var(--text-muted);">${formatDate(o.createdAt)}</td>
+          <td>
+            <div style="display:flex;gap:.35rem;flex-wrap:wrap;">
+              <button class="btn-sm ghost" onclick="openUpdateOrderModal('${escHtml(o.invoiceNumber)}', '${escHtml(o.orderStatus || 'confirmed')}', '${escHtml(o.trackingNumber || '')}', '${escHtml(o.trackingCarrier || '')}', '${escHtml(o.trackingUrl || '')}')">Update</button>
+              <a href="../order-tracking.html?id=${encodeURIComponent(o.invoiceNumber)}" target="_blank"
+                 class="btn-sm ghost" style="text-decoration:none;">Track ↗</a>
+            </div>
+          </td>
+        </tr>`;
+      }).join('');
+    }
+
+    // ── Update Order Modal ───────────────────────────────────────────────
+    function openUpdateOrderModal(invNum, currentStatus, trackNum, carrier, trackUrl) {
+      // Build a simple inline modal using the existing bid detail modal
+      document.getElementById('bid-detail-title').textContent = `Update Order #${invNum}`;
+      document.getElementById('bid-detail-content').innerHTML = `
+        <div style="display:grid;gap:1rem;padding-bottom:.5rem;">
+          <div>
+            <label style="font-size:.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:.3rem;">ORDER STATUS</label>
+            <select id="upd-status" style="width:100%;padding:.65rem .9rem;border:1.5px solid var(--border);border-radius:8px;font-size:.9rem;font-family:'Inter',sans-serif;background:#fff;">
+              <option value="confirmed"        ${currentStatus === 'confirmed' ? 'selected' : ''}>✅ Confirmed</option>
+              <option value="processing"       ${currentStatus === 'processing' ? 'selected' : ''}>⚙️ Processing</option>
+              <option value="packed"           ${currentStatus === 'packed' ? 'selected' : ''}>📦 Packed</option>
+              <option value="shipped"          ${currentStatus === 'shipped' ? 'selected' : ''}>🚚 Shipped</option>
+              <option value="out_for_delivery" ${currentStatus === 'out_for_delivery' ? 'selected' : ''}>🛵 Out for Delivery</option>
+              <option value="delivered"        ${currentStatus === 'delivered' ? 'selected' : ''}>🎉 Delivered</option>
+              <option value="cancelled"        ${currentStatus === 'cancelled' ? 'selected' : ''}>❌ Cancelled</option>
+            </select>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;">
+            <div>
+              <label style="font-size:.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:.3rem;">TRACKING NUMBER</label>
+              <input type="text" id="upd-tracking" value="${escHtml(trackNum)}" placeholder="1Z999AA10123456784"
+                style="width:100%;padding:.65rem .9rem;border:1.5px solid var(--border);border-radius:8px;font-size:.88rem;font-family:'Courier New',monospace;box-sizing:border-box;">
+            </div>
+            <div>
+              <label style="font-size:.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:.3rem;">CARRIER</label>
+              <select id="upd-carrier" style="width:100%;padding:.65rem .9rem;border:1.5px solid var(--border);border-radius:8px;font-size:.9rem;font-family:'Inter',sans-serif;background:#fff;">
+                <option value=""     ${!carrier ? 'selected' : ''}>Select…</option>
+                <option value="UPS"  ${carrier === 'UPS' ? 'selected' : ''}>UPS</option>
+                <option value="FedEx"${carrier === 'FedEx' ? 'selected' : ''}>FedEx</option>
+                <option value="USPS" ${carrier === 'USPS' ? 'selected' : ''}>USPS</option>
+                <option value="DHL"  ${carrier === 'DHL' ? 'selected' : ''}>DHL</option>
+                <option value="Other"${carrier === 'Other' ? 'selected' : ''}>Other</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label style="font-size:.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:.3rem;">TRACKING URL (optional)</label>
+            <input type="url" id="upd-trackurl" value="${escHtml(trackUrl)}" placeholder="https://www.ups.com/track?tracknum=…"
+              style="width:100%;padding:.65rem .9rem;border:1.5px solid var(--border);border-radius:8px;font-size:.88rem;font-family:'Inter',sans-serif;box-sizing:border-box;">
+          </div>
+          <hr style="border:none;border-top:1px solid var(--border);">
+          <div>
+            <label style="font-size:.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:.3rem;">ADD TIMELINE EVENT (optional)</label>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:.75rem;">
+              <input type="text" id="upd-evt-status" placeholder="e.g. Shipment picked up"
+                style="width:100%;padding:.6rem .9rem;border:1.5px solid var(--border);border-radius:8px;font-size:.85rem;font-family:'Inter',sans-serif;box-sizing:border-box;">
+              <input type="text" id="upd-evt-location" placeholder="Location (e.g. Atlanta, GA)"
+                style="width:100%;padding:.6rem .9rem;border:1.5px solid var(--border);border-radius:8px;font-size:.85rem;font-family:'Inter',sans-serif;box-sizing:border-box;">
+            </div>
+            <input type="text" id="upd-evt-desc" placeholder="Description (e.g. Package scanned at hub)"
+              style="width:100%;padding:.6rem .9rem;border:1.5px solid var(--border);border-radius:8px;font-size:.85rem;font-family:'Inter',sans-serif;box-sizing:border-box;">
+          </div>
+          <div id="upd-error" style="display:none;background:#fff1f1;color:#cc0000;border:1px solid #fecaca;border-radius:6px;padding:.65rem;font-size:.85rem;"></div>
+          <button onclick="submitOrderUpdate('${escHtml(invNum)}')"
+            style="background:var(--primary);color:#fff;border:none;padding:.8rem;border-radius:8px;
+                   font-size:.9rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">
+            Save Changes
+          </button>
+        </div>`;
+
+      document.getElementById('bid-detail-modal-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    async function submitOrderUpdate(invNum) {
+      const status = document.getElementById('upd-status').value;
+      const tracking = document.getElementById('upd-tracking').value.trim();
+      const carrier = document.getElementById('upd-carrier').value;
+      const trackUrl = document.getElementById('upd-trackurl').value.trim();
+      const evtStatus = document.getElementById('upd-evt-status').value.trim();
+      const evtDesc = document.getElementById('upd-evt-desc').value.trim();
+      const evtLoc = document.getElementById('upd-evt-location').value.trim();
+      const errEl = document.getElementById('upd-error');
+
+      const body = {
+        orderStatus: status,
+        trackingNumber: tracking,
+        trackingCarrier: carrier,
+        trackingUrl: trackUrl,
+      };
+      if (evtStatus) {
+        body.event = { status: evtStatus, description: evtDesc, location: evtLoc };
+      }
+      if (status === 'delivered') {
+        body.deliveredAt = new Date().toISOString();
+      }
+
+      try {
+        const res = await fetch(`${API_URL}/payment/order/${encodeURIComponent(invNum)}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+          body: JSON.stringify(body)
+        });
+        if (!res.ok) {
+          const d = await res.json();
+          errEl.textContent = d.error || 'Update failed.';
+          errEl.style.display = 'block';
+          return;
+        }
+        closeBidDetailModal();
+        await loadOrders();
+        showGlobalAlert(`Order #${invNum} updated successfully!`, 'success');
+      } catch (err) {
+        errEl.textContent = 'Connection error. ' + err.message;
+        errEl.style.display = 'block';
+      }
     }
 
     // =====================================================

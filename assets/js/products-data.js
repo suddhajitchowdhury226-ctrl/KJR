@@ -644,3 +644,4 @@ window.KJR_CATEGORY_PRODUCTS = {
     { name: "Rheem 70-24157-03 Inducer Motor", part: "70-24157-03", price: "$148.95", was: "$178.75" },
     { name: "Goodman B1340021S Inducer Assy", part: "B1340021S", price: "$168.95", was: "$202.75" },
   ],
+};

@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Track Order | KJR Interior Designs Inc.</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --primary: #cc0000;
+      --dark: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --bg: #f8fafc;
+      --success: #16a34a;
+      --warning: #d97706;
+      --info: #2563eb;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--dark);
+    }
+
+    /* ── Hero ── */
+    .ot-hero {
+      background: linear-gradient(135deg, var(--dark) 0%, #1e293b 100%);
+      padding: 2.5rem 2rem 3rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ot-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(204, 0, 0, .18) 0%, transparent 60%);
+    }
+
+    .ot-hero h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #fff;
+      position: relative;
+      margin-bottom: .4rem;
+    }
+
+    .ot-hero p {
+      color: rgba(255, 255, 255, .65);
+      font-size: .92rem;
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+
+    /* ── Search bar ── */
+    .ot-search {
+      max-width: 520px;
+      margin: 0 auto;
+      position: relative;
+      display: flex;
+      gap: .5rem;
+    }
+
+    .ot-search input {
+      flex: 1;
+      padding: .85rem 1.25rem;
+      border: none;
+      border-radius: 10px;
+      font-size: .95rem;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, .18);
+    }
+
+    .ot-search button {
+      padding: .85rem 1.5rem;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: .88rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      white-space: nowrap;
+      transition: background .2s;
+    }
+
+    .ot-search button:hover {
+      background: #aa0000;
+    }
+
+    /* ── Breadcrumb ── */
+    .breadcrumb {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: .7rem 2.5rem;
+      font-size: .82rem;
+      color: var(--muted);
+    }
+
+    .breadcrumb a {
+      color: var(--primary);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .breadcrumb span {
+      margin: 0 .4rem;
+    }
+
+    /* ── Page body ── */
+    .page-wrap {
+      max-width: 980px;
+      margin: 2rem auto 5rem;
+      padding: 0 1.5rem;
+    }
+
+    /* ── State boxes ── */
+    .state-box {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 3rem;
+      text-align: center;
+    }
+
+    .state-box .icon {
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .state-box h3 {
+      font-size: 1.1rem;
+      font-weight: 800;
+      margin-bottom: .5rem;
+    }
+
+    .state-box p {
+      font-size: .9rem;
+      color: var(--muted);
+    }
+
+    /* ── Main order card ── */
+    .order-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, .07);
+    }
+
+    /* Card header */
+    .order-card-header {
+      background: var(--dark);
+      padding: 1.75rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .order-card-header .brand {
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 800;
+    }
+
+    .order-card-header .brand-sub {
+      color: rgba(255, 255, 255, .5);
+      font-size: .75rem;
+      margin-top: .15rem;
+    }
+
+    .order-card-header .order-meta {
+      text-align: right;
+    }
+
+    .order-card-header .order-num {
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .order-card-header .order-date {
+      color: rgba(255, 255, 255, .5);
+      font-size: .75rem;
+      margin-top: .2rem;
+    }
+
+    /* ── Status badge ── */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      padding: .35rem .9rem;
+      border-radius: 20px;
+      font-size: .75rem;
+      font-weight: 800;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      margin-top: .5rem;
+    }
+
+    .status-badge.confirmed {
+      background: #eff6ff;
+      color: var(--info);
+      border: 1px solid #bfdbfe;
+    }
+
+    .status-badge.processing {
+      background: #fffbeb;
+      color: var(--warning);
+      border: 1px solid #fde68a;
+    }
+
+    .status-badge.packed {
+      background: #fffbeb;
+      color: var(--warning);
+      border: 1px solid #fde68a;
+    }
+
+    .status-badge.shipped {
+      background: #eff6ff;
+      color: var(--info);
+      border: 1px solid #bfdbfe;
+    }
+
+    .status-badge.out_for_delivery {
+      background: #fffbeb;
+      color: var(--warning);
+      border: 1px solid #fde68a;
+    }
+
+    .status-badge.delivered {
+      background: #f0fdf4;
+      color: var(--success);
+      border: 1px solid #bbf7d0;
+    }
+
+    .status-badge.cancelled {
+      background: #fff1f1;
+      color: var(--primary);
+      border: 1px solid #fecaca;
+    }
+
+    /* ── Progress stepper ── */
+    .stepper-wrap {
+      padding: 2rem 2rem 1.5rem;
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stepper {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      position: relative;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .stepper::before {
+      content: '';
+      position: absolute;
+      top: 20px;
+      left: 10%;
+      right: 10%;
+      height: 3px;
+      background: var(--border);
+      z-index: 0;
+    }
+
+    .stepper-progress {
+      position: absolute;
+      top: 20px;
+      left: 10%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--success), #22c55e);
+      z-index: 1;
+      transition: width .6s ease;
+    }
+
+    .step-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .4rem;
+      z-index: 2;
+      flex: 1;
+    }
+
+    .step-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--border);
+      border: 3px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      color: var(--muted);
+      transition: all .3s;
+      font-weight: 700;
+    }
+
+    .step-circle.done {
+      background: var(--success);
+      border-color: var(--success);
+      color: #fff;
+    }
+
+    .step-circle.active {
+      background: var(--info);
+      border-color: var(--info);
+      color: #fff;
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, .15);
+    }
+
+    .step-circle.cancel {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    .step-label {
+      font-size: .7rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-align: center;
+      max-width: 64px;
+      line-height: 1.3;
+    }
+
+    .step-label.done {
+      color: var(--success);
+    }
+
+    .step-label.active {
+      color: var(--info);
+    }
+
+    /* ── Info grid ── */
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-bottom: 1px solid var(--border);
+    }
+
+    @media(max-width:640px) {
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .info-cell {
+      padding: 1.4rem 1.75rem;
+      border-right: 1px solid var(--border);
+    }
+
+    .info-cell:last-child {
+      border-right: none;
+    }
+
+    .info-cell .lbl {
+      font-size: .62rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .15em;
+      color: var(--muted);
+      margin-bottom: .5rem;
+    }
+
+    .info-cell .val {
+      font-size: .88rem;
+      color: var(--dark);
+      line-height: 1.55;
+    }
+
+    .info-cell .val strong {
+      font-weight: 700;
+      display: block;
+    }
+
+    .info-cell .track-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .3rem;
+      margin-top: .5rem;
+      padding: .35rem .85rem;
+      background: var(--info);
+      color: #fff;
+      border-radius: 6px;
+      font-size: .75rem;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .info-cell .track-btn:hover {
+      background: #1d4ed8;
+    }
+
+    /* ── Address cards row ── */
+    .addr-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    @media(max-width:580px) {
+      .addr-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .addr-cell {
+      padding: 1.4rem 1.75rem;
+      border-right: 1px solid var(--border);
+    }
+
+    .addr-cell:last-child {
+      border-right: none;
+    }
+
+    .addr-cell .lbl {
+      font-size: .62rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .15em;
+      color: var(--muted);
+      margin-bottom: .6rem;
+    }
+
+    .addr-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.1rem;
+      font-size: .85rem;
+      line-height: 1.65;
+      color: var(--dark);
+    }
+
+    .addr-box strong {
+      font-weight: 700;
+      display: block;
+      margin-bottom: .1rem;
+    }
+
+    .addr-box .badge-ship {
+      display: inline-block;
+      background: #eff6ff;
+      color: var(--info);
+      border: 1px solid #bfdbfe;
+      font-size: .65rem;
+      font-weight: 700;
+      padding: .15rem .5rem;
+      border-radius: 4px;
+      margin-bottom: .4rem;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    /* ── Timeline ── */
+    .timeline-wrap {
+      padding: 1.75rem 1.75rem 1.25rem;
+    }
+
+    .timeline-title {
+      font-size: .7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .15em;
+      color: var(--muted);
+      margin-bottom: 1.25rem;
+    }
+
+    .timeline {
+      position: relative;
+      padding-left: 2rem;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 9px;
+      width: 2px;
+      background: var(--border);
+      border-radius: 2px;
+    }
+
+    .tl-event {
+      position: relative;
+      padding-bottom: 1.5rem;
+    }
+
+    .tl-event:last-child {
+      padding-bottom: 0;
+    }
+
+    .tl-dot {
+      position: absolute;
+      left: -1.7rem;
+      top: 2px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--border);
+      border: 3px solid #fff;
+      box-shadow: 0 0 0 2px var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .65rem;
+    }
+
+    .tl-dot.latest {
+      background: var(--success);
+      box-shadow: 0 0 0 2px #bbf7d0;
+    }
+
+    .tl-dot.cancelled {
+      background: var(--primary);
+      box-shadow: 0 0 0 2px #fecaca;
+    }
+
+    .tl-body {
+      display: block;
+    }
+
+    .tl-status {
+      font-size: .88rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: .15rem;
+    }
+
+    .tl-desc {
+      font-size: .82rem;
+      color: var(--muted);
+      margin-bottom: .2rem;
+    }
+
+    .tl-meta {
+      display: flex;
+      gap: 1rem;
+      font-size: .75rem;
+      color: #94a3b8;
+      flex-wrap: wrap;
+    }
+
+    .tl-location::before {
+      content: '📍 ';
+    }
+
+    .tl-time::before {
+      content: '🕐 ';
+    }
+
+    /* ── Items table ── */
+    .items-wrap {
+      padding: 1.75rem 1.75rem 1.25rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .items-title {
+      font-size: .7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .15em;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+
+    .items-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .85rem;
+    }
+
+    .items-table thead tr {
+      background: var(--dark);
+    }
+
+    .items-table thead th {
+      padding: .6rem .85rem;
+      color: #e2e8f0;
+      font-size: .67rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      text-align: left;
+    }
+
+    .items-table thead th.right {
+      text-align: right;
+    }
+
+    .items-table thead th.center {
+      text-align: center;
+    }
+
+    .items-table tbody tr:nth-child(even) {
+      background: #f8fafc;
+    }
+
+    .items-table tbody td {
+      padding: .65rem .85rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--dark);
+    }
+
+    .items-table tbody td.right {
+      text-align: right;
+      font-weight: 700;
+    }
+
+    .items-table tbody td.center {
+      text-align: center;
+    }
+
+    .items-table tbody td.part {
+      font-size: .75rem;
+      color: var(--muted);
+      font-family: 'Courier New', monospace;
+    }
+
+    .total-row td {
+      font-weight: 800;
+      font-size: .95rem;
+      border-bottom: none !important;
+      padding-top: 1rem !important;
+    }
+
+    .total-row td:last-child {
+      color: var(--primary);
+    }
+
+    /* ── Footer banner ── */
+    .order-footer {
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+      padding: 1.1rem 1.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: .75rem;
+    }
+
+    .order-footer p {
+      font-size: .8rem;
+      color: var(--muted);
+    }
+
+    .order-footer a {
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .btn-action {
+      padding: .55rem 1.25rem;
+      border-radius: 8px;
+      font-size: .82rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      font-family: 'Inter', sans-serif;
+      display: inline-flex;
+      align-items: center;
+      gap: .35rem;
+      transition: all .2s;
+    }
+
+    .btn-action.dark {
+      background: var(--dark);
+      color: #fff;
+      border: none;
+    }
+
+    .btn-action.dark:hover {
+      background: #1e293b;
+    }
+
+    .btn-action.red {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+    }
+
+    .btn-action.red:hover {
+      background: #aa0000;
+    }
+
+    .btn-action.ghost {
+      background: #fff;
+      color: var(--dark);
+      border: 1.5px solid var(--border);
+    }
+
+    .btn-action.ghost:hover {
+      border-color: var(--dark);
+    }
+
+    /* ── ETA chip ── */
+    .eta-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      color: var(--success);
+      border-radius: 20px;
+      padding: .3rem .85rem;
+      font-size: .75rem;
+      font-weight: 700;
+      margin-top: .35rem;
+    }
+
+    .eta-chip.late {
+      background: #fffbeb;
+      border-color: #fde68a;
+      color: var(--warning);
+    }
+
+    /* ── Print ── */
+    @media print {
+
+      .top-bar,
+      .main-header,
+      .ot-hero,
+      .breadcrumb,
+      .ot-search,
+      .order-footer,
+      footer {
+        display: none !important;
+      }
+
+      body {
+        background: #fff;
+      }
+
+      .page-wrap {
+        margin: 0;
+        padding: 0;
+        max-width: 100%;
+      }
+    }
+
+    /* ── Responsive ── */
+    @media(max-width:600px) {
+      .ot-search {
+        flex-direction: column;
+      }
+
+      .stepper::before {
+        display: none;
+      }
+
+      .stepper {
+        flex-direction: column;
+        gap: .75rem;
+      }
+
+      .stepper-progress {
+        display: none;
+      }
+
+      .step-item {
+        flex-direction: row;
+        gap: .75rem;
+        justify-content: flex-start;
+      }
+
+      .step-label {
+        text-align: left;
+        max-width: none;
+      }
+
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div class="top-bar-left">
+      <span class="utility-info">📞 <strong>888-944-6313</strong> • Call in Orders Only • Call 24/7 • Live
+        Operator</span>
+    </div>
+    <div class="top-bar-right">
+      <a href="contact-us.html">Contact</a>
+      <a href="suggest-feature.html">Suggest Feature</a>
+      <button class="auth-trigger-btn" onclick="openAuthModal('login')">Login / Sign Up</button>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="main-header">
+    <div class="header-container">
+      <div class="logo">
+        <a href="index.html"><img src="logo-new.jpeg" alt="KJR Interior Designs Inc."></a>
+      </div>
+      <nav class="secondary-nav">
+        <div class="secondary-nav-container">
+          <ul class="nav-links">
+            <li><a href="index.html">HOME</a></li>
+            <li><a href="products.html">PRODUCTS</a></li>
+            <li><a href="about-us.html">ABOUT</a></li>
+          </ul>
+        </div>
+      </nav>
+      <div class="header-actions">
+        <a href="Lot-categories.html" class="parts-highlight"
+          style="background:var(--primary);color:#fff;padding:0.4rem 1rem;border-radius:4px;">PARTS CATEGORIES</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <div class="ot-hero">
+    <h1>📦 Track Your Order</h1>
+    <p>Enter your order number from your confirmation email to see real-time status</p>
+    <div class="ot-search">
+      <input type="text" id="orderInput" placeholder="e.g. KJR-748291" oninput="this.value = this.value.toUpperCase()">
+      <button onclick="trackOrder()">Track Order</button>
+    </div>
+  </div>
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <a href="index.html">Home</a><span>›</span>
+    <a href="products.html">Products</a><span>›</span>
+    Track Order
+  </div>
+
+  <!-- Content -->
+  <div class="page-wrap">
+
+    <!-- Prompt -->
+    <div id="statePrompt" class="state-box">
+      <div class="icon">📦</div>
+      <h3>Where Is My Order?</h3>
+      <p>Enter your order number above to get live shipping updates, estimated delivery, and a full order timeline.</p>
+    </div>
+
+    <!-- Loading -->
+    <div id="stateLoading" class="state-box" style="display:none;">
+      <div class="icon">⏳</div>
+      <h3>Looking up your order…</h3>
+      <p>Please wait a moment.</p>
+    </div>
+
+    <!-- Not Found -->
+    <div id="stateNotFound" class="state-box" style="display:none;">
+      <div class="icon">🔍</div>
+      <h3>Order Not Found</h3>
+      <p>We couldn't find an order with that number. Check your confirmation email, or call
+        <strong>888-944-6313</strong>.
+      </p>
+    </div>
+
+    <!-- Error -->
+    <div id="stateError" class="state-box" style="display:none;">
+      <div class="icon">⚠️</div>
+      <h3>Connection Problem</h3>
+      <p id="errMsg">Could not reach our servers. Please try again in a moment.</p>
+    </div>
+
+    <!-- Order Card -->
+    <div id="stateOrder" style="display:none;">
+
+      <!-- Action buttons row -->
+      <div style="display:flex; gap:.6rem; margin-bottom:1rem; flex-wrap:wrap; justify-content:flex-end;">
+        <a href="invoice.html" id="viewInvoiceLink" class="btn-action ghost">🧾 View Invoice</a>
+        <button class="btn-action dark" onclick="window.print()">🖨️ Print</button>
+      </div>
+
+      <div id="orderCard" class="order-card"></div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-brand">
+        <img src="logo-new.jpeg" alt="KJR Interior Designs Inc." style="height:70px;margin-bottom:1.5rem;">
+        <p>A massive supplier for home appliances, electronics, HVAC, and more. BBB Accredited since 2014.</p>
+      </div>
+      <div class="footer-col">
+        <h4>QUICK LINKS</h4>
+        <ul class="footer-links">
+          <li><a href="products.html">All Products</a></li>
+          <li><a href="invoice.html">View Invoice</a></li>
+          <li><a href="order-tracking.html">Track Order</a></li>
+          <li><a href="contact-us.html">Contact Support</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>CONTACT</h4>
+        <p><a href="tel:888-944-6313" style="color:inherit;text-decoration:none;">888-944-6313</a><br>Open 24/7</p>
+        <p style="margin-top:1rem;">1420 Industrial Park Road<br>Paris, TN 38242</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>&copy; 2024 KJR Interior Designs Inc. All rights reserved.</div>
+      <div><a href="#">Privacy Policy</a> &nbsp;|&nbsp; <a href="#">Terms of Service</a></div>
+    </div>
+  </footer>
+
+  <script>
+    const API_BASE = (
+      window.location.hostname === 'localhost' ||
+      window.location.hostname === '127.0.0.1'
+    ) ? 'http://localhost:5001/api' : 'https://kjr-backend.onrender.com/api';
+
+    // ── Status config ──────────────────────────────────────────────────────
+    const STATUS_CONFIG = {
+      confirmed: { label: 'Order Confirmed', icon: '✅', step: 0 },
+      processing: { label: 'Processing', icon: '⚙️', step: 1 },
+      packed: { label: 'Packed', icon: '📦', step: 2 },
+      shipped: { label: 'Shipped', icon: '🚚', step: 3 },
+      out_for_delivery: { label: 'Out for Delivery', icon: '🛵', step: 4 },
+      delivered: { label: 'Delivered', icon: '🎉', step: 5 },
+      cancelled: { label: 'Cancelled', icon: '❌', step: -1 },
+    };
+
+    const STEPS = [
+      { key: 'confirmed', icon: '✅', label: 'Confirmed' },
+      { key: 'processing', icon: '⚙️', label: 'Processing' },
+      { key: 'packed', icon: '📦', label: 'Packed' },
+      { key: 'shipped', icon: '🚚', label: 'Shipped' },
+      { key: 'out_for_delivery', icon: '🛵', label: 'Out for\nDelivery' },
+      { key: 'delivered', icon: '🎉', label: 'Delivered' },
+    ];
+
+    // ── State helpers ──────────────────────────────────────────────────────
+    function showState(id) {
+      ['statePrompt', 'stateLoading', 'stateNotFound', 'stateError', 'stateOrder']
+        .forEach(s => document.getElementById(s).style.display = s === id ? 'block' : 'none');
+    }
+
+    function esc(s) {
+      return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function fmtDate(iso) {
+      if (!iso) return '—';
+      return new Date(iso).toLocaleDateString('en-US',
+        { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' });
+    }
+
+    function fmtDateShort(iso) {
+      if (!iso) return '—';
+      return new Date(iso).toLocaleDateString('en-US',
+        { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+    }
+
+    // ── Render ─────────────────────────────────────────────────────────────
+    function render(order) {
+      const cfg = STATUS_CONFIG[order.orderStatus] || STATUS_CONFIG.confirmed;
+      const stepIdx = cfg.step;
+      const isCancelled = order.orderStatus === 'cancelled';
+
+      // ── Progress stepper ──
+      let stepperHTML = '<div class="stepper" id="stepper">';
+      STEPS.forEach((s, i) => {
+        let cls = '';
+        if (!isCancelled) {
+          if (i < stepIdx) cls = 'done';
+          else if (i === stepIdx) cls = 'active';
+        } else {
+          cls = 'cancel';
+        }
+        stepperHTML += `
+          <div class="step-item">
+            <div class="step-circle ${cls}">${cls === 'done' ? '✓' : s.icon}</div>
+            <div class="step-label ${cls}">${s.label.replace('\n', '<br>')}</div>
+          </div>`;
+      });
+      stepperHTML += `<div class="stepper-progress" id="stepProgress"></div></div>`;
+
+      // ── Timeline events ──
+      const events = [...(order.trackingEvents || [])].reverse(); // newest first
+      let timelineHTML = '';
+      if (events.length) {
+        timelineHTML = `<div class="timeline-wrap">
+          <div class="timeline-title">Tracking History</div>
+          <div class="timeline">`;
+        events.forEach((ev, i) => {
+          const isLatest = i === 0;
+          const dot = isCancelled ? 'cancelled' : (isLatest ? 'latest' : '');
+          timelineHTML += `
+            <div class="tl-event">
+              <div class="tl-dot ${dot}">${isLatest ? (isCancelled ? '✕' : '●') : ''}</div>
+              <div class="tl-body">
+                <div class="tl-status">${esc(ev.status)}</div>
+                ${ev.description ? `<div class="tl-desc">${esc(ev.description)}</div>` : ''}
+                <div class="tl-meta">
+                  ${ev.location ? `<span class="tl-location">${esc(ev.location)}</span>` : ''}
+                  <span class="tl-time">${fmtDate(ev.timestamp)}</span>
+                </div>
+              </div>
+            </div>`;
+        });
+        timelineHTML += `</div></div>`;
+      } else {
+        timelineHTML = `<div class="timeline-wrap">
+          <div class="timeline-title">Tracking History</div>
+          <div style="color:var(--muted);font-size:.85rem;padding:.5rem 0;">
+            No tracking events yet. Events will appear here as your order progresses.
+          </div>
+        </div>`;
+      }
+
+      // ── Items table ──
+      const itemRows = (order.items || []).map(it => `
+        <tr>
+          <td>${esc(it.name)}</td>
+          <td class="part">${esc(it.part || '—')}</td>
+          <td class="center">${it.qty}</td>
+          <td class="right">$${(it.lineTotal || 0).toFixed(2)}</td>
+        </tr>`).join('');
+
+      // ── ETA ──
+      let etaHTML = '';
+      if (order.estimatedDelivery && order.orderStatus !== 'delivered' && order.orderStatus !== 'cancelled') {
+        const eta = new Date(order.estimatedDelivery);
+        const isLate = eta < new Date();
+        etaHTML = `<div class="eta-chip${isLate ? ' late' : ''}">
+          ${isLate ? '⚠️' : '🗓️'} Est. Delivery: ${fmtDateShort(order.estimatedDelivery)}
+        </div>`;
+      } else if (order.deliveredAt) {
+        etaHTML = `<div class="eta-chip">✅ Delivered on ${fmtDateShort(order.deliveredAt)}</div>`;
+      }
+
+      // ── Tracking button ──
+      let trackBtnHTML = '';
+      if (order.trackingNumber && order.trackingUrl) {
+        trackBtnHTML = `<a href="${esc(order.trackingUrl)}" target="_blank" class="track-btn">
+          🔍 Track with ${esc(order.trackingCarrier || 'Carrier')}
+        </a>`;
+      } else if (order.trackingNumber) {
+        trackBtnHTML = `<div style="font-family:'Courier New',monospace;font-size:.85rem;font-weight:700;
+          background:#f1f5f9;padding:.35rem .7rem;border-radius:6px;display:inline-block;margin-top:.4rem;">
+          ${esc(order.trackingNumber)}</div>`;
+      }
+
+      // ── Build full card ──
+      document.getElementById('orderCard').innerHTML = `
+        <!-- Header -->
+        <div class="order-card-header">
+          <div>
+            <div style="color:var(--primary);font-size:.62rem;font-weight:800;letter-spacing:.2em;
+                        text-transform:uppercase;margin-bottom:.2rem;">ORDER STATUS</div>
+            <div class="brand">KJR Interior Designs Inc.</div>
+            <div class="brand-sub">775 Tipton Industrial Dr Suite F, Lawrenceville, GA 30046</div>
+            <div>
+              <span class="status-badge ${order.orderStatus || 'confirmed'}">
+                ${cfg.icon} ${cfg.label}
+              </span>
+            </div>
+          </div>
+          <div class="order-meta">
+            <div class="order-num">#${esc(order.invoiceNumber)}</div>
+            <div class="order-date">Placed: ${fmtDate(order.createdAt)}</div>
+            ${etaHTML}
+          </div>
+        </div>
+
+        <!-- Stepper -->
+        <div class="stepper-wrap">
+          ${stepperHTML}
+        </div>
+
+        <!-- Info grid -->
+        <div class="info-grid">
+          <div class="info-cell">
+            <div class="lbl">Customer</div>
+            <div class="val">
+              <strong>${esc(order.firstName)} ${esc(order.lastName)}</strong>
+            </div>
+          </div>
+          <div class="info-cell">
+            <div class="lbl">Destination</div>
+            <div class="val">
+              <strong>${esc(order.shipTo.city)}, ${esc(order.shipTo.state)} ${esc(order.shipTo.zip)}</strong>
+              <span style="font-size:.78rem;color:var(--muted);">${esc(order.shipTo.country)}</span>
+            </div>
+          </div>
+          <div class="info-cell">
+            <div class="lbl">Tracking</div>
+            <div class="val">
+              ${order.trackingNumber
+          ? `<strong>${esc(order.trackingCarrier || 'Carrier')}</strong>${trackBtnHTML}`
+          : '<span style="color:var(--muted);font-size:.82rem;">Tracking details will appear once shipped</span>'}
+            </div>
+          </div>
+        </div>
+
+        <!-- Addresses -->
+        <div class="addr-row">
+          <div class="addr-cell">
+            <div class="lbl">Ships From</div>
+            <div class="addr-box">
+              <div class="badge-ship">Warehouse</div>
+              <strong>${esc(order.shipFrom.name)}</strong>
+              ${order.shipFrom.company ? `<span style="font-size:.82rem;color:var(--muted);">${esc(order.shipFrom.company)}</span>` : ''}
+              ${esc(order.shipFrom.address)}<br>
+              ${esc(order.shipFrom.city)}, ${esc(order.shipFrom.state)} ${esc(order.shipFrom.zip)}<br>
+              ${esc(order.shipFrom.country)}
+            </div>
+          </div>
+          <div class="addr-cell">
+            <div class="lbl">Ships To</div>
+            <div class="addr-box">
+              <div class="badge-ship">Customer</div>
+              <strong>${esc(order.firstName)} ${esc(order.lastName)}</strong>
+              ${esc(order.shipTo.city)}, ${esc(order.shipTo.state)} ${esc(order.shipTo.zip)}<br>
+              ${esc(order.shipTo.country)}
+            </div>
+          </div>
+        </div>
+
+        <!-- Timeline -->
+        ${timelineHTML}
+
+        <!-- Items -->
+        <div class="items-wrap">
+          <div class="items-title">Order Items (${(order.items || []).length} item${(order.items || []).length !== 1 ? 's' : ''})</div>
+          <table class="items-table">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Part #</th>
+                <th class="center">Qty</th>
+                <th class="right">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${itemRows || '<tr><td colspan="4" style="text-align:center;color:var(--muted);">No items</td></tr>'}
+              <tr class="total-row">
+                <td colspan="3" style="text-align:right;color:var(--muted);">Order Total</td>
+                <td class="right">$${(order.total || 0).toFixed(2)}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Footer -->
+        <div class="order-footer">
+          <p>Questions? Call <strong>888-944-6313</strong> (24/7) or email
+            <a href="mailto:info@kjrid.com">info@kjrid.com</a>
+          </p>
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
+            <a href="invoice.html?id=${esc(order.invoiceNumber)}" class="btn-action ghost">🧾 Invoice</a>
+            <a href="products.html" class="btn-action red">🛒 Shop More</a>
+          </div>
+        </div>`;
+
+      // Animate progress bar
+      if (!isCancelled && stepIdx > 0) {
+        const pct = (stepIdx / (STEPS.length - 1)) * 80; // 80% = 10% margin each side
+        setTimeout(() => {
+          const bar = document.getElementById('stepProgress');
+          if (bar) bar.style.width = pct + '%';
+        }, 100);
+      }
+
+      showState('stateOrder');
+    }
+
+    // ── Track order ────────────────────────────────────────────────────────
+    async function trackOrder(num) {
+      const orderNum = (num || document.getElementById('orderInput').value).trim().toUpperCase();
+      if (!orderNum) return;
+      document.getElementById('orderInput').value = orderNum;
+      showState('stateLoading');
+
+      try {
+        const res = await fetch(`${API_BASE}/payment/order/${encodeURIComponent(orderNum)}`);
+        if (res.status === 404) { showState('stateNotFound'); return; }
+        if (!res.ok) throw new Error(`Server error ${res.status}`);
+        const order = await res.json();
+
+        // Wire up invoice link
+        document.getElementById('viewInvoiceLink').href = `invoice.html?id=${encodeURIComponent(order.invoiceNumber)}`;
+
+        render(order);
+      } catch (err) {
+        document.getElementById('errMsg').textContent = err.message;
+        showState('stateError');
+      }
+    }
+
+    // ── Auto-load from URL ?id= ────────────────────────────────────────────
+    (function autoLoad() {
+      const p = new URLSearchParams(window.location.search);
+      const id = p.get('id') || p.get('order');
+      if (id) {
+        document.getElementById('orderInput').value = id.toUpperCase();
+        trackOrder(id.toUpperCase());
+      }
+    })();
+
+    // Enter key
+    document.getElementById('orderInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') trackOrder();
+    });
+  </script>
+
+  <!-- Auth Modal (shared) -->
+  <div id="authModal" class="auth-modal" onclick="if(event.target===this)closeAuthModal()">
+    <div class="auth-modal-box">
+      <button class="auth-close" onclick="closeAuthModal()" aria-label="Close">&times;</button>
+      <div class="auth-logo"><img src="logo-new.jpeg" alt="KJIR Interior Designs"></div>
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')">Login</button>
+        <button class="auth-tab" id="tabSignup" onclick="switchTab('signup')">Sign Up</button>
+      </div>
+      <form id="formLogin" class="auth-form" onsubmit="handleLogin(event)">
+        <div class="auth-field">
+          <label>Account Type</label>
+          <select id="loginType" required>
+            <option value="">— Select your account type —</option>
+            <option value="sales_team">Sales Team Login</option>
+            <option value="parts">Parts Login</option>
+            <option value="bids">Bids Login</option>
+            <option value="property">Property Management Login</option>
+            <option value="grad">Graduate Login</option>
+          </select>
+        </div>
+        <div class="auth-field">
+          <label>Email or Username</label>
+          <input type="text" id="loginIdentifier" placeholder="Enter email or username" required autocomplete="username">
+        </div>
+        <div class="auth-field">
+          <label>Password</label>
+          <div class="auth-password-wrap">
+            <input type="password" id="loginPassword" placeholder="Enter password" required autocomplete="current-password">
+            <span class="auth-eye" onclick="togglePassword('loginPassword',this)">&#9679;</span>
+          </div>
+        </div>
+        <div class="auth-options">
+          <label class="auth-remember"><input type="checkbox"> Remember me</label>
+          <a href="#" class="auth-forgot">Forgot password?</a>
+        </div>
+        <div id="loginError" class="auth-error" style="display:none;"></div>
+        <button type="submit" class="auth-submit" id="loginBtn">
+          <span class="auth-btn-text">Login</span>
+          <span class="auth-spinner" style="display:none;">...</span>
+        </button>
+        <p class="auth-switch">Don't have an account? <a href="#" onclick="switchTab('signup');return false;">Sign Up</a></p>
+      </form>
+      <form id="formSignup" class="auth-form" style="display:none;" onsubmit="handleSignup(event)">
+        <div class="auth-field">
+          <label>Account Type <span class="req">*</span></label>
+          <select id="signupType" required onchange="toggleSignupFields()">
+            <option value="">— Select your account type —</option>
+            <option value="sales_team">Sales Team Login</option>
+            <option value="parts">Parts Login</option>
+            <option value="bids">Bids Login</option>
+            <option value="property">Property Management Login</option>
+            <option value="grad">Graduate Login</option>
+          </select>
+        </div>
+        <div class="auth-field">
+          <label>Username <span class="req">*</span></label>
+          <input type="text" id="signupUsername" placeholder="Choose a username" required autocomplete="username">
+        </div>
+        <div class="auth-field">
+          <label>Email <span class="req">*</span></label>
+          <input type="email" id="signupEmail" placeholder="Enter your email" required autocomplete="email">
+        </div>
+        <div class="auth-field">
+          <label>Mobile Number</label>
+          <input type="tel" id="signupPhone" placeholder="e.g. 555-123-4567" autocomplete="tel">
+        </div>
+        <div class="auth-field" id="companyField" style="display:none;">
+          <label>Company Name</label>
+          <input type="text" id="signupCompany" placeholder="Your company name">
+        </div>
+        <div class="auth-field" id="instructorField" style="display:none;">
+          <label>Instructor Name</label>
+          <input type="text" id="signupInstructor" placeholder="Your instructor's name">
+        </div>
+        <div class="auth-field">
+          <label>Password <span class="req">*</span></label>
+          <div class="auth-password-wrap">
+            <input type="password" id="signupPassword" placeholder="Create a password" required autocomplete="new-password">
+            <span class="auth-eye" onclick="togglePassword('signupPassword',this)">&#9679;</span>
+          </div>
+        </div>
+        <div class="auth-field">
+          <label>Confirm Password <span class="req">*</span></label>
+          <div class="auth-password-wrap">
+            <input type="password" id="signupConfirm" placeholder="Confirm your password" required autocomplete="new-password">
+            <span class="auth-eye" onclick="togglePassword('signupConfirm',this)">&#9679;</span>
+          </div>
+        </div>
+        <div id="signupError" class="auth-error" style="display:none;"></div>
+        <button type="submit" class="auth-submit" id="signupBtn">
+          <span class="auth-btn-text">Create Account</span>
+          <span class="auth-spinner" style="display:none;">...</span>
+        </button>
+        <p class="auth-switch">Already have an account? <a href="#" onclick="switchTab('login');return false;">Login</a></p>
+      </form>
+    </div>
+  </div>
+
+  <script src="assets/js/bunji.js"></script>
+  <script>
+    // ── Shared Auth Modal ──────────────────────────────────────────────────
+    const BACKEND = 'https://kjr-backend.onrender.com';
+    function openAuthModal(tab){document.getElementById('authModal').classList.add('open');document.body.style.overflow='hidden';switchTab(tab||'login');}
+    function closeAuthModal(){document.getElementById('authModal').classList.remove('open');document.body.style.overflow='';}
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAuthModal();});
+    function switchTab(tab){const l=tab==='login';document.getElementById('tabLogin').classList.toggle('active',l);document.getElementById('tabSignup').classList.toggle('active',!l);document.getElementById('formLogin').style.display=l?'flex':'none';document.getElementById('formSignup').style.display=l?'none':'flex';clearErrors();}
+    function clearErrors(){['loginError','signupError'].forEach(id=>{const e=document.getElementById(id);if(e){e.style.display='none';e.textContent='';};});}
+    function showError(id,msg){const e=document.getElementById(id);if(e){e.textContent=msg;e.style.display='block';}}
+    function togglePassword(fId,eye){const i=document.getElementById(fId);const s=i.type==='password';i.type=s?'text':'password';eye.textContent=s?'Hide':'Show';}
+    function toggleSignupFields(){const t=document.getElementById('signupType').value;document.getElementById('companyField').style.display=['sales_team','parts','bids','property'].includes(t)?'block':'none';document.getElementById('instructorField').style.display=t==='grad'?'block':'none';}
+    function setLoading(id,on){const b=document.getElementById(id);b.querySelector('.auth-btn-text').style.display=on?'none':'inline';b.querySelector('.auth-spinner').style.display=on?'inline':'none';b.disabled=on;}
+    async function handleLogin(e){e.preventDefault();clearErrors();const loginType=document.getElementById('loginType').value;const identifier=document.getElementById('loginIdentifier').value.trim();const password=document.getElementById('loginPassword').value;if(!loginType)return showError('loginError','Please select your account type.');setLoading('loginBtn',true);try{const r=await fetch(BACKEND+'/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({identifier,password,loginType})});const d=await r.json();if(!r.ok)throw new Error(d.errors?.[0]?.msg||'Login failed');localStorage.setItem('kjr_token',d.token);localStorage.setItem('kjr_user',JSON.stringify({...d.user,loginType}));closeAuthModal();updateAuthButton({...d.user,loginType});}catch(err){showError('loginError',err.message);}finally{setLoading('loginBtn',false);}}
+    async function handleSignup(e){e.preventDefault();clearErrors();const loginType=document.getElementById('signupType').value;const username=document.getElementById('signupUsername').value.trim();const email=document.getElementById('signupEmail').value.trim();const password=document.getElementById('signupPassword').value;const confirm=document.getElementById('signupConfirm').value;const phone=document.getElementById('signupPhone').value.trim();const companyName=document.getElementById('signupCompany').value.trim();const instructorName=document.getElementById('signupInstructor').value.trim();if(!loginType)return showError('signupError','Please select an account type.');if(password!==confirm)return showError('signupError','Passwords do not match.');if(password.length<8)return showError('signupError','Password must be at least 8 characters.');setLoading('signupBtn',true);try{const r=await fetch(BACKEND+'/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({loginType,username,email,password,phone,companyName,instructorName})});const d=await r.json();if(!r.ok)throw new Error(d.errors?.[0]?.msg||'Registration failed');localStorage.setItem('kjr_token',d.token);localStorage.setItem('kjr_user',JSON.stringify({...d.user,loginType}));closeAuthModal();updateAuthButton({...d.user,loginType});}catch(err){showError('signupError',err.message);}finally{setLoading('signupBtn',false);}}
+    function updateAuthButton(user){const btn=document.querySelector('.auth-trigger-btn');if(!btn)return;if(user){btn.textContent=user.username;btn.onclick=logout;btn.title='Click to logout';window.dispatchEvent(new Event('kjr-login'));}else{btn.textContent='Login / Sign Up';btn.onclick=()=>openAuthModal('login');btn.title='';}}
+    function logout(){if(!confirm('Logout?'))return;localStorage.removeItem('kjr_token');localStorage.removeItem('kjr_user');updateAuthButton(null);}
+    (function(){const u=JSON.parse(localStorage.getItem('kjr_user')||'null');if(u)updateAuthButton(u);})();
+  </script>
+  
+</body>
+
+</html>

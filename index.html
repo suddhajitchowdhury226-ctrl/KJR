@@ -13,13 +13,132 @@
   <!-- Top Utility Bar -->
   <div class="top-bar">
     <div class="top-bar-left">
-      <span class="utility-info">📞 <strong>888-944-6313</strong> • Call in Orders Only • Call 24/7 • Live
+      <span class="utility-info"><strong>888-944-6313</strong> • Call in Orders Only • Call 24/7 • Live
         Operator</span>
     </div>
     <div class="top-bar-right">
       <a href="contact-us.html">Contact</a>
       <a href="suggest-feature.html">Suggest Feature</a>
-      <a href="sales-login.html" class="sales-login-btn">SALES LOGIN</a>
+      <button class="auth-trigger-btn" onclick="openAuthModal('login')">Login / Sign Up</button>
+    </div>
+  </div>
+
+  <!-- ── Auth Modal ──────────────────────────────────────────────────── -->
+  <div id="authModal" class="auth-modal" onclick="handleAuthModalClick(event)">
+    <div class="auth-modal-box">
+
+      <!-- Close -->
+      <button class="auth-close" onclick="closeAuthModal()" aria-label="Close">&times;</button>
+
+      <!-- Logo -->
+      <div class="auth-logo">
+        <img src="logo-new.jpeg" alt="KJIR Interior Designs">
+      </div>
+
+      <!-- Tabs -->
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')">Login</button>
+        <button class="auth-tab" id="tabSignup" onclick="switchTab('signup')">Sign Up</button>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <form id="formLogin" class="auth-form" onsubmit="handleLogin(event)">
+        <div class="auth-field">
+          <label>Account Type</label>
+          <select id="loginType" required>
+            <option value="">— Select your account type —</option>
+            <option value="sales_team">Sales Team Login</option>
+            <option value="parts">Parts Login</option>
+            <option value="bids">Bids Login</option>
+            <option value="property">Property Management Login</option>
+            <option value="grad">Graduate Login</option>
+          </select>
+        </div>
+        <div class="auth-field">
+          <label>Email or Username</label>
+          <input type="text" id="loginIdentifier" placeholder="Enter email or username" required
+            autocomplete="username">
+        </div>
+        <div class="auth-field">
+          <label>Password</label>
+          <div class="auth-password-wrap">
+            <input type="password" id="loginPassword" placeholder="Enter password" required
+              autocomplete="current-password">
+            <span class="auth-eye" onclick="togglePassword('loginPassword', this)">&#9679;</span>
+          </div>
+        </div>
+        <div class="auth-options">
+          <label class="auth-remember"><input type="checkbox"> Remember me</label>
+          <a href="#" class="auth-forgot">Forgot password?</a>
+        </div>
+        <div id="loginError" class="auth-error" style="display:none;"></div>
+        <button type="submit" class="auth-submit" id="loginBtn">
+          <span class="auth-btn-text">Login</span>
+          <span class="auth-spinner" style="display:none;">...</span>
+        </button>
+        <p class="auth-switch">Don't have an account? <a href="#" onclick="switchTab('signup'); return false;">Sign
+            Up</a></p>
+      </form>
+
+      <!-- SIGNUP FORM -->
+      <form id="formSignup" class="auth-form" style="display:none;" onsubmit="handleSignup(event)">
+        <div class="auth-field">
+          <label>Account Type <span class="req">*</span></label>
+          <select id="signupType" required onchange="toggleSignupFields()">
+            <option value="">— Select your account type —</option>
+            <option value="sales_team">Sales Team Login</option>
+            <option value="parts">Parts Login</option>
+            <option value="bids">Bids Login</option>
+            <option value="property">Property Management Login</option>
+            <option value="grad">Graduate Login</option>
+          </select>
+        </div>
+        <div class="auth-field">
+          <label>Username <span class="req">*</span></label>
+          <input type="text" id="signupUsername" placeholder="Choose a username" required autocomplete="username">
+        </div>
+        <div class="auth-field">
+          <label>Email <span class="req">*</span></label>
+          <input type="email" id="signupEmail" placeholder="Enter your email" required autocomplete="email">
+        </div>
+        <div class="auth-field">
+          <label>Mobile Number</label>
+          <input type="tel" id="signupPhone" placeholder="e.g. 555-123-4567" autocomplete="tel">
+        </div>
+        <div class="auth-field" id="companyField" style="display:none;">
+          <label>Company Name</label>
+          <input type="text" id="signupCompany" placeholder="Your company name">
+        </div>
+        <div class="auth-field" id="instructorField" style="display:none;">
+          <label>Instructor Name</label>
+          <input type="text" id="signupInstructor" placeholder="Your instructor's name">
+        </div>
+        <div class="auth-field">
+          <label>Password <span class="req">*</span></label>
+          <div class="auth-password-wrap">
+            <input type="password" id="signupPassword" placeholder="Create a password" required
+              autocomplete="new-password">
+            <span class="auth-eye" onclick="togglePassword('signupPassword', this)">&#9679;</span>
+          </div>
+        </div>
+        <div class="auth-field">
+          <label>Confirm Password <span class="req">*</span></label>
+          <div class="auth-password-wrap">
+            <input type="password" id="signupConfirm" placeholder="Confirm your password" required
+              autocomplete="new-password">
+            <span class="auth-eye" onclick="togglePassword('signupConfirm', this)">&#9679;</span>
+          </div>
+        </div>
+        <div id="signupError" class="auth-error" style="display:none;"></div>
+        <button type="submit" class="auth-submit" id="signupBtn">
+          <span class="auth-btn-text">Create Account</span>
+          <span class="auth-spinner" style="display:none;">...</span>
+        </button>
+        <p class="auth-switch">Already have an account? <a href="#"
+            onclick="switchTab('login'); return false;">Login</a>
+        </p>
+      </form>
+
     </div>
   </div>
 
@@ -214,8 +333,7 @@
           style="background: var(--primary); color: white; border: none; padding: 1rem 3rem;">Browse All Categories</a>
         <a href="tel:8889446313" class="btn"
           style="background: #222; color: white; border: none; padding: 1rem 3rem;">Call 888-944-6313 to Order</a>
-        <a href="sales-login.html" class="btn"
-          style="background: white; color: #222; border: 2px solid #222; padding: 1rem 3rem;">Sales Team Login (POS)</a>
+
       </div>
     </div>
   </section>
@@ -242,8 +360,8 @@
         <h4>QUICK LINKS</h4>
         <ul class="footer-links">
           <li><a href="property-mgmt.html">Upload Invoice</a></li>
-          <li><a href="sales-login.html">Sign In</a></li>
           <li><a href="invoice.html">View Invoice</a></li>
+          <li><a href="order-tracking.html">Track Order</a></li>
           <li><a href="registration.html">Create Profile</a></li>
           <li><a href="contact-us.html">Contact Support</a></li>
         </ul>
@@ -276,6 +394,163 @@
     });
   </script>
   <script src="assets/js/bunji.js"></script>
+  <script>
+    // ── Auth Modal ─────────────────────────────────────────────────────────
+    const BACKEND = 'https://kjr-backend.onrender.com';
+
+    function openAuthModal(tab = 'login') {
+      document.getElementById('authModal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+      switchTab(tab);
+    }
+
+    function closeAuthModal() {
+      document.getElementById('authModal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function handleAuthModalClick(e) {
+      if (e.target === document.getElementById('authModal')) closeAuthModal();
+    }
+
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAuthModal(); });
+
+    function switchTab(tab) {
+      const isLogin = tab === 'login';
+      document.getElementById('tabLogin').classList.toggle('active', isLogin);
+      document.getElementById('tabSignup').classList.toggle('active', !isLogin);
+      document.getElementById('formLogin').style.display = isLogin ? 'flex' : 'none';
+      document.getElementById('formSignup').style.display = isLogin ? 'none' : 'flex';
+      clearErrors();
+    }
+
+    function clearErrors() {
+      ['loginError', 'signupError'].forEach(id => {
+        const el = document.getElementById(id);
+        el.style.display = 'none';
+        el.textContent = '';
+      });
+    }
+
+    function showError(id, msg) {
+      const el = document.getElementById(id);
+      el.textContent = msg;
+      el.style.display = 'block';
+    }
+
+    function togglePassword(fieldId, eye) {
+      const input = document.getElementById(fieldId);
+      const show = input.type === 'password';
+      input.type = show ? 'text' : 'password';
+      eye.textContent = show ? 'Hide' : 'Show';
+    }
+
+    function toggleSignupFields() {
+      const type = document.getElementById('signupType').value;
+      // Company field: sales team, parts, bids, property
+      const showCompany = ['sales_team', 'parts', 'bids', 'property'].includes(type);
+      // Instructor field: grad only
+      const showInstructor = type === 'grad';
+      document.getElementById('companyField').style.display = showCompany ? 'block' : 'none';
+      document.getElementById('instructorField').style.display = showInstructor ? 'block' : 'none';
+    }
+
+    function setLoading(btnId, loading) {
+      const btn = document.getElementById(btnId);
+      btn.querySelector('.auth-btn-text').style.display = loading ? 'none' : 'inline';
+      btn.querySelector('.auth-spinner').style.display = loading ? 'inline' : 'none';
+      btn.disabled = loading;
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      clearErrors();
+      const loginType = document.getElementById('loginType').value;
+      const identifier = document.getElementById('loginIdentifier').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      if (!loginType) return showError('loginError', 'Please select your account type.');
+      setLoading('loginBtn', true);
+      try {
+        const res = await fetch(`${BACKEND}/api/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ identifier, password, loginType })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.errors?.[0]?.msg || 'Login failed. Please check your credentials.');
+        localStorage.setItem('kjr_token', data.token);
+        localStorage.setItem('kjr_user', JSON.stringify({ ...data.user, loginType }));
+        closeAuthModal();
+        updateAuthButton({ ...data.user, loginType });
+      } catch (err) {
+        showError('loginError', err.message);
+      } finally {
+        setLoading('loginBtn', false);
+      }
+    }
+
+    async function handleSignup(e) {
+      e.preventDefault();
+      clearErrors();
+      const loginType = document.getElementById('signupType').value;
+      const username = document.getElementById('signupUsername').value.trim();
+      const email = document.getElementById('signupEmail').value.trim();
+      const password = document.getElementById('signupPassword').value;
+      const confirm = document.getElementById('signupConfirm').value;
+      const companyName = document.getElementById('signupCompany').value.trim();
+      const instructorName = document.getElementById('signupInstructor').value.trim();
+      const phone = document.getElementById('signupPhone').value.trim();
+      if (!loginType) return showError('signupError', 'Please select an account type.');
+      if (password !== confirm) return showError('signupError', 'Passwords do not match.');
+      if (password.length < 8) return showError('signupError', 'Password must be at least 8 characters.');
+      setLoading('signupBtn', true);
+      try {
+        const res = await fetch(`${BACKEND}/api/auth/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ loginType, username, email, phone, password, companyName, instructorName })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.errors?.[0]?.msg || 'Registration failed. Please try again.');
+        localStorage.setItem('kjr_token', data.token);
+        localStorage.setItem('kjr_user', JSON.stringify({ ...data.user, loginType }));
+        closeAuthModal();
+        updateAuthButton({ ...data.user, loginType });
+      } catch (err) {
+        showError('signupError', err.message);
+      } finally {
+        setLoading('signupBtn', false);
+      }
+    }
+
+    function updateAuthButton(user) {
+      const btn = document.querySelector('.auth-trigger-btn');
+      if (user) {
+        btn.textContent = user.username;
+        btn.onclick = logout;
+        btn.title = 'Click to logout';
+        // Notify bunji widget that user is now logged in
+        window.dispatchEvent(new Event('kjr-login'));
+      } else {
+        btn.textContent = 'Login / Sign Up';
+        btn.onclick = () => openAuthModal('login');
+        btn.title = '';
+      }
+    }
+
+    function logout() {
+      if (!confirm('Logout?')) return;
+      localStorage.removeItem('kjr_token');
+      localStorage.removeItem('kjr_user');
+      updateAuthButton(null);
+    }
+
+    // Restore session on page load
+    (function () {
+      const user = JSON.parse(localStorage.getItem('kjr_user') || 'null');
+      if (user) updateAuthButton(user);
+    })();
+  </script>
 </body>
 
 </html>

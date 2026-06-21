@@ -126,24 +126,24 @@ router.post('/bids', upload.array('documents', 5), async (req, res) => {
   try {
     // 1. Save bid to database
     const newBid = new Bid({
-      project:       req.body.project,
-      projectName:   req.body.projectName,
-      companyName:   req.body.companyName,
+      project: req.body.project,
+      projectName: req.body.projectName,
+      companyName: req.body.companyName,
       contactPerson: req.body.contactPerson,
-      emailAddress:  req.body.emailAddress,
-      phone:         req.body.phone,
-      bidIntent:     req.body.bidIntent,
+      emailAddress: req.body.emailAddress,
+      phone: req.body.phone,
+      bidIntent: req.body.bidIntent,
       declineReason: req.body.declineReason,
-      bidAmount:     req.body.bidAmount ? parseFloat(req.body.bidAmount) : 0,
-      comments:      req.body.comments
+      bidAmount: req.body.bidAmount ? parseFloat(req.body.bidAmount) : 0,
+      comments: req.body.comments
     });
     const bid = await newBid.save();
 
     // 2. Send email notification
     try {
       const transporter = nodemailer.createTransport({
-        host:   process.env.SMTP_HOST || 'smtp.gmail.com',
-        port:   parseInt(process.env.SMTP_PORT) || 587,
+        host: process.env.SMTP_HOST || 'smtp.gmail.com',
+        port: parseInt(process.env.SMTP_PORT) || 587,
         secure: false,
         auth: {
           user: process.env.SMTP_USER,
@@ -152,22 +152,22 @@ router.post('/bids', upload.array('documents', 5), async (req, res) => {
       });
 
       const notifyEmails = process.env.NOTIFY_EMAILS || 'estimating@kjrid.com';
-      const intentLabel  = bid.bidIntent === 'yes'
+      const intentLabel = bid.bidIntent === 'yes'
         ? `YES — Will Bid${bid.bidAmount ? ' | Amount: $' + Number(bid.bidAmount).toLocaleString() : ''}`
         : `NO — Declining${bid.declineReason ? ' | Reason: ' + bid.declineReason : ''}`;
 
       // Build file attachments array from multer buffers
       const attachments = (req.files || []).map(f => ({
-        filename:    f.originalname,
-        content:     f.buffer,
+        filename: f.originalname,
+        content: f.buffer,
         contentType: f.mimetype
       }));
 
       const mailOptions = {
-        from:        `"KJR Bid System" <${process.env.SMTP_USER}>`,
-        to:          notifyEmails,
-        replyTo:     bid.emailAddress,
-        subject:     `Bid Response: ${bid.projectName} — ${bid.companyName}`,
+        from: `"KJR Bid System" <${process.env.SMTP_USER}>`,
+        to: notifyEmails,
+        replyTo: bid.emailAddress,
+        subject: `Bid Response: ${bid.projectName} — ${bid.companyName}`,
         attachments,
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 640px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
@@ -259,8 +259,8 @@ router.get('/admin/bids/:projectId', auth, async (req, res) => {
 router.post('/forms', upload.any(), async (req, res) => {
   try {
     const transporter = nodemailer.createTransport({
-      host:   process.env.SMTP_HOST || 'smtp.gmail.com',
-      port:   parseInt(process.env.SMTP_PORT) || 587,
+      host: process.env.SMTP_HOST || 'smtp.gmail.com',
+      port: parseInt(process.env.SMTP_PORT) || 587,
       secure: false,
       auth: {
         user: process.env.SMTP_USER,
@@ -270,7 +270,7 @@ router.post('/forms', upload.any(), async (req, res) => {
 
     const notifyEmails = process.env.NOTIFY_EMAILS || 'estimating@kjrid.com';
     const subject = req.body._subject || 'New Form Submission';
-    
+
     // Build HTML body from all form fields
     let htmlBody = '<div style="font-family: Arial, sans-serif;"><h2>' + subject + '</h2><table border="1" cellpadding="10" style="border-collapse: collapse;">';
     for (const key in req.body) {
@@ -281,17 +281,17 @@ router.post('/forms', upload.any(), async (req, res) => {
     htmlBody += '</table></div>';
 
     const attachments = (req.files || []).map(f => ({
-      filename:    f.originalname,
-      content:     f.buffer,
+      filename: f.originalname,
+      content: f.buffer,
       contentType: f.mimetype
     }));
 
     const mailOptions = {
-      from:        `"KJR Form System" <${process.env.SMTP_USER}>`,
-      to:          notifyEmails,
-      replyTo:     req.body.Email || req.body.email || process.env.SMTP_USER,
-      subject:     subject,
-      html:        htmlBody,
+      from: `"KJR Form System" <${process.env.SMTP_USER}>`,
+      to: notifyEmails,
+      replyTo: req.body.Email || req.body.email || process.env.SMTP_USER,
+      subject: subject,
+      html: htmlBody,
       attachments
     };
 
@@ -306,32 +306,41 @@ router.post('/forms', upload.any(), async (req, res) => {
 
 // --- USER AUTH ROUTES ---
 // @route   POST api/auth/register
-// @desc    Register user (Sales or Grad)
+// @desc    Register user
 router.post('/auth/register', async (req, res) => {
-  const { loginType, email, username, password, companyName, instructorName } = req.body;
+  const { loginType, email, username, password, phone, companyName, instructorName } = req.body;
+  const VALID_TYPES = ['sales_team', 'parts', 'bids', 'property', 'grad'];
+  if (!VALID_TYPES.includes(loginType)) {
+    return res.status(400).json({ errors: [{ msg: 'Invalid account type selected.' }] });
+  }
   try {
     let user = await User.findOne({ email });
     if (user) {
-      return res.status(400).json({ errors: [{ msg: 'User already exists' }] });
+      return res.status(400).json({ errors: [{ msg: 'An account with this email already exists.' }] });
+    }
+    let userByUsername = await User.findOne({ username });
+    if (userByUsername) {
+      return res.status(400).json({ errors: [{ msg: 'Username is already taken.' }] });
     }
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-    
+
     user = new User({
       loginType,
       email,
       username,
       password: hashedPassword,
-      companyName: loginType === 'sales' ? companyName : '',
-      instructorName: loginType === 'grad' ? instructorName : ''
+      phone: phone || '',
+      companyName: loginType !== 'grad' ? (companyName || '') : '',
+      instructorName: loginType === 'grad' ? (instructorName || '') : ''
     });
-    
+
     await user.save();
-    
+
     const payload = { user: { id: user.id, role: loginType } };
     jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '24h' }, (err, token) => {
       if (err) throw err;
-      res.json({ token, user: { id: user.id, username: user.username, email: user.email, loginType }});
+      res.json({ token, user: { id: user.id, username: user.username, email: user.email, loginType } });
     });
   } catch (err) {
     console.error(err.message);
@@ -340,32 +349,36 @@ router.post('/auth/register', async (req, res) => {
 });
 
 // @route   POST api/auth/login
-// @desc    Authenticate user (Sales/Grad)
+// @desc    Authenticate user
 router.post('/auth/login', async (req, res) => {
   const { identifier, password, loginType } = req.body;
+  const VALID_TYPES = ['sales_team', 'parts', 'bids', 'property', 'grad'];
+  if (!VALID_TYPES.includes(loginType)) {
+    return res.status(400).json({ errors: [{ msg: 'Invalid account type selected.' }] });
+  }
   try {
-    const user = await User.findOne({ 
+    const user = await User.findOne({
       $or: [{ email: identifier }, { username: identifier }],
-      loginType 
+      loginType
     });
-    
+
     if (!user) {
-      return res.status(400).json({ errors: [{ msg: 'Invalid Credentials for this account type' }] });
+      return res.status(400).json({ errors: [{ msg: 'No account found for this email/username and account type.' }] });
     }
-    
+
     if (user.status !== 'active') {
-      return res.status(403).json({ errors: [{ msg: 'Account is suspended or inactive' }] });
+      return res.status(403).json({ errors: [{ msg: 'This account is suspended or inactive. Contact support.' }] });
     }
-    
+
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ errors: [{ msg: 'Invalid Credentials' }] });
+      return res.status(400).json({ errors: [{ msg: 'Incorrect password. Please try again.' }] });
     }
-    
+
     const payload = { user: { id: user.id, role: user.loginType } };
     jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '24h' }, (err, token) => {
       if (err) throw err;
-      res.json({ token, user: { id: user.id, username: user.username, email: user.email, loginType: user.loginType }});
+      res.json({ token, user: { id: user.id, username: user.username, email: user.email, loginType: user.loginType } });
     });
   } catch (err) {
     console.error(err.message);

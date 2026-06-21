@@ -201,6 +201,9 @@ router.post('/charge', async (req, res) => {
             // ── Save invoice to DB ────────────────────────────────────────
             let savedInvoice = null;
             try {
+              const estDelivery = new Date();
+              estDelivery.setDate(estDelivery.getDate() + 5); // ~5 business days
+
               savedInvoice = await new Invoice({
                 invoiceNumber: finalInvoiceNumber,
                 transactionId: transId,
@@ -219,7 +222,16 @@ router.post('/charge', async (req, res) => {
                 taxAmount,
                 shipping: 0,
                 total,
-                status: 'paid'
+                status: 'paid',
+                orderStatus: 'confirmed',
+                estimatedDelivery: estDelivery,
+                // Seed the first tracking event
+                trackingEvents: [{
+                  status: 'Order Confirmed',
+                  description: `Payment of $${total.toFixed(2)} received. Order #${finalInvoiceNumber} is confirmed and being prepared.`,
+                  location: 'Lawrenceville, GA',
+                  timestamp: new Date()
+                }]
               }).save();
               console.log(`[Invoice] Saved: ${finalInvoiceNumber}`);
             } catch (dbErr) {
@@ -328,6 +340,7 @@ router.post('/charge', async (req, res) => {
     <div style="background:#f8fafc;border-top:1px solid #e2e8f0;padding:1.25rem 2.5rem;text-align:center;">
       <p style="color:#64748b;font-size:.8rem;margin:0;">Thank you for your order! Questions? Call <strong>888-944-6313</strong> (24/7 Live Operator) or email <a href="mailto:info@kjrid.com" style="color:#cc0000;">info@kjrid.com</a></p>
       <p style="color:#94a3b8;font-size:.72rem;margin:.5rem 0 0;">View your invoice online at: <a href="https://kjr.vercel.app/invoice.html?id=${finalInvoiceNumber}" style="color:#cc0000;">kjr.vercel.app/invoice.html?id=${finalInvoiceNumber}</a></p>
+      <p style="color:#94a3b8;font-size:.72rem;margin:.25rem 0 0;">Track your order: <a href="https://kjr.vercel.app/order-tracking.html?id=${finalInvoiceNumber}" style="color:#cc0000;">kjr.vercel.app/order-tracking.html?id=${finalInvoiceNumber}</a></p>
     </div>
   </div>
 </body>
@@ -424,6 +437,107 @@ router.get('/invoices', auth, async (req, res) => {
     const invoices = await Invoice.find().sort({ createdAt: -1 });
     res.json(invoices);
   } catch (err) {
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// GET /api/payment/order/:invoiceNumber
+// Public order tracking endpoint — returns order status + timeline
+// ─────────────────────────────────────────────────────────────────────────────
+router.get('/order/:invoiceNumber', async (req, res) => {
+  try {
+    const invoice = await Invoice.findOne({ invoiceNumber: req.params.invoiceNumber });
+    if (!invoice) return res.status(404).json({ error: 'Order not found' });
+
+    // Return only tracking-relevant fields (not card/payment details)
+    res.json({
+      invoiceNumber: invoice.invoiceNumber,
+      orderStatus: invoice.orderStatus || 'confirmed',
+      trackingNumber: invoice.trackingNumber || '',
+      trackingCarrier: invoice.trackingCarrier || '',
+      trackingUrl: invoice.trackingUrl || '',
+      estimatedDelivery: invoice.estimatedDelivery || null,
+      deliveredAt: invoice.deliveredAt || null,
+      trackingEvents: invoice.trackingEvents || [],
+      createdAt: invoice.createdAt,
+      updatedAt: invoice.updatedAt,
+
+      // Customer name (first only for privacy)
+      firstName: invoice.firstName,
+      lastName: invoice.lastName.charAt(0) + '.',   // mask last name
+
+      // Ship FROM (warehouse)
+      shipFrom: {
+        name: invoice.shipFromName || 'Jacob N Artye',
+        company: invoice.shipFromCompany || 'KJR Interior Designs Inc.',
+        address: invoice.shipFromAddress || '775 Tipton Industrial Dr Suite F',
+        city: invoice.shipFromCity || 'Lawrenceville',
+        state: invoice.shipFromState || 'GA',
+        zip: invoice.shipFromZip || '30046',
+        country: invoice.shipFromCountry || 'US',
+      },
+
+      // Ship TO (customer — show city/state only for privacy)
+      shipTo: {
+        city: invoice.city,
+        state: invoice.state,
+        zip: invoice.zip,
+        country: 'US',
+      },
+
+      // Items summary
+      items: invoice.items.map(i => ({
+        name: i.name,
+        part: i.part,
+        qty: i.qty,
+        lineTotal: i.lineTotal
+      })),
+      total: invoice.total,
+    });
+  } catch (err) {
+    console.error('[Order] Tracking error:', err.message);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PUT /api/payment/order/:invoiceNumber  (admin — update tracking)
+// Body: { orderStatus, trackingNumber, trackingCarrier, trackingUrl,
+//         estimatedDelivery, event: { status, description, location } }
+// ─────────────────────────────────────────────────────────────────────────────
+router.put('/order/:invoiceNumber', auth, async (req, res) => {
+  try {
+    const inv = await Invoice.findOne({ invoiceNumber: req.params.invoiceNumber });
+    if (!inv) return res.status(404).json({ error: 'Order not found' });
+
+    const {
+      orderStatus, trackingNumber, trackingCarrier,
+      trackingUrl, estimatedDelivery, deliveredAt, event
+    } = req.body;
+
+    if (orderStatus) inv.orderStatus = orderStatus;
+    if (trackingNumber) inv.trackingNumber = trackingNumber;
+    if (trackingCarrier) inv.trackingCarrier = trackingCarrier;
+    if (trackingUrl) inv.trackingUrl = trackingUrl;
+    if (estimatedDelivery) inv.estimatedDelivery = new Date(estimatedDelivery);
+    if (deliveredAt) inv.deliveredAt = new Date(deliveredAt);
+    inv.updatedAt = new Date();
+
+    // Push new timeline event if provided
+    if (event && event.status) {
+      inv.trackingEvents.push({
+        status: event.status,
+        description: event.description || '',
+        location: event.location || '',
+        timestamp: event.timestamp ? new Date(event.timestamp) : new Date()
+      });
+    }
+
+    await inv.save();
+    res.json({ success: true, orderStatus: inv.orderStatus, trackingEvents: inv.trackingEvents });
+  } catch (err) {
+    console.error('[Order] Update error:', err.message);
     res.status(500).json({ error: 'Server error' });
   }
 });

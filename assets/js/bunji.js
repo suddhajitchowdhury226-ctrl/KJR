@@ -261,7 +261,10 @@
   };
 
   // Expose product data globally for the products.html page
-  window.KJR_CATEGORY_PRODUCTS = CATEGORY_PRODUCTS;
+  // Only set if not already provided by products-data.js
+  if (!window.KJR_CATEGORY_PRODUCTS) {
+    window.KJR_CATEGORY_PRODUCTS = CATEGORY_PRODUCTS;
+  }
 
   const PRODUCT_CATEGORIES = [
     "Accumulators & Receivers", "Adhesives", "Air Cleaners", "Air Filters",
@@ -548,6 +551,28 @@
     </div>
   `;
   document.body.appendChild(widget);
+
+  // ─── GLOBAL LOGIN GATE ────────────────────────────────────────────────────
+  // Chat widget is hidden on ALL pages until the user is logged in
+  const widgetEl = document.getElementById('bunji-widget');
+  const isLoggedIn = !!localStorage.getItem('kjr_user');
+
+  if (!isLoggedIn) {
+    // Keep widget completely hidden
+    if (widgetEl) widgetEl.style.display = 'none';
+
+    // Reveal immediately when user logs in on this page
+    window.addEventListener('kjr-login', () => {
+      if (widgetEl) widgetEl.style.display = '';
+    });
+
+    // Reveal if login detected in another tab
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'kjr_user' && e.newValue) {
+        if (widgetEl) widgetEl.style.display = '';
+      }
+    });
+  }
 
   // ─── REFS ─────────────────────────────────────────────────────────────────
   const toggleBtn = document.getElementById('bunji-toggle');
@@ -1083,7 +1108,8 @@
       const resp = await fetch(LOCAL_API, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sessionId, message: text })
+        body: JSON.stringify({ sessionId, message: text }),
+        signal: AbortSignal.timeout(30000)   // 30s — allows for Render cold start
       });
       const data = await resp.json();
       hideTyping();
@@ -1091,11 +1117,15 @@
       if (resp.ok && data.reply) {
         addBubble(data.reply, 'bunji');
       } else {
-        addBubble('❌ Sorry, I am having trouble connecting right now.', 'bunji');
+        addBubble('I\'m having trouble connecting. Please call 888-944-6313 (24/7 Live Operator) or try again in a moment.', 'bunji');
       }
     } catch (e) {
       hideTyping();
-      addBubble('❌ Error connecting to server.', 'bunji');
+      if (e.name === 'TimeoutError' || e.name === 'AbortError') {
+        addBubble('The server is waking up — this can take up to 30 seconds on first load. Please send your message again in a moment, or call 888-944-6313 (24/7).', 'bunji');
+      } else {
+        addBubble('I\'m having trouble connecting right now. Please call 888-944-6313 (24/7 Live Operator) for immediate assistance.', 'bunji');
+      }
     }
   }
 

@@ -939,7 +939,7 @@
     <div class="top-bar-right">
       <a href="contact-us.html">Contact</a>
       <a href="suggest-feature.html">Suggest Feature</a>
-      <a href="sales-login.html" class="sales-login-btn">SALES LOGIN</a>
+      <button class="auth-trigger-btn" onclick="openAuthModal('login')">Login / Sign Up</button>
     </div>
   </div>
 
@@ -1050,8 +1050,8 @@
         <h4>QUICK LINKS</h4>
         <ul class="footer-links">
           <li><a href="property-mgmt.html">Upload Invoice</a></li>
-          <li><a href="sales-login.html">Sign In</a></li>
           <li><a href="invoice.html">View Invoice</a></li>
+          <li><a href="order-tracking.html">Track Order</a></li>
           <li><a href="registration.html">Create Profile</a></li>
           <li><a href="contact-us.html">Contact Support</a></li>
         </ul>
@@ -1520,6 +1520,124 @@
         updateCartBadge();
       }
     }
+  </script>
+
+  <!-- Auth Modal (shared) -->
+  <div id="authModal" class="auth-modal" onclick="if(event.target===this)closeAuthModal()">
+    <div class="auth-modal-box">
+      <button class="auth-close" onclick="closeAuthModal()" aria-label="Close">&times;</button>
+      <div class="auth-logo"><img src="logo-new.jpeg" alt="KJIR Interior Designs"></div>
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')">Login</button>
+        <button class="auth-tab" id="tabSignup" onclick="switchTab('signup')">Sign Up</button>
+      </div>
+      <form id="formLogin" class="auth-form" onsubmit="handleLogin(event)">
+        <div class="auth-field">
+          <label>Account Type</label>
+          <select id="loginType" required>
+            <option value="">— Select your account type —</option>
+            <option value="sales_team">Sales Team Login</option>
+            <option value="parts">Parts Login</option>
+            <option value="bids">Bids Login</option>
+            <option value="property">Property Management Login</option>
+            <option value="grad">Graduate Login</option>
+          </select>
+        </div>
+        <div class="auth-field">
+          <label>Email or Username</label>
+          <input type="text" id="loginIdentifier" placeholder="Enter email or username" required autocomplete="username">
+        </div>
+        <div class="auth-field">
+          <label>Password</label>
+          <div class="auth-password-wrap">
+            <input type="password" id="loginPassword" placeholder="Enter password" required autocomplete="current-password">
+            <span class="auth-eye" onclick="togglePassword('loginPassword',this)">&#9679;</span>
+          </div>
+        </div>
+        <div class="auth-options">
+          <label class="auth-remember"><input type="checkbox"> Remember me</label>
+          <a href="#" class="auth-forgot">Forgot password?</a>
+        </div>
+        <div id="loginError" class="auth-error" style="display:none;"></div>
+        <button type="submit" class="auth-submit" id="loginBtn">
+          <span class="auth-btn-text">Login</span>
+          <span class="auth-spinner" style="display:none;">...</span>
+        </button>
+        <p class="auth-switch">Don't have an account? <a href="#" onclick="switchTab('signup');return false;">Sign Up</a></p>
+      </form>
+      <form id="formSignup" class="auth-form" style="display:none;" onsubmit="handleSignup(event)">
+        <div class="auth-field">
+          <label>Account Type <span class="req">*</span></label>
+          <select id="signupType" required onchange="toggleSignupFields()">
+            <option value="">— Select your account type —</option>
+            <option value="sales_team">Sales Team Login</option>
+            <option value="parts">Parts Login</option>
+            <option value="bids">Bids Login</option>
+            <option value="property">Property Management Login</option>
+            <option value="grad">Graduate Login</option>
+          </select>
+        </div>
+        <div class="auth-field">
+          <label>Username <span class="req">*</span></label>
+          <input type="text" id="signupUsername" placeholder="Choose a username" required autocomplete="username">
+        </div>
+        <div class="auth-field">
+          <label>Email <span class="req">*</span></label>
+          <input type="email" id="signupEmail" placeholder="Enter your email" required autocomplete="email">
+        </div>
+        <div class="auth-field">
+          <label>Mobile Number</label>
+          <input type="tel" id="signupPhone" placeholder="e.g. 555-123-4567" autocomplete="tel">
+        </div>
+        <div class="auth-field" id="companyField" style="display:none;">
+          <label>Company Name</label>
+          <input type="text" id="signupCompany" placeholder="Your company name">
+        </div>
+        <div class="auth-field" id="instructorField" style="display:none;">
+          <label>Instructor Name</label>
+          <input type="text" id="signupInstructor" placeholder="Your instructor's name">
+        </div>
+        <div class="auth-field">
+          <label>Password <span class="req">*</span></label>
+          <div class="auth-password-wrap">
+            <input type="password" id="signupPassword" placeholder="Create a password" required autocomplete="new-password">
+            <span class="auth-eye" onclick="togglePassword('signupPassword',this)">&#9679;</span>
+          </div>
+        </div>
+        <div class="auth-field">
+          <label>Confirm Password <span class="req">*</span></label>
+          <div class="auth-password-wrap">
+            <input type="password" id="signupConfirm" placeholder="Confirm your password" required autocomplete="new-password">
+            <span class="auth-eye" onclick="togglePassword('signupConfirm',this)">&#9679;</span>
+          </div>
+        </div>
+        <div id="signupError" class="auth-error" style="display:none;"></div>
+        <button type="submit" class="auth-submit" id="signupBtn">
+          <span class="auth-btn-text">Create Account</span>
+          <span class="auth-spinner" style="display:none;">...</span>
+        </button>
+        <p class="auth-switch">Already have an account? <a href="#" onclick="switchTab('login');return false;">Login</a></p>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // ── Shared Auth Modal ──────────────────────────────────────────────────
+    const BACKEND = 'https://kjr-backend.onrender.com';
+    function openAuthModal(tab){document.getElementById('authModal').classList.add('open');document.body.style.overflow='hidden';switchTab(tab||'login');}
+    function closeAuthModal(){document.getElementById('authModal').classList.remove('open');document.body.style.overflow='';}
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAuthModal();});
+    function switchTab(tab){const l=tab==='login';document.getElementById('tabLogin').classList.toggle('active',l);document.getElementById('tabSignup').classList.toggle('active',!l);document.getElementById('formLogin').style.display=l?'flex':'none';document.getElementById('formSignup').style.display=l?'none':'flex';clearErrors();}
+    function clearErrors(){['loginError','signupError'].forEach(id=>{const e=document.getElementById(id);if(e){e.style.display='none';e.textContent='';};});}
+    function showError(id,msg){const e=document.getElementById(id);if(e){e.textContent=msg;e.style.display='block';}}
+    function togglePassword(fId,eye){const i=document.getElementById(fId);const s=i.type==='password';i.type=s?'text':'password';eye.textContent=s?'Hide':'Show';}
+    function toggleSignupFields(){const t=document.getElementById('signupType').value;document.getElementById('companyField').style.display=['sales_team','parts','bids','property'].includes(t)?'block':'none';document.getElementById('instructorField').style.display=t==='grad'?'block':'none';}
+    function setLoading(id,on){const b=document.getElementById(id);b.querySelector('.auth-btn-text').style.display=on?'none':'inline';b.querySelector('.auth-spinner').style.display=on?'inline':'none';b.disabled=on;}
+    async function handleLogin(e){e.preventDefault();clearErrors();const loginType=document.getElementById('loginType').value;const identifier=document.getElementById('loginIdentifier').value.trim();const password=document.getElementById('loginPassword').value;if(!loginType)return showError('loginError','Please select your account type.');setLoading('loginBtn',true);try{const r=await fetch(BACKEND+'/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({identifier,password,loginType})});const d=await r.json();if(!r.ok)throw new Error(d.errors?.[0]?.msg||'Login failed');localStorage.setItem('kjr_token',d.token);localStorage.setItem('kjr_user',JSON.stringify({...d.user,loginType}));closeAuthModal();updateAuthButton({...d.user,loginType});}catch(err){showError('loginError',err.message);}finally{setLoading('loginBtn',false);}}
+    async function handleSignup(e){e.preventDefault();clearErrors();const loginType=document.getElementById('signupType').value;const username=document.getElementById('signupUsername').value.trim();const email=document.getElementById('signupEmail').value.trim();const password=document.getElementById('signupPassword').value;const confirm=document.getElementById('signupConfirm').value;const phone=document.getElementById('signupPhone').value.trim();const companyName=document.getElementById('signupCompany').value.trim();const instructorName=document.getElementById('signupInstructor').value.trim();if(!loginType)return showError('signupError','Please select an account type.');if(password!==confirm)return showError('signupError','Passwords do not match.');if(password.length<8)return showError('signupError','Password must be at least 8 characters.');setLoading('signupBtn',true);try{const r=await fetch(BACKEND+'/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({loginType,username,email,password,phone,companyName,instructorName})});const d=await r.json();if(!r.ok)throw new Error(d.errors?.[0]?.msg||'Registration failed');localStorage.setItem('kjr_token',d.token);localStorage.setItem('kjr_user',JSON.stringify({...d.user,loginType}));closeAuthModal();updateAuthButton({...d.user,loginType});}catch(err){showError('signupError',err.message);}finally{setLoading('signupBtn',false);}}
+    function updateAuthButton(user){const btn=document.querySelector('.auth-trigger-btn');if(!btn)return;if(user){btn.textContent=user.username;btn.onclick=logout;btn.title='Click to logout';window.dispatchEvent(new Event('kjr-login'));}else{btn.textContent='Login / Sign Up';btn.onclick=()=>openAuthModal('login');btn.title='';}}
+    function logout(){if(!confirm('Logout?'))return;localStorage.removeItem('kjr_token');localStorage.removeItem('kjr_user');updateAuthButton(null);}
+    (function(){const u=JSON.parse(localStorage.getItem('kjr_user')||'null');if(u)updateAuthButton(u);})();
   </script>
 </body>
 
