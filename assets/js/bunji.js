@@ -1171,7 +1171,7 @@
 
     let apiResults = [];
     try {
-      const res = await fetch(`${API_BASE}/products?search=${encodeURIComponent(query)}&limit=8`, {
+      const res = await fetch(`${API_BASE}/products/search?q=${encodeURIComponent(query)}&limit=8`, {
         signal: AbortSignal.timeout(8000)
       });
       if (res.ok) {
