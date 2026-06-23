@@ -258,6 +258,12 @@
       border: 1px solid #fecaca;
     }
 
+    .status-badge.pending_approval {
+      background: #fffbeb;
+      color: #92400e;
+      border: 1px solid #fde68a;
+    }
+
     /* ── Progress stepper ── */
     .stepper-wrap {
       padding: 2rem 2rem 1.5rem;
@@ -942,6 +948,7 @@
 
     // ── Status config ──────────────────────────────────────────────────────
     const STATUS_CONFIG = {
+      pending_approval: { label: 'Awaiting Approval', icon: '🕐', step: -2 },
       confirmed: { label: 'Order Confirmed', icon: '✅', step: 0 },
       processing: { label: 'Processing', icon: '⚙️', step: 1 },
       packed: { label: 'Packed', icon: '📦', step: 2 },
@@ -988,24 +995,44 @@
       const cfg = STATUS_CONFIG[order.orderStatus] || STATUS_CONFIG.confirmed;
       const stepIdx = cfg.step;
       const isCancelled = order.orderStatus === 'cancelled';
+      const isPending = order.orderStatus === 'pending_approval';
+
+      // ── Pending approval banner ──
+      let pendingBannerHTML = '';
+      if (isPending) {
+        pendingBannerHTML = `
+          <div style="background:linear-gradient(135deg,#fffbeb,#fef3c7);border:2px solid #fde68a;border-radius:14px;padding:1.75rem;margin-bottom:1.25rem;text-align:center;">
+            <div style="font-size:2.5rem;margin-bottom:.75rem;">🕐</div>
+            <div style="font-size:1.1rem;font-weight:800;color:#92400e;margin-bottom:.4rem;">Order Under Review</div>
+            <div style="font-size:.88rem;color:#78350f;max-width:440px;margin:0 auto .75rem;">
+              Your payment has been received. Our team is reviewing your order and will confirm it shortly. You'll receive an email with your estimated delivery date once approved.
+            </div>
+            <div style="display:inline-flex;align-items:center;gap:.5rem;background:#fff;border:1px solid #fde68a;border-radius:8px;padding:.5rem 1rem;font-size:.82rem;color:#92400e;font-weight:600;">
+              📧 Confirmation email will be sent to: <strong>${esc(order.firstName)}'s email</strong>
+            </div>
+          </div>`;
+      }
 
       // ── Progress stepper ──
-      let stepperHTML = '<div class="stepper" id="stepper">';
-      STEPS.forEach((s, i) => {
-        let cls = '';
-        if (!isCancelled) {
-          if (i < stepIdx) cls = 'done';
-          else if (i === stepIdx) cls = 'active';
-        } else {
-          cls = 'cancel';
-        }
-        stepperHTML += `
-          <div class="step-item">
-            <div class="step-circle ${cls}">${cls === 'done' ? '✓' : s.icon}</div>
-            <div class="step-label ${cls}">${s.label.replace('\n', '<br>')}</div>
-          </div>`;
-      });
-      stepperHTML += `<div class="stepper-progress" id="stepProgress"></div></div>`;
+      let stepperHTML = '';
+      if (!isPending) {
+        stepperHTML = '<div class="stepper" id="stepper">';
+        STEPS.forEach((s, i) => {
+          let cls = '';
+          if (!isCancelled) {
+            if (i < stepIdx) cls = 'done';
+            else if (i === stepIdx) cls = 'active';
+          } else {
+            cls = 'cancel';
+          }
+          stepperHTML += `
+            <div class="step-item">
+              <div class="step-circle ${cls}">${cls === 'done' ? '✓' : s.icon}</div>
+              <div class="step-label ${cls}">${s.label.replace('\n', '<br>')}</div>
+            </div>`;
+        });
+        stepperHTML += `<div class="stepper-progress" id="stepProgress"></div></div>`;
+      }
 
       // ── Timeline events ──
       const events = [...(order.trackingEvents || [])].reverse(); // newest first
@@ -1075,6 +1102,7 @@
 
       // ── Build full card ──
       document.getElementById('orderCard').innerHTML = `
+        ${pendingBannerHTML}
         <!-- Header -->
         <div class="order-card-header">
           <div>
@@ -1096,9 +1124,7 @@
         </div>
 
         <!-- Stepper -->
-        <div class="stepper-wrap">
-          ${stepperHTML}
-        </div>
+        ${isPending ? '' : `<div class="stepper-wrap">${stepperHTML}</div>`}
 
         <!-- Info grid -->
         <div class="info-grid">
@@ -1186,8 +1212,8 @@
         </div>`;
 
       // Animate progress bar
-      if (!isCancelled && stepIdx > 0) {
-        const pct = (stepIdx / (STEPS.length - 1)) * 80; // 80% = 10% margin each side
+      if (!isCancelled && !isPending && stepIdx > 0) {
+        const pct = (stepIdx / (STEPS.length - 1)) * 80;
         setTimeout(() => {
           const bar = document.getElementById('stepProgress');
           if (bar) bar.style.width = pct + '%';
@@ -1259,12 +1285,14 @@
         </div>
         <div class="auth-field">
           <label>Email or Username</label>
-          <input type="text" id="loginIdentifier" placeholder="Enter email or username" required autocomplete="username">
+          <input type="text" id="loginIdentifier" placeholder="Enter email or username" required
+            autocomplete="username">
         </div>
         <div class="auth-field">
           <label>Password</label>
           <div class="auth-password-wrap">
-            <input type="password" id="loginPassword" placeholder="Enter password" required autocomplete="current-password">
+            <input type="password" id="loginPassword" placeholder="Enter password" required
+              autocomplete="current-password">
             <span class="auth-eye" onclick="togglePassword('loginPassword',this)">&#9679;</span>
           </div>
         </div>
@@ -1277,7 +1305,8 @@
           <span class="auth-btn-text">Login</span>
           <span class="auth-spinner" style="display:none;">...</span>
         </button>
-        <p class="auth-switch">Don't have an account? <a href="#" onclick="switchTab('signup');return false;">Sign Up</a></p>
+        <p class="auth-switch">Don't have an account? <a href="#" onclick="switchTab('signup');return false;">Sign
+            Up</a></p>
       </form>
       <form id="formSignup" class="auth-form" style="display:none;" onsubmit="handleSignup(event)">
         <div class="auth-field">
@@ -1314,14 +1343,16 @@
         <div class="auth-field">
           <label>Password <span class="req">*</span></label>
           <div class="auth-password-wrap">
-            <input type="password" id="signupPassword" placeholder="Create a password" required autocomplete="new-password">
+            <input type="password" id="signupPassword" placeholder="Create a password" required
+              autocomplete="new-password">
             <span class="auth-eye" onclick="togglePassword('signupPassword',this)">&#9679;</span>
           </div>
         </div>
         <div class="auth-field">
           <label>Confirm Password <span class="req">*</span></label>
           <div class="auth-password-wrap">
-            <input type="password" id="signupConfirm" placeholder="Confirm your password" required autocomplete="new-password">
+            <input type="password" id="signupConfirm" placeholder="Confirm your password" required
+              autocomplete="new-password">
             <span class="auth-eye" onclick="togglePassword('signupConfirm',this)">&#9679;</span>
           </div>
         </div>
@@ -1330,7 +1361,8 @@
           <span class="auth-btn-text">Create Account</span>
           <span class="auth-spinner" style="display:none;">...</span>
         </button>
-        <p class="auth-switch">Already have an account? <a href="#" onclick="switchTab('login');return false;">Login</a></p>
+        <p class="auth-switch">Already have an account? <a href="#" onclick="switchTab('login');return false;">Login</a>
+        </p>
       </form>
     </div>
   </div>
@@ -1339,36 +1371,36 @@
   <script>
     // ── Shared Auth Modal ──────────────────────────────────────────────────
     const BACKEND = 'https://kjr-backend.onrender.com';
-    function openAuthModal(tab){document.getElementById('authModal').classList.add('open');document.body.style.overflow='hidden';switchTab(tab||'login');}
-    function closeAuthModal(){document.getElementById('authModal').classList.remove('open');document.body.style.overflow='';}
-    document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAuthModal();});
-    function switchTab(tab){const l=tab==='login';document.getElementById('tabLogin').classList.toggle('active',l);document.getElementById('tabSignup').classList.toggle('active',!l);document.getElementById('formLogin').style.display=l?'flex':'none';document.getElementById('formSignup').style.display=l?'none':'flex';clearErrors();}
-    function clearErrors(){['loginError','signupError'].forEach(id=>{const e=document.getElementById(id);if(e){e.style.display='none';e.textContent='';};});}
-    function showError(id,msg){const e=document.getElementById(id);if(e){e.textContent=msg;e.style.display='block';}}
-    function togglePassword(fId,eye){const i=document.getElementById(fId);const s=i.type==='password';i.type=s?'text':'password';eye.textContent=s?'Hide':'Show';}
-    function toggleSignupFields(){const t=document.getElementById('signupType').value;document.getElementById('companyField').style.display=['sales_team','parts','bids','property'].includes(t)?'block':'none';document.getElementById('instructorField').style.display=t==='grad'?'block':'none';}
-    function setLoading(id,on){const b=document.getElementById(id);b.querySelector('.auth-btn-text').style.display=on?'none':'inline';b.querySelector('.auth-spinner').style.display=on?'inline':'none';b.disabled=on;}
-    async function handleLogin(e){e.preventDefault();clearErrors();const loginType=document.getElementById('loginType').value;const identifier=document.getElementById('loginIdentifier').value.trim();const password=document.getElementById('loginPassword').value;if(!loginType)return showError('loginError','Please select your account type.');setLoading('loginBtn',true);try{const r=await fetch(BACKEND+'/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({identifier,password,loginType})});const d=await r.json();if(!r.ok)throw new Error(d.errors?.[0]?.msg||'Login failed');localStorage.setItem('kjr_token',d.token);localStorage.setItem('kjr_user',JSON.stringify({...d.user,loginType}));closeAuthModal();updateAuthButton({...d.user,loginType});}catch(err){showError('loginError',err.message);}finally{setLoading('loginBtn',false);}}
-    async function handleSignup(e){e.preventDefault();clearErrors();const loginType=document.getElementById('signupType').value;const username=document.getElementById('signupUsername').value.trim();const email=document.getElementById('signupEmail').value.trim();const password=document.getElementById('signupPassword').value;const confirm=document.getElementById('signupConfirm').value;const phone=document.getElementById('signupPhone').value.trim();const companyName=document.getElementById('signupCompany').value.trim();const instructorName=document.getElementById('signupInstructor').value.trim();if(!loginType)return showError('signupError','Please select an account type.');if(password!==confirm)return showError('signupError','Passwords do not match.');if(password.length<8)return showError('signupError','Password must be at least 8 characters.');setLoading('signupBtn',true);try{const r=await fetch(BACKEND+'/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({loginType,username,email,password,phone,companyName,instructorName})});const d=await r.json();if(!r.ok)throw new Error(d.errors?.[0]?.msg||'Registration failed');localStorage.setItem('kjr_token',d.token);localStorage.setItem('kjr_user',JSON.stringify({...d.user,loginType}));closeAuthModal();updateAuthButton({...d.user,loginType});}catch(err){showError('signupError',err.message);}finally{setLoading('signupBtn',false);}}
-    function updateAuthButton(user){
-  const wrap=document.querySelector('.top-bar-right');
-  const old=document.querySelector('.user-menu-wrap');if(old)old.remove();
-  const trigger=document.querySelector('.auth-trigger-btn');
-  const TYPE_LABELS={sales_team:'Sales Team',parts:'Parts',bids:'Bids',property:'Property Management',grad:'Graduate'};
-  if(user){
-    if(trigger)trigger.style.display='none';
-    const menu=document.createElement('div');menu.className='user-menu-wrap';
-    menu.innerHTML=`<button class="user-menu-btn">${user.username} <span class="user-arrow">&#9660;</span></button><div class="user-dropdown"><div class="user-dropdown-header"><div class="user-dropdown-name">${user.username}</div><div class="user-dropdown-type">${TYPE_LABELS[user.loginType]||user.loginType}</div></div><div class="user-dropdown-items"><a class="user-dropdown-item" href="profile.html"><i class="item-icon">&#128100;</i> Profile</a><a class="user-dropdown-item" href="order-tracking.html"><i class="item-icon">&#128230;</i> Order History &amp; Tracking</a><a class="user-dropdown-item" href="invoice.html"><i class="item-icon">&#128203;</i> Invoice</a><a class="user-dropdown-item" href="payment.html"><i class="item-icon">&#128179;</i> Payment</a><div class="user-dropdown-divider"></div><a class="user-dropdown-item" href="settings.html"><i class="item-icon">&#9881;</i> Settings</a><div class="user-dropdown-divider"></div><button class="user-dropdown-item logout-item" onclick="logout()"><i class="item-icon">&#10148;</i> Logout</button></div></div>`;
-    if(wrap)wrap.appendChild(menu);
-    window.dispatchEvent(new Event('kjr-login'));
-  }else{
-    if(trigger){trigger.style.display='';trigger.textContent='Login / Sign Up';trigger.onclick=()=>openAuthModal('login');}
-  }
-}
-    function logout(){if(!confirm('Logout?'))return;localStorage.removeItem('kjr_token');localStorage.removeItem('kjr_user');updateAuthButton(null);}
-    (function(){const u=JSON.parse(localStorage.getItem('kjr_user')||'null');if(u)updateAuthButton(u);})();
+    function openAuthModal(tab) { document.getElementById('authModal').classList.add('open'); document.body.style.overflow = 'hidden'; switchTab(tab || 'login'); }
+    function closeAuthModal() { document.getElementById('authModal').classList.remove('open'); document.body.style.overflow = ''; }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAuthModal(); });
+    function switchTab(tab) { const l = tab === 'login'; document.getElementById('tabLogin').classList.toggle('active', l); document.getElementById('tabSignup').classList.toggle('active', !l); document.getElementById('formLogin').style.display = l ? 'flex' : 'none'; document.getElementById('formSignup').style.display = l ? 'none' : 'flex'; clearErrors(); }
+    function clearErrors() { ['loginError', 'signupError'].forEach(id => { const e = document.getElementById(id); if (e) { e.style.display = 'none'; e.textContent = ''; }; }); }
+    function showError(id, msg) { const e = document.getElementById(id); if (e) { e.textContent = msg; e.style.display = 'block'; } }
+    function togglePassword(fId, eye) { const i = document.getElementById(fId); const s = i.type === 'password'; i.type = s ? 'text' : 'password'; eye.textContent = s ? 'Hide' : 'Show'; }
+    function toggleSignupFields() { const t = document.getElementById('signupType').value; document.getElementById('companyField').style.display = ['sales_team', 'parts', 'bids', 'property'].includes(t) ? 'block' : 'none'; document.getElementById('instructorField').style.display = t === 'grad' ? 'block' : 'none'; }
+    function setLoading(id, on) { const b = document.getElementById(id); b.querySelector('.auth-btn-text').style.display = on ? 'none' : 'inline'; b.querySelector('.auth-spinner').style.display = on ? 'inline' : 'none'; b.disabled = on; }
+    async function handleLogin(e) { e.preventDefault(); clearErrors(); const loginType = document.getElementById('loginType').value; const identifier = document.getElementById('loginIdentifier').value.trim(); const password = document.getElementById('loginPassword').value; if (!loginType) return showError('loginError', 'Please select your account type.'); setLoading('loginBtn', true); try { const r = await fetch(BACKEND + '/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ identifier, password, loginType }) }); const d = await r.json(); if (!r.ok) throw new Error(d.errors?.[0]?.msg || 'Login failed'); localStorage.setItem('kjr_token', d.token); localStorage.setItem('kjr_user', JSON.stringify({ ...d.user, loginType })); closeAuthModal(); updateAuthButton({ ...d.user, loginType }); } catch (err) { showError('loginError', err.message); } finally { setLoading('loginBtn', false); } }
+    async function handleSignup(e) { e.preventDefault(); clearErrors(); const loginType = document.getElementById('signupType').value; const username = document.getElementById('signupUsername').value.trim(); const email = document.getElementById('signupEmail').value.trim(); const password = document.getElementById('signupPassword').value; const confirm = document.getElementById('signupConfirm').value; const phone = document.getElementById('signupPhone').value.trim(); const companyName = document.getElementById('signupCompany').value.trim(); const instructorName = document.getElementById('signupInstructor').value.trim(); if (!loginType) return showError('signupError', 'Please select an account type.'); if (password !== confirm) return showError('signupError', 'Passwords do not match.'); if (password.length < 8) return showError('signupError', 'Password must be at least 8 characters.'); setLoading('signupBtn', true); try { const r = await fetch(BACKEND + '/api/auth/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ loginType, username, email, password, phone, companyName, instructorName }) }); const d = await r.json(); if (!r.ok) throw new Error(d.errors?.[0]?.msg || 'Registration failed'); localStorage.setItem('kjr_token', d.token); localStorage.setItem('kjr_user', JSON.stringify({ ...d.user, loginType })); closeAuthModal(); updateAuthButton({ ...d.user, loginType }); } catch (err) { showError('signupError', err.message); } finally { setLoading('signupBtn', false); } }
+    function updateAuthButton(user) {
+      const wrap = document.querySelector('.top-bar-right');
+      const old = document.querySelector('.user-menu-wrap'); if (old) old.remove();
+      const trigger = document.querySelector('.auth-trigger-btn');
+      const TYPE_LABELS = { sales_team: 'Sales Team', parts: 'Parts', bids: 'Bids', property: 'Property Management', grad: 'Graduate' };
+      if (user) {
+        if (trigger) trigger.style.display = 'none';
+        const menu = document.createElement('div'); menu.className = 'user-menu-wrap';
+        menu.innerHTML = `<button class="user-menu-btn">${user.username} <span class="user-arrow">&#9660;</span></button><div class="user-dropdown"><div class="user-dropdown-header"><div class="user-dropdown-name">${user.username}</div><div class="user-dropdown-type">${TYPE_LABELS[user.loginType] || user.loginType}</div></div><div class="user-dropdown-items"><a class="user-dropdown-item" href="profile.html"><i class="item-icon">&#128100;</i> Profile</a><a class="user-dropdown-item" href="order-tracking.html"><i class="item-icon">&#128230;</i> Order History &amp; Tracking</a><a class="user-dropdown-item" href="invoice.html"><i class="item-icon">&#128203;</i> Invoice</a><a class="user-dropdown-item" href="payment.html"><i class="item-icon">&#128179;</i> Payment</a><div class="user-dropdown-divider"></div><a class="user-dropdown-item" href="settings.html"><i class="item-icon">&#9881;</i> Settings</a><div class="user-dropdown-divider"></div><button class="user-dropdown-item logout-item" onclick="logout()"><i class="item-icon">&#10148;</i> Logout</button></div></div>`;
+        if (wrap) wrap.appendChild(menu);
+        window.dispatchEvent(new Event('kjr-login'));
+      } else {
+        if (trigger) { trigger.style.display = ''; trigger.textContent = 'Login / Sign Up'; trigger.onclick = () => openAuthModal('login'); }
+      }
+    }
+    function logout() { if (!confirm('Logout?')) return; localStorage.removeItem('kjr_token'); localStorage.removeItem('kjr_user'); updateAuthButton(null); }
+    (function () { const u = JSON.parse(localStorage.getItem('kjr_user') || 'null'); if (u) updateAuthButton(u); })();
   </script>
-  
+
 </body>
 
 </html>

@@ -890,6 +890,11 @@
 
       <div class="sidebar-section">
         <div class="sidebar-section-label">Commerce</div>
+        <div class="nav-item" data-tab="tab-pending" onclick="switchTab(this, 'tab-pending')"
+          style="position:relative;">
+          <span class="nav-icon">🔔</span>Pending Orders
+          <span class="nav-badge" id="badge-pending" style="background:#cc0000;color:#fff;">—</span>
+        </div>
         <div class="nav-item" data-tab="tab-products" onclick="switchTab(this, 'tab-products')">
           <span class="nav-icon">🛍️</span>Products
           <span class="nav-badge" id="badge-products">—</span>
@@ -1506,6 +1511,7 @@
             <select id="ord-status-filter" onchange="filterOrders()" style="padding:.6rem 1rem; border:1.5px solid var(--border); border-radius:8px;
                      font-size:.875rem; font-family:'Inter',sans-serif; background:#fff;">
               <option value="">All Statuses</option>
+              <option value="pending_approval">🕐 Pending Approval</option>
               <option value="confirmed">Confirmed</option>
               <option value="processing">Processing</option>
               <option value="packed">Packed</option>
@@ -1548,6 +1554,65 @@
               </table>
             </div>
           </div>
+        </div>
+
+        <!-- ======== TAB: PENDING ORDERS ======== -->
+        <div id="tab-pending" class="tab-pane">
+
+          <!-- Stats row -->
+          <div class="stats-row">
+            <div class="stat-card">
+              <div class="stat-icon red">🔔</div>
+              <div>
+                <div class="stat-value" id="stat-pend-count">—</div>
+                <div class="stat-label">Awaiting Approval</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon yellow">💰</div>
+              <div>
+                <div class="stat-value" id="stat-pend-value">—</div>
+                <div class="stat-label">Pending Value</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon blue">📦</div>
+              <div>
+                <div class="stat-value" id="stat-pend-items">—</div>
+                <div class="stat-label">Total Items</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon green">⏱️</div>
+              <div>
+                <div class="stat-value" id="stat-pend-oldest">—</div>
+                <div class="stat-label">Oldest Order</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Info banner -->
+          <div
+            style="background:linear-gradient(135deg,#fffbeb,#fef3c7);border:1.5px solid #fde68a;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:.85rem;">
+            <span style="font-size:1.5rem;">🔔</span>
+            <div>
+              <div style="font-weight:700;color:#92400e;font-size:.9rem;">New orders arrive here first</div>
+              <div style="font-size:.8rem;color:#78350f;margin-top:.15rem;">Review each order, set an estimated delivery
+                date, and click <strong>Approve</strong> to confirm. Orders move to the Order Tracking tab once
+                approved.</div>
+            </div>
+            <button onclick="loadPendingOrders()"
+              style="margin-left:auto;padding:.45rem .9rem;background:#fff;border:1.5px solid #fde68a;border-radius:7px;font-size:.78rem;font-weight:700;cursor:pointer;color:#92400e;white-space:nowrap;font-family:'Inter',sans-serif;">↻
+              Refresh</button>
+          </div>
+
+          <!-- Pending Orders Cards -->
+          <div id="pending-orders-list">
+            <div style="text-align:center;padding:3rem;color:var(--text-muted);">
+              Loading<span class="loading-dots"><span></span><span></span><span></span></span>
+            </div>
+          </div>
+
         </div>
 
       </div>
@@ -1669,6 +1734,94 @@
     </div>
   </div>
 
+  <!-- ============ APPROVE ORDER MODAL ============ -->
+  <div class="modal-overlay" id="approve-modal-overlay" onclick="if(event.target===this)closeApproveModal()"
+    style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9000;align-items:center;justify-content:center;">
+    <div
+      style="background:#fff;border-radius:16px;width:min(560px,94vw);max-height:92vh;overflow-y:auto;box-shadow:0 25px 60px rgba(0,0,0,.3);">
+      <div
+        style="background:linear-gradient(135deg,#0f172a,#1e293b);padding:1.5rem 1.75rem;border-radius:16px 16px 0 0;display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <div
+            style="color:#cc0000;font-size:.65rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;margin-bottom:.25rem;">
+            ORDER REVIEW</div>
+          <div style="color:#fff;font-size:1.1rem;font-weight:800;" id="approveModalTitle">Approve Order</div>
+        </div>
+        <button onclick="closeApproveModal()"
+          style="background:rgba(255,255,255,.1);border:none;color:#fff;width:32px;height:32px;border-radius:50%;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;">&times;</button>
+      </div>
+
+      <!-- Order summary strip -->
+      <div id="approveOrderSummary"
+        style="background:#f8fafc;border-bottom:1px solid #e2e8f0;padding:1.1rem 1.75rem;font-size:.875rem;"></div>
+
+      <!-- Tabs: Approve / Reject -->
+      <div style="display:flex;border-bottom:1px solid #e2e8f0;">
+        <button id="approveTabBtn" onclick="switchApproveTab('approve')"
+          style="flex:1;padding:.85rem;font-size:.88rem;font-weight:700;border:none;background:#fff;color:#16a34a;border-bottom:3px solid #16a34a;cursor:pointer;font-family:'Inter',sans-serif;">✅
+          Approve Order</button>
+        <button id="rejectTabBtn" onclick="switchApproveTab('reject')"
+          style="flex:1;padding:.85rem;font-size:.88rem;font-weight:700;border:none;background:#f8fafc;color:var(--text-muted);border-bottom:3px solid transparent;cursor:pointer;font-family:'Inter',sans-serif;">❌
+          Reject Order</button>
+      </div>
+
+      <!-- Approve panel -->
+      <div id="approvePanel" style="padding:1.5rem 1.75rem;">
+        <div
+          style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:1rem;margin-bottom:1.25rem;font-size:.85rem;color:#14532d;">
+          ✅ Approving this order will confirm it, set an estimated delivery date, and send a confirmation email to the
+          customer.
+        </div>
+        <div style="margin-bottom:1rem;">
+          <label
+            style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#64748b;display:block;margin-bottom:.4rem;">ESTIMATED
+            DELIVERY DATE *</label>
+          <input type="date" id="approveDeliveryDate"
+            style="width:100%;padding:.7rem .9rem;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.92rem;font-family:'Inter',sans-serif;outline:none;">
+        </div>
+        <div style="margin-bottom:1.25rem;">
+          <label
+            style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#64748b;display:block;margin-bottom:.4rem;">NOTE
+            TO CUSTOMER (optional)</label>
+          <textarea id="approveNote" rows="3"
+            placeholder="e.g. Your items are in stock and being prepared for shipment."
+            style="width:100%;padding:.7rem .9rem;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.875rem;font-family:'Inter',sans-serif;resize:vertical;outline:none;box-sizing:border-box;"></textarea>
+        </div>
+        <div id="approveError"
+          style="display:none;background:#fff1f1;color:#cc0000;border:1px solid #fecaca;border-radius:8px;padding:.65rem 1rem;font-size:.85rem;margin-bottom:.85rem;">
+        </div>
+        <button id="approveSubmitBtn" onclick="submitApproval()"
+          style="width:100%;background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;border:none;padding:1rem;border-radius:10px;font-size:.95rem;font-weight:800;cursor:pointer;font-family:'Inter',sans-serif;transition:opacity .2s;">
+          ✅ Approve & Notify Customer
+        </button>
+      </div>
+
+      <!-- Reject panel -->
+      <div id="rejectPanel" style="padding:1.5rem 1.75rem;display:none;">
+        <div
+          style="background:#fff5f5;border:1px solid #fecaca;border-radius:10px;padding:1rem;margin-bottom:1.25rem;font-size:.85rem;color:#991b1b;">
+          ⚠️ Rejecting this order will cancel it and notify the customer. A refund of the full amount will need to be
+          processed manually through your payment gateway.
+        </div>
+        <div style="margin-bottom:1.25rem;">
+          <label
+            style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#64748b;display:block;margin-bottom:.4rem;">REASON
+            FOR REJECTION *</label>
+          <textarea id="rejectReason" rows="4"
+            placeholder="e.g. Requested item is currently out of stock. We will contact you with alternatives..."
+            style="width:100%;padding:.7rem .9rem;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.875rem;font-family:'Inter',sans-serif;resize:vertical;outline:none;box-sizing:border-box;"></textarea>
+        </div>
+        <div id="rejectError"
+          style="display:none;background:#fff1f1;color:#cc0000;border:1px solid #fecaca;border-radius:8px;padding:.65rem 1rem;font-size:.85rem;margin-bottom:.85rem;">
+        </div>
+        <button onclick="submitRejection()"
+          style="width:100%;background:linear-gradient(135deg,#cc0000,#991b1b);color:#fff;border:none;padding:1rem;border-radius:10px;font-size:.95rem;font-weight:800;cursor:pointer;font-family:'Inter',sans-serif;">
+          ❌ Reject Order & Notify Customer
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script>
     // =====================================================
     // CONFIG
@@ -1689,7 +1842,7 @@
     }
 
     async function initDashboard() {
-      await Promise.all([loadProjects(), loadAllBids(), loadUsers(), loadInvoices(), loadOrders(), loadInquiries()]);
+      await Promise.all([loadProjects(), loadAllBids(), loadUsers(), loadInvoices(), loadOrders(), loadInquiries(), loadPendingCount()]);
     }
 
     // =====================================================
@@ -1746,7 +1899,8 @@
       'tab-inquiries': 'Part Inquiries',
       'tab-products': 'Product Catalog',
       'tab-invoices': 'Invoices & Revenue',
-      'tab-orders': 'Order Tracking'
+      'tab-orders': 'Order Tracking',
+      'tab-pending': '🔔 Pending Orders — Awaiting Approval'
     };
 
     function switchTab(el, tabId) {
@@ -1757,6 +1911,7 @@
       document.getElementById('page-title').textContent = tabTitles[tabId];
       if (tabId === 'tab-products') loadProducts();
       if (tabId === 'tab-inquiries') loadInquiries();
+      if (tabId === 'tab-pending') loadPendingOrders();
     }
 
     // =====================================================
@@ -2685,6 +2840,7 @@
     let allOrders = [];
 
     const ORDER_STATUS_LABELS = {
+      pending_approval: { label: '🕐 Pending Approval', color: '#92400e', bg: '#fffbeb' },
       confirmed: { label: 'Confirmed', color: '#2563eb', bg: '#eff6ff' },
       processing: { label: 'Processing', color: '#d97706', bg: '#fffbeb' },
       packed: { label: 'Packed', color: '#d97706', bg: '#fffbeb' },
@@ -2715,6 +2871,10 @@
       document.getElementById('stat-ord-delivered').textContent = allOrders.filter(o => o.orderStatus === 'delivered').length;
       document.getElementById('stat-ord-processing').textContent = allOrders.filter(o => o.orderStatus === 'confirmed' || o.orderStatus === 'processing' || o.orderStatus === 'packed').length;
       document.getElementById('badge-orders').textContent = allOrders.length;
+      // Update pending badge
+      const pendingCount = allOrders.filter(o => o.orderStatus === 'pending_approval').length;
+      const pendingBadge = document.getElementById('badge-pending');
+      if (pendingBadge) pendingBadge.textContent = pendingCount > 0 ? pendingCount : '0';
     }
 
     function filterOrders() {
@@ -3108,6 +3268,283 @@
       el.className = `alert-strip ${type}`;
       el.style.display = 'block';
       setTimeout(() => { el.style.display = 'none'; }, 5000);
+    }
+
+    // =====================================================
+    // PENDING ORDERS
+    // =====================================================
+    let allPendingOrders = [];
+    let approveModalInvNum = null;
+
+    async function loadPendingOrders() {
+      const container = document.getElementById('pending-orders-list');
+      container.innerHTML = '<div style="text-align:center;padding:3rem;color:var(--text-muted);">Loading<span class="loading-dots"><span></span><span></span><span></span></span></div>';
+      try {
+        const res = await fetch(`${API_URL}/payment/pending`, { headers: { 'x-auth-token': token } });
+        if (res.status === 401) { logout(); return; }
+        if (!res.ok) throw new Error('Server error ' + res.status);
+        allPendingOrders = await res.json();
+        renderPendingStats();
+        renderPendingOrders();
+      } catch (err) {
+        container.innerHTML = `<div style="text-align:center;padding:3rem;color:#dc2626;">Failed to load pending orders: ${escHtml(err.message)}</div>`;
+      }
+    }
+
+    function renderPendingStats() {
+      const count = allPendingOrders.length;
+      const value = allPendingOrders.reduce((s, o) => s + (o.total || 0), 0);
+      const items = allPendingOrders.reduce((s, o) => s + (o.items || []).reduce((si, i) => si + (i.qty || 0), 0), 0);
+      let oldestLabel = '—';
+      if (count > 0) {
+        const oldest = allPendingOrders.reduce((a, b) => new Date(a.createdAt) < new Date(b.createdAt) ? a : b);
+        const mins = Math.round((Date.now() - new Date(oldest.createdAt)) / 60000);
+        if (mins < 60) oldestLabel = mins + 'm ago';
+        else if (mins < 1440) oldestLabel = Math.round(mins / 60) + 'h ago';
+        else oldestLabel = Math.round(mins / 1440) + 'd ago';
+      }
+      document.getElementById('stat-pend-count').textContent = count;
+      document.getElementById('stat-pend-value').textContent = '$' + value.toFixed(2);
+      document.getElementById('stat-pend-items').textContent = items;
+      document.getElementById('stat-pend-oldest').textContent = oldestLabel;
+      const badge = document.getElementById('badge-pending');
+      if (badge) badge.textContent = count > 0 ? count : '0';
+    }
+
+    function renderPendingOrders() {
+      const container = document.getElementById('pending-orders-list');
+      if (!allPendingOrders.length) {
+        container.innerHTML = `
+          <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:3.5rem;text-align:center;">
+            <div style="font-size:3rem;margin-bottom:1rem;">✅</div>
+            <h3 style="font-size:1.1rem;font-weight:800;color:#0f172a;margin-bottom:.5rem;">All caught up!</h3>
+            <p style="color:var(--text-muted);font-size:.88rem;">No orders waiting for approval. New orders from customers will appear here automatically.</p>
+          </div>`;
+        return;
+      }
+
+      container.innerHTML = allPendingOrders.map(o => {
+        const name = escHtml((o.firstName || '') + ' ' + (o.lastName || ''));
+        const addr = [o.city, o.state].filter(Boolean).join(', ');
+        const itemCount = (o.items || []).reduce((s, i) => s + (i.qty || 0), 0);
+        const ago = formatAgo(o.createdAt);
+        const itemRows = (o.items || []).slice(0, 4).map(it =>
+          `<div style="display:flex;justify-content:space-between;align-items:center;padding:.45rem 0;border-bottom:1px solid #f1f5f9;font-size:.83rem;">
+            <div>
+              <div style="font-weight:600;color:#0f172a;">${escHtml(it.name)}</div>
+              ${it.part ? `<div style="font-size:.72rem;color:var(--text-muted);font-family:'Courier New',monospace;">${escHtml(it.part)}</div>` : ''}
+            </div>
+            <div style="text-align:right;flex-shrink:0;margin-left:1rem;">
+              <div style="font-weight:700;color:#0f172a;">$${(it.lineTotal || 0).toFixed(2)}</div>
+              <div style="font-size:.72rem;color:var(--text-muted);">qty: ${it.qty}</div>
+            </div>
+          </div>`
+        ).join('');
+        const moreItems = (o.items || []).length > 4 ? `<div style="font-size:.78rem;color:var(--text-muted);padding:.4rem 0;">+ ${(o.items.length - 4)} more item(s)</div>` : '';
+
+        return `
+          <div style="background:#fff;border:1.5px solid #fde68a;border-radius:14px;margin-bottom:1.25rem;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.06);">
+
+            <!-- Card header -->
+            <div style="background:linear-gradient(135deg,#0f172a,#1e293b);padding:1rem 1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem;">
+              <div>
+                <div style="color:#fde68a;font-size:.62rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;margin-bottom:.2rem;">PENDING APPROVAL</div>
+                <div style="color:#fff;font-size:1rem;font-weight:800;font-family:'Courier New',monospace;">#${escHtml(o.invoiceNumber)}</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:.65rem;flex-wrap:wrap;">
+                <div style="background:#fffbeb;border:1px solid #fde68a;color:#92400e;border-radius:6px;padding:.25rem .65rem;font-size:.72rem;font-weight:700;">🕐 ${ago}</div>
+                <div style="background:rgba(255,255,255,.15);color:#fff;border-radius:6px;padding:.25rem .65rem;font-size:.78rem;font-weight:700;">$${(o.total || 0).toFixed(2)}</div>
+              </div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;">
+
+              <!-- Left: Customer + Shipping -->
+              <div style="padding:1.25rem 1.5rem;border-right:1px solid #f1f5f9;">
+                <div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--text-muted);margin-bottom:.6rem;">Customer</div>
+                <div style="font-weight:700;font-size:.95rem;color:#0f172a;">${name}</div>
+                <div style="font-size:.82rem;color:var(--text-muted);margin-top:.15rem;">${escHtml(o.email || '')}</div>
+                ${o.phone ? `<div style="font-size:.82rem;color:var(--text-muted);">${escHtml(o.phone)}</div>` : ''}
+                <div style="margin-top:.85rem;">
+                  <div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--text-muted);margin-bottom:.35rem;">Ship To</div>
+                  <div style="font-size:.85rem;color:#0f172a;">${escHtml(o.address || '')}${o.address2 ? ', ' + escHtml(o.address2) : ''}</div>
+                  <div style="font-size:.85rem;color:#0f172a;">${escHtml(addr)} ${escHtml(o.zip || '')}</div>
+                </div>
+                <div style="margin-top:.85rem;">
+                  <div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--text-muted);margin-bottom:.35rem;">Payment</div>
+                  <div style="font-size:.82rem;color:#16a34a;font-weight:700;">● PAID — $${(o.total || 0).toFixed(2)}</div>
+                  <div style="font-size:.75rem;color:var(--text-muted);">Txn: ${escHtml(o.transactionId || '—')}</div>
+                </div>
+              </div>
+
+              <!-- Right: Items -->
+              <div style="padding:1.25rem 1.5rem;">
+                <div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--text-muted);margin-bottom:.6rem;">Order Items (${itemCount} unit${itemCount !== 1 ? 's' : ''})</div>
+                ${itemRows}
+                ${moreItems}
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;border-top:2px solid #0f172a;margin-top:.5rem;">
+                  <span style="font-size:.82rem;font-weight:700;color:#0f172a;">Total Paid</span>
+                  <span style="font-size:1rem;font-weight:800;color:#cc0000;">$${(o.total || 0).toFixed(2)}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action bar -->
+            <div style="padding:1rem 1.5rem;background:#f8fafc;border-top:1px solid #f1f5f9;display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;">
+              <button onclick="openApproveModal('${escHtml(o.invoiceNumber)}', '${escHtml(name)}', '${(o.total || 0).toFixed(2)}', '${escHtml(o.email || '')}', ${(o.items || []).length})"
+                style="background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;border:none;padding:.65rem 1.4rem;border-radius:8px;font-size:.875rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;gap:.4rem;">
+                ✅ Review &amp; Approve
+              </button>
+              <button onclick="openApproveModal('${escHtml(o.invoiceNumber)}', '${escHtml(name)}', '${(o.total || 0).toFixed(2)}', '${escHtml(o.email || '')}', ${(o.items || []).length}, true)"
+                style="background:transparent;color:#cc0000;border:1.5px solid #fecaca;padding:.65rem 1.2rem;border-radius:8px;font-size:.875rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">
+                ❌ Reject
+              </button>
+              <a href="../order-tracking.html?id=${encodeURIComponent(o.invoiceNumber)}" target="_blank"
+                style="color:var(--text-muted);font-size:.8rem;text-decoration:none;font-weight:600;margin-left:auto;">View Tracking ↗</a>
+              <a href="mailto:${escHtml(o.email || '')}?subject=Your Order ${encodeURIComponent(o.invoiceNumber)} — KJR"
+                style="color:var(--text-muted);font-size:.8rem;text-decoration:none;font-weight:600;">Email Customer ✉️</a>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    function formatAgo(iso) {
+      if (!iso) return '—';
+      const mins = Math.round((Date.now() - new Date(iso)) / 60000);
+      if (mins < 1) return 'just now';
+      if (mins < 60) return mins + 'm ago';
+      if (mins < 1440) return Math.round(mins / 60) + 'h ago';
+      return Math.round(mins / 1440) + 'd ago';
+    }
+
+    function openApproveModal(invNum, customerName, total, email, itemCount, goToReject) {
+      approveModalInvNum = invNum;
+      document.getElementById('approveModalTitle').textContent = 'Order #' + invNum;
+      document.getElementById('approveOrderSummary').innerHTML =
+        `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;">
+          <div><div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#64748b;margin-bottom:.2rem;">Customer</div><div style="font-weight:700;font-size:.88rem;">${escHtml(customerName)}</div><div style="font-size:.75rem;color:#64748b;">${escHtml(email)}</div></div>
+          <div><div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#64748b;margin-bottom:.2rem;">Total Paid</div><div style="font-weight:800;font-size:.95rem;color:#cc0000;">$${total}</div></div>
+          <div><div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#64748b;margin-bottom:.2rem;">Items</div><div style="font-weight:700;font-size:.88rem;">${itemCount} line item${itemCount !== 1 ? 's' : ''}</div></div>
+        </div>`;
+
+      // Set default delivery date to 5 business days from now
+      const eta = new Date();
+      eta.setDate(eta.getDate() + 7);
+      const etaStr = eta.toISOString().split('T')[0];
+      document.getElementById('approveDeliveryDate').value = etaStr;
+      document.getElementById('approveDeliveryDate').min = new Date().toISOString().split('T')[0];
+      document.getElementById('approveNote').value = '';
+      document.getElementById('approveError').style.display = 'none';
+      document.getElementById('rejectReason').value = '';
+      document.getElementById('rejectError').style.display = 'none';
+
+      const overlay = document.getElementById('approve-modal-overlay');
+      overlay.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+      switchApproveTab(goToReject ? 'reject' : 'approve');
+    }
+
+    function closeApproveModal() {
+      document.getElementById('approve-modal-overlay').style.display = 'none';
+      document.body.style.overflow = '';
+      approveModalInvNum = null;
+    }
+
+    function switchApproveTab(tab) {
+      const isApprove = tab === 'approve';
+      document.getElementById('approvePanel').style.display = isApprove ? 'block' : 'none';
+      document.getElementById('rejectPanel').style.display = isApprove ? 'none' : 'block';
+      document.getElementById('approveTabBtn').style.cssText = isApprove
+        ? 'flex:1;padding:.85rem;font-size:.88rem;font-weight:700;border:none;background:#fff;color:#16a34a;border-bottom:3px solid #16a34a;cursor:pointer;font-family:Inter,sans-serif;'
+        : 'flex:1;padding:.85rem;font-size:.88rem;font-weight:700;border:none;background:#f8fafc;color:#64748b;border-bottom:3px solid transparent;cursor:pointer;font-family:Inter,sans-serif;';
+      document.getElementById('rejectTabBtn').style.cssText = isApprove
+        ? 'flex:1;padding:.85rem;font-size:.88rem;font-weight:700;border:none;background:#f8fafc;color:#64748b;border-bottom:3px solid transparent;cursor:pointer;font-family:Inter,sans-serif;'
+        : 'flex:1;padding:.85rem;font-size:.88rem;font-weight:700;border:none;background:#fff;color:#cc0000;border-bottom:3px solid #cc0000;cursor:pointer;font-family:Inter,sans-serif;';
+    }
+
+    async function submitApproval() {
+      if (!approveModalInvNum) return;
+      const deliveryDate = document.getElementById('approveDeliveryDate').value;
+      const note = document.getElementById('approveNote').value.trim();
+      const errEl = document.getElementById('approveError');
+      errEl.style.display = 'none';
+
+      if (!deliveryDate) {
+        errEl.textContent = 'Please select an estimated delivery date.';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      const btn = document.getElementById('approveSubmitBtn');
+      btn.textContent = '⏳ Approving…';
+      btn.disabled = true;
+
+      try {
+        const res = await fetch(`${API_URL}/payment/order/${encodeURIComponent(approveModalInvNum)}/approve`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+          body: JSON.stringify({ estimatedDelivery: deliveryDate, adminNote: note })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Approval failed');
+
+        closeApproveModal();
+        showGlobalAlert(`✅ Order #${approveModalInvNum} approved! Confirmation email sent to customer.`, 'success');
+        await loadPendingOrders();
+        await loadOrders(); // refresh orders tab too
+      } catch (err) {
+        errEl.textContent = err.message;
+        errEl.style.display = 'block';
+      } finally {
+        btn.textContent = '✅ Approve & Notify Customer';
+        btn.disabled = false;
+      }
+    }
+
+    async function submitRejection() {
+      if (!approveModalInvNum) return;
+      const reason = document.getElementById('rejectReason').value.trim();
+      const errEl = document.getElementById('rejectError');
+      errEl.style.display = 'none';
+
+      if (!reason) {
+        errEl.textContent = 'Please provide a reason for rejection.';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      if (!confirm(`Reject order #${approveModalInvNum} and notify the customer?\n\nReason: ${reason}`)) return;
+
+      try {
+        const res = await fetch(`${API_URL}/payment/order/${encodeURIComponent(approveModalInvNum)}/reject`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+          body: JSON.stringify({ reason })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Rejection failed');
+
+        closeApproveModal();
+        showGlobalAlert(`Order #${approveModalInvNum} rejected. Customer notified.`, 'success');
+        await loadPendingOrders();
+        await loadOrders();
+      } catch (err) {
+        errEl.textContent = err.message;
+        errEl.style.display = 'block';
+      }
+    }
+
+    // Auto-load pending count on dashboard init
+    async function loadPendingCount() {
+      try {
+        const res = await fetch(`${API_URL}/payment/pending`, { headers: { 'x-auth-token': token } });
+        if (!res.ok) return;
+        const orders = await res.json();
+        const count = orders.length;
+        const badge = document.getElementById('badge-pending');
+        if (badge) badge.textContent = count > 0 ? count : '0';
+        if (badge && count > 0) badge.style.background = '#cc0000';
+      } catch (e) { /* silent */ }
     }
   </script>
 </body>
