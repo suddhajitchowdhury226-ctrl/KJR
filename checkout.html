@@ -482,16 +482,97 @@
 
   <!-- Steps -->
   <div class="steps-bar">
-    <div class="step active">
+    <div class="step active" id="step1Btn">
       <span class="step-num">1</span> Cart
     </div>
     <span class="step-arrow">›</span>
-    <div class="step">
-      <span class="step-num">2</span> Payment
+    <div class="step" id="step2Btn">
+      <span class="step-num">2</span> Shipping
     </div>
     <span class="step-arrow">›</span>
-    <div class="step">
-      <span class="step-num">3</span> Confirmation
+    <div class="step" id="step3Btn">
+      <span class="step-num">3</span> Payment
+    </div>
+    <span class="step-arrow">›</span>
+    <div class="step" id="step4Btn">
+      <span class="step-num">4</span> Confirmation
+    </div>
+  </div>
+
+  <!-- Step 2: Shipping -->
+  <div id="shippingStep" style="display:none;max-width:780px;margin:2rem auto;padding:0 1.5rem;">
+    <div class="cart-box" style="margin-bottom:1.5rem;">
+      <div class="cart-box-header">
+        <h2>📍 Shipping Address</h2>
+      </div>
+      <div style="padding:1.5rem;">
+        <div id="savedAddressList" style="margin-bottom:1.25rem;display:none;"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+          <div><label
+              style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#64748b;display:block;margin-bottom:.35rem;">First
+              Name *</label>
+            <input id="ship-first" type="text" placeholder="First name"
+              style="width:100%;padding:.65rem .9rem;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.9rem;font-family:'Inter',sans-serif;outline:none;">
+          </div>
+          <div><label
+              style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#64748b;display:block;margin-bottom:.35rem;">Last
+              Name *</label>
+            <input id="ship-last" type="text" placeholder="Last name"
+              style="width:100%;padding:.65rem .9rem;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.9rem;font-family:'Inter',sans-serif;outline:none;">
+          </div>
+        </div>
+        <div style="margin-bottom:1rem;"><label
+            style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#64748b;display:block;margin-bottom:.35rem;">Street
+            Address *</label>
+          <input id="ship-street" type="text" placeholder="123 Main St"
+            style="width:100%;padding:.65rem .9rem;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.9rem;font-family:'Inter',sans-serif;outline:none;">
+        </div>
+        <div style="margin-bottom:1rem;"><label
+            style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#64748b;display:block;margin-bottom:.35rem;">Apt
+            / Suite / Unit</label>
+          <input id="ship-apt" type="text" placeholder="Apt 4B (optional)"
+            style="width:100%;padding:.65rem .9rem;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.9rem;font-family:'Inter',sans-serif;outline:none;">
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1rem;">
+          <div><label
+              style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#64748b;display:block;margin-bottom:.35rem;">City
+              *</label>
+            <input id="ship-city" placeholder="City"
+              style="width:100%;padding:.65rem .9rem;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.9rem;font-family:'Inter',sans-serif;outline:none;">
+          </div>
+          <div><label
+              style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#64748b;display:block;margin-bottom:.35rem;">State
+              *</label>
+            <input id="ship-state" placeholder="FL"
+              style="width:100%;padding:.65rem .9rem;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.9rem;font-family:'Inter',sans-serif;outline:none;">
+          </div>
+          <div><label
+              style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#64748b;display:block;margin-bottom:.35rem;">ZIP
+              *</label>
+            <input id="ship-zip" placeholder="00000"
+              style="width:100%;padding:.65rem .9rem;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.9rem;font-family:'Inter',sans-serif;outline:none;">
+          </div>
+        </div>
+        <div style="margin-bottom:1rem;"><label
+            style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#64748b;display:block;margin-bottom:.35rem;">Phone</label>
+          <input id="ship-phone" type="tel" placeholder="555-123-4567"
+            style="width:100%;padding:.65rem .9rem;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.9rem;font-family:'Inter',sans-serif;outline:none;">
+        </div>
+        <div style="margin-bottom:1rem;">
+          <label style="display:flex;align-items:center;gap:.5rem;font-size:.85rem;font-weight:600;cursor:pointer;">
+            <input type="checkbox" id="ship-save" style="width:16px;height:16px;accent-color:#cc0000;">
+            Save this address to my profile
+          </label>
+        </div>
+        <div id="shipError" style="color:#cc0000;font-size:.82rem;margin-bottom:.75rem;display:none;"></div>
+      </div>
+    </div>
+    <div style="display:flex;gap:1rem;">
+      <button class="checkout-btn" style="width:auto;padding:.85rem 2rem;" onclick="goToPaymentFromShipping()">Continue
+        to Payment →</button>
+      <button onclick="goBackToCart()"
+        style="padding:.85rem 1.5rem;background:#fff;border:1.5px solid #e2e8f0;border-radius:10px;font-size:.88rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">←
+        Back to Cart</button>
     </div>
   </div>
 
@@ -669,6 +750,106 @@
 
     function goToPayment() {
       if (cart.length === 0) return;
+      // Go to shipping step first
+      document.getElementById('checkoutBtn').disabled = true;
+      goToShipping();
+    }
+
+    // ── Step management ────────────────────────────────────────────────────────
+    const BACKEND = 'https://kjr-backend.onrender.com';
+
+    function goToShipping() {
+      document.querySelector('.checkout-page').style.display = 'none';
+      document.getElementById('shippingStep').style.display = 'block';
+      document.getElementById('step1Btn').classList.remove('active');
+      document.getElementById('step1Btn').classList.add('done');
+      document.getElementById('step2Btn').classList.add('active');
+      // Pre-fill from saved addresses if logged in
+      loadSavedAddressesForCheckout();
+    }
+
+    function goBackToCart() {
+      document.querySelector('.checkout-page').style.display = 'grid';
+      document.getElementById('shippingStep').style.display = 'none';
+      document.getElementById('step1Btn').classList.add('active');
+      document.getElementById('step1Btn').classList.remove('done');
+      document.getElementById('step2Btn').classList.remove('active');
+      document.getElementById('checkoutBtn').disabled = cart.length === 0;
+      render();
+    }
+
+    async function loadSavedAddressesForCheckout() {
+      const token = localStorage.getItem('kjr_token');
+      if (!token) return;
+      try {
+        const r = await fetch(BACKEND + '/api/auth/addresses', { headers: { 'x-auth-token': token } });
+        if (!r.ok) return;
+        const addrs = await r.json();
+        if (!addrs.length) return;
+        const container = document.getElementById('savedAddressList');
+        container.style.display = 'block';
+        container.innerHTML = '<p style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#64748b;margin-bottom:.5rem;">Saved Addresses</p>' +
+          addrs.map((a, i) => `<label style="display:flex;align-items:flex-start;gap:.75rem;border:1.5px solid ${a.isDefault ? '#6a0dad' : '#e2e8f0'};border-radius:10px;padding:.85rem;margin-bottom:.5rem;cursor:pointer;background:${a.isDefault ? '#faf5ff' : '#fff'};">
+            <input type="radio" name="savedAddr" value="${i}" ${a.isDefault ? 'checked' : ''} onchange="fillShippingFromSaved(${i})" style="margin-top:.2rem;accent-color:#cc0000;">
+            <div><strong style="font-size:.88rem;">${a.firstName} ${a.lastName}</strong>${a.isDefault ? ' <span style="background:#dbeafe;color:#1e40af;font-size:.65rem;font-weight:700;padding:.1rem .45rem;border-radius:10px;text-transform:uppercase;">Default</span>' : ''}<br><span style="font-size:.8rem;color:#64748b;">${a.street}${a.apt ? ' ' + a.apt : ''}, ${a.city}, ${a.state} ${a.zip}</span></div>
+          </label>`).join('') +
+          '<label style="display:flex;align-items:center;gap:.75rem;border:1.5px solid #e2e8f0;border-radius:10px;padding:.85rem;cursor:pointer;"><input type="radio" name="savedAddr" value="new" onchange="clearShippingFields()" style="accent-color:#cc0000;"> <span style="font-size:.88rem;font-weight:600;">+ Enter a different address</span></label>';
+        // Pre-fill default
+        const def = addrs.find(a => a.isDefault) || addrs[0];
+        const defIdx = addrs.indexOf(def);
+        window._savedCheckoutAddresses = addrs;
+        fillShippingFromSaved(defIdx);
+      } catch (e) { /* no saved addresses loaded */ }
+    }
+
+    function fillShippingFromSaved(idx) {
+      const addrs = window._savedCheckoutAddresses || [];
+      const a = addrs[idx];
+      if (!a) return;
+      document.getElementById('ship-first').value = a.firstName || '';
+      document.getElementById('ship-last').value = a.lastName || '';
+      document.getElementById('ship-street').value = a.street || '';
+      document.getElementById('ship-apt').value = a.apt || '';
+      document.getElementById('ship-city').value = a.city || '';
+      document.getElementById('ship-state').value = a.state || '';
+      document.getElementById('ship-zip').value = a.zip || '';
+      document.getElementById('ship-phone').value = a.phone || '';
+    }
+
+    function clearShippingFields() {
+      ['ship-first', 'ship-last', 'ship-street', 'ship-apt', 'ship-city', 'ship-state', 'ship-zip', 'ship-phone'].forEach(id => document.getElementById(id).value = '');
+    }
+
+    async function goToPaymentFromShipping() {
+      const errEl = document.getElementById('shipError');
+      errEl.style.display = 'none';
+      const first = document.getElementById('ship-first').value.trim();
+      const last = document.getElementById('ship-last').value.trim();
+      const street = document.getElementById('ship-street').value.trim();
+      const city = document.getElementById('ship-city').value.trim();
+      const state = document.getElementById('ship-state').value.trim();
+      const zip = document.getElementById('ship-zip').value.trim();
+      if (!first || !last || !street || !city || !state || !zip) {
+        errEl.textContent = 'Please fill in all required fields (First Name, Last Name, Street, City, State, ZIP).';
+        errEl.style.display = 'block';
+        return;
+      }
+      // Save address to profile if checkbox ticked
+      const shouldSave = document.getElementById('ship-save').checked;
+      if (shouldSave && localStorage.getItem('kjr_token')) {
+        try {
+          await fetch(BACKEND + '/api/auth/addresses', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'x-auth-token': localStorage.getItem('kjr_token') },
+            body: JSON.stringify({ label: 'Home', firstName: first, lastName: last, street, apt: document.getElementById('ship-apt').value.trim(), city, state, zip, phone: document.getElementById('ship-phone').value.trim() })
+          });
+        } catch (e) { /* non-fatal */ }
+      }
+      // Store shipping for payment page
+      localStorage.setItem('kjr_shipping', JSON.stringify({ firstName: first, lastName: last, street, apt: document.getElementById('ship-apt').value.trim(), city, state, zip, phone: document.getElementById('ship-phone').value.trim() }));
+      document.getElementById('step2Btn').classList.remove('active');
+      document.getElementById('step2Btn').classList.add('done');
+      document.getElementById('step3Btn').classList.add('active');
       window.location.href = 'payment.html';
     }
 
@@ -719,12 +900,14 @@
         </div>
         <div class="auth-field">
           <label>Email or Username</label>
-          <input type="text" id="loginIdentifier" placeholder="Enter email or username" required autocomplete="username">
+          <input type="text" id="loginIdentifier" placeholder="Enter email or username" required
+            autocomplete="username">
         </div>
         <div class="auth-field">
           <label>Password</label>
           <div class="auth-password-wrap">
-            <input type="password" id="loginPassword" placeholder="Enter password" required autocomplete="current-password">
+            <input type="password" id="loginPassword" placeholder="Enter password" required
+              autocomplete="current-password">
             <span class="auth-eye" onclick="togglePassword('loginPassword',this)">&#9679;</span>
           </div>
         </div>
@@ -737,7 +920,8 @@
           <span class="auth-btn-text">Login</span>
           <span class="auth-spinner" style="display:none;">...</span>
         </button>
-        <p class="auth-switch">Don't have an account? <a href="#" onclick="switchTab('signup');return false;">Sign Up</a></p>
+        <p class="auth-switch">Don't have an account? <a href="#" onclick="switchTab('signup');return false;">Sign
+            Up</a></p>
       </form>
       <form id="formSignup" class="auth-form" style="display:none;" onsubmit="handleSignup(event)">
         <div class="auth-field">
@@ -774,14 +958,16 @@
         <div class="auth-field">
           <label>Password <span class="req">*</span></label>
           <div class="auth-password-wrap">
-            <input type="password" id="signupPassword" placeholder="Create a password" required autocomplete="new-password">
+            <input type="password" id="signupPassword" placeholder="Create a password" required
+              autocomplete="new-password">
             <span class="auth-eye" onclick="togglePassword('signupPassword',this)">&#9679;</span>
           </div>
         </div>
         <div class="auth-field">
           <label>Confirm Password <span class="req">*</span></label>
           <div class="auth-password-wrap">
-            <input type="password" id="signupConfirm" placeholder="Confirm your password" required autocomplete="new-password">
+            <input type="password" id="signupConfirm" placeholder="Confirm your password" required
+              autocomplete="new-password">
             <span class="auth-eye" onclick="togglePassword('signupConfirm',this)">&#9679;</span>
           </div>
         </div>
@@ -790,7 +976,8 @@
           <span class="auth-btn-text">Create Account</span>
           <span class="auth-spinner" style="display:none;">...</span>
         </button>
-        <p class="auth-switch">Already have an account? <a href="#" onclick="switchTab('login');return false;">Login</a></p>
+        <p class="auth-switch">Already have an account? <a href="#" onclick="switchTab('login');return false;">Login</a>
+        </p>
       </form>
     </div>
   </div>
@@ -799,36 +986,36 @@
   <script>
     // ── Shared Auth Modal ──────────────────────────────────────────────────
     const BACKEND = 'https://kjr-backend.onrender.com';
-    function openAuthModal(tab){document.getElementById('authModal').classList.add('open');document.body.style.overflow='hidden';switchTab(tab||'login');}
-    function closeAuthModal(){document.getElementById('authModal').classList.remove('open');document.body.style.overflow='';}
-    document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAuthModal();});
-    function switchTab(tab){const l=tab==='login';document.getElementById('tabLogin').classList.toggle('active',l);document.getElementById('tabSignup').classList.toggle('active',!l);document.getElementById('formLogin').style.display=l?'flex':'none';document.getElementById('formSignup').style.display=l?'none':'flex';clearErrors();}
-    function clearErrors(){['loginError','signupError'].forEach(id=>{const e=document.getElementById(id);if(e){e.style.display='none';e.textContent='';};});}
-    function showError(id,msg){const e=document.getElementById(id);if(e){e.textContent=msg;e.style.display='block';}}
-    function togglePassword(fId,eye){const i=document.getElementById(fId);const s=i.type==='password';i.type=s?'text':'password';eye.textContent=s?'Hide':'Show';}
-    function toggleSignupFields(){const t=document.getElementById('signupType').value;document.getElementById('companyField').style.display=['sales_team','parts','bids','property'].includes(t)?'block':'none';document.getElementById('instructorField').style.display=t==='grad'?'block':'none';}
-    function setLoading(id,on){const b=document.getElementById(id);b.querySelector('.auth-btn-text').style.display=on?'none':'inline';b.querySelector('.auth-spinner').style.display=on?'inline':'none';b.disabled=on;}
-    async function handleLogin(e){e.preventDefault();clearErrors();const loginType=document.getElementById('loginType').value;const identifier=document.getElementById('loginIdentifier').value.trim();const password=document.getElementById('loginPassword').value;if(!loginType)return showError('loginError','Please select your account type.');setLoading('loginBtn',true);try{const r=await fetch(BACKEND+'/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({identifier,password,loginType})});const d=await r.json();if(!r.ok)throw new Error(d.errors?.[0]?.msg||'Login failed');localStorage.setItem('kjr_token',d.token);localStorage.setItem('kjr_user',JSON.stringify({...d.user,loginType}));closeAuthModal();updateAuthButton({...d.user,loginType});}catch(err){showError('loginError',err.message);}finally{setLoading('loginBtn',false);}}
-    async function handleSignup(e){e.preventDefault();clearErrors();const loginType=document.getElementById('signupType').value;const username=document.getElementById('signupUsername').value.trim();const email=document.getElementById('signupEmail').value.trim();const password=document.getElementById('signupPassword').value;const confirm=document.getElementById('signupConfirm').value;const phone=document.getElementById('signupPhone').value.trim();const companyName=document.getElementById('signupCompany').value.trim();const instructorName=document.getElementById('signupInstructor').value.trim();if(!loginType)return showError('signupError','Please select an account type.');if(password!==confirm)return showError('signupError','Passwords do not match.');if(password.length<8)return showError('signupError','Password must be at least 8 characters.');setLoading('signupBtn',true);try{const r=await fetch(BACKEND+'/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({loginType,username,email,password,phone,companyName,instructorName})});const d=await r.json();if(!r.ok)throw new Error(d.errors?.[0]?.msg||'Registration failed');localStorage.setItem('kjr_token',d.token);localStorage.setItem('kjr_user',JSON.stringify({...d.user,loginType}));closeAuthModal();updateAuthButton({...d.user,loginType});}catch(err){showError('signupError',err.message);}finally{setLoading('signupBtn',false);}}
-    function updateAuthButton(user){
-  const wrap=document.querySelector('.top-bar-right');
-  const old=document.querySelector('.user-menu-wrap');if(old)old.remove();
-  const trigger=document.querySelector('.auth-trigger-btn');
-  const TYPE_LABELS={sales_team:'Sales Team',parts:'Parts',bids:'Bids',property:'Property Management',grad:'Graduate'};
-  if(user){
-    if(trigger)trigger.style.display='none';
-    const menu=document.createElement('div');menu.className='user-menu-wrap';
-    menu.innerHTML=`<button class="user-menu-btn">${user.username} <span class="user-arrow">&#9660;</span></button><div class="user-dropdown"><div class="user-dropdown-header"><div class="user-dropdown-name">${user.username}</div><div class="user-dropdown-type">${TYPE_LABELS[user.loginType]||user.loginType}</div></div><div class="user-dropdown-items"><a class="user-dropdown-item" href="profile.html"><i class="item-icon">&#128100;</i> Profile</a><a class="user-dropdown-item" href="order-tracking.html"><i class="item-icon">&#128230;</i> Order History &amp; Tracking</a><a class="user-dropdown-item" href="invoice.html"><i class="item-icon">&#128203;</i> Invoice</a><a class="user-dropdown-item" href="payment.html"><i class="item-icon">&#128179;</i> Payment</a><div class="user-dropdown-divider"></div><a class="user-dropdown-item" href="settings.html"><i class="item-icon">&#9881;</i> Settings</a><div class="user-dropdown-divider"></div><button class="user-dropdown-item logout-item" onclick="logout()"><i class="item-icon">&#10148;</i> Logout</button></div></div>`;
-    if(wrap)wrap.appendChild(menu);
-    window.dispatchEvent(new Event('kjr-login'));
-  }else{
-    if(trigger){trigger.style.display='';trigger.textContent='Login / Sign Up';trigger.onclick=()=>openAuthModal('login');}
-  }
-}
-    function logout(){if(!confirm('Logout?'))return;localStorage.removeItem('kjr_token');localStorage.removeItem('kjr_user');updateAuthButton(null);}
-    (function(){const u=JSON.parse(localStorage.getItem('kjr_user')||'null');if(u)updateAuthButton(u);})();
+    function openAuthModal(tab) { document.getElementById('authModal').classList.add('open'); document.body.style.overflow = 'hidden'; switchTab(tab || 'login'); }
+    function closeAuthModal() { document.getElementById('authModal').classList.remove('open'); document.body.style.overflow = ''; }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAuthModal(); });
+    function switchTab(tab) { const l = tab === 'login'; document.getElementById('tabLogin').classList.toggle('active', l); document.getElementById('tabSignup').classList.toggle('active', !l); document.getElementById('formLogin').style.display = l ? 'flex' : 'none'; document.getElementById('formSignup').style.display = l ? 'none' : 'flex'; clearErrors(); }
+    function clearErrors() { ['loginError', 'signupError'].forEach(id => { const e = document.getElementById(id); if (e) { e.style.display = 'none'; e.textContent = ''; }; }); }
+    function showError(id, msg) { const e = document.getElementById(id); if (e) { e.textContent = msg; e.style.display = 'block'; } }
+    function togglePassword(fId, eye) { const i = document.getElementById(fId); const s = i.type === 'password'; i.type = s ? 'text' : 'password'; eye.textContent = s ? 'Hide' : 'Show'; }
+    function toggleSignupFields() { const t = document.getElementById('signupType').value; document.getElementById('companyField').style.display = ['sales_team', 'parts', 'bids', 'property'].includes(t) ? 'block' : 'none'; document.getElementById('instructorField').style.display = t === 'grad' ? 'block' : 'none'; }
+    function setLoading(id, on) { const b = document.getElementById(id); b.querySelector('.auth-btn-text').style.display = on ? 'none' : 'inline'; b.querySelector('.auth-spinner').style.display = on ? 'inline' : 'none'; b.disabled = on; }
+    async function handleLogin(e) { e.preventDefault(); clearErrors(); const loginType = document.getElementById('loginType').value; const identifier = document.getElementById('loginIdentifier').value.trim(); const password = document.getElementById('loginPassword').value; if (!loginType) return showError('loginError', 'Please select your account type.'); setLoading('loginBtn', true); try { const r = await fetch(BACKEND + '/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ identifier, password, loginType }) }); const d = await r.json(); if (!r.ok) throw new Error(d.errors?.[0]?.msg || 'Login failed'); localStorage.setItem('kjr_token', d.token); localStorage.setItem('kjr_user', JSON.stringify({ ...d.user, loginType })); closeAuthModal(); updateAuthButton({ ...d.user, loginType }); } catch (err) { showError('loginError', err.message); } finally { setLoading('loginBtn', false); } }
+    async function handleSignup(e) { e.preventDefault(); clearErrors(); const loginType = document.getElementById('signupType').value; const username = document.getElementById('signupUsername').value.trim(); const email = document.getElementById('signupEmail').value.trim(); const password = document.getElementById('signupPassword').value; const confirm = document.getElementById('signupConfirm').value; const phone = document.getElementById('signupPhone').value.trim(); const companyName = document.getElementById('signupCompany').value.trim(); const instructorName = document.getElementById('signupInstructor').value.trim(); if (!loginType) return showError('signupError', 'Please select an account type.'); if (password !== confirm) return showError('signupError', 'Passwords do not match.'); if (password.length < 8) return showError('signupError', 'Password must be at least 8 characters.'); setLoading('signupBtn', true); try { const r = await fetch(BACKEND + '/api/auth/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ loginType, username, email, password, phone, companyName, instructorName }) }); const d = await r.json(); if (!r.ok) throw new Error(d.errors?.[0]?.msg || 'Registration failed'); localStorage.setItem('kjr_token', d.token); localStorage.setItem('kjr_user', JSON.stringify({ ...d.user, loginType })); closeAuthModal(); updateAuthButton({ ...d.user, loginType }); } catch (err) { showError('signupError', err.message); } finally { setLoading('signupBtn', false); } }
+    function updateAuthButton(user) {
+      const wrap = document.querySelector('.top-bar-right');
+      const old = document.querySelector('.user-menu-wrap'); if (old) old.remove();
+      const trigger = document.querySelector('.auth-trigger-btn');
+      const TYPE_LABELS = { sales_team: 'Sales Team', parts: 'Parts', bids: 'Bids', property: 'Property Management', grad: 'Graduate' };
+      if (user) {
+        if (trigger) trigger.style.display = 'none';
+        const menu = document.createElement('div'); menu.className = 'user-menu-wrap';
+        menu.innerHTML = `<button class="user-menu-btn">${user.username} <span class="user-arrow">&#9660;</span></button><div class="user-dropdown"><div class="user-dropdown-header"><div class="user-dropdown-name">${user.username}</div><div class="user-dropdown-type">${TYPE_LABELS[user.loginType] || user.loginType}</div></div><div class="user-dropdown-items"><a class="user-dropdown-item" href="profile.html"><i class="item-icon">&#128100;</i> Profile</a><a class="user-dropdown-item" href="order-tracking.html"><i class="item-icon">&#128230;</i> Order History &amp; Tracking</a><a class="user-dropdown-item" href="invoice.html"><i class="item-icon">&#128203;</i> Invoice</a><a class="user-dropdown-item" href="payment.html"><i class="item-icon">&#128179;</i> Payment</a><div class="user-dropdown-divider"></div><a class="user-dropdown-item" href="settings.html"><i class="item-icon">&#9881;</i> Settings</a><div class="user-dropdown-divider"></div><button class="user-dropdown-item logout-item" onclick="logout()"><i class="item-icon">&#10148;</i> Logout</button></div></div>`;
+        if (wrap) wrap.appendChild(menu);
+        window.dispatchEvent(new Event('kjr-login'));
+      } else {
+        if (trigger) { trigger.style.display = ''; trigger.textContent = 'Login / Sign Up'; trigger.onclick = () => openAuthModal('login'); }
+      }
+    }
+    function logout() { if (!confirm('Logout?')) return; localStorage.removeItem('kjr_token'); localStorage.removeItem('kjr_user'); updateAuthButton(null); }
+    (function () { const u = JSON.parse(localStorage.getItem('kjr_user') || 'null'); if (u) updateAuthButton(u); })();
   </script>
-  
+
 </body>
 
 </html>

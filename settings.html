@@ -6,38 +6,187 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Settings | KJIR Interior Designs Inc.</title>
   <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    .settings-wrap {
-      max-width: 700px;
-      margin: 3rem auto;
+    :root {
+      --primary: #cc0000;
+      --purple: #6a0dad;
+      --dark: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --bg: #f8fafc;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--dark);
+    }
+
+    .settings-hero {
+      background: linear-gradient(135deg, #cc0000, #6a0dad);
+      padding: 2.5rem 2rem 1rem;
+      text-align: center;
+    }
+
+    .settings-hero h1 {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .settings-hero p {
+      color: rgba(255, 255, 255, .7);
+      margin-top: .35rem;
+      font-size: .9rem;
+    }
+
+    .breadcrumb {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: .65rem 2.5rem;
+      font-size: .82rem;
+      color: var(--muted);
+    }
+
+    .breadcrumb a {
+      color: var(--primary);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .settings-layout {
+      max-width: 1000px;
+      margin: 2rem auto;
       padding: 0 1.5rem 5rem;
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    @media(max-width:720px) {
+      .settings-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .settings-sidebar {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      position: sticky;
+      top: 1.5rem;
+    }
+
+    .sidebar-user {
+      background: linear-gradient(135deg, #cc0000, #6a0dad);
+      padding: 1.25rem 1rem;
+      text-align: center;
+    }
+
+    .sidebar-user-name {
+      font-size: .95rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .sidebar-user-email {
+      font-size: .75rem;
+      color: rgba(255, 255, 255, .75);
+      margin-top: .15rem;
+      word-break: break-all;
+    }
+
+    .settings-nav a {
+      display: flex;
+      align-items: center;
+      gap: .65rem;
+      padding: .8rem 1.1rem;
+      font-size: .85rem;
+      font-weight: 600;
+      color: var(--dark);
+      text-decoration: none;
+      border-left: 3px solid transparent;
+      transition: all .15s;
+    }
+
+    .settings-nav a:hover,
+    .settings-nav a.active {
+      background: var(--bg);
+      color: var(--primary);
+      border-left-color: var(--primary);
+    }
+
+    .settings-nav .nav-divider {
+      height: 1px;
+      background: var(--border);
+      margin: .25rem 0;
+    }
+
+    .settings-panel {
+      display: none;
+    }
+
+    .settings-panel.active {
+      display: block;
     }
 
     .settings-card {
       background: #fff;
-      border-radius: 16px;
-      box-shadow: 0 4px 24px rgba(0, 0, 0, .08);
-      padding: 2.5rem;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      margin-bottom: 1.5rem;
+      overflow: hidden;
     }
 
-    .settings-card h2 {
-      font-size: 1.4rem;
-      margin-bottom: 2rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid #e2e8f0;
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card-header h2 {
+      font-size: 1rem;
+      font-weight: 800;
+    }
+
+    .card-header p {
+      font-size: .8rem;
+      color: var(--muted);
+      margin-top: .2rem;
+    }
+
+    .card-body {
+      padding: 1.5rem;
     }
 
     .settings-section {
-      margin-bottom: 2.5rem;
+      margin-bottom: 2rem;
     }
 
-    .settings-section h3 {
-      font-size: .78rem;
+    .settings-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .section-label {
+      font-size: .7rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: .12em;
-      color: #64748b;
-      margin-bottom: 1.25rem;
+      letter-spacing: .1em;
+      color: var(--muted);
+      margin-bottom: .75rem;
+      padding-bottom: .4rem;
+      border-bottom: 1px solid var(--border);
     }
 
     .settings-row {
@@ -52,18 +201,22 @@
       border-bottom: none;
     }
 
-    .settings-label {
-      font-size: .92rem;
-      font-weight: 600;
-      color: #0f172a;
+    .row-info {
+      flex: 1;
     }
 
-    .settings-desc {
-      font-size: .78rem;
-      color: #64748b;
+    .row-label {
+      font-size: .9rem;
+      font-weight: 600;
+    }
+
+    .row-desc {
+      font-size: .77rem;
+      color: var(--muted);
       margin-top: .15rem;
     }
 
+    /* Toggle */
     .toggle {
       position: relative;
       width: 44px;
@@ -106,66 +259,291 @@
       transform: translateX(20px);
     }
 
-    .btn-save {
-      background: linear-gradient(135deg, #cc0000, #6a0dad);
-      color: #fff;
-      border: none;
-      padding: .75rem 2rem;
-      border-radius: 50px;
-      font-size: .9rem;
-      font-weight: 700;
-      cursor: pointer;
-      margin-top: 1rem;
+    /* Fields */
+    .field-group {
+      margin-bottom: 1rem;
     }
 
-    .btn-danger {
-      background: transparent;
-      color: #cc0000;
-      border: 2px solid #cc0000;
-      padding: .65rem 1.5rem;
-      border-radius: 50px;
-      font-size: .85rem;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .settings-field label {
-      font-size: .72rem;
+    .field-group label {
+      font-size: .7rem;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: .08em;
-      color: #64748b;
+      color: var(--muted);
       display: block;
       margin-bottom: .35rem;
     }
 
-    .settings-field input {
+    .field-group input,
+    .field-group select,
+    .field-group textarea {
       width: 100%;
       padding: .65rem .9rem;
-      border: 1.5px solid #e2e8f0;
+      border: 1.5px solid var(--border);
       border-radius: 8px;
-      font-size: .92rem;
-      font-family: inherit;
+      font-size: .9rem;
+      font-family: 'Inter', sans-serif;
       outline: none;
+      transition: border .2s;
     }
 
-    .settings-field input:focus {
-      border-color: #cc0000;
+    .field-group input:focus,
+    .field-group select:focus,
+    .field-group textarea:focus {
+      border-color: var(--primary);
     }
 
-    .settings-field {
-      margin-bottom: 1rem;
+    .field-group input[readonly] {
+      background: var(--bg);
+      color: var(--muted);
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media(max-width:540px) {
+      .field-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      padding: .65rem 1.4rem;
+      border-radius: 8px;
+      font-size: .85rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      font-family: 'Inter', sans-serif;
+      transition: all .2s;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #cc0000, #6a0dad);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      opacity: .9;
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--dark);
+      border: 1.5px solid var(--border);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--dark);
+    }
+
+    .btn-danger {
+      background: transparent;
+      color: var(--primary);
+      border: 1.5px solid var(--primary);
+    }
+
+    .btn-danger:hover {
+      background: #fee2e2;
+    }
+
+    .btn-sm {
+      padding: .45rem 1rem;
+      font-size: .78rem;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: .75rem;
+      flex-wrap: wrap;
+      margin-top: 1.25rem;
+    }
+
+    /* Password strength */
+    .pw-strength {
+      height: 4px;
+      border-radius: 2px;
+      margin-top: .5rem;
+      background: #e2e8f0;
+      overflow: hidden;
+    }
+
+    .pw-strength-bar {
+      height: 100%;
+      border-radius: 2px;
+      transition: width .3s, background .3s;
+    }
+
+    .pw-hint {
+      font-size: .72rem;
+      color: var(--muted);
+      margin-top: .3rem;
+    }
+
+    /* Danger zone */
+    .danger-box {
+      background: #fff5f5;
+      border: 1.5px solid #fecaca;
+      border-radius: 10px;
+      padding: 1.25rem;
+    }
+
+    .danger-box h4 {
+      color: #b91c1c;
+      font-size: .9rem;
+      font-weight: 800;
+      margin-bottom: .4rem;
+    }
+
+    .danger-box p {
+      font-size: .8rem;
+      color: #6b7280;
+      margin-bottom: .85rem;
+    }
+
+    /* Session list */
+    .session-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: .85rem 0;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .session-item:last-child {
+      border-bottom: none;
+    }
+
+    .session-device {
+      font-size: .88rem;
+      font-weight: 600;
+    }
+
+    .session-meta {
+      font-size: .75rem;
+      color: var(--muted);
+      margin-top: .15rem;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: .2rem .6rem;
+      border-radius: 12px;
+      font-size: .7rem;
+      font-weight: 700;
+    }
+
+    .badge-green {
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    .badge-muted {
+      background: var(--bg);
+      color: var(--muted);
+    }
+
+    /* Preference cards */
+    .pref-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media(max-width:540px) {
+      .pref-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .pref-card {
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem;
+      cursor: pointer;
+      transition: border .2s;
+    }
+
+    .pref-card.selected {
+      border-color: var(--primary);
+      background: #fff5f5;
+    }
+
+    .pref-card input {
+      display: none;
+    }
+
+    .pref-title {
+      font-size: .88rem;
+      font-weight: 700;
+      margin-bottom: .2rem;
+    }
+
+    .pref-desc {
+      font-size: .75rem;
+      color: var(--muted);
+    }
+
+    /* Toast */
+    .save-toast {
+      display: none;
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #0f172a;
+      color: #fff;
+      padding: .75rem 1.75rem;
+      border-radius: 50px;
+      font-size: .88rem;
+      font-weight: 700;
+      z-index: 9999;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, .25);
+    }
+
+    .save-toast.show {
+      display: block;
+      animation: fadeInUp .3s ease;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(10px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0)
+      }
     }
 
     .not-logged {
       text-align: center;
-      padding: 4rem 2rem;
+      padding: 5rem 2rem;
+      background: #fff;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+    }
+
+    .spinner-wrap {
+      text-align: center;
+      padding: 3rem;
+      color: var(--muted);
     }
   </style>
 </head>
 
 <body>
 
+  <!-- Top Bar -->
   <div class="top-bar">
     <div class="top-bar-left">
       <span class="utility-info"><strong>888-944-6313</strong> • Call in Orders Only • Call 24/7 • Live Operator</span>
@@ -177,6 +555,7 @@
     </div>
   </div>
 
+  <!-- Header -->
   <header class="main-header">
     <div class="header-container">
       <div class="logo"><a href="index.html"><img src="logo-new.jpeg" alt="KJIR Interior Designs Inc."></a></div>
@@ -198,15 +577,31 @@
         </div>
       </nav>
       <div class="header-actions">
-        <a href="index.html#parts" class="parts-highlight">10M+ PARTS</a>
+        <a href="Lot-categories.html" class="parts-highlight">10M+ PARTS</a>
       </div>
     </div>
   </header>
 
-  <div class="settings-wrap">
-    <div id="settingsContent"></div>
+  <!-- Hero -->
+  <div class="settings-hero">
+    <h1>⚙️ Account Settings</h1>
+    <p>Manage your preferences, security, and notifications</p>
   </div>
 
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <a href="index.html">Home</a> ›
+    <a href="profile.html">My Profile</a> ›
+    Settings
+  </div>
+
+  <div id="settingsRoot" style="max-width:1000px;margin:2rem auto;padding:0 1.5rem 5rem;">
+    <div class="spinner-wrap">⏳ Loading settings…</div>
+  </div>
+
+  <div class="save-toast" id="saveToast"></div>
+
+  <!-- Auth Modal -->
   <div id="authModal" class="auth-modal" onclick="if(event.target===this)closeAuthModal()">
     <div class="auth-modal-box">
       <button class="auth-close" onclick="closeAuthModal()" aria-label="Close">&times;</button>
@@ -243,8 +638,9 @@
         </div>
         <div id="loginError" class="auth-error" style="display:none;"></div>
         <button type="submit" class="auth-submit" id="loginBtn">
-          <span class="auth-btn-text">Login</span><span class="auth-spinner" style="display:none;">...</span>
-        </button>
+          <span class="auth-btn-text">Login</span><span class="auth-spinner" style="display:none;">...</span></button>
+        <p class="auth-switch">Don't have an account? <a href="#" onclick="switchTab('signup');return false;">Sign
+            Up</a></p>
       </form>
       <form id="formSignup" class="auth-form" style="display:none;" onsubmit="handleSignup(event)">
         <div class="auth-field"><label>Account Type <span class="req">*</span></label>
@@ -257,128 +653,430 @@
             <option value="grad">Graduate Login</option>
           </select>
         </div>
-        <div class="auth-field"><label>Username <span class="req">*</span></label><input type="text" id="signupUsername"
-            required autocomplete="username"></div>
-        <div class="auth-field"><label>Email <span class="req">*</span></label><input type="email" id="signupEmail"
-            required autocomplete="email"></div>
-        <div class="auth-field"><label>Mobile Number</label><input type="tel" id="signupPhone" autocomplete="tel"></div>
-        <div class="auth-field" id="companyField" style="display:none;"><label>Company Name</label><input type="text"
-            id="signupCompany"></div>
-        <div class="auth-field" id="instructorField" style="display:none;"><label>Instructor Name</label><input
-            type="text" id="signupInstructor"></div>
+        <div class="auth-field"><label>Username <span class="req">*</span></label>
+          <input type="text" id="signupUsername" placeholder="Choose a username" required autocomplete="username">
+        </div>
+        <div class="auth-field"><label>Email <span class="req">*</span></label>
+          <input type="email" id="signupEmail" placeholder="Enter your email" required autocomplete="email">
+        </div>
+        <div class="auth-field"><label>Mobile Number</label>
+          <input type="tel" id="signupPhone" placeholder="e.g. 555-123-4567" autocomplete="tel">
+        </div>
+        <div class="auth-field" id="companyField" style="display:none;"><label>Company Name</label>
+          <input type="text" id="signupCompany" placeholder="Your company name">
+        </div>
+        <div class="auth-field" id="instructorField" style="display:none;"><label>Instructor Name</label>
+          <input type="text" id="signupInstructor" placeholder="Your instructor's name">
+        </div>
         <div class="auth-field"><label>Password <span class="req">*</span></label>
           <div class="auth-password-wrap">
-            <input type="password" id="signupPassword" required autocomplete="new-password">
+            <input type="password" id="signupPassword" placeholder="Create a password" required
+              autocomplete="new-password">
             <span class="auth-eye" onclick="togglePassword('signupPassword',this)">&#9679;</span>
           </div>
         </div>
         <div class="auth-field"><label>Confirm Password <span class="req">*</span></label>
           <div class="auth-password-wrap">
-            <input type="password" id="signupConfirm" required autocomplete="new-password">
+            <input type="password" id="signupConfirm" placeholder="Confirm your password" required
+              autocomplete="new-password">
             <span class="auth-eye" onclick="togglePassword('signupConfirm',this)">&#9679;</span>
           </div>
         </div>
         <div id="signupError" class="auth-error" style="display:none;"></div>
         <button type="submit" class="auth-submit" id="signupBtn">
-          <span class="auth-btn-text">Create Account</span><span class="auth-spinner" style="display:none;">...</span>
-        </button>
+          <span class="auth-btn-text">Create Account</span><span class="auth-spinner"
+            style="display:none;">...</span></button>
+        <p class="auth-switch">Already have an account? <a href="#" onclick="switchTab('login');return false;">Login</a>
+        </p>
       </form>
     </div>
   </div>
 
-  <script src="assets/js/bunji.js"></script>
-  <script>
+  <script src="assets/js/bunji.js"></script>  <script>
     const BACKEND = 'https://kjr-backend.onrender.com';
-    function openAuthModal(tab) { document.getElementById('authModal').classList.add('open'); document.body.style.overflow = 'hidden'; switchTab(tab || 'login'); }
-    function closeAuthModal() { document.getElementById('authModal').classList.remove('open'); document.body.style.overflow = ''; }
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAuthModal(); });
-    function switchTab(tab) { const l = tab === 'login'; document.getElementById('tabLogin').classList.toggle('active', l); document.getElementById('tabSignup').classList.toggle('active', !l); document.getElementById('formLogin').style.display = l ? 'flex' : 'none'; document.getElementById('formSignup').style.display = l ? 'none' : 'flex'; clearErrors(); }
-    function clearErrors() { ['loginError', 'signupError'].forEach(id => { const e = document.getElementById(id); if (e) { e.style.display = 'none'; e.textContent = ''; }; }); }
-    function showError(id, msg) { const e = document.getElementById(id); if (e) { e.textContent = msg; e.style.display = 'block'; } }
-    function togglePassword(fId, eye) { const i = document.getElementById(fId); const s = i.type === 'password'; i.type = s ? 'text' : 'password'; eye.textContent = s ? 'Hide' : 'Show'; }
-    function toggleSignupFields() { const t = document.getElementById('signupType').value; document.getElementById('companyField').style.display = ['sales_team', 'parts', 'bids', 'property'].includes(t) ? 'block' : 'none'; document.getElementById('instructorField').style.display = t === 'grad' ? 'block' : 'none'; }
-    function setLoading(id, on) { const b = document.getElementById(id); b.querySelector('.auth-btn-text').style.display = on ? 'none' : 'inline'; b.querySelector('.auth-spinner').style.display = on ? 'inline' : 'none'; b.disabled = on; }
-    async function handleLogin(e) { e.preventDefault(); clearErrors(); const loginType = document.getElementById('loginType').value; const identifier = document.getElementById('loginIdentifier').value.trim(); const password = document.getElementById('loginPassword').value; if (!loginType) return showError('loginError', 'Please select your account type.'); setLoading('loginBtn', true); try { const r = await fetch(BACKEND + '/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ identifier, password, loginType }) }); const d = await r.json(); if (!r.ok) throw new Error(d.errors?.[0]?.msg || 'Login failed'); localStorage.setItem('kjr_token', d.token); localStorage.setItem('kjr_user', JSON.stringify({ ...d.user, loginType })); closeAuthModal(); updateAuthButton({ ...d.user, loginType }); renderSettings(); } catch (err) { showError('loginError', err.message); } finally { setLoading('loginBtn', false); } }
-    async function handleSignup(e) { e.preventDefault(); clearErrors(); const loginType = document.getElementById('signupType').value; const username = document.getElementById('signupUsername').value.trim(); const email = document.getElementById('signupEmail').value.trim(); const password = document.getElementById('signupPassword').value; const confirm = document.getElementById('signupConfirm').value; const phone = document.getElementById('signupPhone').value.trim(); const companyName = document.getElementById('signupCompany').value.trim(); const instructorName = document.getElementById('signupInstructor').value.trim(); if (!loginType) return showError('signupError', 'Please select an account type.'); if (password !== confirm) return showError('signupError', 'Passwords do not match.'); setLoading('signupBtn', true); try { const r = await fetch(BACKEND + '/api/auth/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ loginType, username, email, password, phone, companyName, instructorName }) }); const d = await r.json(); if (!r.ok) throw new Error(d.errors?.[0]?.msg || 'Registration failed'); localStorage.setItem('kjr_token', d.token); localStorage.setItem('kjr_user', JSON.stringify({ ...d.user, loginType })); closeAuthModal(); updateAuthButton({ ...d.user, loginType }); renderSettings(); } catch (err) { showError('signupError', err.message); } finally { setLoading('signupBtn', false); } }
+    const TYPE_LABELS = {sales_team:'Sales Team',parts:'Parts',bids:'Bids',property:'Property Management',grad:'Graduate'};
+
+    function getToken(){ return localStorage.getItem('kjr_token'); }
+    function getUser(){ return JSON.parse(localStorage.getItem('kjr_user')||'null'); }
+    function authHeaders(){ return {'Content-Type':'application/json','x-auth-token': getToken()||''}; }
+
+    function openAuthModal(tab){document.getElementById('authModal').classList.add('open');document.body.style.overflow='hidden';switchTab(tab||'login');}
+    function closeAuthModal(){document.getElementById('authModal').classList.remove('open');document.body.style.overflow='';}
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAuthModal();});
+    function switchTab(tab){const l=tab==='login';document.getElementById('tabLogin').classList.toggle('active',l);document.getElementById('tabSignup').classList.toggle('active',!l);document.getElementById('formLogin').style.display=l?'flex':'none';document.getElementById('formSignup').style.display=l?'none':'flex';clearErrors();}
+    function clearErrors(){['loginError','signupError'].forEach(id=>{const e=document.getElementById(id);if(e){e.style.display='none';e.textContent='';};});}
+    function showError(id,msg){const e=document.getElementById(id);if(e){e.textContent=msg;e.style.display='block';}}
+    function togglePassword(fId,eye){const i=document.getElementById(fId);const s=i.type==='password';i.type=s?'text':'password';eye.textContent=s?'Hide':'Show';}
+    function toggleSignupFields(){const t=document.getElementById('signupType').value;document.getElementById('companyField').style.display=['sales_team','parts','bids','property'].includes(t)?'block':'none';document.getElementById('instructorField').style.display=t==='grad'?'block':'none';}
+    function setLoading(id,on){const b=document.getElementById(id);b.querySelector('.auth-btn-text').style.display=on?'none':'inline';b.querySelector('.auth-spinner').style.display=on?'inline':'none';b.disabled=on;}
+
+    async function handleLogin(e){e.preventDefault();clearErrors();const loginType=document.getElementById('loginType').value;const identifier=document.getElementById('loginIdentifier').value.trim();const password=document.getElementById('loginPassword').value;if(!loginType)return showError('loginError','Please select your account type.');setLoading('loginBtn',true);try{const r=await fetch(BACKEND+'/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({identifier,password,loginType})});const d=await r.json();if(!r.ok)throw new Error(d.errors?.[0]?.msg||'Login failed');localStorage.setItem('kjr_token',d.token);localStorage.setItem('kjr_user',JSON.stringify({...d.user,loginType}));closeAuthModal();updateAuthButton({...d.user,loginType});loadSettings();}catch(err){showError('loginError',err.message);}finally{setLoading('loginBtn',false);}}
+    async function handleSignup(e){e.preventDefault();clearErrors();const loginType=document.getElementById('signupType').value;const username=document.getElementById('signupUsername').value.trim();const email=document.getElementById('signupEmail').value.trim();const password=document.getElementById('signupPassword').value;const confirm=document.getElementById('signupConfirm').value;const phone=document.getElementById('signupPhone').value.trim();const companyName=document.getElementById('signupCompany').value.trim();const instructorName=document.getElementById('signupInstructor').value.trim();if(!loginType)return showError('signupError','Please select an account type.');if(password!==confirm)return showError('signupError','Passwords do not match.');if(password.length<8)return showError('signupError','Password must be at least 8 characters.');setLoading('signupBtn',true);try{const r=await fetch(BACKEND+'/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({loginType,username,email,password,phone,companyName,instructorName})});const d=await r.json();if(!r.ok)throw new Error(d.errors?.[0]?.msg||'Registration failed');localStorage.setItem('kjr_token',d.token);localStorage.setItem('kjr_user',JSON.stringify({...d.user,loginType}));closeAuthModal();updateAuthButton({...d.user,loginType});loadSettings();}catch(err){showError('signupError',err.message);}finally{setLoading('signupBtn',false);}}
+
     function updateAuthButton(user){
-      const wrap=document.querySelector('.top-bar-right');
-      const old=document.querySelector('.user-menu-wrap');if(old)old.remove();
-      const trigger=document.querySelector('.auth-trigger-btn');
-      const TYPE_LABELS={sales_team:'Sales Team',parts:'Parts',bids:'Bids',property:'Property Management',grad:'Graduate'};
+      const wrap=document.querySelector('.top-bar-right');const old=document.querySelector('.user-menu-wrap');if(old)old.remove();const trigger=document.querySelector('.auth-trigger-btn');
       if(user){
         if(trigger)trigger.style.display='none';
         const menu=document.createElement('div');menu.className='user-menu-wrap';
-        menu.innerHTML='<button class="user-menu-btn">'+user.username+' <span class="user-arrow">&#9660;</span></button>'
-          +'<div class="user-dropdown">'
-          +'<div class="user-dropdown-header"><div class="user-dropdown-name">'+user.username+'</div>'
-          +'<div class="user-dropdown-type">'+(TYPE_LABELS[user.loginType]||user.loginType)+'</div></div>'
-          +'<div class="user-dropdown-items">'
-          +'<a class="user-dropdown-item" href="profile.html"><i class="item-icon">&#128100;</i> Profile</a>'
-          +'<a class="user-dropdown-item" href="order-tracking.html"><i class="item-icon">&#128230;</i> Order History &amp; Tracking</a>'
-          +'<a class="user-dropdown-item" href="invoice.html"><i class="item-icon">&#128203;</i> Invoice</a>'
-          +'<a class="user-dropdown-item" href="payment.html"><i class="item-icon">&#128179;</i> Payment</a>'
-          +'<div class="user-dropdown-divider"></div>'
-          +'<a class="user-dropdown-item" href="settings.html"><i class="item-icon">&#9881;</i> Settings</a>'
-          +'<div class="user-dropdown-divider"></div>'
-          +'<button class="user-dropdown-item logout-item" onclick="logout()"><i class="item-icon">&#10148;</i> Logout</button>'
-          +'</div></div>';
-        if(wrap)wrap.appendChild(menu);
-        window.dispatchEvent(new Event('kjr-login'));
-      }else{
-        if(trigger){trigger.style.display='';trigger.textContent='Login / Sign Up';trigger.onclick=()=>openAuthModal('login');}
-      }
-    } else { btn.textContent = 'Login / Sign Up'; btn.onclick = () => openAuthModal('login'); btn.title = ''; } }
-    function logout() { if (!confirm('Logout?')) return; localStorage.removeItem('kjr_token'); localStorage.removeItem('kjr_user'); updateAuthButton(null); window.location.href = 'index.html'; }
+        menu.innerHTML='<button class="user-menu-btn">'+user.username+' <span class="user-arrow">&#9660;</span></button><div class="user-dropdown"><div class="user-dropdown-header"><div class="user-dropdown-name">'+user.username+'</div><div class="user-dropdown-type">'+(TYPE_LABELS[user.loginType]||user.loginType)+'</div></div><div class="user-dropdown-items"><a class="user-dropdown-item" href="profile.html"><i class="item-icon">&#128100;</i> Profile</a><a class="user-dropdown-item" href="order-tracking.html"><i class="item-icon">&#128230;</i> Order History &amp; Tracking</a><a class="user-dropdown-item" href="invoice.html"><i class="item-icon">&#128203;</i> Invoice</a><a class="user-dropdown-item" href="payment.html"><i class="item-icon">&#128179;</i> Payment</a><div class="user-dropdown-divider"></div><a class="user-dropdown-item" href="settings.html"><i class="item-icon">&#9881;</i> Settings</a><div class="user-dropdown-divider"></div><button class="user-dropdown-item logout-item" onclick="logout()"><i class="item-icon">&#10148;</i> Logout</button></div></div>';
+        if(wrap)wrap.appendChild(menu);window.dispatchEvent(new Event('kjr-login'));
+      }else{if(trigger){trigger.style.display='';trigger.textContent='Login / Sign Up';trigger.onclick=()=>openAuthModal('login');}}
+    }
+    function logout(){if(!confirm('Logout?'))return;localStorage.removeItem('kjr_token');localStorage.removeItem('kjr_user');updateAuthButton(null);window.location.href='index.html';}
+    function showToast(msg,isError=false){const t=document.getElementById('saveToast');t.textContent=msg;t.style.background=isError?'#cc0000':'#0f172a';t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
 
-    function renderSettings() {
-      const user = JSON.parse(localStorage.getItem('kjr_user') || 'null');
-      const el = document.getElementById('settingsContent');
-      if (!user) {
-        el.innerHTML = `<div class="settings-card not-logged"><h2>Please log in to access settings</h2><button class="btn-save" onclick="openAuthModal('login')">Login</button></div>`;
+    let settingsData = null;
+
+    async function loadSettings(){
+      const user = getUser();
+      const root = document.getElementById('settingsRoot');
+      if(!user){
+        root.innerHTML='<div class="not-logged"><h2>Please log in to access settings</h2><p>You need to be signed in to manage your account settings.</p><button class="btn btn-primary" onclick="openAuthModal(\'login\')">🔐 Login / Sign Up</button></div>';
         return;
       }
-      el.innerHTML = `
-        <div class="settings-card">
-          <h2>Account Settings</h2>
-          <div class="settings-section">
-            <h3>Profile Information</h3>
-            <div class="settings-field"><label>Username</label><input type="text" id="setUsername" value="${user.username}" readonly></div>
-            <div class="settings-field"><label>Email</label><input type="text" id="setEmail" value="${user.email}" readonly></div>
-          </div>
-          <div class="settings-section">
-            <h3>Notifications</h3>
-            <div class="settings-row">
-              <div><div class="settings-label">Order Updates</div><div class="settings-desc">Get notified when your order status changes</div></div>
-              <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
-            </div>
-            <div class="settings-row">
-              <div><div class="settings-label">Promotions &amp; Offers</div><div class="settings-desc">Receive special deals and pricing updates</div></div>
-              <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
-            </div>
-            <div class="settings-row">
-              <div><div class="settings-label">Bid Alerts</div><div class="settings-desc">Notify me about new bid projects in my area</div></div>
-              <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
-            </div>
-          </div>
-          <div class="settings-section">
-            <h3>Security</h3>
-            <div class="settings-row">
-              <div><div class="settings-label">Change Password</div><div class="settings-desc">Update your account password</div></div>
-              <button class="btn-danger" onclick="alert('Please call 888-944-6313 to change your password.')">Change</button>
-            </div>
-          </div>
-          <div class="settings-section">
-            <h3>Danger Zone</h3>
-            <div class="settings-row">
-              <div><div class="settings-label">Log Out</div><div class="settings-desc">Sign out from this device</div></div>
-              <button class="btn-danger" onclick="logout()">Log Out</button>
-            </div>
-          </div>
-        </div>`;
+      try{
+        const r = await fetch(BACKEND+'/api/auth/me',{headers:authHeaders()});
+        if(r.ok){ settingsData = await r.json(); }
+        else { settingsData = {...user}; }
+      }catch(e){ settingsData = {...user}; }
+      renderSettings();
     }
 
-    (function () { const u = JSON.parse(localStorage.getItem('kjr_user') || 'null'); if (u) updateAuthButton(u); renderSettings(); })();
+    function showPanel(id){
+      document.querySelectorAll('.settings-panel').forEach(p=>p.classList.remove('active'));
+      document.querySelectorAll('.settings-nav a').forEach(a=>a.classList.remove('active'));
+      const panel = document.getElementById('panel-'+id);
+      const link = document.querySelector('.settings-nav a[data-panel="'+id+'"]');
+      if(panel) panel.classList.add('active');
+      if(link) link.classList.add('active');
+    }
+
+    function renderSettings(){
+      const u = settingsData;
+      document.getElementById('settingsRoot').innerHTML = `
+      <div class="settings-layout">
+        <aside class="settings-sidebar">
+          <div class="sidebar-user">
+            <div class="sidebar-user-name">${u.username}</div>
+            <div class="sidebar-user-email">${u.email}</div>
+          </div>
+          <nav class="settings-nav">
+            <a href="#" data-panel="account" onclick="showPanel('account');return false;" class="active">👤 Account Info</a>
+            <a href="#" data-panel="notifications" onclick="showPanel('notifications');return false;">🔔 Notifications</a>
+            <a href="#" data-panel="security" onclick="showPanel('security');return false;">🔒 Security</a>
+            <a href="#" data-panel="preferences" onclick="showPanel('preferences');return false;">🎛 Preferences</a>
+            <a href="#" data-panel="privacy" onclick="showPanel('privacy');return false;">🛡 Privacy</a>
+            <div class="nav-divider"></div>
+            <a href="profile.html">← Back to Profile</a>
+            <a href="#" onclick="logout();return false;" style="color:#cc0000;">🚪 Logout</a>
+          </nav>
+        </aside>
+
+        <div>
+          <!-- PANEL: Account Info -->
+          <div class="settings-panel active" id="panel-account">
+            <div class="settings-card">
+              <div class="card-header"><div><h2>Account Information</h2><p>Update your personal details and contact info</p></div></div>
+              <div class="card-body">
+                <div class="settings-section">
+                  <div class="section-label">Identity</div>
+                  <div class="field-grid">
+                    <div class="field-group"><label>First Name</label><input id="set-first" value="${u.firstName||''}" placeholder="First name"></div>
+                    <div class="field-group"><label>Last Name</label><input id="set-last" value="${u.lastName||''}" placeholder="Last name"></div>
+                  </div>
+                  <div class="field-group"><label>Username (read-only)</label><input id="set-username" value="${u.username}" readonly></div>
+                  <div class="field-group"><label>Email (read-only)</label><input id="set-email" value="${u.email}" readonly></div>
+                  <div class="field-group"><label>Phone Number</label><input id="set-phone" value="${u.phone||''}" placeholder="555-123-4567" type="tel"></div>
+                </div>
+                <div class="settings-section">
+                  <div class="section-label">Business / Organization</div>
+                  ${u.loginType!=='grad'?`<div class="field-group"><label>Company Name</label><input id="set-company" value="${u.companyName||''}" placeholder="Your company name"></div>`:''}
+                  ${u.loginType==='grad'?`<div class="field-group"><label>Instructor Name</label><input id="set-instructor" value="${u.instructorName||''}" placeholder="Instructor"></div>`:''}
+                  <div class="field-group"><label>Account Type</label>
+                    <input value="${TYPE_LABELS[u.loginType]||u.loginType}" readonly></div>
+                </div>
+                <div id="accountSaveError" style="color:var(--primary);font-size:.82rem;margin-bottom:.75rem;display:none;"></div>
+                <div class="btn-row">
+                  <button class="btn btn-primary" onclick="saveAccountInfo()">💾 Save Changes</button>
+                  <a href="profile.html" class="btn btn-outline">View Full Profile</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PANEL: Notifications -->
+          <div class="settings-panel" id="panel-notifications">
+            <div class="settings-card">
+              <div class="card-header"><div><h2>Notification Preferences</h2><p>Choose what you want to hear about</p></div></div>
+              <div class="card-body">
+                <div class="settings-section">
+                  <div class="section-label">Order & Transactional</div>
+                  <div class="settings-row">
+                    <div class="row-info"><div class="row-label">Order Updates</div><div class="row-desc">Status changes, shipping confirmation, delivery</div></div>
+                    <label class="toggle"><input type="checkbox" id="notif-order" ${u.notifOrderUpdates!==false?'checked':''}><span class="toggle-slider"></span></label>
+                  </div>
+                  <div class="settings-row">
+                    <div class="row-info"><div class="row-label">Invoice Ready</div><div class="row-desc">Notify when a new invoice is available</div></div>
+                    <label class="toggle"><input type="checkbox" id="notif-invoice" ${u.notifInvoiceReady!==false?'checked':''}><span class="toggle-slider"></span></label>
+                  </div>
+                </div>
+                <div class="settings-section">
+                  <div class="section-label">Marketing & Alerts</div>
+                  <div class="settings-row">
+                    <div class="row-info"><div class="row-label">Promotions & Offers</div><div class="row-desc">Receive special deals, discount codes, and price drops</div></div>
+                    <label class="toggle"><input type="checkbox" id="notif-promo" ${u.notifPromotions?'checked':''}><span class="toggle-slider"></span></label>
+                  </div>
+                  <div class="settings-row">
+                    <div class="row-info"><div class="row-label">Bid Project Alerts</div><div class="row-desc">New bid projects matching your area and type</div></div>
+                    <label class="toggle"><input type="checkbox" id="notif-bids" ${u.notifBidAlerts!==false?'checked':''}><span class="toggle-slider"></span></label>
+                  </div>
+                </div>
+                <div class="settings-section">
+                  <div class="section-label">SMS Notifications</div>
+                  <div class="settings-row">
+                    <div class="row-info"><div class="row-label">SMS Order Updates</div><div class="row-desc">Text messages for shipping and delivery (carrier rates apply)</div></div>
+                    <label class="toggle"><input type="checkbox" id="notif-sms" ${u.notifSmsUpdates?'checked':''}><span class="toggle-slider"></span></label>
+                  </div>
+                </div>
+                <div class="btn-row">
+                  <button class="btn btn-primary" onclick="saveNotifications()">💾 Save Preferences</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PANEL: Security -->
+          <div class="settings-panel" id="panel-security">
+            <div class="settings-card">
+              <div class="card-header"><div><h2>Security</h2><p>Manage your password and account access</p></div></div>
+              <div class="card-body">
+                <div class="settings-section">
+                  <div class="section-label">Change Password</div>
+                  <div class="field-group"><label>Current Password</label>
+                    <div class="auth-password-wrap"><input type="password" id="pw-current" placeholder="Enter current password" autocomplete="current-password"><span class="auth-eye" onclick="togglePassword('pw-current',this)">&#9679;</span></div>
+                  </div>
+                  <div class="field-group">
+                    <label>New Password</label>
+                    <div class="auth-password-wrap"><input type="password" id="pw-new" placeholder="At least 8 characters" autocomplete="new-password" oninput="checkPwStrength(this.value)"><span class="auth-eye" onclick="togglePassword('pw-new',this)">&#9679;</span></div>
+                    <div class="pw-strength"><div class="pw-strength-bar" id="pwStrengthBar" style="width:0%;background:#e2e8f0;"></div></div>
+                    <div class="pw-hint" id="pwHint">Enter a new password</div>
+                  </div>
+                  <div class="field-group"><label>Confirm New Password</label>
+                    <div class="auth-password-wrap"><input type="password" id="pw-confirm" placeholder="Repeat new password" autocomplete="new-password"><span class="auth-eye" onclick="togglePassword('pw-confirm',this)">&#9679;</span></div>
+                  </div>
+                  <div id="pwError" style="color:var(--primary);font-size:.82rem;margin-bottom:.75rem;display:none;"></div>
+                  <div id="pwSuccess" style="color:#15803d;font-size:.82rem;margin-bottom:.75rem;display:none;"></div>
+                  <button class="btn btn-primary" onclick="changePassword()">🔐 Update Password</button>
+                </div>
+                <div class="settings-section" style="margin-top:2rem;">
+                  <div class="section-label">Login Sessions</div>
+                  <div class="session-item">
+                    <div><div class="session-device">💻 Current Browser</div><div class="session-meta">Logged in now · ${new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}</div></div>
+                    <span class="badge badge-green">Active</span>
+                  </div>
+                  <div class="btn-row" style="margin-top:1rem;">
+                    <button class="btn btn-danger btn-sm" onclick="if(confirm('Sign out of all other sessions?'))showToast('✅ All other sessions ended.')">Sign Out All Devices</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Danger Zone -->
+            <div class="settings-card">
+              <div class="card-header"><h2>🚨 Danger Zone</h2></div>
+              <div class="card-body">
+                <div class="danger-box" style="margin-bottom:1rem;">
+                  <h4>Deactivate Account</h4>
+                  <p>Your account will be hidden and you won't be able to log in. You can reactivate by contacting support.</p>
+                  <button class="btn btn-danger btn-sm" onclick="alert('Please call 888-944-6313 to deactivate your account.')">Deactivate Account</button>
+                </div>
+                <div class="danger-box">
+                  <h4>Delete Account</h4>
+                  <p>Permanently deletes your account and all associated data. This action cannot be undone.</p>
+                  <button class="btn btn-danger btn-sm" onclick="alert('For account deletion, please call 888-944-6313 or email support@kjrid.com.')">Delete My Account</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PANEL: Preferences -->
+          <div class="settings-panel" id="panel-preferences">
+            <div class="settings-card">
+              <div class="card-header"><div><h2>Preferences</h2><p>Customize your shopping and browsing experience</p></div></div>
+              <div class="card-body">
+                <div class="settings-section">
+                  <div class="section-label">Default View</div>
+                  <div class="pref-grid" id="prefView">
+                    <label class="pref-card selected"><input type="radio" name="defView" value="grid" checked><div class="pref-title">⊞ Grid View</div><div class="pref-desc">Show products in a grid layout</div></label>
+                    <label class="pref-card"><input type="radio" name="defView" value="list"><div class="pref-title">☰ List View</div><div class="pref-desc">Show products in a list layout</div></label>
+                  </div>
+                </div>
+                <div class="settings-section">
+                  <div class="section-label">Results Per Page</div>
+                  <div class="field-group" style="max-width:200px;">
+                    <label>Show</label>
+                    <select id="resultsPerPage">
+                      <option value="24">24 products</option>
+                      <option value="48" selected>48 products</option>
+                      <option value="96">96 products</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="settings-section">
+                  <div class="section-label">Language & Region</div>
+                  <div class="field-grid">
+                    <div class="field-group"><label>Language</label>
+                      <select id="prefLang"><option value="en" selected>English</option><option value="es">Español</option></select></div>
+                    <div class="field-group"><label>Currency</label>
+                      <select id="prefCurrency"><option value="USD" selected>USD ($)</option></select></div>
+                  </div>
+                </div>
+                <div class="btn-row">
+                  <button class="btn btn-primary" onclick="savePreferences()">💾 Save Preferences</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PANEL: Privacy -->
+          <div class="settings-panel" id="panel-privacy">
+            <div class="settings-card">
+              <div class="card-header"><div><h2>Privacy & Data</h2><p>Control how your data is used</p></div></div>
+              <div class="card-body">
+                <div class="settings-section">
+                  <div class="section-label">Data Usage</div>
+                  <div class="settings-row">
+                    <div class="row-info"><div class="row-label">Personalized Recommendations</div><div class="row-desc">Allow us to use your order history to recommend products</div></div>
+                    <label class="toggle"><input type="checkbox" id="priv-rec" checked><span class="toggle-slider"></span></label>
+                  </div>
+                  <div class="settings-row">
+                    <div class="row-info"><div class="row-label">Analytics Cookies</div><div class="row-desc">Help us improve the site with anonymous usage data</div></div>
+                    <label class="toggle"><input type="checkbox" id="priv-analytics" checked><span class="toggle-slider"></span></label>
+                  </div>
+                  <div class="settings-row">
+                    <div class="row-info"><div class="row-label">Marketing Cookies</div><div class="row-desc">Allow targeted advertising based on your browsing</div></div>
+                    <label class="toggle"><input type="checkbox" id="priv-marketing"><span class="toggle-slider"></span></label>
+                  </div>
+                </div>
+                <div class="settings-section">
+                  <div class="section-label">Your Data</div>
+                  <div class="settings-row">
+                    <div class="row-info"><div class="row-label">Download My Data</div><div class="row-desc">Request a copy of all data we hold about you</div></div>
+                    <button class="btn btn-outline btn-sm" onclick="alert('Your data export will be emailed to '+settingsData.email+' within 3 business days.')">Request Export</button>
+                  </div>
+                </div>
+                <div class="btn-row">
+                  <button class="btn btn-primary" onclick="savePrivacy()">💾 Save Privacy Settings</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>`;
+
+      // Wire up pref card radio behavior
+      document.querySelectorAll('.pref-card').forEach(c=>{
+        c.addEventListener('click',function(){
+          const name = this.querySelector('input').name;
+          document.querySelectorAll('.pref-card').forEach(x=>{ if(x.querySelector('input')?.name===name) x.classList.remove('selected'); });
+          this.classList.add('selected');
+        });
+      });
+    }
+
+    async function saveAccountInfo(){
+      const errEl = document.getElementById('accountSaveError');
+      errEl.style.display='none';
+      const body = {
+        firstName: document.getElementById('set-first').value.trim(),
+        lastName: document.getElementById('set-last').value.trim(),
+        phone: document.getElementById('set-phone').value.trim()
+      };
+      const u = settingsData;
+      if(u.loginType!=='grad'&&document.getElementById('set-company')) body.companyName = document.getElementById('set-company').value.trim();
+      if(u.loginType==='grad'&&document.getElementById('set-instructor')) body.instructorName = document.getElementById('set-instructor').value.trim();
+      try{
+        const r = await fetch(BACKEND+'/api/auth/me',{method:'PUT',headers:authHeaders(),body:JSON.stringify(body)});
+        if(r.ok){
+          settingsData = await r.json();
+          const stored = getUser(); localStorage.setItem('kjr_user',JSON.stringify({...stored,...body}));
+          showToast('✅ Account info saved!');
+        } else { const d=await r.json(); errEl.textContent=(d.msg||'Failed to save'); errEl.style.display='block'; }
+      }catch(e){ errEl.textContent='Network error.'; errEl.style.display='block'; }
+    }
+
+    async function saveNotifications(){
+      const body = {
+        notifOrderUpdates: document.getElementById('notif-order').checked,
+        notifInvoiceReady: document.getElementById('notif-invoice').checked,
+        notifPromotions: document.getElementById('notif-promo').checked,
+        notifBidAlerts: document.getElementById('notif-bids').checked,
+        notifSmsUpdates: document.getElementById('notif-sms').checked
+      };
+      try{
+        const r = await fetch(BACKEND+'/api/auth/me',{method:'PUT',headers:authHeaders(),body:JSON.stringify(body)});
+        if(r.ok){ settingsData=await r.json(); showToast('✅ Notification preferences saved!'); }
+        else { showToast('❌ Failed to save.',true); }
+      }catch(e){ showToast('❌ Network error.',true); }
+    }
+
+    function checkPwStrength(pw){
+      const bar = document.getElementById('pwStrengthBar');
+      const hint = document.getElementById('pwHint');
+      if(!pw){bar.style.width='0%';hint.textContent='Enter a new password';return;}
+      let score = 0;
+      if(pw.length>=8)score++;
+      if(pw.length>=12)score++;
+      if(/[A-Z]/.test(pw))score++;
+      if(/[0-9]/.test(pw))score++;
+      if(/[^A-Za-z0-9]/.test(pw))score++;
+      const pct = (score/5)*100;
+      const colors=['#e2e8f0','#ef4444','#f97316','#eab308','#22c55e','#16a34a'];
+      const labels=['','Weak','Weak','Fair','Good','Strong'];
+      bar.style.width=pct+'%';
+      bar.style.background=colors[score];
+      hint.textContent='Password strength: '+(labels[score]||'');
+    }
+
+    async function changePassword(){
+      const errEl = document.getElementById('pwError');
+      const succEl = document.getElementById('pwSuccess');
+      errEl.style.display='none'; succEl.style.display='none';
+      const curr = document.getElementById('pw-current').value;
+      const nw = document.getElementById('pw-new').value;
+      const confirm = document.getElementById('pw-confirm').value;
+      if(!curr||!nw||!confirm){errEl.textContent='All password fields are required.';errEl.style.display='block';return;}
+      if(nw.length<8){errEl.textContent='New password must be at least 8 characters.';errEl.style.display='block';return;}
+      if(nw!==confirm){errEl.textContent='New passwords do not match.';errEl.style.display='block';return;}
+      try{
+        const r = await fetch(BACKEND+'/api/auth/password',{method:'PUT',headers:authHeaders(),body:JSON.stringify({currentPassword:curr,newPassword:nw})});
+        const d = await r.json();
+        if(r.ok){ succEl.textContent='✅ '+d.msg; succEl.style.display='block'; document.getElementById('pw-current').value=''; document.getElementById('pw-new').value=''; document.getElementById('pw-confirm').value=''; }
+        else { errEl.textContent=d.errors?.[0]?.msg||'Failed to update password.'; errEl.style.display='block'; }
+      }catch(e){ errEl.textContent='Network error.'; errEl.style.display='block'; }
+    }
+
+    function savePreferences(){
+      const prefs = {
+        defaultView: document.querySelector('input[name="defView"]:checked')?.value||'grid',
+        resultsPerPage: document.getElementById('resultsPerPage').value,
+        language: document.getElementById('prefLang').value,
+        currency: document.getElementById('prefCurrency').value
+      };
+      localStorage.setItem('kjr_prefs', JSON.stringify(prefs));
+      showToast('✅ Preferences saved!');
+    }
+
+    function savePrivacy(){
+      localStorage.setItem('kjr_privacy', JSON.stringify({
+        recommendations: document.getElementById('priv-rec').checked,
+        analytics: document.getElementById('priv-analytics').checked,
+        marketing: document.getElementById('priv-marketing').checked
+      }));
+      showToast('✅ Privacy settings saved!');
+    }
+
+    (function(){ const u=getUser(); if(u)updateAuthButton(u); loadSettings(); })();
   </script>
 </body>
-
 </html>
