@@ -740,3 +740,291 @@
   </div>
 
   <script src="assets/js/bunji.js"></script>
+  <script>
+    const BACKEND = 'https://kjr-backend.onrender.com';
+    const TYPE_LABELS = { sales_team: 'Sales Team', parts: 'Parts', bids: 'Bids', property: 'Property Management', grad: 'Graduate' };
+
+    // ── Auth helpers ──────────────────────────────────────────────────────────
+    function getToken() { return localStorage.getItem('kjr_token'); }
+    function getUser() { return JSON.parse(localStorage.getItem('kjr_user') || 'null'); }
+    function authHeaders() { return { 'Content-Type': 'application/json', 'x-auth-token': getToken() || '' }; }
+
+    function openAuthModal(tab) { document.getElementById('authModal').classList.add('open'); document.body.style.overflow = 'hidden'; switchTab(tab || 'login'); }
+    function closeAuthModal() { document.getElementById('authModal').classList.remove('open'); document.body.style.overflow = ''; }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeAuthModal(); closeAddrModal(); } });
+    function switchTab(tab) { const l = tab === 'login'; document.getElementById('tabLogin').classList.toggle('active', l); document.getElementById('tabSignup').classList.toggle('active', !l); document.getElementById('formLogin').style.display = l ? 'flex' : 'none'; document.getElementById('formSignup').style.display = l ? 'none' : 'flex'; clearErrors(); }
+    function clearErrors() { ['loginError', 'signupError'].forEach(id => { const e = document.getElementById(id); if (e) { e.style.display = 'none'; e.textContent = ''; }; }); }
+    function showError(id, msg) { const e = document.getElementById(id); if (e) { e.textContent = msg; e.style.display = 'block'; } }
+    function togglePassword(fId, eye) { const i = document.getElementById(fId); const s = i.type === 'password'; i.type = s ? 'text' : 'password'; eye.textContent = s ? 'Hide' : 'Show'; }
+    function toggleSignupFields() { const t = document.getElementById('signupType').value; document.getElementById('companyField').style.display = ['sales_team', 'parts', 'bids', 'property'].includes(t) ? 'block' : 'none'; document.getElementById('instructorField').style.display = t === 'grad' ? 'block' : 'none'; }
+    function setLoading(id, on) { const b = document.getElementById(id); b.querySelector('.auth-btn-text').style.display = on ? 'none' : 'inline'; b.querySelector('.auth-spinner').style.display = on ? 'inline' : 'none'; b.disabled = on; }
+
+    async function handleLogin(e) { e.preventDefault(); clearErrors(); const loginType = document.getElementById('loginType').value; const identifier = document.getElementById('loginIdentifier').value.trim(); const password = document.getElementById('loginPassword').value; if (!loginType) return showError('loginError', 'Please select your account type.'); setLoading('loginBtn', true); try { const r = await fetch(BACKEND + '/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ identifier, password, loginType }) }); const d = await r.json(); if (!r.ok) throw new Error(d.errors?.[0]?.msg || 'Login failed'); localStorage.setItem('kjr_token', d.token); localStorage.setItem('kjr_user', JSON.stringify({ ...d.user, loginType })); closeAuthModal(); updateAuthButton({ ...d.user, loginType }); loadProfile(); } catch (err) { showError('loginError', err.message); } finally { setLoading('loginBtn', false); } }
+    async function handleSignup(e) { e.preventDefault(); clearErrors(); const loginType = document.getElementById('signupType').value; const username = document.getElementById('signupUsername').value.trim(); const email = document.getElementById('signupEmail').value.trim(); const password = document.getElementById('signupPassword').value; const confirm = document.getElementById('signupConfirm').value; const phone = document.getElementById('signupPhone').value.trim(); const companyName = document.getElementById('signupCompany').value.trim(); const instructorName = document.getElementById('signupInstructor').value.trim(); if (!loginType) return showError('signupError', 'Please select an account type.'); if (password !== confirm) return showError('signupError', 'Passwords do not match.'); if (password.length < 8) return showError('signupError', 'Password must be at least 8 characters.'); setLoading('signupBtn', true); try { const r = await fetch(BACKEND + '/api/auth/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ loginType, username, email, password, phone, companyName, instructorName }) }); const d = await r.json(); if (!r.ok) throw new Error(d.errors?.[0]?.msg || 'Registration failed'); localStorage.setItem('kjr_token', d.token); localStorage.setItem('kjr_user', JSON.stringify({ ...d.user, loginType })); closeAuthModal(); updateAuthButton({ ...d.user, loginType }); loadProfile(); } catch (err) { showError('signupError', err.message); } finally { setLoading('signupBtn', false); } }
+
+    function updateAuthButton(user) {
+      const wrap = document.querySelector('.top-bar-right'); const old = document.querySelector('.user-menu-wrap'); if (old) old.remove(); const trigger = document.querySelector('.auth-trigger-btn');
+      if (user) {
+        if (trigger) trigger.style.display = 'none';
+        const menu = document.createElement('div'); menu.className = 'user-menu-wrap';
+        menu.innerHTML = '<button class="user-menu-btn">' + user.username + ' <span class="user-arrow">&#9660;</span></button><div class="user-dropdown"><div class="user-dropdown-header"><div class="user-dropdown-name">' + user.username + '</div><div class="user-dropdown-type">' + (TYPE_LABELS[user.loginType] || user.loginType) + '</div></div><div class="user-dropdown-items"><a class="user-dropdown-item" href="profile.html"><i class="item-icon">&#128100;</i> Profile</a><a class="user-dropdown-item" href="order-tracking.html"><i class="item-icon">&#128230;</i> Order History &amp; Tracking</a><a class="user-dropdown-item" href="invoice.html"><i class="item-icon">&#128203;</i> Invoice</a><a class="user-dropdown-item" href="payment.html"><i class="item-icon">&#128179;</i> Payment</a><div class="user-dropdown-divider"></div><a class="user-dropdown-item" href="settings.html"><i class="item-icon">&#9881;</i> Settings</a><div class="user-dropdown-divider"></div><button class="user-dropdown-item logout-item" onclick="logout()"><i class="item-icon">&#10148;</i> Logout</button></div></div>';
+        if (wrap) wrap.appendChild(menu); window.dispatchEvent(new Event('kjr-login'));
+      } else { if (trigger) { trigger.style.display = ''; trigger.textContent = 'Login / Sign Up'; trigger.onclick = () => openAuthModal('login'); } }
+    }
+    function logout() { if (!confirm('Logout?')) return; localStorage.removeItem('kjr_token'); localStorage.removeItem('kjr_user'); updateAuthButton(null); window.location.href = 'index.html'; }
+
+    // ── Toast ─────────────────────────────────────────────────────────────────
+    function showToast(msg, isError = false) { const t = document.getElementById('saveToast'); t.textContent = msg; t.style.background = isError ? '#cc0000' : '#0f172a'; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000); }
+
+    // ── Profile data (backend) ────────────────────────────────────────────────
+    let profileData = null;
+
+    async function loadProfile() {
+      const user = getUser();
+      const root = document.getElementById('profileRoot');
+      if (!user) {
+        root.innerHTML = '<div class="not-logged"><h2>Please log in to view your profile</h2><p>You need to be signed in to access your account details.</p><button class="btn btn-primary" onclick="openAuthModal(\'login\')">🔐 Login / Sign Up</button></div>';
+        return;
+      }
+      try {
+        const r = await fetch(BACKEND + '/api/auth/me', { headers: authHeaders() });
+        if (r.ok) { profileData = await r.json(); }
+        else { profileData = { ...user }; } // fallback to localStorage
+      } catch (e) { profileData = { ...user }; }
+      renderProfile();
+    }
+
+    function renderProfile() {
+      const u = profileData;
+      const cart = JSON.parse(localStorage.getItem('kjr_cart') || '[]');
+      const cartQty = cart.reduce((s, i) => s + (i.qty || 1), 0);
+      const initials = ((u.firstName || u.username || 'U')[0] + (u.lastName || '')[0] || '').toUpperCase() || ((u.username || 'U').substring(0, 2).toUpperCase());
+      const avatarHtml = u.avatar ? `<img src="${u.avatar}" alt="Avatar">` : initials;
+      const memberSince = u.createdAt ? new Date(u.createdAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : 'N/A';
+
+      document.getElementById('profileRoot').innerHTML = `
+      <div class="profile-layout">
+        <!-- Sidebar -->
+        <aside class="profile-sidebar">
+          <div class="profile-avatar-wrap">
+            <div class="profile-avatar" id="avatarCircle" onclick="document.getElementById('avatarInput').click()" title="Click to change photo">${avatarHtml}</div>
+            <div class="avatar-change" onclick="document.getElementById('avatarInput').click()">📷 Change photo</div>
+            <div class="sidebar-name">${u.firstName ? u.firstName + ' ' + (u.lastName || '') : u.username}</div>
+            <div class="sidebar-type">${TYPE_LABELS[u.loginType] || u.loginType}</div>
+          </div>
+          <nav class="sidebar-nav">
+            <a href="profile.html" class="active"><i class="nav-icon">👤</i> Profile</a>
+            <a href="order-tracking.html"><i class="nav-icon">📦</i> Order History</a>
+            <a href="invoice.html"><i class="nav-icon">🧾</i> Invoices</a>
+            <a href="payment.html"><i class="nav-icon">💳</i> Payment</a>
+            <div class="sidebar-divider"></div>
+            <a href="settings.html"><i class="nav-icon">⚙️</i> Settings</a>
+            <div class="sidebar-divider"></div>
+            <a href="#" onclick="logout();return false;" style="color:#cc0000;"><i class="nav-icon">🚪</i> Logout</a>
+          </nav>
+        </aside>
+
+        <!-- Right column -->
+        <div>
+          <!-- Stats -->
+          <div class="stats-row">
+            <div class="stat-box"><div class="stat-num">${cartQty}</div><div class="stat-lbl">Cart Items</div></div>
+            <div class="stat-box"><div class="stat-num">${(u.addresses || []).length}</div><div class="stat-lbl">Saved Addresses</div></div>
+            <div class="stat-box"><div class="stat-num">${memberSince}</div><div class="stat-lbl">Member Since</div></div>
+          </div>
+
+          <!-- Personal Info -->
+          <div class="profile-card">
+            <div class="card-header">
+              <h2>👤 Personal Information</h2>
+              <button class="btn btn-outline btn-sm" onclick="toggleEditInfo()">✏️ Edit</button>
+            </div>
+            <div class="card-body" id="infoView">
+              <div class="field-grid">
+                <div class="field-group"><label>First Name</label><div class="val-display">${u.firstName || '—'}</div></div>
+                <div class="field-group"><label>Last Name</label><div class="val-display">${u.lastName || '—'}</div></div>
+                <div class="field-group"><label>Username</label><div class="val-display">${u.username}</div></div>
+                <div class="field-group"><label>Email</label><div class="val-display">${u.email}</div></div>
+                <div class="field-group"><label>Phone</label><div class="val-display">${u.phone || '—'}</div></div>
+                <div class="field-group"><label>Account Type</label><div class="val-display">${TYPE_LABELS[u.loginType] || u.loginType}</div></div>
+                ${u.loginType !== 'grad' && u.companyName ? '<div class="field-group"><label>Company</label><div class="val-display">' + u.companyName + '</div></div>' : ''}
+                ${u.loginType === 'grad' && u.instructorName ? '<div class="field-group"><label>Instructor</label><div class="val-display">' + u.instructorName + '</div></div>' : ''}
+                <div class="field-group"><label>Status</label><div class="val-display"><span class="badge badge-green">● Active</span></div></div>
+              </div>
+            </div>
+            <div class="card-body" id="infoEdit" style="display:none;">
+              <div class="field-grid" style="margin-bottom:1rem;">
+                <div class="field-group"><label>First Name</label><input id="editFirst" value="${u.firstName || ''}" placeholder="First name"></div>
+                <div class="field-group"><label>Last Name</label><input id="editLast" value="${u.lastName || ''}" placeholder="Last name"></div>
+              </div>
+              <div class="field-grid" style="margin-bottom:1rem;">
+                <div class="field-group"><label>Phone</label><input id="editPhone" value="${u.phone || ''}" placeholder="555-123-4567" type="tel"></div>
+                ${u.loginType !== 'grad' ? '<div class="field-group"><label>Company Name</label><input id="editCompany" value="' + (u.companyName || '') + '" placeholder="Company name"></div>' : ''}
+                ${u.loginType === 'grad' ? '<div class="field-group"><label>Instructor Name</label><input id="editInstructor" value="' + (u.instructorName || '') + '" placeholder="Instructor"></div>' : ''}
+              </div>
+              <div style="display:flex;gap:.75rem;">
+                <button class="btn btn-primary" onclick="saveInfo()">💾 Save Changes</button>
+                <button class="btn btn-outline" onclick="toggleEditInfo()">Cancel</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Address Book -->
+          <div class="profile-card">
+            <div class="card-header">
+              <h2>📍 Address Book</h2>
+              <button class="btn btn-primary btn-sm" onclick="openAddrModal()">+ Add Address</button>
+            </div>
+            <div class="card-body" id="addrBook">
+              ${renderAddresses(u.addresses || [])}
+            </div>
+          </div>
+
+          <!-- Quick Links -->
+          <div class="profile-card">
+            <div class="card-header"><h2>⚡ Quick Actions</h2></div>
+            <div class="card-body" style="display:flex;flex-wrap:wrap;gap:.75rem;">
+              <a href="products.html" class="btn btn-outline">🛒 Browse Parts</a>
+              <a href="checkout.html" class="btn btn-outline">🛒 My Cart (${cartQty})</a>
+              <a href="order-tracking.html" class="btn btn-outline">📦 Track Orders</a>
+              <a href="invoice.html" class="btn btn-outline">🧾 Invoices</a>
+              <a href="settings.html" class="btn btn-outline">⚙️ Settings</a>
+            </div>
+          </div>
+        </div>
+      </div>`;
+    }
+
+    function renderAddresses(addrs) {
+      if (!addrs || addrs.length === 0) return '<p style="color:var(--muted);text-align:center;padding:1rem;">No saved addresses. <button class="btn btn-primary btn-sm" onclick="openAddrModal()" style="margin-left:.5rem;">+ Add one</button></p>';
+      return '<div class="address-list">' + addrs.map(a => `
+        <div class="address-card${a.isDefault ? ' default' : ''}">
+          <div class="addr-label">
+            <span>${a.label || 'Address'}</span>
+            ${a.isDefault ? '<span class="badge badge-blue">Default</span>' : ''}
+          </div>
+          <div class="addr-name">${a.firstName || ''} ${a.lastName || ''}</div>
+          <div class="addr-line">${a.street || ''}${a.apt ? ' ' + a.apt : ''}</div>
+          <div class="addr-line">${a.city || ''}${a.state ? ', ' + a.state : ''} ${a.zip || ''}</div>
+          <div class="addr-line">${a.country || ''}</div>
+          ${a.phone ? '<div class="addr-line">📞 ' + a.phone + '</div>' : ''}
+          <div class="addr-actions">
+            <button class="btn btn-outline btn-sm" onclick="openAddrModal('${a._id}')">✏️ Edit</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteAddress('${a._id}')">🗑 Remove</button>
+            ${!a.isDefault ? '<button class="btn btn-sm btn-outline" onclick="setDefaultAddr(\'' + a._id + '\')">Set Default</button>' : ''}
+          </div>
+        </div>`).join('') + '</div>';
+    }
+
+    function toggleEditInfo() {
+      const v = document.getElementById('infoView'), e = document.getElementById('infoEdit');
+      const editing = e.style.display !== 'none';
+      v.style.display = editing ? '' : 'none';
+      e.style.display = editing ? 'none' : '';
+    }
+
+    async function saveInfo() {
+      const u = profileData;
+      const body = {
+        firstName: document.getElementById('editFirst').value.trim(),
+        lastName: document.getElementById('editLast').value.trim(),
+        phone: document.getElementById('editPhone').value.trim()
+      };
+      if (u.loginType !== 'grad' && document.getElementById('editCompany')) body.companyName = document.getElementById('editCompany').value.trim();
+      if (u.loginType === 'grad' && document.getElementById('editInstructor')) body.instructorName = document.getElementById('editInstructor').value.trim();
+      try {
+        const r = await fetch(BACKEND + '/api/auth/me', { method: 'PUT', headers: authHeaders(), body: JSON.stringify(body) });
+        if (r.ok) {
+          profileData = await r.json();
+          const stored = getUser(); localStorage.setItem('kjr_user', JSON.stringify({ ...stored, ...body }));
+          renderProfile(); showToast('✅ Profile updated!');
+        } else { showToast('❌ Failed to save. Try again.', true); }
+      } catch (e) { showToast('❌ Network error.', true); }
+    }
+
+    async function handleAvatarUpload(e) {
+      const file = e.target.files[0]; if (!file) return;
+      const reader = new FileReader();
+      reader.onload = async function (ev) {
+        const base64 = ev.target.result;
+        try {
+          const r = await fetch(BACKEND + '/api/auth/me', { method: 'PUT', headers: authHeaders(), body: JSON.stringify({ avatar: base64 }) });
+          if (r.ok) { profileData = await r.json(); renderProfile(); showToast('✅ Photo updated!'); }
+          else { showToast('❌ Failed to update photo.', true); }
+        } catch (e) { showToast('❌ Network error.', true); }
+      };
+      reader.readAsDataURL(file);
+      e.target.value = '';
+    }
+
+    // ── Address CRUD ──────────────────────────────────────────────────────────
+    let editingAddrId = null;
+
+    function openAddrModal(addrId) {
+      editingAddrId = addrId || null;
+      document.getElementById('addrModalTitle').textContent = addrId ? 'Edit Address' : 'Add New Address';
+      document.getElementById('addrError').style.display = 'none';
+      const a = addrId ? (profileData.addresses || []).find(x => x._id === addrId) || {} : {};
+      document.getElementById('addrId').value = addrId || '';
+      document.getElementById('addrLabel').value = a.label || 'Home';
+      document.getElementById('addrDefault').value = a.isDefault ? 'true' : 'false';
+      document.getElementById('addrFirst').value = a.firstName || '';
+      document.getElementById('addrLast').value = a.lastName || '';
+      document.getElementById('addrStreet').value = a.street || '';
+      document.getElementById('addrApt').value = a.apt || '';
+      document.getElementById('addrCity').value = a.city || '';
+      document.getElementById('addrState').value = a.state || '';
+      document.getElementById('addrZip').value = a.zip || '';
+      document.getElementById('addrCountry').value = a.country || 'US';
+      document.getElementById('addrPhone').value = a.phone || '';
+      document.getElementById('addrModal').classList.add('open');
+    }
+    function closeAddrModal() { document.getElementById('addrModal').classList.remove('open'); editingAddrId = null; }
+
+    async function saveAddress() {
+      const errEl = document.getElementById('addrError');
+      const street = document.getElementById('addrStreet').value.trim();
+      const city = document.getElementById('addrCity').value.trim();
+      const state = document.getElementById('addrState').value.trim();
+      const zip = document.getElementById('addrZip').value.trim();
+      const first = document.getElementById('addrFirst').value.trim();
+      const last = document.getElementById('addrLast').value.trim();
+      if (!first || !last || !street || !city || !state || !zip) { errEl.textContent = 'Please fill in all required fields.'; errEl.style.display = 'block'; return; }
+      const body = { label: document.getElementById('addrLabel').value, isDefault: document.getElementById('addrDefault').value === 'true', firstName: first, lastName: last, street, apt: document.getElementById('addrApt').value.trim(), city, state, zip, country: document.getElementById('addrCountry').value, phone: document.getElementById('addrPhone').value.trim() };
+      try {
+        let url = BACKEND + '/api/auth/addresses', method = 'POST';
+        if (editingAddrId) { url += ('/' + editingAddrId); method = 'PUT'; }
+        const r = await fetch(url, { method, headers: authHeaders(), body: JSON.stringify(body) });
+        if (r.ok) {
+          const addresses = await r.json();
+          profileData.addresses = addresses;
+          document.getElementById('addrBook').innerHTML = renderAddresses(addresses);
+          document.querySelector('.stat-box:nth-child(2) .stat-num').textContent = addresses.length;
+          closeAddrModal(); showToast('✅ Address saved!');
+        } else { const d = await r.json(); errEl.textContent = (d.msg || 'Failed to save address'); errEl.style.display = 'block'; }
+      } catch (e) { errEl.textContent = 'Network error. Try again.'; errEl.style.display = 'block'; }
+    }
+
+    async function deleteAddress(addrId) {
+      if (!confirm('Remove this address?')) return;
+      try {
+        const r = await fetch(BACKEND + '/api/auth/addresses/' + addrId, { method: 'DELETE', headers: authHeaders() });
+        if (r.ok) { profileData.addresses = await r.json(); document.getElementById('addrBook').innerHTML = renderAddresses(profileData.addresses); showToast('✅ Address removed.'); }
+        else { showToast('❌ Failed to remove address.', true); }
+      } catch (e) { showToast('❌ Network error.', true); }
+    }
+
+    async function setDefaultAddr(addrId) {
+      try {
+        const r = await fetch(BACKEND + '/api/auth/addresses/' + addrId, { method: 'PUT', headers: authHeaders(), body: JSON.stringify({ isDefault: true }) });
+        if (r.ok) { profileData.addresses = await r.json(); document.getElementById('addrBook').innerHTML = renderAddresses(profileData.addresses); showToast('✅ Default address updated.'); }
+        else { showToast('❌ Failed.', true); }
+      } catch (e) { showToast('❌ Network error.', true); }
+    }
+
+    // ── Init ──────────────────────────────────────────────────────────────────
+    (function () { const u = getUser(); if (u) updateAuthButton(u); loadProfile(); })();
+  </script>
+</body>
+
+</html>
