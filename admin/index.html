@@ -882,6 +882,10 @@
         <div class="nav-item" data-tab="tab-forms" onclick="switchTab(this, 'tab-forms')">
           <span class="nav-icon">✉️</span>Contact Forms
         </div>
+        <div class="nav-item" data-tab="tab-inquiries" onclick="switchTab(this, 'tab-inquiries')">
+          <span class="nav-icon">🔍</span>Part Inquiries
+          <span class="nav-badge" id="badge-inquiries">—</span>
+        </div>
       </div>
 
       <div class="sidebar-section">
@@ -1060,6 +1064,82 @@
                 <strong>info@kjrid.com</strong> and <strong>estimating@kjrid.com</strong><br>
                 via <a href="https://formsubmit.co" target="_blank" style="color:var(--primary);">FormSubmit.co</a>
               </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ======== TAB: PART INQUIRIES ======== -->
+        <div id="tab-inquiries" class="tab-pane">
+
+          <!-- Stats row -->
+          <div class="stats-row">
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#fff3f3;color:#cc0000;">🔍</div>
+              <div>
+                <div class="stat-value" id="stat-inq-total">—</div>
+                <div class="stat-label">Total Inquiries</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#fff3f3;color:#cc0000;">🆕</div>
+              <div>
+                <div class="stat-value" id="stat-inq-new">—</div>
+                <div class="stat-label">New</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#fffbeb;color:#d97706;">📞</div>
+              <div>
+                <div class="stat-value" id="stat-inq-contacted">—</div>
+                <div class="stat-label">Contacted</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#f0fdf4;color:#16a34a;">✅</div>
+              <div>
+                <div class="stat-value" id="stat-inq-resolved">—</div>
+                <div class="stat-label">Resolved</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-card">
+            <div class="table-card-header">
+              <h3>Part Inquiries from Bunji Chat</h3>
+              <div style="display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;">
+                <input type="text" id="inq-search" placeholder="Search name, email, part…" oninput="filterInquiries()"
+                  style="padding:.45rem .9rem;border:1.5px solid var(--border);border-radius:7px;font-size:.82rem;font-family:'Inter',sans-serif;outline:none;min-width:200px;">
+                <select id="inq-status-filter" onchange="filterInquiries()"
+                  style="padding:.45rem .9rem;border:1.5px solid var(--border);border-radius:7px;font-size:.82rem;font-family:'Inter',sans-serif;background:#fff;outline:none;">
+                  <option value="">All Statuses</option>
+                  <option value="new">🆕 New</option>
+                  <option value="contacted">📞 Contacted</option>
+                  <option value="resolved">✅ Resolved</option>
+                </select>
+                <button onclick="loadInquiries()" class="btn-sm ghost">↺ Refresh</button>
+              </div>
+            </div>
+            <div style="font-size:.8rem;color:var(--text-muted);padding:.4rem 1.5rem .75rem;" id="inq-count-label">
+            </div>
+            <div style="overflow-x:auto;">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Customer</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Part / Product Requested</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="inquiries-tbody">
+                  <tr>
+                    <td colspan="7" style="text-align:center;padding:2rem;color:var(--text-muted);">Loading…</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -1609,7 +1689,7 @@
     }
 
     async function initDashboard() {
-      await Promise.all([loadProjects(), loadAllBids(), loadUsers(), loadInvoices(), loadOrders()]);
+      await Promise.all([loadProjects(), loadAllBids(), loadUsers(), loadInvoices(), loadOrders(), loadInquiries()]);
     }
 
     // =====================================================
@@ -1663,6 +1743,7 @@
       'tab-bids': 'Bid Submissions',
       'tab-users': 'Portal Users',
       'tab-forms': 'Contact Forms',
+      'tab-inquiries': 'Part Inquiries',
       'tab-products': 'Product Catalog',
       'tab-invoices': 'Invoices & Revenue',
       'tab-orders': 'Order Tracking'
@@ -1675,6 +1756,7 @@
       el.classList.add('active');
       document.getElementById('page-title').textContent = tabTitles[tabId];
       if (tabId === 'tab-products') loadProducts();
+      if (tabId === 'tab-inquiries') loadInquiries();
     }
 
     // =====================================================
@@ -2809,6 +2891,197 @@
       } catch (err) {
         errEl.textContent = 'Connection error. ' + err.message;
         errEl.style.display = 'block';
+      }
+    }
+
+    // =====================================================
+    // PART INQUIRIES
+    // =====================================================
+    let allInquiries = [];
+
+    async function loadInquiries() {
+      const tbody = document.getElementById('inquiries-tbody');
+      if (!tbody) return;
+      try {
+        const res = await fetch(`${API_URL}/admin/inquiries`, { headers: { 'x-auth-token': token } });
+        if (res.status === 401) { logout(); return; }
+        if (!res.ok) throw new Error();
+        allInquiries = await res.json();
+        updateInquiryStats();
+        filterInquiries();
+      } catch {
+        if (tbody) tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:2rem;color:#dc2626;">Failed to load inquiries. Is the backend running?</td></tr>`;
+      }
+    }
+
+    function updateInquiryStats() {
+      const total = allInquiries.length;
+      const newCount = allInquiries.filter(i => i.status === 'new').length;
+      const contacted = allInquiries.filter(i => i.status === 'contacted').length;
+      const resolved = allInquiries.filter(i => i.status === 'resolved').length;
+
+      document.getElementById('stat-inq-total').textContent = total;
+      document.getElementById('stat-inq-new').textContent = newCount;
+      document.getElementById('stat-inq-contacted').textContent = contacted;
+      document.getElementById('stat-inq-resolved').textContent = resolved;
+      document.getElementById('badge-inquiries').textContent = newCount > 0 ? newCount : total;
+    }
+
+    function filterInquiries() {
+      const q = (document.getElementById('inq-search')?.value || '').toLowerCase();
+      const status = document.getElementById('inq-status-filter')?.value || '';
+
+      const list = allInquiries.filter(i => {
+        const matchStatus = !status || i.status === status;
+        const matchQ = !q || (
+          (i.name || '').toLowerCase().includes(q) ||
+          (i.email || '').toLowerCase().includes(q) ||
+          (i.phone || '').toLowerCase().includes(q) ||
+          (i.query || '').toLowerCase().includes(q)
+        );
+        return matchStatus && matchQ;
+      });
+
+      const lbl = document.getElementById('inq-count-label');
+      if (lbl) lbl.textContent = `${list.length} inquiry${list.length !== 1 ? 'ies' : 'y'}`;
+      renderInquiriesTable(list);
+    }
+
+    function renderInquiriesTable(list) {
+      const tbody = document.getElementById('inquiries-tbody');
+      if (!tbody) return;
+
+      if (!list.length) {
+        tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state">
+          <div class="empty-icon">🔍</div>
+          <h4>No part inquiries yet</h4>
+          <p>When a customer can't find a part via Bunji chat and submits their contact details, it will appear here.</p>
+        </div></td></tr>`;
+        return;
+      }
+
+      const STATUS_STYLE = {
+        new: { bg: '#fff3f3', color: '#cc0000', label: '🆕 New' },
+        contacted: { bg: '#fffbeb', color: '#d97706', label: '📞 Contacted' },
+        resolved: { bg: '#f0fdf4', color: '#16a34a', label: '✅ Resolved' }
+      };
+
+      tbody.innerHTML = list.map(i => {
+        const ss = STATUS_STYLE[i.status] || STATUS_STYLE.new;
+        const badge = `<span style="background:${ss.bg};color:${ss.color};border:1px solid ${ss.color}40;
+          padding:.2rem .6rem;border-radius:20px;font-size:.7rem;font-weight:700;white-space:nowrap;">${ss.label}</span>`;
+
+        return `<tr>
+          <td><strong>${escHtml(i.name)}</strong></td>
+          <td><a href="mailto:${escHtml(i.email)}" style="color:var(--primary);">${escHtml(i.email)}</a></td>
+          <td>${i.phone ? `<a href="tel:${escHtml(i.phone)}" style="color:var(--primary);">${escHtml(i.phone)}</a>` : '<span style="color:var(--text-muted);">—</span>'}</td>
+          <td><strong style="color:#0f172a;">${escHtml(i.query)}</strong>
+            ${i.adminNotes ? `<div style="font-size:.72rem;color:var(--text-muted);margin-top:2px;">📝 ${escHtml(i.adminNotes)}</div>` : ''}
+          </td>
+          <td>${badge}</td>
+          <td style="white-space:nowrap;font-size:.78rem;color:var(--text-muted);">${formatDate(i.createdAt)}</td>
+          <td>
+            <div style="display:flex;gap:.35rem;flex-wrap:wrap;">
+              <button class="btn-sm ghost" onclick="openInquiryModal('${escHtml(i._id)}', '${escHtml(i.name)}', '${escHtml(i.email)}', '${escHtml(i.phone || '')}', '${escHtml(i.query)}', '${escHtml(i.status)}', '${escHtml(i.adminNotes || '')}')">Manage →</button>
+              <a href="mailto:${escHtml(i.email)}?subject=Re: Part Request — ${encodeURIComponent(i.query)}"
+                class="btn-sm ghost" style="text-decoration:none;">Email ✉️</a>
+            </div>
+          </td>
+        </tr>`;
+      }).join('');
+    }
+
+    function openInquiryModal(id, name, email, phone, query, status, notes) {
+      document.getElementById('bid-detail-title').textContent = `Part Inquiry — ${name}`;
+      document.getElementById('bid-detail-content').innerHTML = `
+        <div style="display:grid;gap:1rem;">
+          <div style="background:#f8fafc;border-radius:8px;padding:1rem 1.25rem;">
+            <div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:.4rem;">Part / Product Requested</div>
+            <div style="font-weight:700;font-size:1rem;color:#0f172a;">${escHtml(query)}</div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.9rem;">
+            <div>
+              <div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:.25rem;">Name</div>
+              <div style="font-weight:600;">${escHtml(name)}</div>
+            </div>
+            <div>
+              <div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:.25rem;">Phone</div>
+              <div>${phone ? `<a href="tel:${escHtml(phone)}" style="color:var(--primary);font-weight:600;">${escHtml(phone)}</a>` : '<span style="color:var(--text-muted);">Not provided</span>'}</div>
+            </div>
+            <div>
+              <div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:.25rem;">Email</div>
+              <div><a href="mailto:${escHtml(email)}" style="color:var(--primary);font-weight:600;">${escHtml(email)}</a></div>
+            </div>
+          </div>
+          <hr style="border:none;border-top:1px solid var(--border);">
+          <div>
+            <label style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);display:block;margin-bottom:.4rem;">UPDATE STATUS</label>
+            <select id="inqm-status"
+              style="width:100%;padding:.65rem .9rem;border:1.5px solid var(--border);border-radius:8px;font-size:.9rem;font-family:'Inter',sans-serif;background:#fff;outline:none;">
+              <option value="new"       ${status === 'new' ? 'selected' : ''}>🆕 New</option>
+              <option value="contacted" ${status === 'contacted' ? 'selected' : ''}>📞 Contacted</option>
+              <option value="resolved"  ${status === 'resolved' ? 'selected' : ''}>✅ Resolved</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);display:block;margin-bottom:.4rem;">ADMIN NOTES</label>
+            <textarea id="inqm-notes" rows="3" placeholder="e.g. Called customer, part ordered from Encompass…"
+              style="width:100%;padding:.65rem .9rem;border:1.5px solid var(--border);border-radius:8px;font-size:.88rem;font-family:'Inter',sans-serif;resize:vertical;box-sizing:border-box;outline:none;">${escHtml(notes)}</textarea>
+          </div>
+          <div id="inqm-error" style="display:none;background:#fff1f1;color:#cc0000;border:1px solid #fecaca;border-radius:6px;padding:.6rem;font-size:.84rem;"></div>
+          <div style="display:flex;gap:.6rem;">
+            <button onclick="saveInquiryUpdate('${escHtml(id)}')"
+              style="flex:1;background:var(--primary);color:#fff;border:none;padding:.8rem;border-radius:8px;font-size:.9rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">
+              Save Changes
+            </button>
+            <a href="mailto:${escHtml(email)}?subject=Re: Part Request — ${encodeURIComponent(query)}"
+              style="flex:1;background:#0f172a;color:#fff;border:none;padding:.8rem;border-radius:8px;font-size:.9rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;text-decoration:none;display:flex;align-items:center;justify-content:center;">
+              ✉️ Email Customer
+            </a>
+          </div>
+          <button onclick="deleteInquiry('${escHtml(id)}')"
+            style="background:transparent;color:#cc0000;border:1.5px solid #fecaca;padding:.6rem;border-radius:8px;font-size:.8rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">
+            🗑 Delete Inquiry
+          </button>
+        </div>`;
+      document.getElementById('bid-detail-modal-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    async function saveInquiryUpdate(id) {
+      const status = document.getElementById('inqm-status').value;
+      const adminNotes = document.getElementById('inqm-notes').value.trim();
+      const errEl = document.getElementById('inqm-error');
+      errEl.style.display = 'none';
+      try {
+        const res = await fetch(`${API_URL}/admin/inquiries/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+          body: JSON.stringify({ status, adminNotes })
+        });
+        if (!res.ok) throw new Error('Update failed');
+        closeBidDetailModal();
+        await loadInquiries();
+        showGlobalAlert('Inquiry updated successfully!', 'success');
+      } catch (err) {
+        errEl.textContent = err.message;
+        errEl.style.display = 'block';
+      }
+    }
+
+    async function deleteInquiry(id) {
+      if (!confirm('Delete this inquiry permanently?')) return;
+      try {
+        const res = await fetch(`${API_URL}/admin/inquiries/${id}`, {
+          method: 'DELETE',
+          headers: { 'x-auth-token': token }
+        });
+        if (!res.ok) throw new Error();
+        closeBidDetailModal();
+        await loadInquiries();
+        showGlobalAlert('Inquiry deleted.', 'success');
+      } catch {
+        showGlobalAlert('Failed to delete inquiry.', 'error');
       }
     }
 
