@@ -1143,50 +1143,102 @@
     inputEl.focus();
   }
 
+  // ── Build a flat, scored product list from the full static catalog ──────────
+  function buildFlatCatalog() {
+    // Prefer products-data.js (full catalog), fall back to bunji's own CATEGORY_PRODUCTS
+    const src = window.KJR_CATEGORY_PRODUCTS || CATEGORY_PRODUCTS;
+    const flat = [];
+    Object.entries(src).forEach(([cat, items]) => {
+      (items || []).forEach(p => {
+        if (p && p.name) flat.push({ ...p, category: cat });
+      });
+    });
+    return flat;
+  }
+
+  // Score a product against a query — higher = better match
+  function scoreProduct(p, tokens, rawQuery) {
+    const nameLower = (p.name || '').toLowerCase();
+    const partLower = (p.part || '').toLowerCase();
+    const catLower = (p.category || '').toLowerCase();
+
+    // Remove spaces/dashes for dimension matching: "20x25" matches "20X25"
+    const nameNorm = nameLower.replace(/[\s\-_]/g, '');
+    const partNorm = partLower.replace(/[\s\-_]/g, '');
+    const qNorm = rawQuery.replace(/[\s\-_]/g, '').toLowerCase();
+
+    let score = 0;
+
+    // Exact part number match — top priority
+    if (partLower === rawQuery) score += 1000;
+    if (partNorm === qNorm) score += 800;
+    if (partLower.includes(rawQuery)) score += 500;
+    if (partNorm.includes(qNorm)) score += 400;
+
+    // Exact name match
+    if (nameLower === rawQuery) score += 600;
+    if (nameNorm === qNorm) score += 500;
+    if (nameLower.includes(rawQuery)) score += 300;
+    if (nameNorm.includes(qNorm)) score += 250;
+
+    // Token-based: score each search word separately
+    tokens.forEach(tok => {
+      const tokNorm = tok.replace(/[\s\-_]/g, '');
+      if (partLower.includes(tok)) score += 120;
+      if (partNorm.includes(tokNorm)) score += 100;
+      if (nameLower.includes(tok)) score += 80;
+      if (nameNorm.includes(tokNorm)) score += 60;
+      if (catLower.includes(tok)) score += 20;
+    });
+
+    return score;
+  }
+
   // Search products locally + via API, then render up to 4 result cards + modal
   async function doPartSearch(query) {
-    const q = query.trim().toLowerCase();
+    const q = query.trim();
     if (!q) return;
 
     showTyping();
 
-    // ── 1. Try local static data first ───────────────────────────────────────
-    const localResults = [];
-    const src = window.KJR_CATEGORY_PRODUCTS || CATEGORY_PRODUCTS;
-    Object.entries(src).forEach(([cat, items]) => {
-      items.forEach(p => {
-        if (
-          p.name.toLowerCase().includes(q) ||
-          (p.part && p.part.toLowerCase().includes(q))
-        ) {
-          localResults.push({ ...p, category: cat });
-        }
-      });
-    });
+    // ── 1. Smart local search across the FULL catalog ────────────────────────
+    const rawQ = q.toLowerCase();
+    // Split query into meaningful tokens (ignore short noise words)
+    const tokens = rawQ.split(/[\s,]+/).filter(t => t.length >= 2);
 
-    // ── 2. Also hit backend search API ───────────────────────────────────────
+    const catalog = buildFlatCatalog();
+
+    // Score every product
+    const scored = catalog
+      .map(p => ({ p, score: scoreProduct(p, tokens, rawQ) }))
+      .filter(x => x.score > 0)
+      .sort((a, b) => b.score - a.score);
+
+    const localResults = scored.map(x => x.p);
+
+    // ── 2. Also hit backend search API (best-effort, non-blocking) ───────────
     const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
       ? 'http://localhost:5001/api'
       : 'https://kjr-backend.onrender.com/api';
 
     let apiResults = [];
     try {
-      const res = await fetch(`${API_BASE}/products/search?q=${encodeURIComponent(query)}&limit=8`, {
-        signal: AbortSignal.timeout(8000)
+      const res = await fetch(`${API_BASE}/products/search?q=${encodeURIComponent(q)}&limit=8`, {
+        signal: AbortSignal.timeout(6000)
       });
       if (res.ok) {
         const data = await res.json();
         apiResults = data.products || [];
       }
-    } catch (e) { /* fall back to local */ }
+    } catch (e) { /* backend unavailable — local results are sufficient */ }
 
     hideTyping();
 
-    // Merge: prefer API, fill with local, deduplicate by part number
+    // ── 3. Merge: API first (DB data), then local — dedupe by part# or name ──
     const seen = new Set();
     const merged = [];
     [...apiResults, ...localResults].forEach(p => {
-      const key = (p.part || p.name).toLowerCase();
+      const key = ((p.part && p.part.trim()) ? p.part.trim() : p.name).toLowerCase();
       if (!seen.has(key)) {
         seen.add(key);
         merged.push(p);
@@ -1194,23 +1246,28 @@
     });
 
     if (merged.length === 0) {
+      // Suggest nearest category match as a hint
+      const catHint = Object.keys(window.KJR_CATEGORY_PRODUCTS || CATEGORY_PRODUCTS)
+        .find(c => tokens.some(t => c.toLowerCase().includes(t)));
+
       addBubble(
-        `😔 No products found for "${query}".\n\n` +
-        `Try a different part number or name, or call us at 888-944-6313 (24/7) for assistance.`,
+        `😔 No products found for "${q}".\n\n` +
+        (catHint ? `💡 Tip: Try browsing the "${catHint}" category, or use a shorter keyword.\n\n` : '') +
+        `You can also call us at 888-944-6313 (24/7) for help finding your part.`,
         'bunji'
       );
       renderPartSearchPrompt();
       return;
     }
 
-    const displayCount = Math.min(merged.length, 4);
+    const show = merged.slice(0, 4);
     addBubble(
-      `✅ Found ${merged.length} result${merged.length !== 1 ? 's' : ''} for "${query}" — showing top ${displayCount}.\n` +
-      `Click "View Details" on any product to see full info, pricing, and order options.`,
+      `✅ Found ${merged.length} result${merged.length !== 1 ? 's' : ''} for "${q}" — showing top ${show.length}.\n` +
+      `Click "View Details" on any card to see full pricing, specs, and order options.`,
       'bunji'
     );
 
-    renderPartSearchResults(merged.slice(0, 4), query, merged.length);
+    renderPartSearchResults(show, q, merged.length);
   }
 
   // ── Render up to 4 search result cards ────────────────────────────────────
