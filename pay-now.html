@@ -7,6 +7,8 @@
   <title>Pay Now | KJR Interior Designs Inc.</title>
   <link rel="stylesheet" href="styles.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Authorize.net Accept.js — PRODUCTION -->
+  <script src="https://js.authorize.net/v1/Accept.js" charset="utf-8"></script>
   <style>
     :root {
       --primary: #cc0000;
@@ -14,6 +16,7 @@
       --muted: #64748b;
       --border: #e2e8f0;
       --bg: #f8fafc;
+      --green: #16a34a;
     }
 
     * {
@@ -28,7 +31,6 @@
       color: var(--dark);
     }
 
-    /* ── Page Hero ── */
     .pn-hero {
       background: var(--dark);
       padding: 2.5rem 2rem;
@@ -48,7 +50,66 @@
       font-size: .95rem;
     }
 
-    /* ── Layout ── */
+    /* Progress indicator */
+    .pn-steps {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      padding: .7rem 0;
+    }
+
+    .pn-step {
+      display: flex;
+      align-items: center;
+      gap: .45rem;
+      padding: .45rem 1.75rem;
+      font-size: .8rem;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .pn-step.active {
+      color: var(--primary);
+    }
+
+    .pn-step.done {
+      color: var(--green);
+    }
+
+    .pn-step-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .72rem;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .pn-step.active .pn-step-num {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    .pn-step.done .pn-step-num {
+      background: var(--green);
+      border-color: var(--green);
+      color: #fff;
+    }
+
+    .pn-step-arrow {
+      color: var(--border);
+      font-size: 1rem;
+    }
+
+    /* Layout */
     .pn-layout {
       max-width: 1100px;
       margin: 2.5rem auto 5rem;
@@ -65,7 +126,7 @@
       }
     }
 
-    /* ── Card shell ── */
+    /* Card */
     .card {
       background: #fff;
       border: 1px solid var(--border);
@@ -89,19 +150,18 @@
     .card-hdr h2 {
       font-size: 1rem;
       font-weight: 800;
-      font-family: 'Inter', sans-serif;
     }
 
-    /* ── Add Product Form ── */
+    /* Add product form */
     .add-form {
       padding: 1.25rem 1.5rem;
       display: grid;
-      grid-template-columns: 1fr 1fr auto;
+      grid-template-columns: 1fr 1fr 1fr auto;
       gap: .75rem;
       align-items: end;
     }
 
-    @media(max-width:600px) {
+    @media(max-width:680px) {
       .add-form {
         grid-template-columns: 1fr;
       }
@@ -109,20 +169,20 @@
 
     .fld label {
       display: block;
-      font-size: .72rem;
+      font-size: .7rem;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: .08em;
       color: var(--muted);
-      margin-bottom: .35rem;
+      margin-bottom: .3rem;
     }
 
     .fld input {
       width: 100%;
-      padding: .65rem .9rem;
+      padding: .62rem .9rem;
       border: 1.5px solid var(--border);
       border-radius: 8px;
-      font-size: .9rem;
+      font-size: .88rem;
       font-family: 'Inter', sans-serif;
       outline: none;
       transition: border-color .2s;
@@ -133,57 +193,65 @@
     }
 
     .add-btn {
-      padding: .68rem 1.4rem;
+      padding: .65rem 1.4rem;
       background: var(--primary);
       color: #fff;
       border: none;
       border-radius: 8px;
-      font-size: .88rem;
+      font-size: .85rem;
       font-weight: 800;
       cursor: pointer;
       font-family: 'Inter', sans-serif;
       white-space: nowrap;
       transition: background .2s;
+      height: 40px;
     }
 
     .add-btn:hover {
       background: #aa0000;
     }
 
-    /* ── Items Table ── */
-    .items-table {
+    .err-msg {
+      padding: 0 1.5rem .75rem;
+      color: var(--primary);
+      font-size: .8rem;
+      display: none;
+    }
+
+    /* Items table */
+    .items-tbl {
       width: 100%;
       border-collapse: collapse;
     }
 
-    .items-table th {
-      font-size: .72rem;
+    .items-tbl th {
+      font-size: .68rem;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: .08em;
       color: var(--muted);
-      padding: .65rem 1.5rem;
+      padding: .6rem 1.5rem;
       background: #f8fafc;
       border-bottom: 1px solid var(--border);
       text-align: left;
     }
 
-    .items-table td {
-      padding: .85rem 1.5rem;
+    .items-tbl td {
+      padding: .8rem 1.5rem;
       border-bottom: 1px solid var(--border);
-      font-size: .9rem;
+      font-size: .88rem;
       vertical-align: middle;
     }
 
-    .items-table tr:last-child td {
+    .items-tbl tr:last-child td {
       border-bottom: none;
     }
 
     .part-tag {
-      font-size: .72rem;
+      font-size: .7rem;
       color: var(--muted);
       font-family: 'Courier New', monospace;
-      margin-top: .2rem;
+      margin-top: .15rem;
     }
 
     .price-cell {
@@ -208,6 +276,7 @@
       background: #f8fafc;
       font-size: 1rem;
       cursor: pointer;
+      transition: background .15s;
     }
 
     .qty-ctrl button:hover {
@@ -215,12 +284,12 @@
     }
 
     .qty-ctrl input {
-      width: 42px;
+      width: 40px;
       text-align: center;
       border: none;
       border-left: 1.5px solid var(--border);
       border-right: 1.5px solid var(--border);
-      font-size: .85rem;
+      font-size: .83rem;
       font-weight: 700;
       font-family: 'Inter', sans-serif;
       height: 28px;
@@ -232,7 +301,7 @@
       border: none;
       color: #94a3b8;
       cursor: pointer;
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       padding: 0 .2rem;
       transition: color .2s;
     }
@@ -242,13 +311,13 @@
     }
 
     .no-items {
-      padding: 2.5rem;
+      padding: 2.25rem;
       text-align: center;
       color: var(--muted);
-      font-size: .9rem;
+      font-size: .88rem;
     }
 
-    /* ── Billing form ── */
+    /* Billing */
     .bill-body {
       padding: 1.5rem;
     }
@@ -271,10 +340,10 @@
 
     .inp {
       width: 100%;
-      padding: .65rem .9rem;
+      padding: .62rem .9rem;
       border: 1.5px solid var(--border);
       border-radius: 8px;
-      font-size: .9rem;
+      font-size: .88rem;
       font-family: 'Inter', sans-serif;
       outline: none;
       transition: border-color .2s;
@@ -284,7 +353,90 @@
       border-color: var(--primary);
     }
 
-    /* ── Summary Box ── */
+    .inp.error {
+      border-color: var(--primary);
+      background: #fff5f5;
+    }
+
+    /* Payment card form */
+    .pay-body {
+      padding: 1.5rem;
+    }
+
+    .pay-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media(max-width:500px) {
+      .pay-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .pay-grid .span2 {
+      grid-column: 1/-1;
+    }
+
+    .card-icons {
+      display: flex;
+      gap: .45rem;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .card-icon {
+      background: #f1f5f9;
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: .25rem .5rem;
+      font-size: .75rem;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: .04em;
+    }
+
+    .card-icon.visa {
+      color: #1a1f71;
+    }
+
+    .card-icon.mc {
+      color: #eb001b;
+    }
+
+    .card-icon.amex {
+      color: #007bc1;
+    }
+
+    .card-icon.disc {
+      color: #ff6600;
+    }
+
+    /* Secure badge row */
+    .secure-row {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      font-size: .75rem;
+      color: var(--muted);
+      margin-top: 1rem;
+    }
+
+    .authnet-badge {
+      display: flex;
+      align-items: center;
+      gap: .35rem;
+      background: #f1f5f9;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: .3rem .7rem;
+      font-size: .7rem;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    /* Summary box */
     .summary-box {
       background: #fff;
       border: 1px solid var(--border);
@@ -303,8 +455,8 @@
     .sum-row {
       display: flex;
       justify-content: space-between;
-      font-size: .88rem;
-      padding: .45rem 0;
+      font-size: .87rem;
+      padding: .42rem 0;
       border-bottom: 1px solid var(--border);
     }
 
@@ -319,18 +471,19 @@
     .sum-total {
       display: flex;
       justify-content: space-between;
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       font-weight: 800;
-      padding: .75rem 0 1.1rem;
+      padding: .7rem 0 1rem;
       border-top: 2px solid var(--dark);
-      margin-top: .5rem;
+      margin-top: .4rem;
     }
 
     .sum-total span:last-child {
       color: var(--primary);
     }
 
-    .pay-btn {
+    /* Pay button */
+    .pay-submit-btn {
       width: 100%;
       padding: 1rem;
       background: var(--primary);
@@ -341,33 +494,51 @@
       font-weight: 800;
       cursor: pointer;
       font-family: 'Inter', sans-serif;
-      transition: background .2s;
-    }
-
-    .pay-btn:hover {
-      background: #aa0000;
-    }
-
-    .pay-btn:disabled {
-      background: #94a3b8;
-      cursor: default;
-    }
-
-    .secure {
+      transition: background .2s, opacity .2s;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: .4rem;
-      font-size: .75rem;
-      color: var(--muted);
-      margin-top: .85rem;
+      gap: .6rem;
+    }
+
+    .pay-submit-btn:hover:not(:disabled) {
+      background: #aa0000;
+    }
+
+    .pay-submit-btn:disabled {
+      opacity: .55;
+      cursor: default;
+    }
+
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border: 2.5px solid rgba(255, 255, 255, .35);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      display: none;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .pay-submit-btn.loading .spinner {
+      display: block;
+    }
+
+    .pay-submit-btn.loading .btn-txt {
+      display: none;
     }
 
     .call-bar {
       background: #f1f5f9;
       border-radius: 10px;
-      padding: .85rem 1rem;
-      font-size: .8rem;
+      padding: .8rem 1rem;
+      font-size: .78rem;
       color: var(--muted);
       text-align: center;
       margin-top: 1rem;
@@ -377,58 +548,151 @@
       color: var(--dark);
     }
 
-    /* ── Success overlay ── */
-    #successOverlay {
+    /* ── Congratulations overlay ── */
+    #congratsOverlay {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, .6);
-      z-index: 2000;
+      background: rgba(0, 0, 0, .7);
+      z-index: 9999;
       align-items: center;
       justify-content: center;
-      backdrop-filter: blur(4px);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      padding: 1.5rem;
     }
 
-    #successOverlay.open {
+    #congratsOverlay.open {
       display: flex;
     }
 
-    .success-box {
+    .congrats-box {
       background: #fff;
-      border-radius: 16px;
+      border-radius: 20px;
       padding: 3rem 2.5rem;
-      max-width: 480px;
-      width: 90%;
+      max-width: 540px;
+      width: 100%;
       text-align: center;
+      animation: slideUp .45s cubic-bezier(.22, 1, .36, 1);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, .25);
     }
 
-    .success-box .check {
-      font-size: 3.5rem;
-      margin-bottom: 1rem;
+    @keyframes slideUp {
+      from {
+        transform: translateY(40px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
     }
 
-    .success-box h2 {
-      font-size: 1.6rem;
+    .congrats-checkmark {
+      width: 72px;
+      height: 72px;
+      background: #f0fdf4;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      border: 3px solid #bbf7d0;
+    }
+
+    .congrats-checkmark svg {
+      width: 36px;
+      height: 36px;
+    }
+
+    .congrats-box h2 {
+      font-size: 1.75rem;
       font-weight: 800;
-      color: #16a34a;
-      margin-bottom: .75rem;
+      color: var(--dark);
+      margin-bottom: .5rem;
     }
 
-    .success-box p {
+    .congrats-box .subtitle {
       color: var(--muted);
-      font-size: .92rem;
+      font-size: .95rem;
       margin-bottom: 2rem;
+      line-height: 1.6;
     }
 
-    .success-box .back-btn {
-      display: inline-block;
+    .congrats-details {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      text-align: left;
+      border: 1px solid var(--border);
+    }
+
+    .congrats-detail-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: .85rem;
+      padding: .3rem 0;
+    }
+
+    .congrats-detail-row span:first-child {
+      color: var(--muted);
+    }
+
+    .congrats-detail-row span:last-child {
+      font-weight: 700;
+      color: var(--dark);
+    }
+
+    .congrats-detail-row.total span:last-child {
+      color: var(--primary);
+      font-size: 1rem;
+    }
+
+    .congrats-actions {
+      display: flex;
+      gap: .75rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .congrats-btn {
+      padding: .75rem 1.5rem;
+      border-radius: 8px;
+      font-size: .88rem;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      transition: opacity .2s;
+    }
+
+    .congrats-btn:hover {
+      opacity: .85;
+    }
+
+    .congrats-btn.primary {
       background: var(--primary);
       color: #fff;
-      padding: .8rem 2rem;
-      border-radius: 8px;
-      font-weight: 800;
-      font-size: .9rem;
-      text-decoration: none;
+    }
+
+    .congrats-btn.dark {
+      background: var(--dark);
+      color: #fff;
+    }
+
+    .congrats-btn.outline {
+      background: #fff;
+      border: 1.5px solid var(--border);
+      color: var(--dark);
+    }
+
+    .congrats-email-note {
+      font-size: .78rem;
+      color: var(--muted);
+      margin-top: 1.5rem;
     }
   </style>
 </head>
@@ -453,9 +717,7 @@
   <!-- Header -->
   <header class="main-header">
     <div class="header-container">
-      <div class="logo">
-        <a href="index.html"><img src="logo-new.jpeg" alt="KJR Interior Designs Inc."></a>
-      </div>
+      <div class="logo"><a href="index.html"><img src="logo-new.jpeg" alt="KJR Interior Designs Inc."></a></div>
       <nav class="secondary-nav">
         <div class="secondary-nav-container">
           <ul class="nav-links">
@@ -473,25 +735,33 @@
           </ul>
         </div>
       </nav>
-      <div class="header-actions">
-        <a href="#parts" class="parts-highlight">10M+ PARTS</a>
-      </div>
+      <div class="header-actions"><a href="index.html#parts" class="parts-highlight">10M+ PARTS</a></div>
     </div>
   </header>
 
   <!-- Hero -->
   <div class="pn-hero">
     <h1>Pay Now</h1>
-    <p>Add your items, fill in billing details, and submit your payment securely.</p>
+    <p>Add your items, fill in billing &amp; card details, then submit securely.</p>
+  </div>
+
+  <!-- Step Indicator -->
+  <div class="pn-steps">
+    <div class="pn-step active" id="pnStep1"><span class="pn-step-num">1</span> Add Items</div>
+    <span class="pn-step-arrow">›</span>
+    <div class="pn-step" id="pnStep2"><span class="pn-step-num">2</span> Billing</div>
+    <span class="pn-step-arrow">›</span>
+    <div class="pn-step" id="pnStep3"><span class="pn-step-num">3</span> Payment</div>
+    <span class="pn-step-arrow">›</span>
+    <div class="pn-step" id="pnStep4"><span class="pn-step-num">4</span> Confirmed</div>
   </div>
 
   <!-- Main Layout -->
   <div class="pn-layout">
-
     <!-- LEFT COLUMN -->
     <div>
 
-      <!-- ADD PRODUCT CARD -->
+      <!-- ADD PRODUCT -->
       <div class="card">
         <div class="card-hdr">
           <h2>Add Products</h2>
@@ -502,36 +772,34 @@
             <input type="text" id="addName" placeholder="e.g. Water Heater 40 gal">
           </div>
           <div class="fld">
-            <label>Part Number (optional)</label>
+            <label>Part Number <span style="color:var(--muted);font-weight:400;">(optional)</span></label>
             <input type="text" id="addPart" placeholder="e.g. WH-40-GAS">
           </div>
           <div class="fld">
             <label>Unit Price ($)</label>
             <input type="number" id="addPrice" placeholder="0.00" min="0" step="0.01">
           </div>
-          <div>
-            <button class="add-btn" onclick="addProduct()">+ Add</button>
-          </div>
+          <button class="add-btn" onclick="addProduct()">+ Add</button>
         </div>
-        <div id="addError" style="padding:0 1.5rem .75rem;color:var(--primary);font-size:.82rem;display:none;"></div>
+        <div id="addError" class="err-msg"></div>
       </div>
 
-      <!-- ITEMS LIST CARD -->
+      <!-- ITEMS LIST -->
       <div class="card">
         <div class="card-hdr">
-          <h2>Order Items &nbsp;<span id="itemBadge"
-              style="background:#f1f5f9;border-radius:20px;padding:.15rem .65rem;font-size:.8rem;font-weight:700;">0</span>
+          <h2>Order Items <span id="itemBadge"
+              style="background:#f1f5f9;border-radius:20px;padding:.12rem .6rem;font-size:.78rem;font-weight:700;margin-left:.35rem;">0</span>
           </h2>
           <button onclick="clearAll()"
-            style="font-size:.75rem;color:var(--primary);background:none;border:none;cursor:pointer;font-weight:600;">Clear
+            style="font-size:.73rem;color:var(--primary);background:none;border:none;cursor:pointer;font-weight:600;">Clear
             All</button>
         </div>
         <div id="itemsWrap">
-          <div class="no-items">No products added yet. Use the form above to add items.</div>
+          <div class="no-items">No products added yet — use the form above.</div>
         </div>
       </div>
 
-      <!-- BILLING CARD -->
+      <!-- BILLING INFO -->
       <div class="card">
         <div class="card-hdr">
           <h2>Billing Information</h2>
@@ -550,26 +818,67 @@
               <label>Email Address <span style="color:var(--primary)">*</span></label>
               <input class="inp" type="email" id="bEmail" placeholder="you@email.com">
             </div>
-            <div class="fld span2">
+            <div class="fld">
               <label>Phone Number</label>
               <input class="inp" type="tel" id="bPhone" placeholder="555-123-4567">
             </div>
-            <div class="fld span2">
+            <div class="fld">
               <label>Company / Organization</label>
               <input class="inp" type="text" id="bCompany" placeholder="Optional">
             </div>
             <div class="fld span2">
-              <label>Notes / Reference</label>
-              <input class="inp" type="text" id="bNotes" placeholder="Invoice #, order reference, etc.">
+              <label>Order Notes / Reference</label>
+              <input class="inp" type="text" id="bNotes" placeholder="Invoice #, reference number, etc.">
             </div>
           </div>
-          <div id="billError" style="color:var(--primary);font-size:.82rem;margin-top:.75rem;display:none;"></div>
+          <div id="billError" class="err-msg" style="padding:0;margin-top:.75rem;"></div>
+        </div>
+      </div>
+
+      <!-- PAYMENT CARD -->
+      <div class="card">
+        <div class="card-hdr">
+          <h2>Card Details</h2>
+          <div class="card-icons">
+            <span class="card-icon visa">VISA</span>
+            <span class="card-icon mc">MC</span>
+            <span class="card-icon amex">AMEX</span>
+            <span class="card-icon disc">DISC</span>
+          </div>
+        </div>
+        <div class="pay-body">
+          <div class="pay-grid">
+            <div class="fld span2">
+              <label>Name on Card <span style="color:var(--primary)">*</span></label>
+              <input class="inp" type="text" id="cardName" placeholder="John Smith" autocomplete="cc-name">
+            </div>
+            <div class="fld span2">
+              <label>Card Number <span style="color:var(--primary)">*</span></label>
+              <input class="inp" type="text" id="cardNumber" placeholder="•••• •••• •••• ••••" maxlength="19"
+                autocomplete="cc-number" inputmode="numeric">
+            </div>
+            <div class="fld">
+              <label>Expiry (MM/YY) <span style="color:var(--primary)">*</span></label>
+              <input class="inp" type="text" id="cardExp" placeholder="MM/YY" maxlength="5" autocomplete="cc-exp"
+                inputmode="numeric">
+            </div>
+            <div class="fld">
+              <label>CVV <span style="color:var(--primary)">*</span></label>
+              <input class="inp" type="text" id="cardCvv" placeholder="•••" maxlength="4" autocomplete="cc-csc"
+                inputmode="numeric">
+            </div>
+          </div>
+          <div id="cardError" class="err-msg" style="padding:0;margin-top:.75rem;"></div>
+          <div class="secure-row">
+            <span>🔒 256-bit SSL Encrypted</span>
+            <div class="authnet-badge">⚡ Powered by Authorize.net</div>
+          </div>
         </div>
       </div>
 
     </div><!-- end left -->
 
-    <!-- RIGHT COLUMN: Summary -->
+    <!-- RIGHT: Summary -->
     <div class="summary-box">
       <h3>Order Summary</h3>
       <div class="sum-row"><span>Items</span><span id="sumItems">0</span></div>
@@ -577,11 +886,12 @@
       <div class="sum-row"><span>Tax (8%)</span><span id="sumTax">$0.00</span></div>
       <div class="sum-total"><span>Total Due</span><span id="sumTotal">$0.00</span></div>
 
-      <button class="pay-btn" id="payBtn" onclick="submitPayment()" disabled>
-        💳 Submit Payment
+      <button class="pay-submit-btn" id="payBtn" onclick="initiatePayment()" disabled>
+        <span class="spinner"></span>
+        <span class="btn-txt">💳 Pay Now</span>
       </button>
 
-      <div class="secure">🔒 Secure &amp; Encrypted</div>
+      <div class="secure-row" style="justify-content:center;margin-top:.85rem;">🔒 Secure &amp; PCI-Compliant</div>
 
       <div class="call-bar">
         Prefer to pay by phone?<br>
@@ -591,84 +901,107 @@
 
   </div><!-- end layout -->
 
-  <!-- Success Overlay -->
-  <div id="successOverlay">
-    <div class="success-box">
-      <div class="check">✅</div>
-      <h2>Payment Submitted!</h2>
-      <p>Thank you. Your order has been received and our team will process it shortly.<br>A confirmation will be sent to
-        your email.</p>
-      <a href="index.html" class="back-btn">← Back to Home</a>
+  <!-- ── CONGRATULATIONS OVERLAY ── -->
+  <div id="congratsOverlay">
+    <div class="congrats-box">
+      <div class="congrats-checkmark">
+        <svg viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="26" cy="26" r="25" stroke="#16a34a" stroke-width="2" fill="#f0fdf4" />
+          <path d="M14 27L22 35L38 18" stroke="#16a34a" stroke-width="3" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+      </div>
+      <h2>Payment Successful!</h2>
+      <p class="subtitle">Thank you for your order. Your payment has been processed and a confirmation email is on its
+        way.</p>
+      <div class="congrats-details">
+        <div class="congrats-detail-row"><span>Order #</span><span id="congInvoice">—</span></div>
+        <div class="congrats-detail-row"><span>Transaction ID</span><span id="congTxn">—</span></div>
+        <div class="congrats-detail-row"><span>Auth Code</span><span id="congAuth">—</span></div>
+        <div class="congrats-detail-row"><span>Name</span><span id="congName">—</span></div>
+        <div class="congrats-detail-row"><span>Email</span><span id="congEmail">—</span></div>
+        <div class="congrats-detail-row total"><span>Amount Paid</span><span id="congTotal">—</span></div>
+      </div>
+      <div class="congrats-actions">
+        <a id="congTrackBtn" href="order-tracking.html" class="congrats-btn dark">📦 Track Order</a>
+        <a id="congInvoiceBtn" href="invoice.html" class="congrats-btn primary">🧾 View Invoice</a>
+        <a href="index.html" class="congrats-btn outline">← Home</a>
+      </div>
+      <p class="congrats-email-note">📧 A detailed invoice has been sent to your email address.</p>
     </div>
   </div>
 
   <script>
+    const BACKEND = 'https://kjr-backend.onrender.com';
     let items = [];
+    let authNetConfig = null;
 
+    // ── Load Authorize.net public config from backend ──────────────────────
+    async function loadAuthNetConfig() {
+      try {
+        const r = await fetch(BACKEND + '/api/payment/config');
+        authNetConfig = await r.json();
+      } catch (e) {
+        console.warn('Could not load payment config:', e.message);
+      }
+    }
+    loadAuthNetConfig();
+
+    // ── Card input formatting ──────────────────────────────────────────────
+    document.getElementById('cardNumber').addEventListener('input', function () {
+      let v = this.value.replace(/\D/g, '').substring(0, 16);
+      this.value = v.replace(/(.{4})/g, '$1 ').trim();
+    });
+    document.getElementById('cardExp').addEventListener('input', function () {
+      let v = this.value.replace(/\D/g, '').substring(0, 4);
+      if (v.length >= 3) v = v.substring(0, 2) + '/' + v.substring(2);
+      this.value = v;
+    });
+    document.getElementById('cardCvv').addEventListener('input', function () {
+      this.value = this.value.replace(/\D/g, '').substring(0, 4);
+    });
+    document.getElementById('addPrice').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') addProduct();
+    });
+
+    // ── Add product ────────────────────────────────────────────────────────
     function addProduct() {
       const errEl = document.getElementById('addError');
       const name = document.getElementById('addName').value.trim();
       const part = document.getElementById('addPart').value.trim();
       const price = parseFloat(document.getElementById('addPrice').value);
-
       errEl.style.display = 'none';
-
-      if (!name && !part) {
-        errEl.textContent = 'Please enter at least a Product Name or Part Number.';
-        errEl.style.display = 'block';
-        return;
-      }
-      if (isNaN(price) || price < 0) {
-        errEl.textContent = 'Please enter a valid price.';
-        errEl.style.display = 'block';
-        return;
-      }
-
-      items.push({ name: name || part, part: part, price: price, qty: 1 });
-
-      // clear inputs
+      if (!name && !part) { showErr(errEl, 'Please enter a Product Name or Part Number.'); return; }
+      if (isNaN(price) || price < 0) { showErr(errEl, 'Please enter a valid price.'); return; }
+      items.push({ name: name || part, part, price, qty: 1 });
       document.getElementById('addName').value = '';
       document.getElementById('addPart').value = '';
       document.getElementById('addPrice').value = '';
       document.getElementById('addName').focus();
-
       renderItems();
+      setStepActive(1);
     }
-
-    // Allow Enter key on price field to trigger Add
-    document.getElementById('addPrice').addEventListener('keydown', function (e) {
-      if (e.key === 'Enter') addProduct();
-    });
 
     function renderItems() {
       const wrap = document.getElementById('itemsWrap');
       const badge = document.getElementById('itemBadge');
-
       if (items.length === 0) {
-        wrap.innerHTML = '<div class="no-items">No products added yet. Use the form above to add items.</div>';
+        wrap.innerHTML = '<div class="no-items">No products added yet — use the form above.</div>';
         badge.textContent = '0';
         updateSummary();
         return;
       }
-
       badge.textContent = items.length;
-
-      let html = '<table class="items-table"><thead><tr><th>Product</th><th>Qty</th><th>Unit Price</th><th>Total</th><th></th></tr></thead><tbody>';
+      let html = '<table class="items-tbl"><thead><tr><th>Product</th><th>Qty</th><th>Unit Price</th><th>Total</th><th></th></tr></thead><tbody>';
       items.forEach((item, i) => {
         const line = item.price * item.qty;
         html += `<tr>
-          <td>
-            <div style="font-weight:700;">${escHtml(item.name)}</div>
-            ${item.part ? `<div class="part-tag">Part# ${escHtml(item.part)}</div>` : ''}
-          </td>
-          <td>
-            <div class="qty-ctrl">
-              <button onclick="changeQty(${i},-1)">−</button>
-              <input type="number" value="${item.qty}" min="1" max="9999"
-                onchange="setQty(${i},this.value)" style="width:42px;text-align:center;border:none;border-left:1.5px solid #e2e8f0;border-right:1.5px solid #e2e8f0;font-size:.85rem;font-weight:700;height:28px;outline:none;">
-              <button onclick="changeQty(${i},1)">+</button>
-            </div>
-          </td>
+          <td><div style="font-weight:700;">${esc(item.name)}</div>${item.part ? `<div class="part-tag">Part# ${esc(item.part)}</div>` : ''}</td>
+          <td><div class="qty-ctrl">
+            <button onclick="chgQty(${i},-1)">−</button>
+            <input type="number" value="${item.qty}" min="1" max="9999" onchange="setQty(${i},this.value)">
+            <button onclick="chgQty(${i},1)">+</button>
+          </div></td>
           <td>$${item.price.toFixed(2)}</td>
           <td class="price-cell">$${line.toFixed(2)}</td>
           <td><button class="del-btn" onclick="removeItem(${i})" title="Remove">✕</button></td>
@@ -679,89 +1012,160 @@
       updateSummary();
     }
 
-    function changeQty(i, d) {
-      items[i].qty = Math.max(1, Math.min(9999, items[i].qty + d));
-      renderItems();
-    }
-
-    function setQty(i, val) {
-      items[i].qty = Math.max(1, Math.min(9999, parseInt(val) || 1));
-      renderItems();
-    }
-
-    function removeItem(i) {
-      items.splice(i, 1);
-      renderItems();
-    }
-
-    function clearAll() {
-      if (items.length === 0) return;
-      if (!confirm('Remove all items?')) return;
-      items = [];
-      renderItems();
-    }
+    function chgQty(i, d) { items[i].qty = Math.max(1, Math.min(9999, items[i].qty + d)); renderItems(); }
+    function setQty(i, v) { items[i].qty = Math.max(1, Math.min(9999, parseInt(v) || 1)); renderItems(); }
+    function removeItem(i) { items.splice(i, 1); renderItems(); }
+    function clearAll() { if (!items.length) return; if (!confirm('Remove all items?')) return; items = []; renderItems(); }
 
     function updateSummary() {
-      let subtotal = 0, totalQty = 0;
-      items.forEach(it => { subtotal += it.price * it.qty; totalQty += it.qty; });
-      const tax = subtotal * 0.08;
-      const total = subtotal + tax;
-
-      document.getElementById('sumItems').textContent = totalQty;
-      document.getElementById('sumSubtotal').textContent = '$' + subtotal.toFixed(2);
+      let sub = 0, qty = 0;
+      items.forEach(it => { sub += it.price * it.qty; qty += it.qty; });
+      const tax = sub * 0.08;
+      const total = sub + tax;
+      document.getElementById('sumItems').textContent = qty;
+      document.getElementById('sumSubtotal').textContent = '$' + sub.toFixed(2);
       document.getElementById('sumTax').textContent = '$' + tax.toFixed(2);
       document.getElementById('sumTotal').textContent = '$' + total.toFixed(2);
       document.getElementById('payBtn').disabled = items.length === 0;
     }
 
-    function escHtml(str) {
-      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    }
+    function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+    function showErr(el, msg) { el.textContent = msg; el.style.display = 'block'; }
+    function setStepActive(n) { for (let i = 1; i <= 4; i++) { const s = document.getElementById('pnStep' + i); s.classList.remove('active', 'done'); if (i < n) s.classList.add('done'); if (i === n) s.classList.add('active'); } }
 
-    function submitPayment() {
-      const billErr = document.getElementById('billError');
-      billErr.style.display = 'none';
-
+    // ── Validate billing ───────────────────────────────────────────────────
+    function validateBilling() {
+      const errEl = document.getElementById('billError');
+      errEl.style.display = 'none';
       const first = document.getElementById('bFirst').value.trim();
       const last = document.getElementById('bLast').value.trim();
       const email = document.getElementById('bEmail').value.trim();
+      if (!first || !last) { showErr(errEl, 'Please enter your first and last name.'); document.getElementById('bFirst').focus(); return false; }
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showErr(errEl, 'Please enter a valid email address.'); document.getElementById('bEmail').focus(); return false; }
+      return true;
+    }
 
-      if (!first || !last) {
-        billErr.textContent = 'Please enter your first and last name.';
-        billErr.style.display = 'block';
-        document.getElementById('bFirst').focus();
-        return;
-      }
-      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        billErr.textContent = 'Please enter a valid email address.';
-        billErr.style.display = 'block';
-        document.getElementById('bEmail').focus();
-        return;
-      }
+    // ── Validate card fields ───────────────────────────────────────────────
+    function validateCard() {
+      const errEl = document.getElementById('cardError');
+      errEl.style.display = 'none';
+      const name = document.getElementById('cardName').value.trim();
+      const number = document.getElementById('cardNumber').value.replace(/\s/g, '');
+      const exp = document.getElementById('cardExp').value.trim();
+      const cvv = document.getElementById('cardCvv').value.trim();
+      if (!name) { showErr(errEl, 'Please enter the name on your card.'); return false; }
+      if (!/^\d{15,16}$/.test(number)) { showErr(errEl, 'Please enter a valid 15 or 16-digit card number.'); return false; }
+      if (!/^\d{2}\/\d{2}$/.test(exp)) { showErr(errEl, 'Please enter expiry in MM/YY format.'); return false; }
+      if (!/^\d{3,4}$/.test(cvv)) { showErr(errEl, 'Please enter a valid CVV.'); return false; }
+      return true;
+    }
+
+    // ── Main payment trigger ───────────────────────────────────────────────
+    function initiatePayment() {
       if (items.length === 0) return;
+      if (!validateBilling()) { document.getElementById('bFirst').scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
+      if (!validateCard()) { document.getElementById('cardName').scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
+      if (!authNetConfig) { showErr(document.getElementById('cardError'), 'Payment gateway is loading. Please try again.'); return; }
 
-      // Redirect to payment.html with order data
-      const subtotal = items.reduce((s, it) => s + it.price * it.qty, 0);
-      const tax = subtotal * 0.08;
-      const total = subtotal + tax;
+      setStepActive(3);
+      setLoading(true);
 
-      const order = {
-        billing: {
-          firstName: first,
-          lastName: last,
-          email,
-          phone: document.getElementById('bPhone').value.trim(),
-          company: document.getElementById('bCompany').value.trim(),
-          notes: document.getElementById('bNotes').value.trim()
+      const exp = document.getElementById('cardExp').value.trim();
+      const [expMo, expYr] = exp.split('/');
+
+      // Build Accept.js secure data — card NEVER touches our server
+      const secureData = {
+        authData: {
+          clientKey: authNetConfig.publicClientKey,
+          apiLoginID: authNetConfig.apiLoginId
         },
-        items,
-        subtotal: subtotal.toFixed(2),
-        tax: tax.toFixed(2),
-        total: total.toFixed(2)
+        cardData: {
+          cardNumber: document.getElementById('cardNumber').value.replace(/\s/g, ''),
+          month: expMo,
+          year: '20' + expYr,
+          cardCode: document.getElementById('cardCvv').value.trim(),
+          fullName: document.getElementById('cardName').value.trim()
+        }
       };
 
-      localStorage.setItem('kjr_paynow_order', JSON.stringify(order));
-      window.location.href = 'payment.html?from=paynow';
+      Accept.dispatchData(secureData, handleAcceptResponse);
+    }
+
+    // ── Accept.js callback ─────────────────────────────────────────────────
+    async function handleAcceptResponse(response) {
+      if (response.messages.resultCode === 'Error') {
+        const msg = response.messages.message.map(m => m.text).join(' ');
+        showErr(document.getElementById('cardError'), '⚠️ ' + msg);
+        setLoading(false);
+        setStepActive(3);
+        return;
+      }
+
+      // We have a nonce — now charge via our backend
+      const opaqueData = response.opaqueData;
+      const sub = items.reduce((s, it) => s + it.price * it.qty, 0);
+      const tax = sub * 0.08;
+      const total = sub + tax;
+      const invNum = 'KJR-' + Date.now();
+
+      const payload = {
+        opaqueDataDescriptor: opaqueData.dataDescriptor,
+        opaqueDataValue: opaqueData.dataValue,
+        amount: total.toFixed(2),
+        firstName: document.getElementById('bFirst').value.trim(),
+        lastName: document.getElementById('bLast').value.trim(),
+        email: document.getElementById('bEmail').value.trim(),
+        phone: document.getElementById('bPhone').value.trim(),
+        company: document.getElementById('bCompany').value.trim(),
+        notes: document.getElementById('bNotes').value.trim(),
+        invoiceNumber: invNum,
+        description: 'KJR Interior Designs Order',
+        cartItems: items.map(it => ({ name: it.name, part: it.part, qty: it.qty, price: String(it.price) }))
+      };
+
+      try {
+        const r = await fetch(BACKEND + '/api/payment/charge', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+        });
+        const data = await r.json();
+
+        if (data.success) {
+          setStepActive(4);
+          showCongrats(data, total, payload);
+        } else {
+          showErr(document.getElementById('cardError'), '❌ ' + (data.message || 'Payment declined. Please check your card details.'));
+          setLoading(false);
+          setStepActive(3);
+        }
+      } catch (e) {
+        showErr(document.getElementById('cardError'), '❌ Network error. Please check your connection and try again.');
+        setLoading(false);
+        setStepActive(3);
+      }
+    }
+
+    // ── Show congratulations ───────────────────────────────────────────────
+    function showCongrats(data, total, payload) {
+      const inv = data.invoiceNumber || payload.invoiceNumber;
+      document.getElementById('congInvoice').textContent = inv;
+      document.getElementById('congTxn').textContent = data.transactionId || '—';
+      document.getElementById('congAuth').textContent = data.authCode || '—';
+      document.getElementById('congName').textContent = payload.firstName + ' ' + payload.lastName;
+      document.getElementById('congEmail').textContent = payload.email;
+      document.getElementById('congTotal').textContent = '$' + total.toFixed(2);
+      document.getElementById('congTrackBtn').href = 'order-tracking.html?id=' + encodeURIComponent(inv);
+      document.getElementById('congInvoiceBtn').href = 'invoice.html?id=' + encodeURIComponent(inv);
+      document.getElementById('congratsOverlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+      // Clear sensitive data from the DOM
+      ['cardNumber', 'cardExp', 'cardCvv'].forEach(id => document.getElementById(id).value = '');
+    }
+
+    // ── Loading state ──────────────────────────────────────────────────────
+    function setLoading(on) {
+      const btn = document.getElementById('payBtn');
+      btn.classList.toggle('loading', on);
+      btn.disabled = on;
     }
   </script>
 
@@ -775,8 +1179,7 @@
         <button class="auth-tab" id="tabSignup" onclick="switchTab('signup')">Sign Up</button>
       </div>
       <form id="formLogin" class="auth-form" onsubmit="handleLogin(event)">
-        <div class="auth-field">
-          <label>Account Type</label>
+        <div class="auth-field"><label>Account Type</label>
           <select id="loginType" required>
             <option value="">— Select your account type —</option>
             <option value="sales_team">Sales Team Login</option>
@@ -786,13 +1189,11 @@
             <option value="grad">Graduate Login</option>
           </select>
         </div>
-        <div class="auth-field">
-          <label>Email or Username</label>
+        <div class="auth-field"><label>Email or Username</label>
           <input type="text" id="loginIdentifier" placeholder="Enter email or username" required
             autocomplete="username">
         </div>
-        <div class="auth-field">
-          <label>Password</label>
+        <div class="auth-field"><label>Password</label>
           <div class="auth-password-wrap">
             <input type="password" id="loginPassword" placeholder="Enter password" required
               autocomplete="current-password">
@@ -805,15 +1206,13 @@
         </div>
         <div id="loginError" class="auth-error" style="display:none;"></div>
         <button type="submit" class="auth-submit" id="loginBtn">
-          <span class="auth-btn-text">Login</span>
-          <span class="auth-spinner" style="display:none;">...</span>
+          <span class="auth-btn-text">Login</span><span class="auth-spinner" style="display:none;">...</span>
         </button>
         <p class="auth-switch">Don't have an account? <a href="#" onclick="switchTab('signup');return false;">Sign
             Up</a></p>
       </form>
       <form id="formSignup" class="auth-form" style="display:none;" onsubmit="handleSignup(event)">
-        <div class="auth-field">
-          <label>Account Type <span class="req">*</span></label>
+        <div class="auth-field"><label>Account Type <span class="req">*</span></label>
           <select id="signupType" required onchange="toggleSignupFields()">
             <option value="">— Select your account type —</option>
             <option value="sales_team">Sales Team Login</option>
@@ -823,36 +1222,29 @@
             <option value="grad">Graduate Login</option>
           </select>
         </div>
-        <div class="auth-field">
-          <label>Username <span class="req">*</span></label>
+        <div class="auth-field"><label>Username <span class="req">*</span></label>
           <input type="text" id="signupUsername" placeholder="Choose a username" required autocomplete="username">
         </div>
-        <div class="auth-field">
-          <label>Email <span class="req">*</span></label>
+        <div class="auth-field"><label>Email <span class="req">*</span></label>
           <input type="email" id="signupEmail" placeholder="Enter your email" required autocomplete="email">
         </div>
-        <div class="auth-field">
-          <label>Mobile Number</label>
+        <div class="auth-field"><label>Mobile Number</label>
           <input type="tel" id="signupPhone" placeholder="e.g. 555-123-4567" autocomplete="tel">
         </div>
-        <div class="auth-field" id="companyField" style="display:none;">
-          <label>Company Name</label>
+        <div class="auth-field" id="companyField" style="display:none;"><label>Company Name</label>
           <input type="text" id="signupCompany" placeholder="Your company name">
         </div>
-        <div class="auth-field" id="instructorField" style="display:none;">
-          <label>Instructor Name</label>
+        <div class="auth-field" id="instructorField" style="display:none;"><label>Instructor Name</label>
           <input type="text" id="signupInstructor" placeholder="Your instructor's name">
         </div>
-        <div class="auth-field">
-          <label>Password <span class="req">*</span></label>
+        <div class="auth-field"><label>Password <span class="req">*</span></label>
           <div class="auth-password-wrap">
             <input type="password" id="signupPassword" placeholder="Create a password" required
               autocomplete="new-password">
             <span class="auth-eye" onclick="togglePassword('signupPassword',this)">&#9679;</span>
           </div>
         </div>
-        <div class="auth-field">
-          <label>Confirm Password <span class="req">*</span></label>
+        <div class="auth-field"><label>Confirm Password <span class="req">*</span></label>
           <div class="auth-password-wrap">
             <input type="password" id="signupConfirm" placeholder="Confirm your password" required
               autocomplete="new-password">
@@ -861,8 +1253,7 @@
         </div>
         <div id="signupError" class="auth-error" style="display:none;"></div>
         <button type="submit" class="auth-submit" id="signupBtn">
-          <span class="auth-btn-text">Create Account</span>
-          <span class="auth-spinner" style="display:none;">...</span>
+          <span class="auth-btn-text">Create Account</span><span class="auth-spinner" style="display:none;">...</span>
         </button>
         <p class="auth-switch">Already have an account? <a href="#" onclick="switchTab('login');return false;">Login</a>
         </p>
@@ -875,7 +1266,7 @@
     <div class="footer-content">
       <div class="footer-brand">
         <img src="logo-new.jpeg" alt="KJR Interior Designs Inc." style="height:70px;margin-bottom:1.5rem;">
-        <p>A massive supplier for home appliances, electronics, HVAC, and more. BBB Accredited since 2014.</p>
+        <p>BBB Accredited since 2014. Nationwide interior design, renovation, and supply chain solutions.</p>
       </div>
       <div class="footer-col">
         <h4>CONTACT</h4>
@@ -893,18 +1284,15 @@
 
   <script src="assets/js/bunji.js"></script>
   <script>
-    const BACKEND = 'https://kjr-backend.onrender.com';
     function openAuthModal(tab) { document.getElementById('authModal').classList.add('open'); document.body.style.overflow = 'hidden'; switchTab(tab || 'login'); }
     function closeAuthModal() { document.getElementById('authModal').classList.remove('open'); document.body.style.overflow = ''; }
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAuthModal(); });
-    function switchTab(tab) { const l = tab === 'login'; document.getElementById('tabLogin').classList.toggle('active', l); document.getElementById('tabSignup').classList.toggle('active', !l); document.getElementById('formLogin').style.display = l ? 'flex' : 'none'; document.getElementById('formSignup').style.display = l ? 'none' : 'flex'; clearErrors(); }
-    function clearErrors() { ['loginError', 'signupError'].forEach(id => { const e = document.getElementById(id); if (e) { e.style.display = 'none'; e.textContent = ''; }; }); }
-    function showError(id, msg) { const e = document.getElementById(id); if (e) { e.textContent = msg; e.style.display = 'block'; } }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && !document.getElementById('congratsOverlay').classList.contains('open')) closeAuthModal(); });
+    function switchTab(tab) { const l = tab === 'login'; document.getElementById('tabLogin').classList.toggle('active', l); document.getElementById('tabSignup').classList.toggle('active', !l); document.getElementById('formLogin').style.display = l ? 'flex' : 'none'; document.getElementById('formSignup').style.display = l ? 'none' : 'flex';['loginError', 'signupError'].forEach(id => { const e = document.getElementById(id); if (e) { e.style.display = 'none'; e.textContent = ''; }; }); }
     function togglePassword(fId, eye) { const i = document.getElementById(fId); const s = i.type === 'password'; i.type = s ? 'text' : 'password'; eye.textContent = s ? 'Hide' : 'Show'; }
     function toggleSignupFields() { const t = document.getElementById('signupType').value; document.getElementById('companyField').style.display = ['sales_team', 'parts', 'bids', 'property'].includes(t) ? 'block' : 'none'; document.getElementById('instructorField').style.display = t === 'grad' ? 'block' : 'none'; }
-    function setLoading(id, on) { const b = document.getElementById(id); b.querySelector('.auth-btn-text').style.display = on ? 'none' : 'inline'; b.querySelector('.auth-spinner').style.display = on ? 'inline' : 'none'; b.disabled = on; }
-    async function handleLogin(e) { e.preventDefault(); clearErrors(); const loginType = document.getElementById('loginType').value; const identifier = document.getElementById('loginIdentifier').value.trim(); const password = document.getElementById('loginPassword').value; if (!loginType) return showError('loginError', 'Please select your account type.'); setLoading('loginBtn', true); try { const r = await fetch(BACKEND + '/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ identifier, password, loginType }) }); const d = await r.json(); if (!r.ok) throw new Error(d.errors?.[0]?.msg || 'Login failed'); localStorage.setItem('kjr_token', d.token); localStorage.setItem('kjr_user', JSON.stringify(d.user)); closeAuthModal(); } catch (err) { showError('loginError', err.message); } finally { setLoading('loginBtn', false); } }
-    async function handleSignup(e) { e.preventDefault(); clearErrors(); const p = document.getElementById('signupPassword').value; const c = document.getElementById('signupConfirm').value; if (p !== c) return showError('signupError', 'Passwords do not match.'); setLoading('signupBtn', true); try { const r = await fetch(BACKEND + '/api/auth/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: document.getElementById('signupUsername').value.trim(), email: document.getElementById('signupEmail').value.trim(), password: p, accountType: document.getElementById('signupType').value, phone: document.getElementById('signupPhone').value.trim(), company: document.getElementById('signupCompany').value.trim(), instructor: document.getElementById('signupInstructor').value.trim() }) }); const d = await r.json(); if (!r.ok) throw new Error(d.errors?.[0]?.msg || 'Registration failed'); localStorage.setItem('kjr_token', d.token); localStorage.setItem('kjr_user', JSON.stringify(d.user)); closeAuthModal(); } catch (err) { showError('signupError', err.message); } finally { setLoading('signupBtn', false); } }
+    function setLoading2(id, on) { const b = document.getElementById(id); b.querySelector('.auth-btn-text').style.display = on ? 'none' : 'inline'; b.querySelector('.auth-spinner').style.display = on ? 'inline' : 'none'; b.disabled = on; }
+    async function handleLogin(e) { e.preventDefault(); const errEl = document.getElementById('loginError'); errEl.style.display = 'none'; const loginType = document.getElementById('loginType').value; const identifier = document.getElementById('loginIdentifier').value.trim(); const password = document.getElementById('loginPassword').value; if (!loginType) { errEl.textContent = 'Please select your account type.'; errEl.style.display = 'block'; return; } setLoading2('loginBtn', true); try { const r = await fetch(BACKEND + '/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ identifier, password, loginType }) }); const d = await r.json(); if (!r.ok) throw new Error(d.errors?.[0]?.msg || 'Login failed'); localStorage.setItem('kjr_token', d.token); localStorage.setItem('kjr_user', JSON.stringify(d.user)); closeAuthModal(); } catch (err) { errEl.textContent = err.message; errEl.style.display = 'block'; } finally { setLoading2('loginBtn', false); } }
+    async function handleSignup(e) { e.preventDefault(); const errEl = document.getElementById('signupError'); errEl.style.display = 'none'; const p = document.getElementById('signupPassword').value; const c = document.getElementById('signupConfirm').value; if (p !== c) { errEl.textContent = 'Passwords do not match.'; errEl.style.display = 'block'; return; } setLoading2('signupBtn', true); try { const r = await fetch(BACKEND + '/api/auth/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: document.getElementById('signupUsername').value.trim(), email: document.getElementById('signupEmail').value.trim(), password: p, accountType: document.getElementById('signupType').value, phone: document.getElementById('signupPhone').value.trim(), company: document.getElementById('signupCompany').value.trim(), instructor: document.getElementById('signupInstructor').value.trim() }) }); const d = await r.json(); if (!r.ok) throw new Error(d.errors?.[0]?.msg || 'Registration failed'); localStorage.setItem('kjr_token', d.token); localStorage.setItem('kjr_user', JSON.stringify(d.user)); closeAuthModal(); } catch (err) { errEl.textContent = err.message; errEl.style.display = 'block'; } finally { setLoading2('signupBtn', false); } }
   </script>
 </body>
 
