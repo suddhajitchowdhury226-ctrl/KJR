@@ -132,7 +132,7 @@ router.post('/charge', async (req, res) => {
 
   // ── Transaction request — order MUST match Authorize.net XSD sequence ──
   const transactionRequest = new ApiContracts.TransactionRequestType();
-  transactionRequest.setTransactionType(ApiContracts.TransactionTypeEnum.authCaptureTransaction);
+  transactionRequest.setTransactionType(ApiContracts.TransactionTypeEnum.AUTHCAPTURETRANSACTION);
   transactionRequest.setAmount(parsedAmount.toFixed(2));
   transactionRequest.setPayment(paymentType);
   transactionRequest.setOrder(orderDetails);
