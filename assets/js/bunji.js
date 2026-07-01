@@ -343,7 +343,8 @@
       background: var(--primary, #cc0000); color: white;
       border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
       cursor: pointer; font-size: 24px;
-      display: flex; align-items: center; justify-content: center;
+      display: none !important;
+      align-items: center; justify-content: center;
       transition: transform 0.3s ease;
       position: relative;
     }
