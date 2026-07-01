@@ -191,9 +191,9 @@
       <h1>KJ Remodeling Interior Designs Inc.</h1>
       <p>Advancing the conversation on interior design, renovation, and supply chain solutions across the USA.</p>
       <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-        <a href="bid-projects.html" class="btn">Start Bidding</a>
-        <a href="#parts" class="btn">Buy Parts</a>
-        <a href="property-mgmt.html" class="btn">Property Mgmt Crew</a>
+        <a href="#" class="btn" onclick="requireLogin(event,'bid-projects.html')">Start Bidding</a>
+        <a href="#" class="btn" onclick="requireLogin(event,'#parts')">Buy Parts</a>
+        <a href="#" class="btn" onclick="requireLogin(event,'property-mgmt.html')">Property Mgmt Crew</a>
       </div>
     </div>
   </section>
@@ -387,6 +387,38 @@
     // ── Auth Modal ─────────────────────────────────────────────────────────
     const BACKEND = 'https://kjr-backend.onrender.com';
 
+    // ── Require login before navigating ───────────────────────────────────
+    function requireLogin(e, destination) {
+      e.preventDefault();
+      const token = localStorage.getItem('kjr_token');
+      if (token) {
+        // Already logged in — navigate directly
+        if (destination.startsWith('#')) {
+          const el = document.querySelector(destination);
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+        } else {
+          window.location.href = destination;
+        }
+      } else {
+        // Not logged in — store destination and open modal
+        window._pendingNavDest = destination;
+        openAuthModal('login');
+      }
+    }
+
+    // After successful login/signup, redirect if a destination is pending
+    function handlePostLoginRedirect() {
+      const dest = window._pendingNavDest;
+      if (!dest) return;
+      window._pendingNavDest = null;
+      if (dest.startsWith('#')) {
+        const el = document.querySelector(dest);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        window.location.href = dest;
+      }
+    }
+
     function openAuthModal(tab = 'login') {
       document.getElementById('authModal').classList.add('open');
       document.body.style.overflow = 'hidden';
@@ -471,6 +503,7 @@
         localStorage.setItem('kjr_user', JSON.stringify({ ...data.user, loginType }));
         closeAuthModal();
         updateAuthButton({ ...data.user, loginType });
+        handlePostLoginRedirect();
       } catch (err) {
         showError('loginError', err.message);
       } finally {
@@ -505,6 +538,7 @@
         localStorage.setItem('kjr_user', JSON.stringify({ ...data.user, loginType }));
         closeAuthModal();
         updateAuthButton({ ...data.user, loginType });
+        handlePostLoginRedirect();
       } catch (err) {
         showError('signupError', err.message);
       } finally {
