@@ -130,17 +130,17 @@ router.post('/charge', async (req, res) => {
   billTo.setCountry('US');
   if (phone) billTo.setPhoneNumber(phone.replace(/\D/g, '').substring(0, 25));
 
-  // ── Transaction request ─────────────────────────────────────────────────
+  // ── Transaction request — order MUST match Authorize.net XSD sequence ──
   const transactionRequest = new ApiContracts.TransactionRequestType();
   transactionRequest.setTransactionType(ApiContracts.TransactionTypeEnum.authCaptureTransaction);
-  transactionRequest.setPayment(paymentType);
   transactionRequest.setAmount(parsedAmount.toFixed(2));
+  transactionRequest.setPayment(paymentType);
   transactionRequest.setOrder(orderDetails);
-  transactionRequest.setCustomer(customerData);
-  transactionRequest.setBillTo(billTo);
   if (Array.isArray(cartItems) && cartItems.length > 0) {
     transactionRequest.setLineItems(lineItemsArr);
   }
+  transactionRequest.setCustomer(customerData);
+  transactionRequest.setBillTo(billTo);
 
   // ── Create the full API request ─────────────────────────────────────────
   const createRequest = new ApiContracts.CreateTransactionRequest();
