@@ -1074,6 +1074,7 @@
       const [expMo, expYr] = exp.split('/');
 
       // Build Accept.js secure data — card NEVER touches our server
+      // NOTE: Accept.js only accepts cardNumber, month, year, cardCode — no extra fields
       const secureData = {
         authData: {
           clientKey: authNetConfig.publicClientKey,
@@ -1082,9 +1083,8 @@
         cardData: {
           cardNumber: document.getElementById('cardNumber').value.replace(/\s/g, ''),
           month: expMo,
-          year: '20' + expYr,
-          cardCode: document.getElementById('cardCvv').value.trim(),
-          fullName: document.getElementById('cardName').value.trim()
+          year: expYr.length === 4 ? expYr : '20' + expYr,
+          cardCode: document.getElementById('cardCvv').value.trim()
         }
       };
 
