@@ -107,6 +107,7 @@ img {
   border-bottom: 1px solid var(--border-light);
   font-family: var(--font-sans);
   font-size: 0.85rem;
+  position: relative;
 }
 
 .top-bar-left .utility-info {
@@ -151,6 +152,34 @@ img {
   background: var(--primary-dark);
   transform: translateY(-1px);
   box-shadow: 0 4px 8px rgba(204, 0, 0, 0.2);
+}
+
+/* Pay Now center button */
+.top-bar-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.paynow-btn {
+  background: var(--primary);
+  color: white !important;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.45rem 1.4rem;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  display: inline-block;
+}
+
+.paynow-btn:hover {
+  background: var(--primary-dark) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(204, 0, 0, 0.3);
 }
 
 /* --- Main Navigation Header (Cleaner) --- */
