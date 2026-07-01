@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Checkout | KJR Interior Designs Inc.</title>
+  <title>Pay Now | KJR Interior Designs Inc.</title>
   <link rel="stylesheet" href="styles.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
@@ -28,129 +28,57 @@
       color: var(--dark);
     }
 
-    .checkout-hero {
+    /* ── Page Hero ── */
+    .pn-hero {
       background: var(--dark);
       padding: 2.5rem 2rem;
       text-align: center;
     }
 
-    .checkout-hero h1 {
+    .pn-hero h1 {
       font-size: 2rem;
       font-weight: 800;
       color: #fff;
       font-family: 'Inter', sans-serif;
     }
 
-    .checkout-hero p {
-      color: rgba(255, 255, 255, .6);
+    .pn-hero p {
+      color: rgba(255, 255, 255, .55);
       margin-top: .4rem;
       font-size: .95rem;
     }
 
-    .breadcrumb {
-      background: #fff;
-      border-bottom: 1px solid var(--border);
-      padding: .7rem 2.5rem;
-      font-size: .82rem;
-      color: var(--muted);
-    }
-
-    .breadcrumb a {
-      color: var(--primary);
-      font-weight: 600;
-      text-decoration: none;
-    }
-
-    .breadcrumb span {
-      margin: 0 .4rem;
-    }
-
-    /* ── Steps ── */
-    .steps-bar {
-      background: #fff;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      justify-content: center;
-      gap: 0;
-      padding: .75rem 0;
-    }
-
-    .step {
-      display: flex;
-      align-items: center;
-      gap: .5rem;
-      padding: .5rem 2rem;
-      font-size: .82rem;
-      font-weight: 700;
-      color: var(--muted);
-      position: relative;
-    }
-
-    .step.active {
-      color: var(--primary);
-    }
-
-    .step.done {
-      color: #16a34a;
-    }
-
-    .step-num {
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      background: var(--bg);
-      border: 2px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: .78rem;
-      font-weight: 800;
-      flex-shrink: 0;
-    }
-
-    .step.active .step-num {
-      background: var(--primary);
-      border-color: var(--primary);
-      color: #fff;
-    }
-
-    .step.done .step-num {
-      background: #16a34a;
-      border-color: #16a34a;
-      color: #fff;
-    }
-
-    .step-arrow {
-      color: var(--border);
-      font-size: 1.1rem;
-    }
-
     /* ── Layout ── */
-    .checkout-page {
+    .pn-layout {
       max-width: 1100px;
-      margin: 0 auto;
-      padding: 2rem 1.5rem 5rem;
+      margin: 2.5rem auto 5rem;
+      padding: 0 1.5rem;
       display: grid;
       grid-template-columns: 1fr 360px;
       gap: 2rem;
       align-items: start;
     }
 
-    @media(max-width:780px) {
-      .checkout-page {
+    @media(max-width:820px) {
+      .pn-layout {
         grid-template-columns: 1fr;
       }
     }
 
-    /* ── Cart Table ── */
-    .cart-box {
+    /* ── Card shell ── */
+    .card {
       background: #fff;
       border: 1px solid var(--border);
       border-radius: 14px;
       overflow: hidden;
+      margin-bottom: 1.5rem;
     }
 
-    .cart-box-header {
+    .card:last-child {
+      margin-bottom: 0;
+    }
+
+    .card-hdr {
       padding: 1.1rem 1.5rem;
       border-bottom: 1px solid var(--border);
       display: flex;
@@ -158,79 +86,136 @@
       align-items: center;
     }
 
-    .cart-box-header h2 {
+    .card-hdr h2 {
       font-size: 1rem;
       font-weight: 800;
       font-family: 'Inter', sans-serif;
     }
 
-    .clear-cart-btn {
-      font-size: .75rem;
-      color: var(--primary);
-      background: none;
+    /* ── Add Product Form ── */
+    .add-form {
+      padding: 1.25rem 1.5rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      gap: .75rem;
+      align-items: end;
+    }
+
+    @media(max-width:600px) {
+      .add-form {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .fld label {
+      display: block;
+      font-size: .72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      margin-bottom: .35rem;
+    }
+
+    .fld input {
+      width: 100%;
+      padding: .65rem .9rem;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: .9rem;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      transition: border-color .2s;
+    }
+
+    .fld input:focus {
+      border-color: var(--primary);
+    }
+
+    .add-btn {
+      padding: .68rem 1.4rem;
+      background: var(--primary);
+      color: #fff;
       border: none;
+      border-radius: 8px;
+      font-size: .88rem;
+      font-weight: 800;
       cursor: pointer;
       font-family: 'Inter', sans-serif;
-      font-weight: 600;
+      white-space: nowrap;
+      transition: background .2s;
     }
 
-    .cart-item {
-      display: grid;
-      grid-template-columns: 1fr auto auto;
-      gap: 1rem;
-      align-items: center;
-      padding: 1rem 1.5rem;
+    .add-btn:hover {
+      background: #aa0000;
+    }
+
+    /* ── Items Table ── */
+    .items-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .items-table th {
+      font-size: .72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      padding: .65rem 1.5rem;
+      background: #f8fafc;
       border-bottom: 1px solid var(--border);
+      text-align: left;
     }
 
-    .cart-item:last-child {
+    .items-table td {
+      padding: .85rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      font-size: .9rem;
+      vertical-align: middle;
+    }
+
+    .items-table tr:last-child td {
       border-bottom: none;
     }
 
-    .item-name {
-      font-size: .9rem;
-      font-weight: 700;
-      color: var(--dark);
-    }
-
-    .item-part {
-      font-size: .75rem;
+    .part-tag {
+      font-size: .72rem;
       color: var(--muted);
-      margin-top: .15rem;
       font-family: 'Courier New', monospace;
+      margin-top: .2rem;
     }
 
-    .item-price {
-      font-size: .95rem;
+    .price-cell {
       font-weight: 800;
       color: var(--primary);
       white-space: nowrap;
     }
 
-    .qty-ctrl-sm {
+    .qty-ctrl {
       display: flex;
       align-items: center;
       border: 1.5px solid var(--border);
       border-radius: 7px;
       overflow: hidden;
+      width: fit-content;
     }
 
-    .qty-ctrl-sm button {
+    .qty-ctrl button {
       width: 28px;
       height: 28px;
       border: none;
-      background: var(--bg);
+      background: #f8fafc;
       font-size: 1rem;
       cursor: pointer;
-      font-family: 'Inter', sans-serif;
     }
 
-    .qty-ctrl-sm button:hover {
+    .qty-ctrl button:hover {
       background: #e2e8f0;
     }
 
-    .qty-ctrl-sm input {
-      width: 40px;
+    .qty-ctrl input {
+      width: 42px;
       text-align: center;
       border: none;
       border-left: 1.5px solid var(--border);
@@ -242,41 +227,64 @@
       outline: none;
     }
 
-    .remove-btn {
+    .del-btn {
       background: none;
       border: none;
       color: #94a3b8;
       cursor: pointer;
-      font-size: 1rem;
-      padding: 0 .25rem;
+      font-size: 1.1rem;
+      padding: 0 .2rem;
+      transition: color .2s;
     }
 
-    .remove-btn:hover {
+    .del-btn:hover {
       color: var(--primary);
     }
 
-    .empty-cart {
-      padding: 3rem;
+    .no-items {
+      padding: 2.5rem;
       text-align: center;
       color: var(--muted);
-    }
-
-    .empty-cart .big {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-    }
-
-    .empty-cart p {
       font-size: .9rem;
     }
 
-    .empty-cart a {
-      color: var(--primary);
-      font-weight: 700;
-      text-decoration: none;
+    /* ── Billing form ── */
+    .bill-body {
+      padding: 1.5rem;
     }
 
-    /* ── Order Summary ── */
+    .bill-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media(max-width:500px) {
+      .bill-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .bill-grid .span2 {
+      grid-column: 1/-1;
+    }
+
+    .inp {
+      width: 100%;
+      padding: .65rem .9rem;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: .9rem;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      transition: border-color .2s;
+    }
+
+    .inp:focus {
+      border-color: var(--primary);
+    }
+
+    /* ── Summary Box ── */
     .summary-box {
       background: #fff;
       border: 1px solid var(--border);
@@ -290,41 +298,39 @@
       font-size: 1rem;
       font-weight: 800;
       margin-bottom: 1.25rem;
-      font-family: 'Inter', sans-serif;
     }
 
-    .summary-row {
+    .sum-row {
       display: flex;
       justify-content: space-between;
       font-size: .88rem;
       padding: .45rem 0;
       border-bottom: 1px solid var(--border);
-      color: var(--dark);
     }
 
-    .summary-row:last-of-type {
+    .sum-row:last-of-type {
       border-bottom: none;
     }
 
-    .summary-row span:last-child {
+    .sum-row span:last-child {
       font-weight: 700;
     }
 
-    .summary-total {
+    .sum-total {
       display: flex;
       justify-content: space-between;
-      font-size: 1.1rem;
+      font-size: 1.15rem;
       font-weight: 800;
-      padding: .75rem 0 1rem;
+      padding: .75rem 0 1.1rem;
       border-top: 2px solid var(--dark);
       margin-top: .5rem;
     }
 
-    .summary-total span:last-child {
+    .sum-total span:last-child {
       color: var(--primary);
     }
 
-    .checkout-btn {
+    .pay-btn {
       width: 100%;
       padding: 1rem;
       background: var(--primary);
@@ -336,44 +342,18 @@
       cursor: pointer;
       font-family: 'Inter', sans-serif;
       transition: background .2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: .5rem;
     }
 
-    .checkout-btn:hover {
+    .pay-btn:hover {
       background: #aa0000;
     }
 
-    .checkout-btn:disabled {
+    .pay-btn:disabled {
       background: #94a3b8;
       cursor: default;
     }
 
-    .continue-btn {
-      width: 100%;
-      padding: .75rem;
-      background: #fff;
-      color: var(--dark);
-      border: 1.5px solid var(--border);
-      border-radius: 10px;
-      font-size: .88rem;
-      font-weight: 700;
-      cursor: pointer;
-      font-family: 'Inter', sans-serif;
-      margin-top: .75rem;
-      transition: all .2s;
-      text-align: center;
-      display: block;
-      text-decoration: none;
-    }
-
-    .continue-btn:hover {
-      border-color: var(--dark);
-    }
-
-    .secure-badge {
+    .secure {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -381,38 +361,6 @@
       font-size: .75rem;
       color: var(--muted);
       margin-top: .85rem;
-    }
-
-    .promo-row {
-      display: flex;
-      gap: .5rem;
-      margin: 1rem 0;
-    }
-
-    .promo-row input {
-      flex: 1;
-      padding: .55rem .85rem;
-      border: 1.5px solid var(--border);
-      border-radius: 7px;
-      font-size: .82rem;
-      font-family: 'Inter', sans-serif;
-      outline: none;
-    }
-
-    .promo-row input:focus {
-      border-color: var(--primary);
-    }
-
-    .promo-row button {
-      padding: .55rem 1rem;
-      background: var(--dark);
-      color: #fff;
-      border: none;
-      border-radius: 7px;
-      font-size: .82rem;
-      font-weight: 700;
-      cursor: pointer;
-      font-family: 'Inter', sans-serif;
     }
 
     .call-bar {
@@ -428,19 +376,76 @@
     .call-bar strong {
       color: var(--dark);
     }
+
+    /* ── Success overlay ── */
+    #successOverlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .6);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+
+    #successOverlay.open {
+      display: flex;
+    }
+
+    .success-box {
+      background: #fff;
+      border-radius: 16px;
+      padding: 3rem 2.5rem;
+      max-width: 480px;
+      width: 90%;
+      text-align: center;
+    }
+
+    .success-box .check {
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .success-box h2 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #16a34a;
+      margin-bottom: .75rem;
+    }
+
+    .success-box p {
+      color: var(--muted);
+      font-size: .92rem;
+      margin-bottom: 2rem;
+    }
+
+    .success-box .back-btn {
+      display: inline-block;
+      background: var(--primary);
+      color: #fff;
+      padding: .8rem 2rem;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: .9rem;
+      text-decoration: none;
+    }
   </style>
 </head>
 
 <body>
 
-  <!-- Top Bar -->
+  <!-- Top Utility Bar -->
   <div class="top-bar">
     <div class="top-bar-left">
-      <span class="utility-info">📞 <strong>888-944-6313</strong> • Call in Orders Only • Call 24/7 • Live
-        Operator</span>
+      <span class="utility-info"><strong>888-944-6313</strong> • Call in Orders Only • Call 24/7 • Live Operator</span>
+    </div>
+    <div class="top-bar-center">
+      <a href="pay-now.html" class="paynow-btn">PAY NOW</a>
     </div>
     <div class="top-bar-right">
       <a href="contact-us.html">Contact</a>
+      <a href="suggest-feature.html">Suggest Feature</a>
       <button class="auth-trigger-btn" onclick="openAuthModal('login')">Login / Sign Up</button>
     </div>
   </div>
@@ -455,429 +460,312 @@
         <div class="secondary-nav-container">
           <ul class="nav-links">
             <li><a href="index.html">HOME</a></li>
-            <li><a href="products.html">PRODUCTS</a></li>
+            <li class="has-dropdown">
+              <a href="#">WORK FORCE <span class="dropdown-arrow">▾</span></a>
+              <ul class="dropdown-menu">
+                <li><a href="career-move.html">Career Move</a></li>
+                <li><a href="property-mgmt.html">Property Mgmt Crew</a></li>
+                <li><a href="bid-projects.html">Bid Projects</a></li>
+                <li><a href="work-completed.html">Work Completed by KJRID</a></li>
+              </ul>
+            </li>
             <li><a href="about-us.html">ABOUT</a></li>
           </ul>
         </div>
       </nav>
       <div class="header-actions">
-        <a href="Lot-categories.html" class="parts-highlight"
-          style="background:var(--primary);color:#fff;padding:0.4rem 1rem;border-radius:4px;">PARTS CATEGORIES</a>
+        <a href="#parts" class="parts-highlight">10M+ PARTS</a>
       </div>
     </div>
   </header>
 
   <!-- Hero -->
-  <div class="checkout-hero">
-    <h1>🛒 Your Cart</h1>
-    <p>Review your items, then proceed to payment</p>
+  <div class="pn-hero">
+    <h1>Pay Now</h1>
+    <p>Add your items, fill in billing details, and submit your payment securely.</p>
   </div>
 
-  <!-- Breadcrumb -->
-  <div class="breadcrumb">
-    <a href="index.html">Home</a><span>›</span>
-    <a href="products.html">Products</a><span>›</span>
-    Checkout
-  </div>
+  <!-- Main Layout -->
+  <div class="pn-layout">
 
-  <!-- Steps -->
-  <div class="steps-bar">
-    <div class="step active" id="step1Btn">
-      <span class="step-num">1</span> Cart
-    </div>
-    <span class="step-arrow">›</span>
-    <div class="step" id="step2Btn">
-      <span class="step-num">2</span> Shipping
-    </div>
-    <span class="step-arrow">›</span>
-    <div class="step" id="step3Btn">
-      <span class="step-num">3</span> Payment
-    </div>
-    <span class="step-arrow">›</span>
-    <div class="step" id="step4Btn">
-      <span class="step-num">4</span> Confirmation
-    </div>
-  </div>
+    <!-- LEFT COLUMN -->
+    <div>
 
-  <!-- Step 2: Shipping -->
-  <div id="shippingStep" style="display:none;max-width:780px;margin:2rem auto;padding:0 1.5rem;">
-    <div class="cart-box" style="margin-bottom:1.5rem;">
-      <div class="cart-box-header">
-        <h2>📍 Shipping Address</h2>
+      <!-- ADD PRODUCT CARD -->
+      <div class="card">
+        <div class="card-hdr">
+          <h2>Add Products</h2>
+        </div>
+        <div class="add-form">
+          <div class="fld">
+            <label>Product Name</label>
+            <input type="text" id="addName" placeholder="e.g. Water Heater 40 gal">
+          </div>
+          <div class="fld">
+            <label>Part Number (optional)</label>
+            <input type="text" id="addPart" placeholder="e.g. WH-40-GAS">
+          </div>
+          <div class="fld">
+            <label>Unit Price ($)</label>
+            <input type="number" id="addPrice" placeholder="0.00" min="0" step="0.01">
+          </div>
+          <div>
+            <button class="add-btn" onclick="addProduct()">+ Add</button>
+          </div>
+        </div>
+        <div id="addError" style="padding:0 1.5rem .75rem;color:var(--primary);font-size:.82rem;display:none;"></div>
       </div>
-      <div style="padding:1.5rem;">
-        <div id="savedAddressList" style="margin-bottom:1.25rem;display:none;"></div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
-          <div><label
-              style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#64748b;display:block;margin-bottom:.35rem;">First
-              Name *</label>
-            <input id="ship-first" type="text" placeholder="First name"
-              style="width:100%;padding:.65rem .9rem;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.9rem;font-family:'Inter',sans-serif;outline:none;">
-          </div>
-          <div><label
-              style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#64748b;display:block;margin-bottom:.35rem;">Last
-              Name *</label>
-            <input id="ship-last" type="text" placeholder="Last name"
-              style="width:100%;padding:.65rem .9rem;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.9rem;font-family:'Inter',sans-serif;outline:none;">
-          </div>
-        </div>
-        <div style="margin-bottom:1rem;"><label
-            style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#64748b;display:block;margin-bottom:.35rem;">Street
-            Address *</label>
-          <input id="ship-street" type="text" placeholder="123 Main St"
-            style="width:100%;padding:.65rem .9rem;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.9rem;font-family:'Inter',sans-serif;outline:none;">
-        </div>
-        <div style="margin-bottom:1rem;"><label
-            style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#64748b;display:block;margin-bottom:.35rem;">Apt
-            / Suite / Unit</label>
-          <input id="ship-apt" type="text" placeholder="Apt 4B (optional)"
-            style="width:100%;padding:.65rem .9rem;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.9rem;font-family:'Inter',sans-serif;outline:none;">
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1rem;">
-          <div><label
-              style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#64748b;display:block;margin-bottom:.35rem;">City
-              *</label>
-            <input id="ship-city" placeholder="City"
-              style="width:100%;padding:.65rem .9rem;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.9rem;font-family:'Inter',sans-serif;outline:none;">
-          </div>
-          <div><label
-              style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#64748b;display:block;margin-bottom:.35rem;">State
-              *</label>
-            <input id="ship-state" placeholder="FL"
-              style="width:100%;padding:.65rem .9rem;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.9rem;font-family:'Inter',sans-serif;outline:none;">
-          </div>
-          <div><label
-              style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#64748b;display:block;margin-bottom:.35rem;">ZIP
-              *</label>
-            <input id="ship-zip" placeholder="00000"
-              style="width:100%;padding:.65rem .9rem;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.9rem;font-family:'Inter',sans-serif;outline:none;">
-          </div>
-        </div>
-        <div style="margin-bottom:1rem;"><label
-            style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#64748b;display:block;margin-bottom:.35rem;">Phone</label>
-          <input id="ship-phone" type="tel" placeholder="555-123-4567"
-            style="width:100%;padding:.65rem .9rem;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.9rem;font-family:'Inter',sans-serif;outline:none;">
-        </div>
-        <div style="margin-bottom:1rem;">
-          <label style="display:flex;align-items:center;gap:.5rem;font-size:.85rem;font-weight:600;cursor:pointer;">
-            <input type="checkbox" id="ship-save" style="width:16px;height:16px;accent-color:#cc0000;">
-            Save this address to my profile
-          </label>
-        </div>
-        <div id="shipError" style="color:#cc0000;font-size:.82rem;margin-bottom:.75rem;display:none;"></div>
-      </div>
-    </div>
-    <div style="display:flex;gap:1rem;">
-      <button class="checkout-btn" style="width:auto;padding:.85rem 2rem;" onclick="goToPaymentFromShipping()">Continue
-        to Payment →</button>
-      <button onclick="goBackToCart()"
-        style="padding:.85rem 1.5rem;background:#fff;border:1.5px solid #e2e8f0;border-radius:10px;font-size:.88rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">←
-        Back to Cart</button>
-    </div>
-  </div>
 
-  <!-- Page -->
-  <div class="checkout-page">
-
-    <!-- Cart Items -->
-    <div class="cart-box">
-      <div class="cart-box-header">
-        <h2>Cart Items (<span id="itemCount">0</span>)</h2>
-        <button class="clear-cart-btn" onclick="clearCart()">Clear Cart</button>
-      </div>
-      <div id="cartItems">
-        <div class="empty-cart">
-          <div class="big">🛒</div>
-          <p>Your cart is empty. <a href="products.html">Browse products →</a></p>
+      <!-- ITEMS LIST CARD -->
+      <div class="card">
+        <div class="card-hdr">
+          <h2>Order Items &nbsp;<span id="itemBadge"
+              style="background:#f1f5f9;border-radius:20px;padding:.15rem .65rem;font-size:.8rem;font-weight:700;">0</span>
+          </h2>
+          <button onclick="clearAll()"
+            style="font-size:.75rem;color:var(--primary);background:none;border:none;cursor:pointer;font-weight:600;">Clear
+            All</button>
+        </div>
+        <div id="itemsWrap">
+          <div class="no-items">No products added yet. Use the form above to add items.</div>
         </div>
       </div>
-    </div>
 
-    <!-- Order Summary -->
+      <!-- BILLING CARD -->
+      <div class="card">
+        <div class="card-hdr">
+          <h2>Billing Information</h2>
+        </div>
+        <div class="bill-body">
+          <div class="bill-grid">
+            <div class="fld">
+              <label>First Name <span style="color:var(--primary)">*</span></label>
+              <input class="inp" type="text" id="bFirst" placeholder="John">
+            </div>
+            <div class="fld">
+              <label>Last Name <span style="color:var(--primary)">*</span></label>
+              <input class="inp" type="text" id="bLast" placeholder="Smith">
+            </div>
+            <div class="fld span2">
+              <label>Email Address <span style="color:var(--primary)">*</span></label>
+              <input class="inp" type="email" id="bEmail" placeholder="you@email.com">
+            </div>
+            <div class="fld span2">
+              <label>Phone Number</label>
+              <input class="inp" type="tel" id="bPhone" placeholder="555-123-4567">
+            </div>
+            <div class="fld span2">
+              <label>Company / Organization</label>
+              <input class="inp" type="text" id="bCompany" placeholder="Optional">
+            </div>
+            <div class="fld span2">
+              <label>Notes / Reference</label>
+              <input class="inp" type="text" id="bNotes" placeholder="Invoice #, order reference, etc.">
+            </div>
+          </div>
+          <div id="billError" style="color:var(--primary);font-size:.82rem;margin-top:.75rem;display:none;"></div>
+        </div>
+      </div>
+
+    </div><!-- end left -->
+
+    <!-- RIGHT COLUMN: Summary -->
     <div class="summary-box">
       <h3>Order Summary</h3>
+      <div class="sum-row"><span>Items</span><span id="sumItems">0</span></div>
+      <div class="sum-row"><span>Subtotal</span><span id="sumSubtotal">$0.00</span></div>
+      <div class="sum-row"><span>Tax (8%)</span><span id="sumTax">$0.00</span></div>
+      <div class="sum-total"><span>Total Due</span><span id="sumTotal">$0.00</span></div>
 
-      <div class="summary-row"><span>Subtotal (<span id="qtyTotal">0</span> items)</span><span
-          id="subtotalAmt">$0.00</span></div>
-      <div class="summary-row"><span>Shipping</span><span>Calculated at payment</span></div>
-      <div class="summary-row"><span>Tax (est.)</span><span id="taxAmt">$0.00</span></div>
-      <div class="summary-total">
-        <span>Total</span>
-        <span id="totalAmt">$0.00</span>
-      </div>
-
-      <div class="promo-row">
-        <input type="text" id="promoInput" placeholder="Promo code">
-        <button onclick="applyPromo()">Apply</button>
-      </div>
-
-      <button class="checkout-btn" id="checkoutBtn" onclick="goToPayment()" disabled>
-        💳 Proceed to Payment
+      <button class="pay-btn" id="payBtn" onclick="submitPayment()" disabled>
+        💳 Submit Payment
       </button>
-      <a href="products.html" class="continue-btn">← Continue Shopping</a>
 
-      <div class="secure-badge">🔒 Secure & Encrypted Checkout</div>
+      <div class="secure">🔒 Secure &amp; Encrypted</div>
 
       <div class="call-bar">
-        Prefer to order by phone?<br>
+        Prefer to pay by phone?<br>
         Call <strong>888-944-6313</strong> — 24/7 Live Operator
       </div>
     </div>
 
+  </div><!-- end layout -->
+
+  <!-- Success Overlay -->
+  <div id="successOverlay">
+    <div class="success-box">
+      <div class="check">✅</div>
+      <h2>Payment Submitted!</h2>
+      <p>Thank you. Your order has been received and our team will process it shortly.<br>A confirmation will be sent to
+        your email.</p>
+      <a href="index.html" class="back-btn">← Back to Home</a>
+    </div>
   </div>
 
   <script>
-    let cart = JSON.parse(localStorage.getItem('kjr_cart') || '[]');
-    let promoDiscount = 0;
+    let items = [];
 
-    function parsePrice(str) {
-      if (!str) return 0;
-      return parseFloat(str.replace(/[^0-9.]/g, '')) || 0;
-    }
+    function addProduct() {
+      const errEl = document.getElementById('addError');
+      const name = document.getElementById('addName').value.trim();
+      const part = document.getElementById('addPart').value.trim();
+      const price = parseFloat(document.getElementById('addPrice').value);
 
-    function saveCart() {
-      localStorage.setItem('kjr_cart', JSON.stringify(cart));
-    }
-
-    function render() {
-      const container = document.getElementById('cartItems');
-      const itemCount = document.getElementById('itemCount');
-      const qtyTotal = document.getElementById('qtyTotal');
-      const subtotalEl = document.getElementById('subtotalAmt');
-      const taxEl = document.getElementById('taxAmt');
-      const totalEl = document.getElementById('totalAmt');
-      const btn = document.getElementById('checkoutBtn');
-
-      if (cart.length === 0) {
-        container.innerHTML = `<div class="empty-cart">
-          <div class="big">🛒</div>
-          <p>Your cart is empty. <a href="products.html">Browse products →</a></p>
-        </div>`;
-        itemCount.textContent = '0';
-        qtyTotal.textContent = '0';
-        subtotalEl.textContent = '$0.00';
-        taxEl.textContent = '$0.00';
-        totalEl.textContent = '$0.00';
-        btn.disabled = true;
-        return;
-      }
-
-      let html = '';
-      let subtotal = 0;
-      let totalQty = 0;
-
-      cart.forEach((item, i) => {
-        const unitPrice = parsePrice(item.price);
-        const lineTotal = unitPrice * item.qty;
-        subtotal += lineTotal;
-        totalQty += item.qty;
-
-        html += `<div class="cart-item">
-          <div>
-            <div class="item-name">${item.name}</div>
-            <div class="item-part">Part# ${item.part || 'N/A'}</div>
-          </div>
-          <div class="qty-ctrl-sm">
-            <button onclick="changeQty(${i}, -1)">−</button>
-            <input type="number" value="${item.qty}" min="1" max="999"
-              onchange="setQty(${i}, this.value)">
-            <button onclick="changeQty(${i}, 1)">+</button>
-          </div>
-          <div style="display:flex;align-items:center;gap:.75rem;">
-            <div>
-              <div class="item-price">$${lineTotal.toFixed(2)}</div>
-              <div style="font-size:.72rem;color:var(--muted);">$${unitPrice.toFixed(2)} each</div>
-            </div>
-            <button class="remove-btn" onclick="removeItem(${i})" title="Remove">✕</button>
-          </div>
-        </div>`;
-      });
-
-      container.innerHTML = html;
-      itemCount.textContent = cart.length;
-      qtyTotal.textContent = totalQty;
-
-      subtotal = subtotal - promoDiscount;
-      if (subtotal < 0) subtotal = 0;
-      const tax = subtotal * 0.08;
-      const total = subtotal + tax;
-
-      subtotalEl.textContent = '$' + subtotal.toFixed(2);
-      taxEl.textContent = '$' + tax.toFixed(2);
-      totalEl.textContent = '$' + total.toFixed(2);
-      btn.disabled = false;
-    }
-
-    function changeQty(i, delta) {
-      cart[i].qty = Math.max(1, Math.min(999, (cart[i].qty || 1) + delta));
-      saveCart();
-      render();
-    }
-
-    function setQty(i, val) {
-      cart[i].qty = Math.max(1, Math.min(999, parseInt(val) || 1));
-      saveCart();
-      render();
-    }
-
-    function removeItem(i) {
-      cart.splice(i, 1);
-      saveCart();
-      render();
-    }
-
-    function clearCart() {
-      if (!confirm('Remove all items from cart?')) return;
-      cart = [];
-      saveCart();
-      render();
-    }
-
-    function applyPromo() {
-      const code = document.getElementById('promoInput').value.trim().toUpperCase();
-      if (code === 'KJR10') {
-        promoDiscount = 10;
-        alert('Promo code applied! $10.00 off your order.');
-      } else if (code === 'HVAC5') {
-        promoDiscount = 5;
-        alert('Promo code applied! $5.00 off your order.');
-      } else {
-        promoDiscount = 0;
-        alert('Invalid promo code. Try KJR10 for $10 off.');
-      }
-      render();
-    }
-
-    function goToPayment() {
-      if (cart.length === 0) return;
-      // Go to shipping step first
-      document.getElementById('checkoutBtn').disabled = true;
-      goToShipping();
-    }
-
-    // ── Step management ────────────────────────────────────────────────────────
-    const BACKEND = 'https://kjr-backend.onrender.com';
-
-    function goToShipping() {
-      document.querySelector('.checkout-page').style.display = 'none';
-      document.getElementById('shippingStep').style.display = 'block';
-      document.getElementById('step1Btn').classList.remove('active');
-      document.getElementById('step1Btn').classList.add('done');
-      document.getElementById('step2Btn').classList.add('active');
-      // Pre-fill from saved addresses if logged in
-      loadSavedAddressesForCheckout();
-    }
-
-    function goBackToCart() {
-      document.querySelector('.checkout-page').style.display = 'grid';
-      document.getElementById('shippingStep').style.display = 'none';
-      document.getElementById('step1Btn').classList.add('active');
-      document.getElementById('step1Btn').classList.remove('done');
-      document.getElementById('step2Btn').classList.remove('active');
-      document.getElementById('checkoutBtn').disabled = cart.length === 0;
-      render();
-    }
-
-    async function loadSavedAddressesForCheckout() {
-      const token = localStorage.getItem('kjr_token');
-      if (!token) return;
-      try {
-        const r = await fetch(BACKEND + '/api/auth/addresses', { headers: { 'x-auth-token': token } });
-        if (!r.ok) return;
-        const addrs = await r.json();
-        if (!addrs.length) return;
-        const container = document.getElementById('savedAddressList');
-        container.style.display = 'block';
-        container.innerHTML = '<p style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#64748b;margin-bottom:.5rem;">Saved Addresses</p>' +
-          addrs.map((a, i) => `<label style="display:flex;align-items:flex-start;gap:.75rem;border:1.5px solid ${a.isDefault ? '#6a0dad' : '#e2e8f0'};border-radius:10px;padding:.85rem;margin-bottom:.5rem;cursor:pointer;background:${a.isDefault ? '#faf5ff' : '#fff'};">
-            <input type="radio" name="savedAddr" value="${i}" ${a.isDefault ? 'checked' : ''} onchange="fillShippingFromSaved(${i})" style="margin-top:.2rem;accent-color:#cc0000;">
-            <div><strong style="font-size:.88rem;">${a.firstName} ${a.lastName}</strong>${a.isDefault ? ' <span style="background:#dbeafe;color:#1e40af;font-size:.65rem;font-weight:700;padding:.1rem .45rem;border-radius:10px;text-transform:uppercase;">Default</span>' : ''}<br><span style="font-size:.8rem;color:#64748b;">${a.street}${a.apt ? ' ' + a.apt : ''}, ${a.city}, ${a.state} ${a.zip}</span></div>
-          </label>`).join('') +
-          '<label style="display:flex;align-items:center;gap:.75rem;border:1.5px solid #e2e8f0;border-radius:10px;padding:.85rem;cursor:pointer;"><input type="radio" name="savedAddr" value="new" onchange="clearShippingFields()" style="accent-color:#cc0000;"> <span style="font-size:.88rem;font-weight:600;">+ Enter a different address</span></label>';
-        // Pre-fill default
-        const def = addrs.find(a => a.isDefault) || addrs[0];
-        const defIdx = addrs.indexOf(def);
-        window._savedCheckoutAddresses = addrs;
-        fillShippingFromSaved(defIdx);
-      } catch (e) { /* no saved addresses loaded */ }
-    }
-
-    function fillShippingFromSaved(idx) {
-      const addrs = window._savedCheckoutAddresses || [];
-      const a = addrs[idx];
-      if (!a) return;
-      document.getElementById('ship-first').value = a.firstName || '';
-      document.getElementById('ship-last').value = a.lastName || '';
-      document.getElementById('ship-street').value = a.street || '';
-      document.getElementById('ship-apt').value = a.apt || '';
-      document.getElementById('ship-city').value = a.city || '';
-      document.getElementById('ship-state').value = a.state || '';
-      document.getElementById('ship-zip').value = a.zip || '';
-      document.getElementById('ship-phone').value = a.phone || '';
-    }
-
-    function clearShippingFields() {
-      ['ship-first', 'ship-last', 'ship-street', 'ship-apt', 'ship-city', 'ship-state', 'ship-zip', 'ship-phone'].forEach(id => document.getElementById(id).value = '');
-    }
-
-    async function goToPaymentFromShipping() {
-      const errEl = document.getElementById('shipError');
       errEl.style.display = 'none';
-      const first = document.getElementById('ship-first').value.trim();
-      const last = document.getElementById('ship-last').value.trim();
-      const street = document.getElementById('ship-street').value.trim();
-      const city = document.getElementById('ship-city').value.trim();
-      const state = document.getElementById('ship-state').value.trim();
-      const zip = document.getElementById('ship-zip').value.trim();
-      if (!first || !last || !street || !city || !state || !zip) {
-        errEl.textContent = 'Please fill in all required fields (First Name, Last Name, Street, City, State, ZIP).';
+
+      if (!name && !part) {
+        errEl.textContent = 'Please enter at least a Product Name or Part Number.';
         errEl.style.display = 'block';
         return;
       }
-      // Save address to profile if checkbox ticked
-      const shouldSave = document.getElementById('ship-save').checked;
-      if (shouldSave && localStorage.getItem('kjr_token')) {
-        try {
-          await fetch(BACKEND + '/api/auth/addresses', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'x-auth-token': localStorage.getItem('kjr_token') },
-            body: JSON.stringify({ label: 'Home', firstName: first, lastName: last, street, apt: document.getElementById('ship-apt').value.trim(), city, state, zip, phone: document.getElementById('ship-phone').value.trim() })
-          });
-        } catch (e) { /* non-fatal */ }
+      if (isNaN(price) || price < 0) {
+        errEl.textContent = 'Please enter a valid price.';
+        errEl.style.display = 'block';
+        return;
       }
-      // Store shipping for payment page
-      localStorage.setItem('kjr_shipping', JSON.stringify({ firstName: first, lastName: last, street, apt: document.getElementById('ship-apt').value.trim(), city, state, zip, phone: document.getElementById('ship-phone').value.trim() }));
-      document.getElementById('step2Btn').classList.remove('active');
-      document.getElementById('step2Btn').classList.add('done');
-      document.getElementById('step3Btn').classList.add('active');
-      window.location.href = 'payment.html';
+
+      items.push({ name: name || part, part: part, price: price, qty: 1 });
+
+      // clear inputs
+      document.getElementById('addName').value = '';
+      document.getElementById('addPart').value = '';
+      document.getElementById('addPrice').value = '';
+      document.getElementById('addName').focus();
+
+      renderItems();
     }
 
-    // ── Check for returning from payment with invoice number ──────────────
-    (function checkReturnFromPayment() {
-      const params = new URLSearchParams(window.location.search);
-      const inv = params.get('invoice');
-      if (inv) {
-        // Payment was completed — show invoice link prominently
-        const summaryBox = document.querySelector('.summary-box');
-        if (summaryBox) {
-          const banner = document.createElement('div');
-          banner.style.cssText = 'background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:1rem;margin-top:1rem;text-align:center;';
-          banner.innerHTML = `<div style="color:#16a34a;font-weight:800;margin-bottom:.5rem;">✓ Payment Successful!</div>
-            <a href="invoice.html?id=${encodeURIComponent(inv)}" style="display:inline-block;background:#0f172a;color:#fff;padding:.6rem 1.25rem;border-radius:8px;font-size:.85rem;font-weight:700;text-decoration:none;margin-right:.5rem;">🧾 View Invoice</a>
-            <a href="order-tracking.html?id=${encodeURIComponent(inv)}" style="display:inline-block;background:#2563eb;color:#fff;padding:.6rem 1.25rem;border-radius:8px;font-size:.85rem;font-weight:700;text-decoration:none;margin-right:.5rem;">📦 Track Order</a>
-            <a href="products.html" style="display:inline-block;background:#cc0000;color:#fff;padding:.6rem 1.25rem;border-radius:8px;font-size:.85rem;font-weight:700;text-decoration:none;">🛒 Shop More</a>`;
-          summaryBox.appendChild(banner);
-        }
-      }
-    })();
+    // Allow Enter key on price field to trigger Add
+    document.getElementById('addPrice').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') addProduct();
+    });
 
-    // Init
-    render();
+    function renderItems() {
+      const wrap = document.getElementById('itemsWrap');
+      const badge = document.getElementById('itemBadge');
+
+      if (items.length === 0) {
+        wrap.innerHTML = '<div class="no-items">No products added yet. Use the form above to add items.</div>';
+        badge.textContent = '0';
+        updateSummary();
+        return;
+      }
+
+      badge.textContent = items.length;
+
+      let html = '<table class="items-table"><thead><tr><th>Product</th><th>Qty</th><th>Unit Price</th><th>Total</th><th></th></tr></thead><tbody>';
+      items.forEach((item, i) => {
+        const line = item.price * item.qty;
+        html += `<tr>
+          <td>
+            <div style="font-weight:700;">${escHtml(item.name)}</div>
+            ${item.part ? `<div class="part-tag">Part# ${escHtml(item.part)}</div>` : ''}
+          </td>
+          <td>
+            <div class="qty-ctrl">
+              <button onclick="changeQty(${i},-1)">−</button>
+              <input type="number" value="${item.qty}" min="1" max="9999"
+                onchange="setQty(${i},this.value)" style="width:42px;text-align:center;border:none;border-left:1.5px solid #e2e8f0;border-right:1.5px solid #e2e8f0;font-size:.85rem;font-weight:700;height:28px;outline:none;">
+              <button onclick="changeQty(${i},1)">+</button>
+            </div>
+          </td>
+          <td>$${item.price.toFixed(2)}</td>
+          <td class="price-cell">$${line.toFixed(2)}</td>
+          <td><button class="del-btn" onclick="removeItem(${i})" title="Remove">✕</button></td>
+        </tr>`;
+      });
+      html += '</tbody></table>';
+      wrap.innerHTML = html;
+      updateSummary();
+    }
+
+    function changeQty(i, d) {
+      items[i].qty = Math.max(1, Math.min(9999, items[i].qty + d));
+      renderItems();
+    }
+
+    function setQty(i, val) {
+      items[i].qty = Math.max(1, Math.min(9999, parseInt(val) || 1));
+      renderItems();
+    }
+
+    function removeItem(i) {
+      items.splice(i, 1);
+      renderItems();
+    }
+
+    function clearAll() {
+      if (items.length === 0) return;
+      if (!confirm('Remove all items?')) return;
+      items = [];
+      renderItems();
+    }
+
+    function updateSummary() {
+      let subtotal = 0, totalQty = 0;
+      items.forEach(it => { subtotal += it.price * it.qty; totalQty += it.qty; });
+      const tax = subtotal * 0.08;
+      const total = subtotal + tax;
+
+      document.getElementById('sumItems').textContent = totalQty;
+      document.getElementById('sumSubtotal').textContent = '$' + subtotal.toFixed(2);
+      document.getElementById('sumTax').textContent = '$' + tax.toFixed(2);
+      document.getElementById('sumTotal').textContent = '$' + total.toFixed(2);
+      document.getElementById('payBtn').disabled = items.length === 0;
+    }
+
+    function escHtml(str) {
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function submitPayment() {
+      const billErr = document.getElementById('billError');
+      billErr.style.display = 'none';
+
+      const first = document.getElementById('bFirst').value.trim();
+      const last = document.getElementById('bLast').value.trim();
+      const email = document.getElementById('bEmail').value.trim();
+
+      if (!first || !last) {
+        billErr.textContent = 'Please enter your first and last name.';
+        billErr.style.display = 'block';
+        document.getElementById('bFirst').focus();
+        return;
+      }
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        billErr.textContent = 'Please enter a valid email address.';
+        billErr.style.display = 'block';
+        document.getElementById('bEmail').focus();
+        return;
+      }
+      if (items.length === 0) return;
+
+      // Redirect to payment.html with order data
+      const subtotal = items.reduce((s, it) => s + it.price * it.qty, 0);
+      const tax = subtotal * 0.08;
+      const total = subtotal + tax;
+
+      const order = {
+        billing: {
+          firstName: first,
+          lastName: last,
+          email,
+          phone: document.getElementById('bPhone').value.trim(),
+          company: document.getElementById('bCompany').value.trim(),
+          notes: document.getElementById('bNotes').value.trim()
+        },
+        items,
+        subtotal: subtotal.toFixed(2),
+        tax: tax.toFixed(2),
+        total: total.toFixed(2)
+      };
+
+      localStorage.setItem('kjr_paynow_order', JSON.stringify(order));
+      window.location.href = 'payment.html?from=paynow';
+    }
   </script>
 
-
-  <!-- Auth Modal (shared) -->
+  <!-- Auth Modal -->
   <div id="authModal" class="auth-modal" onclick="if(event.target===this)closeAuthModal()">
     <div class="auth-modal-box">
       <button class="auth-close" onclick="closeAuthModal()" aria-label="Close">&times;</button>
@@ -982,9 +870,29 @@
     </div>
   </div>
 
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-brand">
+        <img src="logo-new.jpeg" alt="KJR Interior Designs Inc." style="height:70px;margin-bottom:1.5rem;">
+        <p>A massive supplier for home appliances, electronics, HVAC, and more. BBB Accredited since 2014.</p>
+      </div>
+      <div class="footer-col">
+        <h4>CONTACT</h4>
+        <p><a href="tel:888-944-6313" style="color:inherit;text-decoration:none;">888-944-6313</a><br>Open 24/7</p>
+        <p style="margin-top:1rem;"><a href="https://maps.google.com/?q=1420+Industrial+Park+Road,+Paris,+TN+38242"
+            target="_blank" style="color:inherit;text-decoration:none;">1420 Industrial Park Road<br>Paris, TN 38242</a>
+        </p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>&copy; 2024 KJR Interior Designs Inc. All rights reserved.</div>
+      <div><a href="#">Privacy Policy</a> &nbsp;|&nbsp; <a href="#">Terms of Service</a></div>
+    </div>
+  </footer>
+
   <script src="assets/js/bunji.js"></script>
   <script>
-    // ── Shared Auth Modal ──────────────────────────────────────────────────
     const BACKEND = 'https://kjr-backend.onrender.com';
     function openAuthModal(tab) { document.getElementById('authModal').classList.add('open'); document.body.style.overflow = 'hidden'; switchTab(tab || 'login'); }
     function closeAuthModal() { document.getElementById('authModal').classList.remove('open'); document.body.style.overflow = ''; }
@@ -995,27 +903,9 @@
     function togglePassword(fId, eye) { const i = document.getElementById(fId); const s = i.type === 'password'; i.type = s ? 'text' : 'password'; eye.textContent = s ? 'Hide' : 'Show'; }
     function toggleSignupFields() { const t = document.getElementById('signupType').value; document.getElementById('companyField').style.display = ['sales_team', 'parts', 'bids', 'property'].includes(t) ? 'block' : 'none'; document.getElementById('instructorField').style.display = t === 'grad' ? 'block' : 'none'; }
     function setLoading(id, on) { const b = document.getElementById(id); b.querySelector('.auth-btn-text').style.display = on ? 'none' : 'inline'; b.querySelector('.auth-spinner').style.display = on ? 'inline' : 'none'; b.disabled = on; }
-    async function handleLogin(e) { e.preventDefault(); clearErrors(); const loginType = document.getElementById('loginType').value; const identifier = document.getElementById('loginIdentifier').value.trim(); const password = document.getElementById('loginPassword').value; if (!loginType) return showError('loginError', 'Please select your account type.'); setLoading('loginBtn', true); try { const r = await fetch(BACKEND + '/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ identifier, password, loginType }) }); const d = await r.json(); if (!r.ok) throw new Error(d.errors?.[0]?.msg || 'Login failed'); localStorage.setItem('kjr_token', d.token); localStorage.setItem('kjr_user', JSON.stringify({ ...d.user, loginType })); closeAuthModal(); updateAuthButton({ ...d.user, loginType }); } catch (err) { showError('loginError', err.message); } finally { setLoading('loginBtn', false); } }
-    async function handleSignup(e) { e.preventDefault(); clearErrors(); const loginType = document.getElementById('signupType').value; const username = document.getElementById('signupUsername').value.trim(); const email = document.getElementById('signupEmail').value.trim(); const password = document.getElementById('signupPassword').value; const confirm = document.getElementById('signupConfirm').value; const phone = document.getElementById('signupPhone').value.trim(); const companyName = document.getElementById('signupCompany').value.trim(); const instructorName = document.getElementById('signupInstructor').value.trim(); if (!loginType) return showError('signupError', 'Please select an account type.'); if (password !== confirm) return showError('signupError', 'Passwords do not match.'); if (password.length < 8) return showError('signupError', 'Password must be at least 8 characters.'); setLoading('signupBtn', true); try { const r = await fetch(BACKEND + '/api/auth/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ loginType, username, email, password, phone, companyName, instructorName }) }); const d = await r.json(); if (!r.ok) throw new Error(d.errors?.[0]?.msg || 'Registration failed'); localStorage.setItem('kjr_token', d.token); localStorage.setItem('kjr_user', JSON.stringify({ ...d.user, loginType })); closeAuthModal(); updateAuthButton({ ...d.user, loginType }); } catch (err) { showError('signupError', err.message); } finally { setLoading('signupBtn', false); } }
-    function updateAuthButton(user) {
-      const wrap = document.querySelector('.top-bar-right');
-      const old = document.querySelector('.user-menu-wrap'); if (old) old.remove();
-      const trigger = document.querySelector('.auth-trigger-btn');
-      const TYPE_LABELS = { sales_team: 'Sales Team', parts: 'Parts', bids: 'Bids', property: 'Property Management', grad: 'Graduate' };
-      if (user) {
-        if (trigger) trigger.style.display = 'none';
-        const menu = document.createElement('div'); menu.className = 'user-menu-wrap';
-        menu.innerHTML = `<button class="user-menu-btn">${user.username} <span class="user-arrow">&#9660;</span></button><div class="user-dropdown"><div class="user-dropdown-header"><div class="user-dropdown-name">${user.username}</div><div class="user-dropdown-type">${TYPE_LABELS[user.loginType] || user.loginType}</div></div><div class="user-dropdown-items"><a class="user-dropdown-item" href="profile.html"><i class="item-icon">&#128100;</i> Profile</a><a class="user-dropdown-item" href="order-tracking.html"><i class="item-icon">&#128230;</i> Order History &amp; Tracking</a><a class="user-dropdown-item" href="invoice.html"><i class="item-icon">&#128203;</i> Invoice</a><a class="user-dropdown-item" href="payment.html"><i class="item-icon">&#128179;</i> Payment</a><div class="user-dropdown-divider"></div><a class="user-dropdown-item" href="settings.html"><i class="item-icon">&#9881;</i> Settings</a><div class="user-dropdown-divider"></div><button class="user-dropdown-item logout-item" onclick="logout()"><i class="item-icon">&#10148;</i> Logout</button></div></div>`;
-        if (wrap) wrap.appendChild(menu);
-        window.dispatchEvent(new Event('kjr-login'));
-      } else {
-        if (trigger) { trigger.style.display = ''; trigger.textContent = 'Login / Sign Up'; trigger.onclick = () => openAuthModal('login'); }
-      }
-    }
-    function logout() { if (!confirm('Logout?')) return; localStorage.removeItem('kjr_token'); localStorage.removeItem('kjr_user'); updateAuthButton(null); }
-    (function () { const u = JSON.parse(localStorage.getItem('kjr_user') || 'null'); if (u) updateAuthButton(u); })();
+    async function handleLogin(e) { e.preventDefault(); clearErrors(); const loginType = document.getElementById('loginType').value; const identifier = document.getElementById('loginIdentifier').value.trim(); const password = document.getElementById('loginPassword').value; if (!loginType) return showError('loginError', 'Please select your account type.'); setLoading('loginBtn', true); try { const r = await fetch(BACKEND + '/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ identifier, password, loginType }) }); const d = await r.json(); if (!r.ok) throw new Error(d.errors?.[0]?.msg || 'Login failed'); localStorage.setItem('kjr_token', d.token); localStorage.setItem('kjr_user', JSON.stringify(d.user)); closeAuthModal(); } catch (err) { showError('loginError', err.message); } finally { setLoading('loginBtn', false); } }
+    async function handleSignup(e) { e.preventDefault(); clearErrors(); const p = document.getElementById('signupPassword').value; const c = document.getElementById('signupConfirm').value; if (p !== c) return showError('signupError', 'Passwords do not match.'); setLoading('signupBtn', true); try { const r = await fetch(BACKEND + '/api/auth/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: document.getElementById('signupUsername').value.trim(), email: document.getElementById('signupEmail').value.trim(), password: p, accountType: document.getElementById('signupType').value, phone: document.getElementById('signupPhone').value.trim(), company: document.getElementById('signupCompany').value.trim(), instructor: document.getElementById('signupInstructor').value.trim() }) }); const d = await r.json(); if (!r.ok) throw new Error(d.errors?.[0]?.msg || 'Registration failed'); localStorage.setItem('kjr_token', d.token); localStorage.setItem('kjr_user', JSON.stringify(d.user)); closeAuthModal(); } catch (err) { showError('signupError', err.message); } finally { setLoading('signupBtn', false); } }
   </script>
-
 </body>
 
 </html>
