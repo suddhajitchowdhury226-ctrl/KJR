@@ -7,6 +7,7 @@ const Bid = require('../models/Bid');
 const User = require('../models/User');
 const Product = require('../models/Product');
 const PartInquiry = require('../models/PartInquiry');
+const SiteContent = require('../models/SiteContent');
 const auth = require('../middleware/auth');
 const nodemailer = require('nodemailer');
 
@@ -803,6 +804,54 @@ router.delete('/admin/inquiries/:id', auth, async (req, res) => {
     res.json({ success: true });
   } catch (err) {
     console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SITE CONTENT (homepage editable content)
+// ─────────────────────────────────────────────────────────────────────────────
+
+// @route   GET /api/site-content
+// @desc    Get public homepage content
+// @access  Public
+router.get('/site-content', async (req, res) => {
+  try {
+    let content = await SiteContent.findOne({ key: 'main' });
+    if (!content) {
+      // Auto-create with defaults on first request
+      content = await new SiteContent({ key: 'main' }).save();
+    }
+    res.json(content);
+  } catch (err) {
+    console.error('site-content GET:', err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+// @route   PUT /api/admin/site-content
+// @desc    Update homepage content (admin only)
+// @access  Private
+router.put('/admin/site-content', auth, async (req, res) => {
+  try {
+    const allowed = [
+      'heroHeading', 'heroSubtitle', 'heroVideoUrl',
+      'missionSubLabel', 'missionQuote',
+      'servicesSectionTitle', 'servicesSectionSubtitle', 'serviceCards',
+      'marketSectionTitle', 'marketSectionSubtitle', 'marketAreas'
+    ];
+    const update = {};
+    allowed.forEach(k => { if (req.body[k] !== undefined) update[k] = req.body[k]; });
+    update.updatedAt = new Date();
+
+    const content = await SiteContent.findOneAndUpdate(
+      { key: 'main' },
+      { $set: update },
+      { new: true, upsert: true }
+    );
+    res.json(content);
+  } catch (err) {
+    console.error('site-content PUT:', err.message);
     res.status(500).send('Server Error');
   }
 });

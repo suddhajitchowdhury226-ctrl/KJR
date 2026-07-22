@@ -909,6 +909,13 @@
         </div>
       </div>
 
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Website</div>
+        <div class="nav-item" data-tab="tab-content" onclick="switchTab(this, 'tab-content')">
+          <span class="nav-icon">🖥️</span>Website Content
+        </div>
+      </div>
+
       <div class="sidebar-footer">
         <button class="logout-btn" onclick="logout()">
           <span></span> Logout
@@ -1615,6 +1622,110 @@
 
         </div>
 
+        <!-- ======== TAB: WEBSITE CONTENT ======== -->
+        <div id="tab-content" class="tab-pane">
+
+          <div
+            style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:.75rem;">
+            <div>
+              <h2 style="font-size:1.2rem;font-weight:800;margin-bottom:.2rem;">Website Content Editor</h2>
+              <p style="font-size:.82rem;color:var(--text-muted);">Changes save to the database and appear live on the
+                main website.</p>
+            </div>
+            <button class="btn-sm red" id="save-content-btn" onclick="saveAllContent()">💾 Save All Changes</button>
+          </div>
+
+          <div id="content-save-alert"
+            style="display:none;padding:.75rem 1rem;border-radius:8px;font-size:.875rem;margin-bottom:1.25rem;"></div>
+
+          <!-- ── HERO SECTION ── -->
+          <div class="table-card" style="margin-bottom:1.5rem;">
+            <div class="table-card-header">
+              <h3>🎬 Hero Section</h3>
+            </div>
+            <div style="padding:1.5rem;display:grid;gap:1rem;">
+              <div class="form-group">
+                <label>Heading</label>
+                <input type="text" id="cnt-hero-heading" placeholder="Main hero headline…">
+              </div>
+              <div class="form-group">
+                <label>Subtitle</label>
+                <textarea id="cnt-hero-subtitle" rows="2" style="resize:vertical;"
+                  placeholder="Hero subtitle text…"></textarea>
+              </div>
+              <div class="form-group">
+                <label>Background Video URL</label>
+                <input type="url" id="cnt-hero-video" placeholder="https://…mp4">
+              </div>
+            </div>
+          </div>
+
+          <!-- ── MISSION SECTION ── -->
+          <div class="table-card" style="margin-bottom:1.5rem;">
+            <div class="table-card-header">
+              <h3>📣 Mission / Pricing Section</h3>
+            </div>
+            <div style="padding:1.5rem;display:grid;gap:1rem;">
+              <div class="form-group">
+                <label>Sub-label (above quote)</label>
+                <input type="text" id="cnt-mission-sub" placeholder="e.g. PRE-SET PRICING FOR CREWS">
+              </div>
+              <div class="form-group">
+                <label>Quote Text</label>
+                <textarea id="cnt-mission-quote" rows="3" style="resize:vertical;"
+                  placeholder="Mission quote…"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── SERVICES SECTION ── -->
+          <div class="table-card" style="margin-bottom:1.5rem;">
+            <div class="table-card-header">
+              <h3>🔧 Services Section</h3>
+            </div>
+            <div style="padding:1.5rem;display:grid;gap:1.25rem;">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                <div class="form-group">
+                  <label>Section Title</label>
+                  <input type="text" id="cnt-svc-section-title" placeholder="e.g. SERVICES WE PROVIDE">
+                </div>
+                <div class="form-group">
+                  <label>Section Subtitle</label>
+                  <input type="text" id="cnt-svc-section-sub" placeholder="Subtitle below section title…">
+                </div>
+              </div>
+
+              <!-- Service Card Editors -->
+              <div id="service-cards-editor"
+                style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.25rem;"></div>
+            </div>
+          </div>
+
+          <!-- ── MARKET AREAS ── -->
+          <div class="table-card" style="margin-bottom:1.5rem;">
+            <div class="table-card-header">
+              <h3>📍 Market Areas</h3>
+              <button class="btn-sm ghost" onclick="addMarketArea()">+ Add City</button>
+            </div>
+            <div style="padding:1.5rem;display:grid;gap:1rem;">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                <div class="form-group">
+                  <label>Section Title</label>
+                  <input type="text" id="cnt-market-title" placeholder="e.g. OUR PRIMARY MARKET AREAS">
+                </div>
+                <div class="form-group">
+                  <label>Section Subtitle</label>
+                  <input type="text" id="cnt-market-sub" placeholder="Subtitle…">
+                </div>
+              </div>
+              <div id="market-areas-editor"
+                style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.75rem;"></div>
+            </div>
+          </div>
+
+        </div>
+        <!-- /tab-content -->
+
       </div>
     </main>
   </div>
@@ -1900,7 +2011,8 @@
       'tab-products': 'Product Catalog',
       'tab-invoices': 'Invoices & Revenue',
       'tab-orders': 'Order Tracking',
-      'tab-pending': '🔔 Pending Orders — Awaiting Approval'
+      'tab-pending': '🔔 Pending Orders — Awaiting Approval',
+      'tab-content': '🖥️ Website Content Editor'
     };
 
     function switchTab(el, tabId) {
@@ -1912,6 +2024,7 @@
       if (tabId === 'tab-products') loadProducts();
       if (tabId === 'tab-inquiries') loadInquiries();
       if (tabId === 'tab-pending') loadPendingOrders();
+      if (tabId === 'tab-content') loadSiteContent();
     }
 
     // =====================================================
@@ -3545,6 +3658,235 @@
         if (badge) badge.textContent = count > 0 ? count : '0';
         if (badge && count > 0) badge.style.background = '#cc0000';
       } catch (e) { /* silent */ }
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // WEBSITE CONTENT EDITOR
+    // ─────────────────────────────────────────────────────────
+
+    let _siteContent = null; // cached current content
+
+    async function loadSiteContent() {
+      try {
+        const res = await fetch(`${API_URL}/site-content`);
+        if (!res.ok) return;
+        _siteContent = await res.json();
+        populateContentForm(_siteContent);
+      } catch (e) {
+        console.warn('Could not load site content:', e.message);
+      }
+    }
+
+    function populateContentForm(c) {
+      // Hero
+      setVal('cnt-hero-heading', c.heroHeading);
+      setVal('cnt-hero-subtitle', c.heroSubtitle);
+      setVal('cnt-hero-video', c.heroVideoUrl);
+
+      // Mission
+      setVal('cnt-mission-sub', c.missionSubLabel);
+      setVal('cnt-mission-quote', c.missionQuote);
+
+      // Services section headings
+      setVal('cnt-svc-section-title', c.servicesSectionTitle);
+      setVal('cnt-svc-section-sub', c.servicesSectionSubtitle);
+
+      // Service cards
+      renderServiceCards(c.serviceCards || []);
+
+      // Market areas
+      setVal('cnt-market-title', c.marketSectionTitle);
+      setVal('cnt-market-sub', c.marketSectionSubtitle);
+      renderMarketAreas(c.marketAreas || []);
+    }
+
+    function setVal(id, val) {
+      const el = document.getElementById(id);
+      if (el && val !== undefined && val !== null) el.value = val;
+    }
+
+    function renderServiceCards(cards) {
+      const container = document.getElementById('service-cards-editor');
+      container.innerHTML = '';
+      cards.forEach((card, i) => {
+        const div = document.createElement('div');
+        div.style.cssText = 'background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:1.25rem;display:grid;gap:.75rem;';
+        div.innerHTML = `
+          <div style="font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--primary);">Service Card ${i + 1}</div>
+
+          <!-- Image preview + upload -->
+          <div style="display:flex;align-items:center;gap:.85rem;">
+            <img id="svc-img-preview-${i}" src="${card.img || ''}" alt=""
+              style="width:70px;height:55px;object-fit:cover;border-radius:8px;border:1.5px solid #e2e8f0;background:#f1f5f9;"
+              onerror="this.style.display='none'" ${card.img ? '' : 'style="display:none"'}>
+            <div style="flex:1;">
+              <label style="display:inline-block;padding:.4rem .85rem;background:#fff;border:1.5px solid #e2e8f0;border-radius:7px;cursor:pointer;font-size:.78rem;font-weight:600;">
+                📷 Upload Image
+                <input type="file" accept="image/*" style="display:none" onchange="handleSvcImgUpload(event,${i})">
+              </label>
+              <input type="text" id="svc-img-url-${i}" value="${card.img || ''}" placeholder="or paste image URL"
+                style="margin-top:.4rem;width:100%;padding:.4rem .7rem;border:1.5px solid #e2e8f0;border-radius:7px;font-size:.78rem;outline:none;"
+                oninput="updateSvcImgPreview(${i})">
+            </div>
+          </div>
+
+          <div class="form-group" style="margin:0;">
+            <label>Category Label</label>
+            <input type="text" id="svc-meta-${i}" value="${escHtml(card.meta || '')}" placeholder="e.g. RENOVATION">
+          </div>
+          <div class="form-group" style="margin:0;">
+            <label>Title</label>
+            <input type="text" id="svc-title-${i}" value="${escHtml(card.title || '')}" placeholder="Card title…">
+          </div>
+          <div class="form-group" style="margin:0;">
+            <label>Description</label>
+            <textarea id="svc-excerpt-${i}" rows="3" style="resize:vertical;" placeholder="Card description…">${escHtml(card.excerpt || '')}</textarea>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function handleSvcImgUpload(event, idx) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const dataUrl = e.target.result;
+        const urlInput = document.getElementById(`svc-img-url-${idx}`);
+        const preview = document.getElementById(`svc-img-preview-${idx}`);
+        if (urlInput) urlInput.value = dataUrl;
+        if (preview) { preview.src = dataUrl; preview.style.display = ''; }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function updateSvcImgPreview(idx) {
+      const val = document.getElementById(`svc-img-url-${idx}`).value;
+      const preview = document.getElementById(`svc-img-preview-${idx}`);
+      if (preview) { preview.src = val; preview.style.display = val ? '' : 'none'; }
+    }
+
+    function renderMarketAreas(areas) {
+      const container = document.getElementById('market-areas-editor');
+      container.innerHTML = '';
+      areas.forEach((area, i) => {
+        const div = document.createElement('div');
+        div.style.cssText = 'display:flex;align-items:center;gap:.5rem;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:8px;padding:.5rem .75rem;';
+        div.innerHTML = `
+          <input type="checkbox" id="market-active-${i}" ${area.active !== false ? 'checked' : ''}
+            style="width:16px;height:16px;cursor:pointer;accent-color:var(--primary);" title="Show on website">
+          <input type="text" id="market-label-${i}" value="${escHtml(area.label || '')}"
+            style="flex:1;border:none;background:transparent;font-size:.85rem;font-weight:600;outline:none;color:var(--text);"
+            placeholder="CITY, STATE">
+          <button onclick="removeMarketArea(${i})" title="Remove"
+            style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:1rem;line-height:1;padding:0 2px;">✕</button>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function addMarketArea() {
+      const container = document.getElementById('market-areas-editor');
+      const i = container.children.length;
+      const div = document.createElement('div');
+      div.style.cssText = 'display:flex;align-items:center;gap:.5rem;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:8px;padding:.5rem .75rem;';
+      div.innerHTML = `
+        <input type="checkbox" id="market-active-${i}" checked
+          style="width:16px;height:16px;cursor:pointer;accent-color:var(--primary);" title="Show on website">
+        <input type="text" id="market-label-${i}" value=""
+          style="flex:1;border:none;background:transparent;font-size:.85rem;font-weight:600;outline:none;color:var(--text);"
+          placeholder="CITY, STATE">
+        <button onclick="removeMarketArea(${i})" title="Remove"
+          style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:1rem;line-height:1;padding:0 2px;">✕</button>
+      `;
+      container.appendChild(div);
+    }
+
+    function removeMarketArea(idx) {
+      const container = document.getElementById('market-areas-editor');
+      const items = [...container.children];
+      if (items[idx]) items[idx].remove();
+      // Re-index remaining items
+      [...container.children].forEach((div, i) => {
+        const cb = div.querySelector('input[type="checkbox"]');
+        const inp = div.querySelector('input[type="text"]');
+        const btn = div.querySelector('button');
+        if (cb) cb.id = `market-active-${i}`;
+        if (inp) inp.id = `market-label-${i}`;
+        if (btn) btn.setAttribute('onclick', `removeMarketArea(${i})`);
+      });
+    }
+
+    function collectServiceCards() {
+      const cards = [];
+      let i = 0;
+      while (document.getElementById(`svc-title-${i}`) !== null) {
+        cards.push({
+          id: `service${i + 1}`,
+          meta: (document.getElementById(`svc-meta-${i}`)?.value || '').trim(),
+          title: (document.getElementById(`svc-title-${i}`)?.value || '').trim(),
+          excerpt: (document.getElementById(`svc-excerpt-${i}`)?.value || '').trim(),
+          img: (document.getElementById(`svc-img-url-${i}`)?.value || '').trim()
+        });
+        i++;
+      }
+      return cards;
+    }
+
+    function collectMarketAreas() {
+      const areas = [];
+      const container = document.getElementById('market-areas-editor');
+      [...container.children].forEach((div, i) => {
+        const label = (document.getElementById(`market-label-${i}`)?.value || '').trim();
+        const active = document.getElementById(`market-active-${i}`)?.checked !== false;
+        if (label) areas.push({ id: `area-${Date.now()}-${i}`, label, active });
+      });
+      return areas;
+    }
+
+    async function saveAllContent() {
+      const btn = document.getElementById('save-content-btn');
+      const alert = document.getElementById('content-save-alert');
+      btn.disabled = true;
+      btn.textContent = 'Saving…';
+
+      const payload = {
+        heroHeading: (document.getElementById('cnt-hero-heading')?.value || '').trim(),
+        heroSubtitle: (document.getElementById('cnt-hero-subtitle')?.value || '').trim(),
+        heroVideoUrl: (document.getElementById('cnt-hero-video')?.value || '').trim(),
+        missionSubLabel: (document.getElementById('cnt-mission-sub')?.value || '').trim(),
+        missionQuote: (document.getElementById('cnt-mission-quote')?.value || '').trim(),
+        servicesSectionTitle: (document.getElementById('cnt-svc-section-title')?.value || '').trim(),
+        servicesSectionSubtitle: (document.getElementById('cnt-svc-section-sub')?.value || '').trim(),
+        serviceCards: collectServiceCards(),
+        marketSectionTitle: (document.getElementById('cnt-market-title')?.value || '').trim(),
+        marketSectionSubtitle: (document.getElementById('cnt-market-sub')?.value || '').trim(),
+        marketAreas: collectMarketAreas()
+      };
+
+      try {
+        const res = await fetch(`${API_URL}/admin/site-content`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
+          body: JSON.stringify(payload)
+        });
+        if (!res.ok) throw new Error('Save failed');
+        _siteContent = await res.json();
+        alert.style.cssText = 'display:block;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;padding:.75rem 1rem;border-radius:8px;font-size:.875rem;margin-bottom:1.25rem;';
+        alert.textContent = '✅ Website content saved successfully! Changes are now live.';
+      } catch (e) {
+        alert.style.cssText = 'display:block;background:#fff1f1;color:#dc2626;border:1px solid #fca5a5;padding:.75rem 1rem;border-radius:8px;font-size:.875rem;margin-bottom:1.25rem;';
+        alert.textContent = '❌ Error saving content: ' + e.message;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '💾 Save All Changes';
+        setTimeout(() => { alert.style.display = 'none'; }, 5000);
+      }
+    }
+
+    function escHtml(str) {
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
   </script>
 </body>

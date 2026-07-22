@@ -181,15 +181,16 @@
 
 
   <!-- Hero Section -->
-  <section class="hero">
-    <video autoplay muted loop playsinline class="hero-bg">
+  <section class="hero" id="hero-section">
+    <video autoplay muted loop playsinline class="hero-bg" id="hero-video">
       <source
         src="https://res.cloudinary.com/dc8xxhoaf/video/upload/v1767988938/3773486-hd-1920-1080-30fps-tyea3fib-1_3P5aPwyY_online-video-cutter.com_tzwfze.mp4"
         type="video/mp4">
     </video>
     <div class="hero-content">
-      <h1>KJ Remodeling Interior Designs Inc.</h1>
-      <p>Advancing the conversation on interior design, renovation, and supply chain solutions across the USA.</p>
+      <h1 id="hero-heading">KJ Remodeling Interior Designs Inc.</h1>
+      <p id="hero-subtitle">Advancing the conversation on interior design, renovation, and supply chain solutions across
+        the USA.</p>
       <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
         <a href="#" class="btn" onclick="requireLogin(event,'bid-projects.html')">Start Bidding</a>
         <a href="#" class="btn" onclick="requireLogin(event,'#parts')">Buy Parts</a>
@@ -201,8 +202,8 @@
   <!-- Mission / Pricing Section -->
   <section class="mission-section">
     <div class="mission-content">
-      <span class="mission-sub">PRE-SET PRICING FOR CREWS</span>
-      <div class="mission-quote">
+      <span class="mission-sub" id="mission-sub-label">PRE-SET PRICING FOR CREWS</span>
+      <div class="mission-quote" id="mission-quote">
         "KJIR Interior Designs Inc. operates with pre-set pricing which makes sense for your business. Work orders are
         given to us with set prices and cannot be negotiated."
       </div>
@@ -214,25 +215,24 @@
   </section>
 
   <!-- Services Grid -->
-  <section class="content-section">
+  <section class="content-section" id="services-section">
     <div class="section-header">
-      <h2>SERVICES WE PROVIDE</h2>
-      <p>Contracting opportunities available across major metropolitan areas</p>
+      <h2 id="services-title">SERVICES WE PROVIDE</h2>
+      <p id="services-subtitle">Contracting opportunities available across major metropolitan areas</p>
     </div>
 
-    <div class="grid">
+    <div class="grid" id="services-grid">
       <!-- Service 1 -->
       <article class="card">
         <div class="card-img">
-          <img src="assets/story1.png" alt="Cabinets & Flooring">
+          <img src="assets/story1.png" alt="Cabinets & Flooring" id="svc-img-0">
         </div>
         <div class="card-body">
-          <span class="card-meta">RENOVATION</span>
-          <h3 class="card-title">CABINETS & FLOORING</h3>
-          <p class="card-excerpt">
+          <span class="card-meta" id="svc-meta-0">RENOVATION</span>
+          <h3 class="card-title" id="svc-title-0">CABINETS & FLOORING</h3>
+          <p class="card-excerpt" id="svc-excerpt-0">
             Complete installation and replacement services. Baseboard replacement, luxury vinyl tile, and custom
-            cabinetry
-            solutions for modern homes.
+            cabinetry solutions for modern homes.
           </p>
         </div>
       </article>
@@ -240,12 +240,12 @@
       <!-- Service 2 -->
       <article class="card">
         <div class="card-img">
-          <img src="assets/story2.png" alt="Plumbing & HVAC">
+          <img src="assets/story2.png" alt="Plumbing & HVAC" id="svc-img-1">
         </div>
         <div class="card-body">
-          <span class="card-meta">SYSTEMS & UTILITIES</span>
-          <h3 class="card-title">PLUMBING & HVAC</h3>
-          <p class="card-excerpt">
+          <span class="card-meta" id="svc-meta-1">SYSTEMS & UTILITIES</span>
+          <h3 class="card-title" id="svc-title-1">PLUMBING & HVAC</h3>
+          <p class="card-excerpt" id="svc-excerpt-1">
             Licensed repairs and installs. Water heaters, septic systems, main sewer line augers, and full HVAC unit
             replacements.
           </p>
@@ -255,12 +255,12 @@
       <!-- Service 3 -->
       <article class="card">
         <div class="card-img">
-          <img src="assets/story3.png" alt="Roofing & Siding">
+          <img src="assets/story3.png" alt="Roofing & Siding" id="svc-img-2">
         </div>
         <div class="card-body">
-          <span class="card-meta">EXTERIOR</span>
-          <h3 class="card-title">ROOFING & SIDING</h3>
-          <p class="card-excerpt">
+          <span class="card-meta" id="svc-meta-2">EXTERIOR</span>
+          <h3 class="card-title" id="svc-title-2">ROOFING & SIDING</h3>
+          <p class="card-excerpt" id="svc-excerpt-2">
             Full exterior remediation including bundle shingle replacement, vinyl siding repair, pressure washing, and
             structural maintenance.
           </p>
@@ -271,12 +271,13 @@
 
   <!-- Market Areas (Dark Section) -->
   <section class="market-section">
-    <h2>OUR PRIMARY MARKET AREAS</h2>
-    <p style="opacity: 0.7; font-family: var(--font-heading); font-style: italic; margin-top: 1rem;">
+    <h2 id="market-title">OUR PRIMARY MARKET AREAS</h2>
+    <p id="market-subtitle"
+      style="opacity: 0.7; font-family: var(--font-heading); font-style: italic; margin-top: 1rem;">
       Serving major cities and surrounding regions
     </p>
 
-    <div class="market-list">
+    <div class="market-list" id="market-list">
       <div class="market-item">ATLANTA, GA</div>
       <div class="market-item">AUGUSTA, GA</div>
       <div class="market-item">SAVANNAH, GA</div>
@@ -383,6 +384,63 @@
     });
   </script>
   <script src="assets/js/bunji.js"></script>
+  <script>
+    // ── Dynamic Site Content Loader ────────────────────────────────────────
+    (async function loadSiteContent() {
+      const BACKEND = 'https://kjr-backend.onrender.com';
+      try {
+        const res = await fetch(`${BACKEND}/api/site-content`);
+        if (!res.ok) return;
+        const c = await res.json();
+
+        // Hero
+        if (c.heroHeading) document.getElementById('hero-heading').textContent = c.heroHeading;
+        if (c.heroSubtitle) document.getElementById('hero-subtitle').textContent = c.heroSubtitle;
+        if (c.heroVideoUrl) {
+          const vid = document.getElementById('hero-video');
+          vid.querySelector('source').src = c.heroVideoUrl;
+          vid.load();
+        }
+
+        // Mission
+        if (c.missionSubLabel) document.getElementById('mission-sub-label').textContent = c.missionSubLabel;
+        if (c.missionQuote) document.getElementById('mission-quote').textContent = c.missionQuote;
+
+        // Services section headings
+        if (c.servicesSectionTitle) document.getElementById('services-title').textContent = c.servicesSectionTitle;
+        if (c.servicesSectionSubtitle) document.getElementById('services-subtitle').textContent = c.servicesSectionSubtitle;
+
+        // Service cards (up to 3)
+        if (Array.isArray(c.serviceCards)) {
+          c.serviceCards.slice(0, 3).forEach((card, i) => {
+            const imgEl = document.getElementById(`svc-img-${i}`);
+            const metaEl = document.getElementById(`svc-meta-${i}`);
+            const titleEl = document.getElementById(`svc-title-${i}`);
+            const excerptEl = document.getElementById(`svc-excerpt-${i}`);
+            if (card.img && imgEl) { imgEl.src = card.img; imgEl.alt = card.title || ''; }
+            if (card.meta && metaEl) metaEl.textContent = card.meta;
+            if (card.title && titleEl) titleEl.textContent = card.title;
+            if (card.excerpt && excerptEl) excerptEl.textContent = card.excerpt;
+          });
+        }
+
+        // Market areas
+        if (c.marketSectionTitle) document.getElementById('market-title').textContent = c.marketSectionTitle;
+        if (c.marketSectionSubtitle) document.getElementById('market-subtitle').textContent = c.marketSectionSubtitle;
+        if (Array.isArray(c.marketAreas)) {
+          const list = document.getElementById('market-list');
+          const active = c.marketAreas.filter(a => a.active !== false);
+          if (active.length) {
+            list.innerHTML = active.map(a =>
+              `<div class="market-item">${a.label}</div>`
+            ).join('');
+          }
+        }
+      } catch (e) {
+        // Silently fail — static HTML fallback remains visible
+      }
+    })();
+  </script>
   <script>
     // ── Auth Modal ─────────────────────────────────────────────────────────
     const BACKEND = 'https://kjr-backend.onrender.com';
