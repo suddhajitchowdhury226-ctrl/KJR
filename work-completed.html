@@ -189,14 +189,14 @@
   <!-- Page Hero -->
   <section class="hero" style="height: 50vh;">
     <!-- Keep the existing video format/source used in other headers -->
-    <video autoplay muted loop playsinline class="hero-bg">
+    <video autoplay muted loop playsinline class="hero-bg" id="wc-hero-video">
       <source
         src="https://res.cloudinary.com/dc8xxhoaf/video/upload/v1767988938/3773486-hd-1920-1080-30fps-tyea3fib-1_3P5aPwyY_online-video-cutter.com_tzwfze.mp4"
         type="video/mp4">
     </video>
     <div class="hero-content">
-      <h1>WORK COMPLETED BY KJRID</h1>
-      <p>Transforming spaces nationwide with pristine interior finishes and commercial construction excellence.</p>
+      <h1 id="wc-hero-heading">WORK COMPLETED BY KJRID</h1>
+      <p id="wc-hero-subtitle">Transforming spaces nationwide with pristine interior finishes and commercial construction excellence.</p>
     </div>
   </section>
 
@@ -441,7 +441,7 @@
   if(user){
     if(trigger)trigger.style.display='none';
     const menu=document.createElement('div');menu.className='user-menu-wrap';
-    menu.innerHTML=`<button class="user-menu-btn">${user.username} <span class="user-arrow">&#9660;</span></button><div class="user-dropdown"><div class="user-dropdown-header"><div class="user-dropdown-name">${user.username}</div><div class="user-dropdown-type">${TYPE_LABELS[user.loginType]||user.loginType}</div></div><div class="user-dropdown-items"><a class="user-dropdown-item" href="profile.html"><i class="item-icon">&#128100;</i> Profile</a><a class="user-dropdown-item" href="order-tracking.html"><i class="item-icon">&#128230;</i> Order History &amp; Tracking</a><a class="user-dropdown-item" href="invoice.html"><i class="item-icon">&#128203;</i> Invoice</a><a class="user-dropdown-item" href="payment.html"><i class="item-icon">&#128179;</i> Payment</a><div class="user-dropdown-divider"></div><a class="user-dropdown-item" href="settings.html"><i class="item-icon">&#9881;</i> Settings</a><div class="user-dropdown-divider"></div><button class="user-dropdown-item logout-item" onclick="logout()"><i class="item-icon">&#10148;</i> Logout</button></div></div>`;
+    menu.innerHTML=`<button class="user-menu-btn">${user.username} <span class="user-arrow">&#9660;</span></button><div class="user-dropdown"><div class="user-dropdown-header"><div class="user-dropdown-name">${user.username}</div><div class="user-dropdown-type">${TYPE_LABELS[user.loginType]||user.loginType}</div></div><div class="user-dropdown-items"><a class="user-dropdown-item" href="profile.html"><i class="item-icon">&#128100;</i> Profile</a><div class="user-dropdown-divider"></div><a class="user-dropdown-item" href="settings.html"><i class="item-icon">&#9881;</i> Settings</a><div class="user-dropdown-divider"></div><button class="user-dropdown-item logout-item" onclick="logout()"><i class="item-icon">&#10148;</i> Logout</button></div></div>`;
     if(wrap)wrap.appendChild(menu);
     window.dispatchEvent(new Event('kjr-login'));
   }else{
@@ -452,6 +452,46 @@
     (function(){const u=JSON.parse(localStorage.getItem('kjr_user')||'null');if(u)updateAuthButton(u);})();
   </script>
   
+
+  <script>
+    (async function() {
+      const BACKEND = 'https://kjr-backend.onrender.com';
+      try {
+        const res = await fetch(`${BACKEND}/api/site-content`);
+        if (!res.ok) return;
+        const d = await res.json();
+        const c = d.workCompleted || {};
+        const g = d.global || {};
+        const setT = (id, v) => { const el = document.getElementById(id); if(el && v) el.textContent = v; };
+        if (c.heroHeading)  setT('wc-hero-heading', c.heroHeading);
+        if (c.heroSubtitle) setT('wc-hero-subtitle', c.heroSubtitle);
+        if (c.heroVideoUrl) { const v = document.getElementById('wc-hero-video'); if(v){v.querySelector('source').src = c.heroVideoUrl; v.load();} }
+        if (c.gallerySectionTitle)    setT('wc-gallery-title', c.gallerySectionTitle);
+        if (c.gallerySectionSubtitle) setT('wc-gallery-subtitle', c.gallerySectionSubtitle);
+        if (c.stat1Value) setT('wc-stat1-value', c.stat1Value);
+        if (c.stat1Label) setT('wc-stat1-label', c.stat1Label);
+        if (c.stat2Value) setT('wc-stat2-value', c.stat2Value);
+        if (c.stat2Label) setT('wc-stat2-label', c.stat2Label);
+        if (c.stat3Value) setT('wc-stat3-value', c.stat3Value);
+        if (c.stat3Label) setT('wc-stat3-label', c.stat3Label);
+        if (c.stat4Value) setT('wc-stat4-value', c.stat4Value);
+        if (c.stat4Label) setT('wc-stat4-label', c.stat4Label);
+        if (Array.isArray(c.galleryImages) && c.galleryImages.length) {
+          const grid = document.getElementById('wc-gallery-grid');
+          if (grid) {
+            grid.innerHTML = c.galleryImages.map((img, i) => `
+              <div class="gallery-item" onclick="openLightbox('${img.src}','${img.alt}')">
+                <img src="${img.src}" alt="${img.alt}" loading="lazy">
+                <div class="gallery-overlay"><span>${img.alt}</span></div>
+              </div>`).join('');
+          }
+        }
+        if (g.footerTagline) { const ft = document.querySelector('.footer-brand p'); if(ft) ft.textContent = g.footerTagline; }
+        if (g.footerCopyright){ const fc = document.querySelector('.footer-bottom div'); if(fc) fc.textContent = g.footerCopyright; }
+        if (g.partsHighlight){ const ph = document.querySelector('.parts-highlight'); if(ph) ph.textContent = g.partsHighlight; }
+      } catch(e) {}
+    })();
+  </script>
 </body>
 
 </html>

@@ -61,14 +61,14 @@
 
   <!-- Page Hero -->
   <section class="hero" style="height: 50vh;">
-    <video autoplay muted loop playsinline class="hero-bg">
+    <video autoplay muted loop playsinline class="hero-bg" id="au-hero-video">
       <source
         src="https://res.cloudinary.com/dc8xxhoaf/video/upload/v1767988938/3773486-hd-1920-1080-30fps-tyea3fib-1_3P5aPwyY_online-video-cutter.com_tzwfze.mp4"
         type="video/mp4">
     </video>
     <div class="hero-content">
-      <h1>LEADERSHIP & PARTNERS</h1>
-      <p>Meet the team driving excellence in construction and design across the nation.</p>
+      <h1 id="au-hero-heading">LEADERSHIP & PARTNERS</h1>
+      <p id="au-hero-subtitle">Meet the team driving excellence in construction and design across the nation.</p>
     </div>
   </section>
 
@@ -76,15 +76,15 @@
   <!-- Leadership Team -->
   <section class="content-section" style="background: white;">
     <div class="section-header">
-      <h2>EXECUTIVE LEADERSHIP</h2>
-      <p>Dedicated professionals leading our vision</p>
+      <h2 id="au-exec-title">EXECUTIVE LEADERSHIP</h2>
+      <p id="au-exec-subtitle">Dedicated professionals leading our vision</p>
     </div>
 
     <div class="team-grid">
       <!-- CEO -->
       <div class="team-card">
         <div class="team-img-wrapper">
-          <img src="CEO.png" alt="Victor Carlucci">
+          <img src="CEO.png" alt="Victor Carlucci" id="au-exec-photo-0">
         </div>
         <div class="team-role">Senior CEO</div>
         <div class="team-name">Victor Carlucci</div>
@@ -97,7 +97,7 @@
       <!-- COO -->
       <div class="team-card">
         <div class="team-img-wrapper">
-          <img src="COO.png" alt="Junaid Patel">
+          <img src="COO.png" alt="Junaid Patel" id="au-exec-photo-1">
         </div>
         <div class="team-role">COO</div>
         <div class="team-name">Junaid Patel</div>
@@ -359,7 +359,7 @@
   if(user){
     if(trigger)trigger.style.display='none';
     const menu=document.createElement('div');menu.className='user-menu-wrap';
-    menu.innerHTML=`<button class="user-menu-btn">${user.username} <span class="user-arrow">&#9660;</span></button><div class="user-dropdown"><div class="user-dropdown-header"><div class="user-dropdown-name">${user.username}</div><div class="user-dropdown-type">${TYPE_LABELS[user.loginType]||user.loginType}</div></div><div class="user-dropdown-items"><a class="user-dropdown-item" href="profile.html"><i class="item-icon">&#128100;</i> Profile</a><a class="user-dropdown-item" href="order-tracking.html"><i class="item-icon">&#128230;</i> Order History &amp; Tracking</a><a class="user-dropdown-item" href="invoice.html"><i class="item-icon">&#128203;</i> Invoice</a><a class="user-dropdown-item" href="payment.html"><i class="item-icon">&#128179;</i> Payment</a><div class="user-dropdown-divider"></div><a class="user-dropdown-item" href="settings.html"><i class="item-icon">&#9881;</i> Settings</a><div class="user-dropdown-divider"></div><button class="user-dropdown-item logout-item" onclick="logout()"><i class="item-icon">&#10148;</i> Logout</button></div></div>`;
+    menu.innerHTML=`<button class="user-menu-btn">${user.username} <span class="user-arrow">&#9660;</span></button><div class="user-dropdown"><div class="user-dropdown-header"><div class="user-dropdown-name">${user.username}</div><div class="user-dropdown-type">${TYPE_LABELS[user.loginType]||user.loginType}</div></div><div class="user-dropdown-items"><a class="user-dropdown-item" href="profile.html"><i class="item-icon">&#128100;</i> Profile</a><div class="user-dropdown-divider"></div><a class="user-dropdown-item" href="settings.html"><i class="item-icon">&#9881;</i> Settings</a><div class="user-dropdown-divider"></div><button class="user-dropdown-item logout-item" onclick="logout()"><i class="item-icon">&#10148;</i> Logout</button></div></div>`;
     if(wrap)wrap.appendChild(menu);
     window.dispatchEvent(new Event('kjr-login'));
   }else{
@@ -370,6 +370,46 @@
     (function(){const u=JSON.parse(localStorage.getItem('kjr_user')||'null');if(u)updateAuthButton(u);})();
   </script>
   
+
+  <script>
+    (async function() {
+      const BACKEND = 'https://kjr-backend.onrender.com';
+      try {
+        const res = await fetch(`${BACKEND}/api/site-content`);
+        if (!res.ok) return;
+        const d = await res.json();
+        const c = d.aboutUs || {};
+        const g = d.global || {};
+        const setT = (id, v) => { const el = document.getElementById(id); if(el && v) el.textContent = v; };
+        const setSrc = (id, v) => { const el = document.getElementById(id); if(el && v) el.src = v; };
+        if (c.heroHeading)  setT('au-hero-heading',  c.heroHeading);
+        if (c.heroSubtitle) setT('au-hero-subtitle', c.heroSubtitle);
+        if (c.heroVideoUrl) { const v = document.getElementById('au-hero-video'); if(v){v.querySelector('source').src = c.heroVideoUrl; v.load();} }
+        if (c.execTitle)    setT('au-exec-title',    c.execTitle);
+        if (c.execSubtitle) setT('au-exec-subtitle', c.execSubtitle);
+        if (c.supportTitle) { const el = document.getElementById('au-support-title'); if(el) el.textContent = c.supportTitle; }
+        // Exec team photos
+        if (Array.isArray(c.execTeam)) {
+          c.execTeam.forEach((m, i) => {
+            setSrc(`au-exec-photo-${i}`, m.photo);
+            setT(`au-exec-name-${i}`, m.name);
+            setT(`au-exec-role-${i}`, m.role);
+          });
+        }
+        if (Array.isArray(c.supportTeam)) {
+          c.supportTeam.forEach((m, i) => {
+            setSrc(`au-sup-photo-${i}`, m.photo);
+            setT(`au-sup-name-${i}`, m.name);
+            setT(`au-sup-role-${i}`, m.role);
+          });
+        }
+        if (g.footerTagline) { const ft = document.querySelector('.footer-brand p'); if(ft) ft.textContent = g.footerTagline; }
+        if (g.footerCopyright){ const fc = document.querySelector('.footer-bottom div'); if(fc) fc.textContent = g.footerCopyright; }
+        if (g.partsHighlight){ const ph = document.querySelector('.parts-highlight'); if(ph) ph.textContent = g.partsHighlight; }
+        if (g.phone){ document.querySelectorAll('a[href^="tel:"]').forEach(el => { if(el.textContent.includes('888')) el.textContent = g.phone; }); }
+      } catch(e) {}
+    })();
+  </script>
 </body>
 
 </html>

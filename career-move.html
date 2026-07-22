@@ -13,7 +13,8 @@
   <!-- Top Utility Bar -->
   <div class="top-bar">
     <div class="top-bar-left">
-      <span class="utility-info">📞 <strong>888-944-6313</strong> • Call in Orders Only • Call 24/7 • Live Operator</span>
+      <span class="utility-info">📞 <strong>888-944-6313</strong> • Call in Orders Only • Call 24/7 • Live
+        Operator</span>
     </div>
     <div class="top-bar-right">
       <a href="contact-us.html">Contact</a>
@@ -37,14 +38,14 @@
   <!-- Hero Section -->
   <!-- Hero Section -->
   <section class="hero" style="height: 60vh;">
-    <video autoplay muted loop playsinline class="hero-bg">
+    <video autoplay muted loop playsinline class="hero-bg" id="cm-hero-video">
       <source
         src="https://res.cloudinary.com/dc8xxhoaf/video/upload/v1767988938/3773486-hd-1920-1080-30fps-tyea3fib-1_3P5aPwyY_online-video-cutter.com_tzwfze.mp4"
         type="video/mp4">
     </video>
     <div class="hero-content">
-      <h1>CAREER MOVE</h1>
-      <p style="font-size: 1.2rem; margin-bottom: 2rem;">
+      <h1 id="cm-hero-heading">CAREER MOVE</h1>
+      <p id="cm-hero-subtitle" style="font-size: 1.2rem; margin-bottom: 2rem;">
         Just starting out in your career (age 16 – 24)?
         <a href="#" id="startHereLink"
           style="color: var(--primary); font-weight: 700; text-decoration: underline; cursor: pointer;">START HERE</a>
@@ -97,10 +98,10 @@
   <!-- Career Fields List -->
   <section class="content-section" style="padding-bottom: 2rem;">
     <div class="section-header">
-      <h2>EXPLORE CAREER FIELDS</h2>
-      <p>We have graduates with the following work experiences ready for hire</p>
+      <h2 id="cm-explore-title">EXPLORE CAREER FIELDS</h2>
+      <p id="cm-explore-subtitle">We have graduates with the following work experiences ready for hire</p>
     </div>
-    <div class="pill-grid">
+    <div class="pill-grid" id="cm-career-pills">
       <span class="pill">Advanced Asphalt Paving</span>
       <span class="pill">ACT / College</span>
       <span class="pill">Bricklayer</span>
@@ -124,7 +125,7 @@
   <!-- Hiring Program Banner -->
   <section class="mission-section" style="padding: 6rem 2rem; background: var(--bg-off-white);">
     <div class="feature-card">
-      <h2 class="feature-title">Learn more about the Graduate hiring program +</h2>
+      <h2 class="feature-title" id="cm-hiring-title">Learn more about the Graduate hiring program +</h2>
 
       <div style="text-align: center; margin-bottom: 3rem;">
         <button class="auth-trigger-btn" onclick="openAuthModal(\'login\')">
@@ -133,7 +134,7 @@
       </div>
 
       <div style="text-align: left; line-height: 1.8; color: var(--text-body);">
-        <p style="margin-bottom: 2rem; font-size: 1.1rem;">
+        <p style="margin-bottom: 2rem; font-size: 1.1rem;" id="cm-hiring-body">
           If you are an employer seeking well-trained, entry-level employees in your business,
           <strong>Job Corps</strong> is the ideal place to find them. Our students receive focused, hands-on
           career training that prepares them to enter your business workforce ready.
@@ -161,11 +162,13 @@
         <span class="mission-sub"
           style="color: var(--primary); font-weight: 700; letter-spacing: 2px; font-size: 0.9rem;">PARTNERSHIP
           OPPORTUNITIES</span>
-        <h2 class="feature-title" style="margin-top: 0.5rem; color: var(--primary);">Empower Job Corps Graduates With
+        <h2 class="feature-title" style="margin-top: 0.5rem; color: var(--primary);" id="cm-partner-title">Empower Job
+          Corps Graduates With
           KJR</h2>
       </div>
 
-      <div style="font-size: 1.1rem; line-height: 1.8; color: var(--text-body); max-width: 800px; margin: 0 auto;">
+      <div style="font-size: 1.1rem; line-height: 1.8; color: var(--text-body); max-width: 800px; margin: 0 auto;"
+        id="cm-partner-body">
         <p style="margin-bottom: 2rem;">
           <strong style="color: var(--text-main);">Why Partner with Us:</strong> At <strong>KJR INTERIOR DESIGNS
             INC</strong>,
@@ -207,10 +210,13 @@
           <li><a href="property-mgmt.html">Auto Insurance</a></li>
           <li><a href="property-profile-creation.html">Vendor Profile</a></li>
         </ul>
-      </div><div class="footer-col">
+      </div>
+      <div class="footer-col">
         <h4>CONTACT</h4>
         <p><a href="tel:888-944-6313" style="color: inherit; text-decoration: none;">888-944-6313</a><br>Open 24/7</p>
-        <p style="margin-top: 1rem;"><a href="https://maps.google.com/?q=1420+Industrial+Park+Road,+Paris,+TN+38242" target="_blank" style="color: inherit; text-decoration: none;">1420 Industrial Park Road<br>Paris, TN 38242</a></p>
+        <p style="margin-top: 1rem;"><a href="https://maps.google.com/?q=1420+Industrial+Park+Road,+Paris,+TN+38242"
+            target="_blank" style="color: inherit; text-decoration: none;">1420 Industrial Park Road<br>Paris, TN
+            38242</a></p>
       </div>
     </div>
 
@@ -265,12 +271,14 @@
         </div>
         <div class="auth-field">
           <label>Email or Username</label>
-          <input type="text" id="loginIdentifier" placeholder="Enter email or username" required autocomplete="username">
+          <input type="text" id="loginIdentifier" placeholder="Enter email or username" required
+            autocomplete="username">
         </div>
         <div class="auth-field">
           <label>Password</label>
           <div class="auth-password-wrap">
-            <input type="password" id="loginPassword" placeholder="Enter password" required autocomplete="current-password">
+            <input type="password" id="loginPassword" placeholder="Enter password" required
+              autocomplete="current-password">
             <span class="auth-eye" onclick="togglePassword('loginPassword',this)">&#9679;</span>
           </div>
         </div>
@@ -283,7 +291,8 @@
           <span class="auth-btn-text">Login</span>
           <span class="auth-spinner" style="display:none;">...</span>
         </button>
-        <p class="auth-switch">Don't have an account? <a href="#" onclick="switchTab('signup');return false;">Sign Up</a></p>
+        <p class="auth-switch">Don't have an account? <a href="#" onclick="switchTab('signup');return false;">Sign
+            Up</a></p>
       </form>
       <form id="formSignup" class="auth-form" style="display:none;" onsubmit="handleSignup(event)">
         <div class="auth-field">
@@ -320,14 +329,16 @@
         <div class="auth-field">
           <label>Password <span class="req">*</span></label>
           <div class="auth-password-wrap">
-            <input type="password" id="signupPassword" placeholder="Create a password" required autocomplete="new-password">
+            <input type="password" id="signupPassword" placeholder="Create a password" required
+              autocomplete="new-password">
             <span class="auth-eye" onclick="togglePassword('signupPassword',this)">&#9679;</span>
           </div>
         </div>
         <div class="auth-field">
           <label>Confirm Password <span class="req">*</span></label>
           <div class="auth-password-wrap">
-            <input type="password" id="signupConfirm" placeholder="Confirm your password" required autocomplete="new-password">
+            <input type="password" id="signupConfirm" placeholder="Confirm your password" required
+              autocomplete="new-password">
             <span class="auth-eye" onclick="togglePassword('signupConfirm',this)">&#9679;</span>
           </div>
         </div>
@@ -336,45 +347,79 @@
           <span class="auth-btn-text">Create Account</span>
           <span class="auth-spinner" style="display:none;">...</span>
         </button>
-        <p class="auth-switch">Already have an account? <a href="#" onclick="switchTab('login');return false;">Login</a></p>
+        <p class="auth-switch">Already have an account? <a href="#" onclick="switchTab('login');return false;">Login</a>
+        </p>
       </form>
     </div>
   </div>
 
   <script src="assets/js/bunji.js"></script>
   <script>
+    // ── Dynamic Content Loader ────────────────────────────────────────────
+    (async function () {
+      const BACKEND = 'https://kjr-backend.onrender.com';
+      try {
+        const res = await fetch(`${BACKEND}/api/site-content`);
+        if (!res.ok) return;
+        const d = await res.json();
+        const c = d.careerMove || {};
+        const g = d.global || {};
+
+        if (c.heroHeading) document.getElementById('cm-hero-heading').textContent = c.heroHeading;
+        if (c.heroSubtitle) document.getElementById('cm-hero-subtitle').textContent = c.heroSubtitle;
+        if (c.heroVideoUrl) { const v = document.getElementById('cm-hero-video'); v.querySelector('source').src = c.heroVideoUrl; v.load(); }
+        if (c.exploreSectionTitle) document.getElementById('cm-explore-title').textContent = c.exploreSectionTitle;
+        if (c.exploreSectionSubtitle) document.getElementById('cm-explore-subtitle').textContent = c.exploreSectionSubtitle;
+        if (c.hiringTitle) document.getElementById('cm-hiring-title').textContent = c.hiringTitle;
+        if (c.hiringBody) document.getElementById('cm-hiring-body').textContent = c.hiringBody;
+        if (c.partnerTitle) document.getElementById('cm-partner-title').textContent = c.partnerTitle;
+        if (c.partnerBody) document.getElementById('cm-partner-body').textContent = c.partnerBody;
+        if (Array.isArray(c.careerPills) && c.careerPills.length) {
+          const grid = document.getElementById('cm-career-pills');
+          grid.innerHTML = c.careerPills.map(p => `<span class="pill">${p.label}</span>`).join('');
+        }
+
+        // Global
+        if (g.phone) document.querySelectorAll('.global-phone').forEach(el => el.textContent = g.phone);
+        if (g.topBarText) { const tb = document.querySelector('.utility-info strong'); if (tb && tb.nextSibling) tb.nextSibling.textContent = ' • ' + g.topBarText; }
+        if (g.footerTagline) { const ft = document.querySelector('.footer-brand p'); if (ft) ft.textContent = g.footerTagline; }
+        if (g.footerCopyright) { const fc = document.querySelector('.footer-bottom div'); if (fc) fc.textContent = g.footerCopyright; }
+      } catch (e) { /* silent fallback */ }
+    })();
+  </script>
+  <script>
     // ── Shared Auth Modal ──────────────────────────────────────────────────
     const BACKEND = 'https://kjr-backend.onrender.com';
-    function openAuthModal(tab){document.getElementById('authModal').classList.add('open');document.body.style.overflow='hidden';switchTab(tab||'login');}
-    function closeAuthModal(){document.getElementById('authModal').classList.remove('open');document.body.style.overflow='';}
-    document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAuthModal();});
-    function switchTab(tab){const l=tab==='login';document.getElementById('tabLogin').classList.toggle('active',l);document.getElementById('tabSignup').classList.toggle('active',!l);document.getElementById('formLogin').style.display=l?'flex':'none';document.getElementById('formSignup').style.display=l?'none':'flex';clearErrors();}
-    function clearErrors(){['loginError','signupError'].forEach(id=>{const e=document.getElementById(id);if(e){e.style.display='none';e.textContent='';};});}
-    function showError(id,msg){const e=document.getElementById(id);if(e){e.textContent=msg;e.style.display='block';}}
-    function togglePassword(fId,eye){const i=document.getElementById(fId);const s=i.type==='password';i.type=s?'text':'password';eye.textContent=s?'Hide':'Show';}
-    function toggleSignupFields(){const t=document.getElementById('signupType').value;document.getElementById('companyField').style.display=['sales_team','parts','bids','property'].includes(t)?'block':'none';document.getElementById('instructorField').style.display=t==='grad'?'block':'none';}
-    function setLoading(id,on){const b=document.getElementById(id);b.querySelector('.auth-btn-text').style.display=on?'none':'inline';b.querySelector('.auth-spinner').style.display=on?'inline':'none';b.disabled=on;}
-    async function handleLogin(e){e.preventDefault();clearErrors();const loginType=document.getElementById('loginType').value;const identifier=document.getElementById('loginIdentifier').value.trim();const password=document.getElementById('loginPassword').value;if(!loginType)return showError('loginError','Please select your account type.');setLoading('loginBtn',true);try{const r=await fetch(BACKEND+'/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({identifier,password,loginType})});const d=await r.json();if(!r.ok)throw new Error(d.errors?.[0]?.msg||'Login failed');localStorage.setItem('kjr_token',d.token);localStorage.setItem('kjr_user',JSON.stringify({...d.user,loginType}));closeAuthModal();updateAuthButton({...d.user,loginType});}catch(err){showError('loginError',err.message);}finally{setLoading('loginBtn',false);}}
-    async function handleSignup(e){e.preventDefault();clearErrors();const loginType=document.getElementById('signupType').value;const username=document.getElementById('signupUsername').value.trim();const email=document.getElementById('signupEmail').value.trim();const password=document.getElementById('signupPassword').value;const confirm=document.getElementById('signupConfirm').value;const phone=document.getElementById('signupPhone').value.trim();const companyName=document.getElementById('signupCompany').value.trim();const instructorName=document.getElementById('signupInstructor').value.trim();if(!loginType)return showError('signupError','Please select an account type.');if(password!==confirm)return showError('signupError','Passwords do not match.');if(password.length<8)return showError('signupError','Password must be at least 8 characters.');setLoading('signupBtn',true);try{const r=await fetch(BACKEND+'/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({loginType,username,email,password,phone,companyName,instructorName})});const d=await r.json();if(!r.ok)throw new Error(d.errors?.[0]?.msg||'Registration failed');localStorage.setItem('kjr_token',d.token);localStorage.setItem('kjr_user',JSON.stringify({...d.user,loginType}));closeAuthModal();updateAuthButton({...d.user,loginType});}catch(err){showError('signupError',err.message);}finally{setLoading('signupBtn',false);}}
-    function updateAuthButton(user){
-  const wrap=document.querySelector('.top-bar-right');
-  const old=document.querySelector('.user-menu-wrap');if(old)old.remove();
-  const trigger=document.querySelector('.auth-trigger-btn');
-  const TYPE_LABELS={sales_team:'Sales Team',parts:'Parts',bids:'Bids',property:'Property Management',grad:'Graduate'};
-  if(user){
-    if(trigger)trigger.style.display='none';
-    const menu=document.createElement('div');menu.className='user-menu-wrap';
-    menu.innerHTML=`<button class="user-menu-btn">${user.username} <span class="user-arrow">&#9660;</span></button><div class="user-dropdown"><div class="user-dropdown-header"><div class="user-dropdown-name">${user.username}</div><div class="user-dropdown-type">${TYPE_LABELS[user.loginType]||user.loginType}</div></div><div class="user-dropdown-items"><a class="user-dropdown-item" href="profile.html"><i class="item-icon">&#128100;</i> Profile</a><a class="user-dropdown-item" href="order-tracking.html"><i class="item-icon">&#128230;</i> Order History &amp; Tracking</a><a class="user-dropdown-item" href="invoice.html"><i class="item-icon">&#128203;</i> Invoice</a><a class="user-dropdown-item" href="payment.html"><i class="item-icon">&#128179;</i> Payment</a><div class="user-dropdown-divider"></div><a class="user-dropdown-item" href="settings.html"><i class="item-icon">&#9881;</i> Settings</a><div class="user-dropdown-divider"></div><button class="user-dropdown-item logout-item" onclick="logout()"><i class="item-icon">&#10148;</i> Logout</button></div></div>`;
-    if(wrap)wrap.appendChild(menu);
-    window.dispatchEvent(new Event('kjr-login'));
-  }else{
-    if(trigger){trigger.style.display='';trigger.textContent='Login / Sign Up';trigger.onclick=()=>openAuthModal('login');}
-  }
-}
-    function logout(){if(!confirm('Logout?'))return;localStorage.removeItem('kjr_token');localStorage.removeItem('kjr_user');updateAuthButton(null);}
-    (function(){const u=JSON.parse(localStorage.getItem('kjr_user')||'null');if(u)updateAuthButton(u);})();
+    function openAuthModal(tab) { document.getElementById('authModal').classList.add('open'); document.body.style.overflow = 'hidden'; switchTab(tab || 'login'); }
+    function closeAuthModal() { document.getElementById('authModal').classList.remove('open'); document.body.style.overflow = ''; }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAuthModal(); });
+    function switchTab(tab) { const l = tab === 'login'; document.getElementById('tabLogin').classList.toggle('active', l); document.getElementById('tabSignup').classList.toggle('active', !l); document.getElementById('formLogin').style.display = l ? 'flex' : 'none'; document.getElementById('formSignup').style.display = l ? 'none' : 'flex'; clearErrors(); }
+    function clearErrors() { ['loginError', 'signupError'].forEach(id => { const e = document.getElementById(id); if (e) { e.style.display = 'none'; e.textContent = ''; }; }); }
+    function showError(id, msg) { const e = document.getElementById(id); if (e) { e.textContent = msg; e.style.display = 'block'; } }
+    function togglePassword(fId, eye) { const i = document.getElementById(fId); const s = i.type === 'password'; i.type = s ? 'text' : 'password'; eye.textContent = s ? 'Hide' : 'Show'; }
+    function toggleSignupFields() { const t = document.getElementById('signupType').value; document.getElementById('companyField').style.display = ['sales_team', 'parts', 'bids', 'property'].includes(t) ? 'block' : 'none'; document.getElementById('instructorField').style.display = t === 'grad' ? 'block' : 'none'; }
+    function setLoading(id, on) { const b = document.getElementById(id); b.querySelector('.auth-btn-text').style.display = on ? 'none' : 'inline'; b.querySelector('.auth-spinner').style.display = on ? 'inline' : 'none'; b.disabled = on; }
+    async function handleLogin(e) { e.preventDefault(); clearErrors(); const loginType = document.getElementById('loginType').value; const identifier = document.getElementById('loginIdentifier').value.trim(); const password = document.getElementById('loginPassword').value; if (!loginType) return showError('loginError', 'Please select your account type.'); setLoading('loginBtn', true); try { const r = await fetch(BACKEND + '/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ identifier, password, loginType }) }); const d = await r.json(); if (!r.ok) throw new Error(d.errors?.[0]?.msg || 'Login failed'); localStorage.setItem('kjr_token', d.token); localStorage.setItem('kjr_user', JSON.stringify({ ...d.user, loginType })); closeAuthModal(); updateAuthButton({ ...d.user, loginType }); } catch (err) { showError('loginError', err.message); } finally { setLoading('loginBtn', false); } }
+    async function handleSignup(e) { e.preventDefault(); clearErrors(); const loginType = document.getElementById('signupType').value; const username = document.getElementById('signupUsername').value.trim(); const email = document.getElementById('signupEmail').value.trim(); const password = document.getElementById('signupPassword').value; const confirm = document.getElementById('signupConfirm').value; const phone = document.getElementById('signupPhone').value.trim(); const companyName = document.getElementById('signupCompany').value.trim(); const instructorName = document.getElementById('signupInstructor').value.trim(); if (!loginType) return showError('signupError', 'Please select an account type.'); if (password !== confirm) return showError('signupError', 'Passwords do not match.'); if (password.length < 8) return showError('signupError', 'Password must be at least 8 characters.'); setLoading('signupBtn', true); try { const r = await fetch(BACKEND + '/api/auth/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ loginType, username, email, password, phone, companyName, instructorName }) }); const d = await r.json(); if (!r.ok) throw new Error(d.errors?.[0]?.msg || 'Registration failed'); localStorage.setItem('kjr_token', d.token); localStorage.setItem('kjr_user', JSON.stringify({ ...d.user, loginType })); closeAuthModal(); updateAuthButton({ ...d.user, loginType }); } catch (err) { showError('signupError', err.message); } finally { setLoading('signupBtn', false); } }
+    function updateAuthButton(user) {
+      const wrap = document.querySelector('.top-bar-right');
+      const old = document.querySelector('.user-menu-wrap'); if (old) old.remove();
+      const trigger = document.querySelector('.auth-trigger-btn');
+      const TYPE_LABELS = { sales_team: 'Sales Team', parts: 'Parts', bids: 'Bids', property: 'Property Management', grad: 'Graduate' };
+      if (user) {
+        if (trigger) trigger.style.display = 'none';
+        const menu = document.createElement('div'); menu.className = 'user-menu-wrap';
+        menu.innerHTML = `<button class="user-menu-btn">${user.username} <span class="user-arrow">&#9660;</span></button><div class="user-dropdown"><div class="user-dropdown-header"><div class="user-dropdown-name">${user.username}</div><div class="user-dropdown-type">${TYPE_LABELS[user.loginType] || user.loginType}</div></div><div class="user-dropdown-items"><a class="user-dropdown-item" href="profile.html"><i class="item-icon">&#128100;</i> Profile</a><div class="user-dropdown-divider"></div><a class="user-dropdown-item" href="settings.html"><i class="item-icon">&#9881;</i> Settings</a><div class="user-dropdown-divider"></div><button class="user-dropdown-item logout-item" onclick="logout()"><i class="item-icon">&#10148;</i> Logout</button></div></div>`;
+        if (wrap) wrap.appendChild(menu);
+        window.dispatchEvent(new Event('kjr-login'));
+      } else {
+        if (trigger) { trigger.style.display = ''; trigger.textContent = 'Login / Sign Up'; trigger.onclick = () => openAuthModal('login'); }
+      }
+    }
+    function logout() { if (!confirm('Logout?')) return; localStorage.removeItem('kjr_token'); localStorage.removeItem('kjr_user'); updateAuthButton(null); }
+    (function () { const u = JSON.parse(localStorage.getItem('kjr_user') || 'null'); if (u) updateAuthButton(u); })();
   </script>
-  
+
 </body>
 
 </html>
