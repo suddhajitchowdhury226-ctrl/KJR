@@ -25,7 +25,7 @@
 
   <!-- Main Navigation Header -->
   <header class="main-header">
-    <div class="header-container">
+    <div class="header-container" style="position:relative;">
       <div class="logo">
         <a href="index.html">
           <img src="logo-new.jpeg" alt="KJR Interior Designs Inc.">
@@ -51,7 +51,8 @@
       <div class="header-actions">
         <a href="Lot-categories.html" class="parts-highlight">10M+ PARTS</a>
       </div>
-    </div>
+        <button class="hamburger" id="kjrHamburger" onclick="openMobileNav()" aria-label="Open navigation menu"><span></span><span></span><span></span></button>
+  </div>
   </header>
 
   <!-- Hero Section -->
@@ -482,6 +483,100 @@
         if (g.footerCopyright){ const fc = document.querySelector('.footer-bottom div'); if(fc) fc.textContent = g.footerCopyright; }
         if (g.partsHighlight){ const ph = document.querySelector('.parts-highlight'); if(ph) ph.textContent = g.partsHighlight; }
       } catch(e) {}
+    })();
+  </script>
+
+  <!-- ══ Mobile Nav Overlay ══════════════════════════════════════════════ -->
+  <div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="closeMobileNav()"></div>
+
+  <!-- ══ Mobile Nav Drawer ═══════════════════════════════════════════════ -->
+  <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
+    <div class="mobile-nav-header">
+      <a href="index.html"><img src="logo-new.jpeg" alt="KJR Interior Designs"></a>
+      <button class="mobile-nav-close" onclick="closeMobileNav()" aria-label="Close menu">&times;</button>
+    </div>
+    <ul class="mobile-nav-links">
+      <li><a href="index.html" class="mob-home">🏠 Home</a></li>
+      <li>
+        <button onclick="toggleMobileSubnav(this)" aria-expanded="false">
+          💼 Work Force <span style="font-size:.8rem;">▾</span>
+        </button>
+        <ul class="mobile-nav-sub">
+          <li><a href="career-move.html">Career Move</a></li>
+          <li><a href="property-mgmt.html">Property Mgmt Crew</a></li>
+          <li><a href="bid-projects.html">Bid Projects</a></li>
+          <li><a href="work-completed.html">Work Completed by KJRID</a></li>
+        </ul>
+      </li>
+      <li><a href="about-us.html">👥 About</a></li>
+      <li><a href="contact-us.html">✉️ Contact</a></li>
+      <li><a href="suggest-feature.html">💡 Suggest Feature</a></li>
+      <div class="mobile-nav-divider"></div>
+      <li><a href="Lot-categories.html" style="color:var(--primary);font-weight:800;">📦 10M+ Parts</a></li>
+      <li><a href="pay-now.html" style="color:var(--primary);">💳 Pay Now</a></li>
+    </ul>
+    <div class="mobile-nav-footer" id="mobileNavFooter">
+      <button class="mobile-cta-primary" onclick="openMobileAuthModal()">Login / Sign Up</button>
+    </div>
+  </nav>
+
+  <script>
+  // ── Mobile Nav ────────────────────────────────────────────────────────────
+  function openMobileNav() {
+    document.getElementById('mobileNav').classList.add('open');
+    document.getElementById('mobileNavOverlay').classList.add('open');
+    document.getElementById('kjrHamburger').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    // Mark active page
+    const path = location.pathname.split('/').pop() || 'index.html';
+    document.querySelectorAll('.mobile-nav-links a').forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === path);
+    });
+    // Update footer based on login
+    const user = JSON.parse(localStorage.getItem('kjr_user') || 'null');
+    const footer = document.getElementById('mobileNavFooter');
+    if (user && footer) {
+      footer.innerHTML = '<div style="padding:.3rem .5rem;font-size:.8rem;color:var(--text-muted);font-weight:600;">Signed in as ' + user.username + '</div>' +
+        '<a href="profile.html" class="mobile-cta-outline">👤 Profile</a>' +
+        '<a href="settings.html" class="mobile-cta-outline">⚙️ Settings</a>' +
+        '<button class="mobile-cta-outline" onclick="mobileLogout()">⇥ Logout</button>';
+    }
+  }
+  function closeMobileNav() {
+    document.getElementById('mobileNav').classList.remove('open');
+    document.getElementById('mobileNavOverlay').classList.remove('open');
+    const hb = document.getElementById('kjrHamburger');
+    if (hb) hb.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function toggleMobileSubnav(btn) {
+    const sub = btn.nextElementSibling;
+    const isOpen = sub.classList.toggle('open');
+    btn.setAttribute('aria-expanded', isOpen);
+    btn.querySelector('span').textContent = isOpen ? '▴' : '▾';
+  }
+  function openMobileAuthModal() {
+    closeMobileNav();
+    if (typeof openAuthModal === 'function') openAuthModal('login');
+  }
+  function mobileLogout() {
+    if (!confirm('Logout?')) return;
+    localStorage.removeItem('kjr_token');
+    localStorage.removeItem('kjr_user');
+    location.reload();
+  }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMobileNav(); });
+  </script>
+
+
+  <script>
+    // Header scroll shadow
+    (function() {
+      const hdr = document.querySelector('.main-header');
+      if (!hdr) return;
+      window.addEventListener('scroll', () => {
+        hdr.classList.toggle('scrolled', window.scrollY > 10);
+      }, { passive: true });
     })();
   </script>
 </body>
