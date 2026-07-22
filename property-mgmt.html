@@ -205,10 +205,10 @@
   <!-- Intro / Finished Work -->
   <section class="mission-section" style="padding: 6rem 2rem; background: var(--bg-off-white);">
     <div class="feature-card">
-      <h2 class="feature-title">FINISHED WORK & INVOICE</h2>
+      <h2 class="feature-title" id="pm-finwork-title">FINISHED WORK & INVOICE</h2>
       <div
         style="font-size: 1.1rem; line-height: 1.8; color: var(--text-body); border-bottom: 2px solid var(--border-light); padding-bottom: 2rem; margin-bottom: 2rem;">
-        <p style="margin-bottom: 1rem;">
+        <p style="margin-bottom: 1rem;" id="pm-finwork-body">
           We are expanding our operations and are looking for qualified contractors to join our team!
           We currently serve major metropolitan cities and surrounding areas across the USA.
         </p>
@@ -329,8 +329,8 @@
   <!-- Pricing Table -->
   <section class="content-section" style="background: white;">
     <div class="section-header">
-      <h2>PRE-SET PRICING FOR CREWS</h2>
-      <p>Work orders are given with set prices and cannot be negotiated.</p>
+      <h2 id="pm-pricing-title">PRE-SET PRICING FOR CREWS</h2>
+      <p id="pm-pricing-sub">Work orders are given with set prices and cannot be negotiated.</p>
     </div>
 
     <div class="container" style="max-width: 1000px;">
@@ -439,8 +439,8 @@
   <!-- Approved Crews List -->
   <section class="content-section" style="background: var(--bg-surface);">
     <div class="section-header">
-      <h2>APPROVED PROPERTY MANAGEMENT CREWS</h2>
-      <p>Qualified companies currently serving our network</p>
+      <h2 id="pm-approved-title">APPROVED PROPERTY MANAGEMENT CREWS</h2>
+      <p id="pm-approved-sub">Qualified companies currently serving our network</p>
     </div>
 
     <div class="feature-card" style="max-width: 1000px;">
@@ -743,9 +743,12 @@
         if (c.heroHeading)  setT('pm-hero-heading', c.heroHeading);
         if (c.heroSubtitle) setT('pm-hero-subtitle', c.heroSubtitle);
         if (c.heroVideoUrl) { const v = document.getElementById('pm-hero-video'); if(v){v.querySelector('source').src = c.heroVideoUrl; v.load();} }
-        if (c.finishedWorkTitle) setT('pm-finwork-title', c.finishedWorkTitle);
-        if (c.pricingTitle)      setT('pm-pricing-title', c.pricingTitle);
-        if (c.approvedTitle)     setT('pm-approved-title', c.approvedTitle);
+        if (c.finishedWorkTitle)  setT('pm-finwork-title',  c.finishedWorkTitle);
+        if (c.finishedWorkBody)   setT('pm-finwork-body',   c.finishedWorkBody);
+        if (c.pricingTitle)       setT('pm-pricing-title',  c.pricingTitle);
+        if (c.pricingSubtitle)    setT('pm-pricing-sub',    c.pricingSubtitle);
+        if (c.approvedTitle)      setT('pm-approved-title', c.approvedTitle);
+        if (c.approvedSubtitle)   setT('pm-approved-sub',   c.approvedSubtitle);
         if (g.footerTagline) { const ft = document.querySelector('.footer-brand p'); if(ft) ft.textContent = g.footerTagline; }
         if (g.footerCopyright){ const fc = document.querySelector('.footer-bottom div'); if(fc) fc.textContent = g.footerCopyright; }
         if (g.partsHighlight){ const ph = document.querySelector('.parts-highlight'); if(ph) ph.textContent = g.partsHighlight; }

@@ -827,6 +827,110 @@
       color: var(--green);
       border: 1px solid #bbf7d0;
     }
+
+    /* ══ Page Sub-Tabs & Cards ══ */
+    .page-tab {
+      padding: .6rem 1.2rem;
+      border: 2px solid transparent;
+      border-radius: 6px;
+      background: #f8fafc;
+      color: var(--text-muted);
+      font-size: .82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .15s;
+    }
+
+    .page-tab:hover {
+      background: #e2e8f0;
+      color: var(--text);
+    }
+
+    .page-tab.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .page-tab-pane {
+      display: none;
+    }
+
+    .page-tab-pane.active {
+      display: block;
+    }
+
+    .edit-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 1.25rem;
+    }
+
+    .edit-card-hdr {
+      padding: 1rem 1.25rem;
+      background: #f8fafc;
+      border-bottom: 1px solid var(--border);
+      font-size: .875rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .edit-card-body {
+      padding: 1.25rem;
+    }
+
+    .fg {
+      margin-bottom: 1rem;
+    }
+
+    .fg:last-child {
+      margin-bottom: 0;
+    }
+
+    .fg label {
+      display: block;
+      font-size: .75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--text-muted);
+      margin-bottom: .4rem;
+    }
+
+    .fg input,
+    .fg textarea,
+    .fg select {
+      width: 100%;
+      padding: .65rem .9rem;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: .9rem;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+    }
+
+    .fg input:focus,
+    .fg textarea:focus,
+    .fg select:focus {
+      border-color: var(--primary);
+    }
+
+    .fg textarea {
+      resize: vertical;
+    }
+
+    .fg-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .fg-row:last-child {
+      margin-bottom: 0;
+    }
   </style>
 </head>
 
@@ -1058,101 +1162,315 @@
         <!-- ======== TAB: WEBSITE CONTENT ======== -->
         <div id="tab-content" class="tab-pane">
 
+          <!-- Header bar -->
           <div
-            style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:.75rem;">
+            style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap;gap:.75rem;">
             <div>
-              <h2 style="font-size:1.2rem;font-weight:800;margin-bottom:.2rem;">Website Content Editor</h2>
-              <p style="font-size:.82rem;color:var(--text-muted);">Changes save to the database and appear live on the
-                main website.</p>
+              <h2 style="font-size:1.2rem;font-weight:800;margin-bottom:.2rem;">��️ Landing Page Content Editor</h2>
+              <p style="font-size:.82rem;color:var(--text-muted);">Select a page below, edit text &amp; images, then
+                click Save.</p>
             </div>
-            <button class="btn-sm red" id="save-content-btn" onclick="saveAllContent()">💾 Save All Changes</button>
+            <button class="btn-sm red" id="save-content-btn" onclick="saveAllContent()">💾 Save Changes</button>
           </div>
 
           <div id="content-save-alert"
-            style="display:none;padding:.75rem 1rem;border-radius:8px;font-size:.875rem;margin-bottom:1.25rem;"></div>
+            style="display:none;padding:.75rem 1rem;border-radius:8px;font-size:.875rem;margin-bottom:1rem;"></div>
 
-          <!-- ── HERO SECTION ── -->
-          <div class="table-card" style="margin-bottom:1.5rem;">
-            <div class="table-card-header">
-              <h3>🎬 Hero Section</h3>
+          <!-- Page sub-tabs -->
+          <div
+            style="display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1.5rem;border-bottom:2px solid var(--border);padding-bottom:.75rem;">
+            <button class="page-tab active" onclick="switchPageTab(this,'pgtab-home')">🏠 Home</button>
+            <button class="page-tab" onclick="switchPageTab(this,'pgtab-career')">💼 Career Move</button>
+            <button class="page-tab" onclick="switchPageTab(this,'pgtab-property')">🏘️ Property Mgmt</button>
+            <button class="page-tab" onclick="switchPageTab(this,'pgtab-bid')">📋 Bid Projects</button>
+            <button class="page-tab" onclick="switchPageTab(this,'pgtab-work')">🏗️ Work Completed</button>
+            <button class="page-tab" onclick="switchPageTab(this,'pgtab-about')">👥 About Us</button>
+            <button class="page-tab" onclick="switchPageTab(this,'pgtab-contact')">✉️ Contact Us</button>
+            <button class="page-tab" onclick="switchPageTab(this,'pgtab-suggest')">💡 Suggest Feature</button>
+            <button class="page-tab" onclick="switchPageTab(this,'pgtab-global')">🌐 Global</button>
+          </div>
+
+          <!-- HOME PAGE -->
+          <div id="pgtab-home" class="page-tab-pane active">
+            <div class="edit-card">
+              <div class="edit-card-hdr">🎬 Hero Section</div>
+              <div class="edit-card-body">
+                <div class="fg"><label>Heading</label><input type="text" id="h-hero-heading"></div>
+                <div class="fg"><label>Subtitle</label><textarea id="h-hero-subtitle" rows="2"></textarea></div>
+                <div class="fg"><label>Background Video URL</label><input type="url" id="h-hero-video"></div>
+              </div>
             </div>
-            <div style="padding:1.5rem;display:grid;gap:1rem;">
-              <div class="form-group">
-                <label>Heading</label>
-                <input type="text" id="cnt-hero-heading" placeholder="Main hero headline…">
+            <div class="edit-card">
+              <div class="edit-card-hdr">📣 Mission / Pricing Quote</div>
+              <div class="edit-card-body">
+                <div class="fg"><label>Sub-label</label><input type="text" id="h-mission-sub"></div>
+                <div class="fg"><label>Quote Text</label><textarea id="h-mission-quote" rows="3"></textarea></div>
               </div>
-              <div class="form-group">
-                <label>Subtitle</label>
-                <textarea id="cnt-hero-subtitle" rows="2" style="resize:vertical;"
-                  placeholder="Hero subtitle text…"></textarea>
+            </div>
+            <div class="edit-card">
+              <div class="edit-card-hdr">🔧 Services Section</div>
+              <div class="edit-card-body">
+                <div class="fg-row">
+                  <div class="fg"><label>Section Title</label><input type="text" id="h-svc-title"></div>
+                  <div class="fg"><label>Section Subtitle</label><input type="text" id="h-svc-sub"></div>
+                </div>
+                <div id="service-cards-editor"
+                  style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.25rem;margin-top:.75rem;">
+                </div>
               </div>
-              <div class="form-group">
-                <label>Background Video URL</label>
-                <input type="url" id="cnt-hero-video" placeholder="https://…mp4">
+            </div>
+            <div class="edit-card">
+              <div class="edit-card-hdr" style="display:flex;justify-content:space-between;align-items:center;"><span>📍
+                  Market Areas</span><button class="btn-sm ghost" onclick="addMarketArea()">+ Add City</button></div>
+              <div class="edit-card-body">
+                <div class="fg-row">
+                  <div class="fg"><label>Section Title</label><input type="text" id="h-market-title"></div>
+                  <div class="fg"><label>Section Subtitle</label><input type="text" id="h-market-sub"></div>
+                </div>
+                <div id="market-areas-editor"
+                  style="display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:.75rem;margin-top:.75rem;">
+                </div>
               </div>
             </div>
           </div>
 
-          <!-- ── MISSION SECTION ── -->
-          <div class="table-card" style="margin-bottom:1.5rem;">
-            <div class="table-card-header">
-              <h3>📣 Mission / Pricing Section</h3>
-            </div>
-            <div style="padding:1.5rem;display:grid;gap:1rem;">
-              <div class="form-group">
-                <label>Sub-label (above quote)</label>
-                <input type="text" id="cnt-mission-sub" placeholder="e.g. PRE-SET PRICING FOR CREWS">
+          <!-- CAREER MOVE -->
+          <div id="pgtab-career" class="page-tab-pane">
+            <div class="edit-card">
+              <div class="edit-card-hdr">🎬 Hero Section</div>
+              <div class="edit-card-body">
+                <div class="fg"><label>Heading</label><input type="text" id="cm-hero-heading"></div>
+                <div class="fg"><label>Subtitle</label><textarea id="cm-hero-subtitle" rows="2"></textarea></div>
+                <div class="fg"><label>Video URL</label><input type="url" id="cm-hero-video"></div>
               </div>
-              <div class="form-group">
-                <label>Quote Text</label>
-                <textarea id="cnt-mission-quote" rows="3" style="resize:vertical;"
-                  placeholder="Mission quote…"></textarea>
+            </div>
+            <div class="edit-card">
+              <div class="edit-card-hdr">🎓 Explore Career Fields</div>
+              <div class="edit-card-body">
+                <div class="fg-row">
+                  <div class="fg"><label>Section Title</label><input type="text" id="cm-explore-title"></div>
+                  <div class="fg"><label>Subtitle</label><input type="text" id="cm-explore-sub"></div>
+                </div>
+                <div class="fg"><label>Career Pills — one per line</label><textarea id="cm-pills" rows="7"
+                    placeholder="Advanced Asphalt Paving&#10;Bricklayer&#10;Carpentry…"></textarea></div>
+              </div>
+            </div>
+            <div class="edit-card">
+              <div class="edit-card-hdr">📢 Graduate Hiring Program</div>
+              <div class="edit-card-body">
+                <div class="fg"><label>Section Title</label><input type="text" id="cm-hiring-title"></div>
+                <div class="fg"><label>Body Text</label><textarea id="cm-hiring-body" rows="3"></textarea></div>
+              </div>
+            </div>
+            <div class="edit-card">
+              <div class="edit-card-hdr">🤝 Partnership Section</div>
+              <div class="edit-card-body">
+                <div class="fg"><label>Title</label><input type="text" id="cm-partner-title"></div>
+                <div class="fg"><label>Body Text</label><textarea id="cm-partner-body" rows="4"></textarea></div>
               </div>
             </div>
           </div>
 
-          <!-- ── SERVICES SECTION ── -->
-          <div class="table-card" style="margin-bottom:1.5rem;">
-            <div class="table-card-header">
-              <h3>🔧 Services Section</h3>
+          <!-- PROPERTY MGMT -->
+          <div id="pgtab-property" class="page-tab-pane">
+            <div class="edit-card">
+              <div class="edit-card-hdr">🎬 Hero Section</div>
+              <div class="edit-card-body">
+                <div class="fg"><label>Heading</label><input type="text" id="pm-hero-heading"></div>
+                <div class="fg"><label>Subtitle</label><textarea id="pm-hero-subtitle" rows="2"></textarea></div>
+                <div class="fg"><label>Video URL</label><input type="url" id="pm-hero-video"></div>
+              </div>
             </div>
-            <div style="padding:1.5rem;display:grid;gap:1.25rem;">
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-                <div class="form-group">
-                  <label>Section Title</label>
-                  <input type="text" id="cnt-svc-section-title" placeholder="e.g. SERVICES WE PROVIDE">
-                </div>
-                <div class="form-group">
-                  <label>Section Subtitle</label>
-                  <input type="text" id="cnt-svc-section-sub" placeholder="Subtitle below section title…">
+            <div class="edit-card">
+              <div class="edit-card-hdr">🧾 Finished Work &amp; Invoice Section</div>
+              <div class="edit-card-body">
+                <div class="fg"><label>Section Title</label><input type="text" id="pm-finwork-title"></div>
+                <div class="fg"><label>Body Text</label><textarea id="pm-finwork-body" rows="3"></textarea></div>
+              </div>
+            </div>
+            <div class="edit-card">
+              <div class="edit-card-hdr">💰 Pre-Set Pricing Section</div>
+              <div class="edit-card-body">
+                <div class="fg-row">
+                  <div class="fg"><label>Section Title</label><input type="text" id="pm-pricing-title"></div>
+                  <div class="fg"><label>Subtitle</label><input type="text" id="pm-pricing-sub"></div>
                 </div>
               </div>
-
-              <!-- Service Card Editors -->
-              <div id="service-cards-editor"
-                style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.25rem;"></div>
+            </div>
+            <div class="edit-card">
+              <div class="edit-card-hdr">✅ Approved Crews Section</div>
+              <div class="edit-card-body">
+                <div class="fg-row">
+                  <div class="fg"><label>Section Title</label><input type="text" id="pm-approved-title"></div>
+                  <div class="fg"><label>Subtitle</label><input type="text" id="pm-approved-sub"></div>
+                </div>
+              </div>
             </div>
           </div>
 
-          <!-- ── MARKET AREAS ── -->
-          <div class="table-card" style="margin-bottom:1.5rem;">
-            <div class="table-card-header">
-              <h3>📍 Market Areas</h3>
-              <button class="btn-sm ghost" onclick="addMarketArea()">+ Add City</button>
+          <!-- BID PROJECTS -->
+          <div id="pgtab-bid" class="page-tab-pane">
+            <div class="edit-card">
+              <div class="edit-card-hdr">🎬 Hero Section</div>
+              <div class="edit-card-body">
+                <div class="fg"><label>Hero Badge</label><input type="text" id="bp-hero-badge"
+                    placeholder="e.g. NOW ACCEPTING BIDS"></div>
+                <div class="fg"><label>Heading</label><input type="text" id="bp-hero-heading"></div>
+                <div class="fg"><label>Subtitle</label><textarea id="bp-hero-subtitle" rows="2"></textarea></div>
+                <div class="fg"><label>Video URL</label><input type="url" id="bp-hero-video"></div>
+              </div>
             </div>
-            <div style="padding:1.5rem;display:grid;gap:1rem;">
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-                <div class="form-group">
-                  <label>Section Title</label>
-                  <input type="text" id="cnt-market-title" placeholder="e.g. OUR PRIMARY MARKET AREAS">
-                </div>
-                <div class="form-group">
-                  <label>Section Subtitle</label>
-                  <input type="text" id="cnt-market-sub" placeholder="Subtitle…">
+            <div class="edit-card">
+              <div class="edit-card-hdr">⚠️ Notice Banner</div>
+              <div class="edit-card-body">
+                <div class="fg"><label>Notice Title</label><input type="text" id="bp-notice-title"></div>
+                <div class="fg"><label>Notice Body</label><textarea id="bp-notice-body" rows="4"></textarea></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- WORK COMPLETED -->
+          <div id="pgtab-work" class="page-tab-pane">
+            <div class="edit-card">
+              <div class="edit-card-hdr">🎬 Hero Section</div>
+              <div class="edit-card-body">
+                <div class="fg"><label>Heading</label><input type="text" id="wc-hero-heading"></div>
+                <div class="fg"><label>Subtitle</label><textarea id="wc-hero-subtitle" rows="2"></textarea></div>
+                <div class="fg"><label>Video URL</label><input type="url" id="wc-hero-video"></div>
+              </div>
+            </div>
+            <div class="edit-card">
+              <div class="edit-card-hdr">📊 Stats Bar</div>
+              <div class="edit-card-body">
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:.75rem;">
+                  <div class="fg"><label>Stat 1 Value</label><input type="text" id="wc-stat1-val" placeholder="500+">
+                  </div>
+                  <div class="fg"><label>Stat 1 Label</label><input type="text" id="wc-stat1-lbl"></div>
+                  <div class="fg"><label>Stat 2 Value</label><input type="text" id="wc-stat2-val"></div>
+                  <div class="fg"><label>Stat 2 Label</label><input type="text" id="wc-stat2-lbl"></div>
+                  <div class="fg"><label>Stat 3 Value</label><input type="text" id="wc-stat3-val"></div>
+                  <div class="fg"><label>Stat 3 Label</label><input type="text" id="wc-stat3-lbl"></div>
+                  <div class="fg"><label>Stat 4 Value</label><input type="text" id="wc-stat4-val"></div>
+                  <div class="fg"><label>Stat 4 Label</label><input type="text" id="wc-stat4-lbl"></div>
                 </div>
               </div>
-              <div id="market-areas-editor"
-                style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.75rem;"></div>
+            </div>
+            <div class="edit-card">
+              <div class="edit-card-hdr" style="display:flex;justify-content:space-between;align-items:center;">
+                <span>🖼️ Gallery Images</span><button class="btn-sm ghost" onclick="addGalleryImage()">+ Add
+                  Image</button></div>
+              <div class="edit-card-body">
+                <div class="fg-row">
+                  <div class="fg"><label>Section Title</label><input type="text" id="wc-gallery-title"></div>
+                  <div class="fg"><label>Section Subtitle</label><input type="text" id="wc-gallery-sub"></div>
+                </div>
+                <div id="gallery-images-editor"
+                  style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem;margin-top:.75rem;">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ABOUT US -->
+          <div id="pgtab-about" class="page-tab-pane">
+            <div class="edit-card">
+              <div class="edit-card-hdr">🎬 Hero Section</div>
+              <div class="edit-card-body">
+                <div class="fg"><label>Heading</label><input type="text" id="au-hero-heading"></div>
+                <div class="fg"><label>Subtitle</label><textarea id="au-hero-subtitle" rows="2"></textarea></div>
+                <div class="fg"><label>Video URL</label><input type="url" id="au-hero-video"></div>
+              </div>
+            </div>
+            <div class="edit-card">
+              <div class="edit-card-hdr">👔 Executive Leadership</div>
+              <div class="edit-card-body">
+                <div class="fg-row">
+                  <div class="fg"><label>Section Title</label><input type="text" id="au-exec-title"></div>
+                  <div class="fg"><label>Subtitle</label><input type="text" id="au-exec-sub"></div>
+                </div>
+                <div id="exec-team-editor"
+                  style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem;margin-top:.75rem;">
+                </div>
+              </div>
+            </div>
+            <div class="edit-card">
+              <div class="edit-card-hdr">🛠️ Project Management &amp; Support</div>
+              <div class="edit-card-body">
+                <div class="fg"><label>Section Title</label><input type="text" id="au-support-title"></div>
+                <div id="support-team-editor"
+                  style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem;margin-top:.75rem;">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CONTACT US -->
+          <div id="pgtab-contact" class="page-tab-pane">
+            <div class="edit-card">
+              <div class="edit-card-hdr">🎬 Hero Section</div>
+              <div class="edit-card-body">
+                <div class="fg"><label>Heading</label><input type="text" id="cu-hero-heading"></div>
+                <div class="fg"><label>Subtitle</label><textarea id="cu-hero-subtitle" rows="2"></textarea></div>
+                <div class="fg"><label>Video URL</label><input type="url" id="cu-hero-video"></div>
+              </div>
+            </div>
+            <div class="edit-card">
+              <div class="edit-card-hdr">📞 Contact Info</div>
+              <div class="edit-card-body">
+                <div class="fg-row">
+                  <div class="fg"><label>Section Title</label><input type="text" id="cu-section-title"></div>
+                  <div class="fg"><label>Phone Number</label><input type="text" id="cu-phone"></div>
+                </div>
+                <div class="fg-row">
+                  <div class="fg"><label>Hours</label><input type="text" id="cu-hours"></div>
+                  <div class="fg"><label>Address</label><input type="text" id="cu-address"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SUGGEST FEATURE -->
+          <div id="pgtab-suggest" class="page-tab-pane">
+            <div class="edit-card">
+              <div class="edit-card-hdr">🎬 Hero Section</div>
+              <div class="edit-card-body">
+                <div class="fg"><label>Heading</label><input type="text" id="sf-hero-heading"></div>
+                <div class="fg"><label>Subtitle</label><textarea id="sf-hero-subtitle" rows="2"></textarea></div>
+                <div class="fg"><label>Video URL</label><input type="url" id="sf-hero-video"></div>
+              </div>
+            </div>
+            <div class="edit-card">
+              <div class="edit-card-hdr">📊 Surveys Section</div>
+              <div class="edit-card-body">
+                <div class="fg"><label>Section Title</label><input type="text" id="sf-survey-title"></div>
+                <div class="fg"><label>Intro Text</label><textarea id="sf-survey-intro" rows="2"></textarea></div>
+              </div>
+            </div>
+            <div class="edit-card">
+              <div class="edit-card-hdr">💡 Help Us Improve Section</div>
+              <div class="edit-card-body">
+                <div class="fg"><label>Section Title</label><input type="text" id="sf-improve-title"></div>
+                <div class="fg"><label>Intro Text</label><textarea id="sf-improve-intro" rows="2"></textarea></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- GLOBAL -->
+          <div id="pgtab-global" class="page-tab-pane">
+            <div class="edit-card">
+              <div class="edit-card-hdr">🌐 Shared Across All Pages</div>
+              <div class="edit-card-body">
+                <div class="fg-row">
+                  <div class="fg"><label>Phone Number</label><input type="text" id="gl-phone"></div>
+                  <div class="fg"><label>Top Bar Text</label><input type="text" id="gl-topbar"></div>
+                </div>
+                <div class="fg-row">
+                  <div class="fg"><label>Parts Button Text (Header)</label><input type="text" id="gl-parts"></div>
+                  <div class="fg"><label>Address</label><input type="text" id="gl-address"></div>
+                </div>
+                <div class="fg"><label>Footer Tagline</label><input type="text" id="gl-footer-tagline"></div>
+                <div class="fg"><label>Footer Copyright</label><input type="text" id="gl-footer-copy"></div>
+              </div>
             </div>
           </div>
 
@@ -3086,10 +3404,19 @@
     }
 
     // ─────────────────────────────────────────────────────────
-    // WEBSITE CONTENT EDITOR
-    // ─────────────────────────────────────────────────────────
 
-    let _siteContent = null; // cached current content
+    // ═════════════════════════════════════════════════════════════════════════
+    // WEBSITE CONTENT EDITOR — All Pages
+    // ═════════════════════════════════════════════════════════════════════════
+
+    let _siteContent = null;
+
+    function switchPageTab(btn, tabId) {
+      document.querySelectorAll('.page-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.page-tab-pane').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(tabId).classList.add('active');
+    }
 
     async function loadSiteContent() {
       try {
@@ -3097,128 +3424,173 @@
         if (!res.ok) return;
         _siteContent = await res.json();
         populateContentForm(_siteContent);
-      } catch (e) {
-        console.warn('Could not load site content:', e.message);
-      }
+      } catch (e) { console.warn('Could not load site content:', e.message); }
     }
 
-    function populateContentForm(c) {
-      // Hero
-      setVal('cnt-hero-heading', c.heroHeading);
-      setVal('cnt-hero-subtitle', c.heroSubtitle);
-      setVal('cnt-hero-video', c.heroVideoUrl);
+    function populateContentForm(d) {
+      const v = (id, val) => { const el = document.getElementById(id); if (el && val != null) el.value = val || ''; };
+      
+      // HOME
+      const h = d.home || {};
+      v('h-hero-heading', h.heroHeading);
+      v('h-hero-subtitle', h.heroSubtitle);
+      v('h-hero-video', h.heroVideoUrl);
+      v('h-mission-sub', h.missionSubLabel);
+      v('h-mission-quote', h.missionQuote);
+      v('h-svc-title', h.servicesSectionTitle);
+      v('h-svc-sub', h.servicesSectionSubtitle);
+      v('h-market-title', h.marketSectionTitle);
+      v('h-market-sub', h.marketSectionSubtitle);
+      renderServiceCards(h.serviceCards || []);
+      renderMarketAreas(h.marketAreas || []);
 
-      // Mission
-      setVal('cnt-mission-sub', c.missionSubLabel);
-      setVal('cnt-mission-quote', c.missionQuote);
+      // CAREER MOVE
+      const cm = d.careerMove || {};
+      v('cm-hero-heading', cm.heroHeading);
+      v('cm-hero-subtitle', cm.heroSubtitle);
+      v('cm-hero-video', cm.heroVideoUrl);
+      v('cm-explore-title', cm.exploreSectionTitle);
+      v('cm-explore-sub', cm.exploreSectionSubtitle);
+      v('cm-pills', (cm.careerPills || []).map(p => p.label).join('\n'));
+      v('cm-hiring-title', cm.hiringTitle);
+      v('cm-hiring-body', cm.hiringBody);
+      v('cm-partner-title', cm.partnerTitle);
+      v('cm-partner-body', cm.partnerBody);
 
-      // Services section headings
-      setVal('cnt-svc-section-title', c.servicesSectionTitle);
-      setVal('cnt-svc-section-sub', c.servicesSectionSubtitle);
+      // PROPERTY MGMT
+      const pm = d.propertyMgmt || {};
+      v('pm-hero-heading', pm.heroHeading);
+      v('pm-hero-subtitle', pm.heroSubtitle);
+      v('pm-hero-video', pm.heroVideoUrl);
+      v('pm-finwork-title', pm.finishedWorkTitle);
+      v('pm-finwork-body', pm.finishedWorkBody);
+      v('pm-pricing-title', pm.pricingTitle);
+      v('pm-pricing-sub', pm.pricingSubtitle);
+      v('pm-approved-title', pm.approvedTitle);
+      v('pm-approved-sub', pm.approvedSubtitle);
 
-      // Service cards
-      renderServiceCards(c.serviceCards || []);
+      // BID PROJECTS
+      const bp = d.bidProjects || {};
+      v('bp-hero-badge', bp.heroBadge);
+      v('bp-hero-heading', bp.heroHeading);
+      v('bp-hero-subtitle', bp.heroSubtitle);
+      v('bp-hero-video', bp.heroVideoUrl);
+      v('bp-notice-title', bp.noticeTitle);
+      v('bp-notice-body', bp.noticeBody);
 
-      // Market areas
-      setVal('cnt-market-title', c.marketSectionTitle);
-      setVal('cnt-market-sub', c.marketSectionSubtitle);
-      renderMarketAreas(c.marketAreas || []);
-    }
+      // WORK COMPLETED
+      const wc = d.workCompleted || {};
+      v('wc-hero-heading', wc.heroHeading);
+      v('wc-hero-subtitle', wc.heroSubtitle);
+      v('wc-hero-video', wc.heroVideoUrl);
+      v('wc-stat1-val', wc.stat1Value);
+      v('wc-stat1-lbl', wc.stat1Label);
+      v('wc-stat2-val', wc.stat2Value);
+      v('wc-stat2-lbl', wc.stat2Label);
+      v('wc-stat3-val', wc.stat3Value);
+      v('wc-stat3-lbl', wc.stat3Label);
+      v('wc-stat4-val', wc.stat4Value);
+      v('wc-stat4-lbl', wc.stat4Label);
+      v('wc-gallery-title', wc.gallerySectionTitle);
+      v('wc-gallery-sub', wc.gallerySectionSubtitle);
+      renderGalleryImages(wc.galleryImages || []);
 
-    function setVal(id, val) {
-      const el = document.getElementById(id);
-      if (el && val !== undefined && val !== null) el.value = val;
+      // ABOUT US
+      const au = d.aboutUs || {};
+      v('au-hero-heading', au.heroHeading);
+      v('au-hero-subtitle', au.heroSubtitle);
+      v('au-hero-video', au.heroVideoUrl);
+      v('au-exec-title', au.execTitle);
+      v('au-exec-sub', au.execSubtitle);
+      v('au-support-title', au.supportTitle);
+      renderTeamMembers('exec-team-editor', au.execTeam || [], 'exec');
+      renderTeamMembers('support-team-editor', au.supportTeam || [], 'sup');
+
+      // CONTACT US
+      const cu = d.contactUs || {};
+      v('cu-hero-heading', cu.heroHeading);
+      v('cu-hero-subtitle', cu.heroSubtitle);
+      v('cu-hero-video', cu.heroVideoUrl);
+      v('cu-section-title', cu.sectionTitle);
+      v('cu-phone', cu.phone);
+      v('cu-hours', cu.hours);
+      v('cu-address', cu.address);
+
+      // SUGGEST FEATURE
+      const sf = d.suggestFeature || {};
+      v('sf-hero-heading', sf.heroHeading);
+      v('sf-hero-subtitle', sf.heroSubtitle);
+      v('sf-hero-video', sf.heroVideoUrl);
+      v('sf-survey-title', sf.surveyTitle);
+      v('sf-survey-intro', sf.surveyIntro);
+      v('sf-improve-title', sf.improveTitle);
+      v('sf-improve-intro', sf.improveIntro);
+
+      // GLOBAL
+      const gl = d.global || {};
+      v('gl-phone', gl.phone);
+      v('gl-topbar', gl.topBarText);
+      v('gl-parts', gl.partsHighlight);
+      v('gl-address', gl.address);
+      v('gl-footer-tagline', gl.footerTagline);
+      v('gl-footer-copy', gl.footerCopyright);
     }
 
     function renderServiceCards(cards) {
-      const container = document.getElementById('service-cards-editor');
-      container.innerHTML = '';
+      const c = document.getElementById('service-cards-editor');
+      c.innerHTML = '';
       cards.forEach((card, i) => {
         const div = document.createElement('div');
         div.style.cssText = 'background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:1.25rem;display:grid;gap:.75rem;';
         const imgSrc = card.img || '';
         div.innerHTML = `
           <div style="font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--primary);">Service Card ${i + 1}</div>
-
-          <!-- Image preview + Cloudinary upload -->
           <div style="display:flex;align-items:flex-start;gap:.85rem;">
             <div style="flex-shrink:0;">
-              <img id="svc-img-preview-${i}" src="${imgSrc}" alt=""
-                style="width:90px;height:70px;object-fit:cover;border-radius:8px;border:1.5px solid #e2e8f0;background:#f1f5f9;display:${imgSrc ? 'block' : 'none'};">
+              <img id="svc-img-preview-${i}" src="${imgSrc}" alt="" style="width:90px;height:70px;object-fit:cover;border-radius:8px;border:1.5px solid #e2e8f0;background:#f1f5f9;display:${imgSrc ? 'block' : 'none'};">
               <div id="svc-img-placeholder-${i}" style="width:90px;height:70px;border-radius:8px;border:1.5px dashed #e2e8f0;background:#f1f5f9;display:${imgSrc ? 'none' : 'flex'};align-items:center;justify-content:center;font-size:.65rem;color:#94a3b8;text-align:center;">No Image</div>
             </div>
             <div style="flex:1;display:grid;gap:.4rem;">
-              <label id="svc-upload-btn-${i}" style="display:inline-flex;align-items:center;gap:.4rem;padding:.45rem .9rem;background:#fff;border:1.5px solid #e2e8f0;border-radius:7px;cursor:pointer;font-size:.78rem;font-weight:600;width:fit-content;">
-                📷 Upload Image
-                <input type="file" accept="image/*" style="display:none" onchange="handleSvcImgUpload(event,${i})">
-              </label>
+              <label id="svc-upload-btn-${i}" style="display:inline-flex;align-items:center;gap:.4rem;padding:.45rem .9rem;background:#fff;border:1.5px solid #e2e8f0;border-radius:7px;cursor:pointer;font-size:.78rem;font-weight:600;width:fit-content;">📷 Upload Image<input type="file" accept="image/*" style="display:none" onchange="handleSvcImgUpload(event,${i})"></label>
               <div id="svc-upload-status-${i}" style="font-size:.72rem;color:#64748b;min-height:1.2em;"></div>
-              <input type="text" id="svc-img-url-${i}" value="${imgSrc}" placeholder="or paste image URL directly"
-                style="width:100%;padding:.4rem .7rem;border:1.5px solid #e2e8f0;border-radius:7px;font-size:.78rem;outline:none;font-family:'Inter',sans-serif;"
-                oninput="updateSvcImgPreview(${i})">
+              <input type="text" id="svc-img-url-${i}" value="${imgSrc}" placeholder="or paste image URL" style="width:100%;padding:.4rem .7rem;border:1.5px solid #e2e8f0;border-radius:7px;font-size:.78rem;outline:none;font-family:'Inter',sans-serif;" oninput="updateSvcImgPreview(${i})">
               <div style="font-size:.68rem;color:#94a3b8;">Upload sends to Cloudinary automatically</div>
             </div>
           </div>
-
-          <div class="form-group" style="margin:0;">
-            <label>Category Label</label>
-            <input type="text" id="svc-meta-${i}" value="${escHtml(card.meta || '')}" placeholder="e.g. RENOVATION">
-          </div>
-          <div class="form-group" style="margin:0;">
-            <label>Title</label>
-            <input type="text" id="svc-title-${i}" value="${escHtml(card.title || '')}" placeholder="Card title…">
-          </div>
-          <div class="form-group" style="margin:0;">
-            <label>Description</label>
-            <textarea id="svc-excerpt-${i}" rows="3" style="resize:vertical;" placeholder="Card description…">${escHtml(card.excerpt || '')}</textarea>
-          </div>
+          <div class="fg" style="margin:0;"><label>Category Label</label><input type="text" id="svc-meta-${i}" value="${escHtml(card.meta || '')}" placeholder="e.g. RENOVATION"></div>
+          <div class="fg" style="margin:0;"><label>Title</label><input type="text" id="svc-title-${i}" value="${escHtml(card.title || '')}" placeholder="Card title…"></div>
+          <div class="fg" style="margin:0;"><label>Description</label><textarea id="svc-excerpt-${i}" rows="3" style="resize:vertical;" placeholder="Card description…">${escHtml(card.excerpt || '')}</textarea></div>
         `;
-        container.appendChild(div);
+        c.appendChild(div);
       });
     }
 
     async function handleSvcImgUpload(event, idx) {
       const file = event.target.files[0];
       if (!file) return;
-
       const statusEl = document.getElementById(`svc-upload-status-${idx}`);
       const previewEl = document.getElementById(`svc-img-preview-${idx}`);
       const placeholderEl = document.getElementById(`svc-img-placeholder-${idx}`);
       const urlInput = document.getElementById(`svc-img-url-${idx}`);
       const uploadBtn = document.getElementById(`svc-upload-btn-${idx}`);
-
-      // Show local preview immediately
       const localUrl = URL.createObjectURL(file);
       if (previewEl) { previewEl.src = localUrl; previewEl.style.display = 'block'; }
       if (placeholderEl) placeholderEl.style.display = 'none';
-
       statusEl.style.color = '#d97706';
       statusEl.textContent = '⏳ Uploading to Cloudinary…';
       if (uploadBtn) uploadBtn.style.opacity = '0.6';
-
       try {
         const formData = new FormData();
         formData.append('image', file);
-        formData.append('cardIndex', idx);
-
-        const res = await fetch(`${API_URL}/admin/site-content/upload-image`, {
-          method: 'POST',
-          headers: { 'x-auth-token': token },
-          body: formData
-        });
-
-        if (!res.ok) {
-          const err = await res.json().catch(() => ({}));
-          throw new Error(err.error || `Upload failed (${res.status})`);
-        }
-
+        formData.append('page', 'home');
+        formData.append('field', 'serviceCard');
+        formData.append('index', idx);
+        const res = await fetch(`${API_URL}/admin/site-content/upload-image`, { method: 'POST', headers: { 'x-auth-token': token }, body: formData });
+        if (!res.ok) { const err = await res.json().catch(() => ({})); throw new Error(err.error || `Upload failed (${res.status})`); }
         const data = await res.json();
         const cloudUrl = data.url;
-
-        // Update preview + URL field with Cloudinary URL
         if (previewEl) previewEl.src = cloudUrl;
         if (urlInput) urlInput.value = cloudUrl;
-
         statusEl.style.color = '#16a34a';
         statusEl.textContent = '✅ Uploaded to Cloudinary!';
         setTimeout(() => { statusEl.textContent = ''; }, 3000);
@@ -3240,47 +3612,38 @@
     }
 
     function renderMarketAreas(areas) {
-      const container = document.getElementById('market-areas-editor');
-      container.innerHTML = '';
+      const c = document.getElementById('market-areas-editor');
+      c.innerHTML = '';
       areas.forEach((area, i) => {
         const div = document.createElement('div');
         div.style.cssText = 'display:flex;align-items:center;gap:.5rem;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:8px;padding:.5rem .75rem;';
         div.innerHTML = `
-          <input type="checkbox" id="market-active-${i}" ${area.active !== false ? 'checked' : ''}
-            style="width:16px;height:16px;cursor:pointer;accent-color:var(--primary);" title="Show on website">
-          <input type="text" id="market-label-${i}" value="${escHtml(area.label || '')}"
-            style="flex:1;border:none;background:transparent;font-size:.85rem;font-weight:600;outline:none;color:var(--text);"
-            placeholder="CITY, STATE">
-          <button onclick="removeMarketArea(${i})" title="Remove"
-            style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:1rem;line-height:1;padding:0 2px;">✕</button>
+          <input type="checkbox" id="market-active-${i}" ${area.active !== false ? 'checked' : ''} style="width:16px;height:16px;cursor:pointer;accent-color:var(--primary);" title="Show on website">
+          <input type="text" id="market-label-${i}" value="${escHtml(area.label || '')}" style="flex:1;border:none;background:transparent;font-size:.85rem;font-weight:600;outline:none;color:var(--text);" placeholder="CITY, STATE">
+          <button onclick="removeMarketArea(${i})" title="Remove" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:1rem;line-height:1;padding:0 2px;">✕</button>
         `;
-        container.appendChild(div);
+        c.appendChild(div);
       });
     }
 
     function addMarketArea() {
-      const container = document.getElementById('market-areas-editor');
-      const i = container.children.length;
+      const c = document.getElementById('market-areas-editor');
+      const i = c.children.length;
       const div = document.createElement('div');
       div.style.cssText = 'display:flex;align-items:center;gap:.5rem;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:8px;padding:.5rem .75rem;';
       div.innerHTML = `
-        <input type="checkbox" id="market-active-${i}" checked
-          style="width:16px;height:16px;cursor:pointer;accent-color:var(--primary);" title="Show on website">
-        <input type="text" id="market-label-${i}" value=""
-          style="flex:1;border:none;background:transparent;font-size:.85rem;font-weight:600;outline:none;color:var(--text);"
-          placeholder="CITY, STATE">
-        <button onclick="removeMarketArea(${i})" title="Remove"
-          style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:1rem;line-height:1;padding:0 2px;">✕</button>
+        <input type="checkbox" id="market-active-${i}" checked style="width:16px;height:16px;cursor:pointer;accent-color:var(--primary);">
+        <input type="text" id="market-label-${i}" value="" style="flex:1;border:none;background:transparent;font-size:.85rem;font-weight:600;outline:none;color:var(--text);" placeholder="CITY, STATE">
+        <button onclick="removeMarketArea(${i})" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:1rem;line-height:1;padding:0 2px;">✕</button>
       `;
-      container.appendChild(div);
+      c.appendChild(div);
     }
 
     function removeMarketArea(idx) {
-      const container = document.getElementById('market-areas-editor');
-      const items = [...container.children];
+      const c = document.getElementById('market-areas-editor');
+      const items = [...c.children];
       if (items[idx]) items[idx].remove();
-      // Re-index remaining items
-      [...container.children].forEach((div, i) => {
+      [...c.children].forEach((div, i) => {
         const cb = div.querySelector('input[type="checkbox"]');
         const inp = div.querySelector('input[type="text"]');
         const btn = div.querySelector('button');
@@ -3290,10 +3653,65 @@
       });
     }
 
+    function renderGalleryImages(images) {
+      const c = document.getElementById('gallery-images-editor');
+      c.innerHTML = images.length ? '' : '<p style="color:var(--text-muted);">No gallery images yet. Click + Add Image to start.</p>';
+      images.forEach((img, i) => {
+        const div = document.createElement('div');
+        div.style.cssText = 'background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:1rem;';
+        div.innerHTML = `
+          <div style="margin-bottom:.5rem;"><img src="${img.src || ''}" style="width:100%;height:120px;object-fit:cover;border-radius:6px;background:#f1f5f9;"></div>
+          <div class="fg" style="margin-bottom:.5rem;"><label>Image URL</label><input type="text" id="gal-src-${i}" value="${escHtml(img.src || '')}"></div>
+          <div class="fg" style="margin-bottom:.5rem;"><label>Alt Text</label><input type="text" id="gal-alt-${i}" value="${escHtml(img.alt || '')}"></div>
+          <button class="btn-sm danger" onclick="removeGalleryImage(${i})" style="width:100%;font-size:.75rem;">Remove</button>
+        `;
+        c.appendChild(div);
+      });
+    }
+
+    function addGalleryImage() {
+      const c = document.getElementById('gallery-images-editor');
+      if (c.innerHTML.includes('No gallery images')) c.innerHTML = '';
+      const i = c.children.length;
+      const div = document.createElement('div');
+      div.style.cssText = 'background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:1rem;';
+      div.innerHTML = `
+        <div class="fg" style="margin-bottom:.5rem;"><label>Image URL</label><input type="text" id="gal-src-${i}" placeholder="https://…"></div>
+        <div class="fg" style="margin-bottom:.5rem;"><label>Alt Text</label><input type="text" id="gal-alt-${i}" placeholder="Image description"></div>
+        <button class="btn-sm danger" onclick="removeGalleryImage(${i})" style="width:100%;font-size:.75rem;">Remove</button>
+      `;
+      c.appendChild(div);
+    }
+
+    function removeGalleryImage(idx) {
+      const c = document.getElementById('gallery-images-editor');
+      const items = [...c.children];
+      if (items[idx]) items[idx].remove();
+      if (!c.children.length) c.innerHTML = '<p style="color:var(--text-muted);">No gallery images yet.</p>';
+    }
+
+    function renderTeamMembers(containerId, team, prefix) {
+      const c = document.getElementById(containerId);
+      c.innerHTML = '';
+      team.forEach((m, i) => {
+        const div = document.createElement('div');
+        div.style.cssText = 'background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:1rem;';
+        div.innerHTML = `
+          <div style="margin-bottom:.75rem;"><img src="${m.photo || ''}" style="width:100%;height:100px;object-fit:cover;border-radius:8px;background:#f1f5f9;"></div>
+          <div class="fg" style="margin-bottom:.5rem;"><label>Photo URL</label><input type="text" id="${prefix}-photo-${i}" value="${escHtml(m.photo || '')}"></div>
+          <div class="fg" style="margin-bottom:.5rem;"><label>Role</label><input type="text" id="${prefix}-role-${i}" value="${escHtml(m.role || '')}"></div>
+          <div class="fg" style="margin-bottom:.5rem;"><label>Name</label><input type="text" id="${prefix}-name-${i}" value="${escHtml(m.name || '')}"></div>
+          <div class="fg" style="margin-bottom:.5rem;"><label>Email 1</label><input type="text" id="${prefix}-email1-${i}" value="${escHtml(m.email1 || '')}"></div>
+          <div class="fg" style="margin:0;"><label>Email 2</label><input type="text" id="${prefix}-email2-${i}" value="${escHtml(m.email2 || '')}"></div>
+        `;
+        c.appendChild(div);
+      });
+    }
+
     function collectServiceCards() {
       const cards = [];
       let i = 0;
-      while (document.getElementById(`svc-title-${i}`) !== null) {
+      while (document.getElementById(`svc-title-${i}`)) {
         cards.push({
           id: `service${i + 1}`,
           meta: (document.getElementById(`svc-meta-${i}`)?.value || '').trim(),
@@ -3308,13 +3726,42 @@
 
     function collectMarketAreas() {
       const areas = [];
-      const container = document.getElementById('market-areas-editor');
-      [...container.children].forEach((div, i) => {
+      const c = document.getElementById('market-areas-editor');
+      [...c.children].forEach((div, i) => {
         const label = (document.getElementById(`market-label-${i}`)?.value || '').trim();
         const active = document.getElementById(`market-active-${i}`)?.checked !== false;
         if (label) areas.push({ id: `area-${Date.now()}-${i}`, label, active });
       });
       return areas;
+    }
+
+    function collectGalleryImages() {
+      const images = [];
+      let i = 0;
+      while (document.getElementById(`gal-src-${i}`)) {
+        const src = (document.getElementById(`gal-src-${i}`)?.value || '').trim();
+        const alt = (document.getElementById(`gal-alt-${i}`)?.value || '').trim();
+        if (src) images.push({ id: `g${i + 1}`, src, alt });
+        i++;
+      }
+      return images;
+    }
+
+    function collectTeamMembers(prefix) {
+      const team = [];
+      let i = 0;
+      while (document.getElementById(`${prefix}-name-${i}`)) {
+        team.push({
+          id: `${prefix}${i + 1}`,
+          photo: (document.getElementById(`${prefix}-photo-${i}`)?.value || '').trim(),
+          role: (document.getElementById(`${prefix}-role-${i}`)?.value || '').trim(),
+          name: (document.getElementById(`${prefix}-name-${i}`)?.value || '').trim(),
+          email1: (document.getElementById(`${prefix}-email1-${i}`)?.value || '').trim(),
+          email2: (document.getElementById(`${prefix}-email2-${i}`)?.value || '').trim()
+        });
+        i++;
+      }
+      return team;
     }
 
     async function saveAllContent() {
@@ -3323,18 +3770,60 @@
       btn.disabled = true;
       btn.textContent = 'Saving…';
 
+      const g = (id) => (document.getElementById(id)?.value || '').trim();
       const payload = {
-        heroHeading: (document.getElementById('cnt-hero-heading')?.value || '').trim(),
-        heroSubtitle: (document.getElementById('cnt-hero-subtitle')?.value || '').trim(),
-        heroVideoUrl: (document.getElementById('cnt-hero-video')?.value || '').trim(),
-        missionSubLabel: (document.getElementById('cnt-mission-sub')?.value || '').trim(),
-        missionQuote: (document.getElementById('cnt-mission-quote')?.value || '').trim(),
-        servicesSectionTitle: (document.getElementById('cnt-svc-section-title')?.value || '').trim(),
-        servicesSectionSubtitle: (document.getElementById('cnt-svc-section-sub')?.value || '').trim(),
-        serviceCards: collectServiceCards(),
-        marketSectionTitle: (document.getElementById('cnt-market-title')?.value || '').trim(),
-        marketSectionSubtitle: (document.getElementById('cnt-market-sub')?.value || '').trim(),
-        marketAreas: collectMarketAreas()
+        home: {
+          heroHeading: g('h-hero-heading'), heroSubtitle: g('h-hero-subtitle'), heroVideoUrl: g('h-hero-video'),
+          missionSubLabel: g('h-mission-sub'), missionQuote: g('h-mission-quote'),
+          servicesSectionTitle: g('h-svc-title'), servicesSectionSubtitle: g('h-svc-sub'),
+          marketSectionTitle: g('h-market-title'), marketSectionSubtitle: g('h-market-sub'),
+          serviceCards: collectServiceCards(), marketAreas: collectMarketAreas()
+        },
+        careerMove: {
+          heroHeading: g('cm-hero-heading'), heroSubtitle: g('cm-hero-subtitle'), heroVideoUrl: g('cm-hero-video'),
+          exploreSectionTitle: g('cm-explore-title'), exploreSectionSubtitle: g('cm-explore-sub'),
+          careerPills: g('cm-pills').split('\n').filter(l => l.trim()).map(l => ({ label: l.trim() })),
+          hiringTitle: g('cm-hiring-title'), hiringBody: g('cm-hiring-body'),
+          partnerTitle: g('cm-partner-title'), partnerBody: g('cm-partner-body')
+        },
+        propertyMgmt: {
+          heroHeading: g('pm-hero-heading'), heroSubtitle: g('pm-hero-subtitle'), heroVideoUrl: g('pm-hero-video'),
+          finishedWorkTitle: g('pm-finwork-title'), finishedWorkBody: g('pm-finwork-body'),
+          pricingTitle: g('pm-pricing-title'), pricingSubtitle: g('pm-pricing-sub'),
+          approvedTitle: g('pm-approved-title'), approvedSubtitle: g('pm-approved-sub')
+        },
+        bidProjects: {
+          heroBadge: g('bp-hero-badge'), heroHeading: g('bp-hero-heading'), heroSubtitle: g('bp-hero-subtitle'), heroVideoUrl: g('bp-hero-video'),
+          noticeTitle: g('bp-notice-title'), noticeBody: g('bp-notice-body')
+        },
+        workCompleted: {
+          heroHeading: g('wc-hero-heading'), heroSubtitle: g('wc-hero-subtitle'), heroVideoUrl: g('wc-hero-video'),
+          stat1Value: g('wc-stat1-val'), stat1Label: g('wc-stat1-lbl'),
+          stat2Value: g('wc-stat2-val'), stat2Label: g('wc-stat2-lbl'),
+          stat3Value: g('wc-stat3-val'), stat3Label: g('wc-stat3-lbl'),
+          stat4Value: g('wc-stat4-val'), stat4Label: g('wc-stat4-lbl'),
+          gallerySectionTitle: g('wc-gallery-title'), gallerySectionSubtitle: g('wc-gallery-sub'),
+          galleryImages: collectGalleryImages()
+        },
+        aboutUs: {
+          heroHeading: g('au-hero-heading'), heroSubtitle: g('au-hero-subtitle'), heroVideoUrl: g('au-hero-video'),
+          execTitle: g('au-exec-title'), execSubtitle: g('au-exec-sub'),
+          supportTitle: g('au-support-title'),
+          execTeam: collectTeamMembers('exec'), supportTeam: collectTeamMembers('sup')
+        },
+        contactUs: {
+          heroHeading: g('cu-hero-heading'), heroSubtitle: g('cu-hero-subtitle'), heroVideoUrl: g('cu-hero-video'),
+          sectionTitle: g('cu-section-title'), phone: g('cu-phone'), hours: g('cu-hours'), address: g('cu-address')
+        },
+        suggestFeature: {
+          heroHeading: g('sf-hero-heading'), heroSubtitle: g('sf-hero-subtitle'), heroVideoUrl: g('sf-hero-video'),
+          surveyTitle: g('sf-survey-title'), surveyIntro: g('sf-survey-intro'),
+          improveTitle: g('sf-improve-title'), improveIntro: g('sf-improve-intro')
+        },
+        global: {
+          phone: g('gl-phone'), topBarText: g('gl-topbar'), partsHighlight: g('gl-parts'),
+          address: g('gl-address'), footerTagline: g('gl-footer-tagline'), footerCopyright: g('gl-footer-copy')
+        }
       };
 
       try {
@@ -3345,20 +3834,20 @@
         });
         if (!res.ok) throw new Error('Save failed');
         _siteContent = await res.json();
-        alert.style.cssText = 'display:block;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;padding:.75rem 1rem;border-radius:8px;font-size:.875rem;margin-bottom:1.25rem;';
+        alert.style.cssText = 'display:block;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;padding:.75rem 1rem;border-radius:8px;font-size:.875rem;';
         alert.textContent = '✅ Website content saved successfully! Changes are now live.';
       } catch (e) {
-        alert.style.cssText = 'display:block;background:#fff1f1;color:#dc2626;border:1px solid #fca5a5;padding:.75rem 1rem;border-radius:8px;font-size:.875rem;margin-bottom:1.25rem;';
+        alert.style.cssText = 'display:block;background:#fff1f1;color:#dc2626;border:1px solid #fca5a5;padding:.75rem 1rem;border-radius:8px;font-size:.875rem;';
         alert.textContent = '❌ Error saving content: ' + e.message;
       } finally {
         btn.disabled = false;
-        btn.textContent = '💾 Save All Changes';
+        btn.textContent = '💾 Save Changes';
         setTimeout(() => { alert.style.display = 'none'; }, 5000);
       }
     }
 
     function escHtml(str) {
-      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
   </script>
 </body>
