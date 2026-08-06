@@ -271,7 +271,22 @@ router.post('/forms', upload.any(), async (req, res) => {
       }
     });
 
-    const notifyEmails = process.env.NOTIFY_EMAILS || 'estimating@kjrid.com';
+    // Route to the correct inbox based on _formType hidden field
+    const ft = req.body._formType || '';
+    let notifyEmails;
+    if (ft === 'contact' || ft === 'suggest') {
+      notifyEmails = 'contact@kjrid.com';
+    } else if (ft === 'property' || ft === 'propertyprofile') {
+      notifyEmails = 'propertymanagement@kjrid.com';
+    } else if (ft === 'career') {
+      notifyEmails = 'info@kjrid.com';
+    } else if (ft === 'hireagrad') {
+      notifyEmails = 'hire@kjrid.com';
+    } else if (req.body._to) {
+      notifyEmails = req.body._to;
+    } else {
+      notifyEmails = process.env.NOTIFY_EMAILS || 'estimating@kjrid.com';
+    }
     const subject = req.body._subject || 'New Form Submission';
 
     // Build HTML body from all form fields
@@ -306,6 +321,111 @@ router.post('/forms', upload.any(), async (req, res) => {
   }
 });
 
+
+
+// @route   POST api/bid-applications
+// @desc    Apply to Bid — saves to DB + emails estimating@kjrid.com
+// @access  Public
+router.post('/bid-applications', upload.array('documents', 5), async (req, res) => {
+  try {
+    const newBid = new Bid({
+      project: req.body.project || 'general-application',
+      projectName: req.body.projectName || 'General Bid Application',
+      companyName: req.body.companyName || req.body.company || '',
+      contactPerson: req.body.contactPerson || req.body.name || '',
+      emailAddress: req.body.emailAddress || req.body.email || '',
+      phone: req.body.phone || '',
+      bidIntent: 'yes',
+      comments: req.body.comments || req.body.message || ''
+    });
+    const bid = await newBid.save();
+    try {
+      const transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST || 'smtp.gmail.com',
+        port: parseInt(process.env.SMTP_PORT) || 587,
+        secure: false,
+        auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS }
+      });
+      const attachments = (req.files || []).map(f => ({
+        filename: f.originalname, content: f.buffer, contentType: f.mimetype
+      }));
+      await transporter.sendMail({
+        from: `"KJR Bid Applications" <${process.env.SMTP_USER}>`,
+        to: 'estimating@kjrid.com',
+        replyTo: bid.emailAddress,
+        subject: `New Bid Application: ${bid.companyName || bid.contactPerson}`,
+        attachments,
+        html: `<div style="font-family:Arial,sans-serif;max-width:600px;border:1px solid #ddd;border-radius:8px;overflow:hidden;">
+          <div style="background:#cc0000;color:#fff;padding:1.2rem 2rem;"><h2 style="margin:0;">New Bid Application</h2></div>
+          <div style="padding:1.5rem 2rem;">
+            <table style="width:100%;border-collapse:collapse;font-size:.9rem;">
+              <tr><td style="padding:.5rem;font-weight:bold;color:#555;width:35%;">Company</td><td style="padding:.5rem;">${bid.companyName||'—'}</td></tr>
+              <tr style="background:#f9f9f9"><td style="padding:.5rem;font-weight:bold;color:#555;">Contact</td><td style="padding:.5rem;">${bid.contactPerson||'—'}</td></tr>
+              <tr><td style="padding:.5rem;font-weight:bold;color:#555;">Email</td><td style="padding:.5rem;">${bid.emailAddress||'—'}</td></tr>
+              <tr style="background:#f9f9f9"><td style="padding:.5rem;font-weight:bold;color:#555;">Phone</td><td style="padding:.5rem;">${bid.phone||'—'}</td></tr>
+              ${bid.comments?`<tr><td style="padding:.5rem;font-weight:bold;color:#555;">Notes</td><td style="padding:.5rem;">${bid.comments}</td></tr>`:''}
+              ${attachments.length>0?`<tr style="background:#f9f9f9"><td style="padding:.5rem;font-weight:bold;color:#555;">Docs</td><td style="padding:.5rem;">${attachments.map(a=>a.filename).join(', ')}</td></tr>`:''}
+            </table>
+          </div>
+        </div>`
+      });
+    } catch (emailErr) { console.error('Bid application email failed:', emailErr.message); }
+    res.json({ success: true, bid });
+  } catch (err) { console.error(err.message); res.status(500).json({ error: 'Server Error' }); }
+});
+
+// @route   POST api/invite-contractors
+// @desc    Admin sends bid invitations to multiple contractors
+// @access  Private
+router.post('/invite-contractors', auth, async (req, res) => {
+  try {
+    const { emails, projectId, projectName, projectDetails, bidDueDate } = req.body;
+    if (!emails || !Array.isArray(emails) || emails.length === 0)
+      return res.status(400).json({ error: 'No email addresses provided' });
+    const project = projectId ? await Project.findById(projectId).catch(()=>null) : null;
+    const pName    = projectName    || (project && project.title)      || 'Open Project';
+    const pDetails = projectDetails || (project && project.address)    || '';
+    const pDue     = bidDueDate     || (project && project.bidDueDate) || '';
+    const bidLink  = `${process.env.FRONTEND_URL || 'https://kjrid.com'}/bid-projects.html`;
+    const transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST||'smtp.gmail.com', port: parseInt(process.env.SMTP_PORT)||587,
+      secure: false, auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS }
+    });
+    const results = [];
+    for (const email of emails) {
+      try {
+        await transporter.sendMail({
+          from: `"KJ Remodeling Interior Designs" <${process.env.SMTP_USER}>`,
+          to: email.trim(), cc: 'estimating@kjrid.com',
+          subject: `Invitation to Bid: ${pName}`,
+          html: `<div style="font-family:Arial,sans-serif;max-width:600px;border:1px solid #ddd;border-radius:8px;overflow:hidden;">
+            <div style="background:#cc0000;color:#fff;padding:1.2rem 2rem;">
+              <h2 style="margin:0;">Invitation to Bid</h2>
+              <p style="margin:.3rem 0 0;opacity:.8;font-size:.85rem;">KJ Remodeling Interior Designs Inc.</p>
+            </div>
+            <div style="padding:1.5rem 2rem;">
+              <p>You are invited to submit a bid for the following project:</p>
+              <table style="width:100%;border-collapse:collapse;font-size:.9rem;margin:1rem 0;">
+                <tr style="background:#f9f9f9"><td style="padding:.6rem;font-weight:bold;color:#555;width:35%;">Project</td><td style="padding:.6rem;">${pName}</td></tr>
+                ${pDetails?`<tr><td style="padding:.6rem;font-weight:bold;color:#555;">Details</td><td style="padding:.6rem;">${pDetails}</td></tr>`:''}
+                ${pDue?`<tr style="background:#f9f9f9"><td style="padding:.6rem;font-weight:bold;color:#555;">Bid Due</td><td style="padding:.6rem;">${pDue}</td></tr>`:''}
+              </table>
+              <div style="text-align:center;margin:1.5rem 0;">
+                <a href="${bidLink}" style="background:#cc0000;color:#fff;padding:.9rem 2.5rem;border-radius:50px;text-decoration:none;font-weight:700;font-size:1rem;display:inline-block;">View Project &amp; Submit Bid</a>
+              </div>
+              <p style="font-size:.8rem;color:#888;border-top:1px solid #eee;padding-top:1rem;">
+                KJ Remodeling Interior Designs Inc. &bull; 126 Castle Club Drive, Stone Mountain, GA 30087<br>
+                Questions? <a href="mailto:estimating@kjrid.com" style="color:#cc0000">estimating@kjrid.com</a>
+              </p>
+            </div>
+          </div>`
+        });
+        results.push({ email, success: true });
+      } catch (e) { results.push({ email, success: false, error: e.message }); }
+    }
+    res.json({ success: true, results });
+  } catch (err) { console.error(err.message); res.status(500).json({ error: 'Server Error' }); }
+});
 
 // --- USER AUTH ROUTES ---
 // @route   POST api/auth/register

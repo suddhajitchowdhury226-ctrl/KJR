@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Work Completed | KJR Interior Designs Inc.</title>
+  <title>Work Completed | KJ Remodeling Interior Designs Inc.</title>
   <link rel="stylesheet" href="styles.css">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
@@ -208,11 +208,7 @@
     </div>
 
     <!-- Stats Bar -->
-    <div class="stats-bar">
-      <div class="stat-item">
-        <div class="stat-num" id="wc-stat1-value">500+</div>
-        <div class="stat-label" id="wc-stat1-label">Projects Completed</div>
-      </div>
+    
       <div class="stat-item">
         <div class="stat-num" id="wc-stat2-value">14</div>
         <div class="stat-label" id="wc-stat2-label">Years in Business</div>
@@ -247,31 +243,76 @@
   <footer>
     <div class="footer-content">
       <div class="footer-brand">
-        <img src="logo-new.jpeg" alt="KJR Interior Designs Inc." style="height: 70px; margin-bottom: 1.5rem;">
-        <p>KJR Interior Designs Inc. &mdash; Professional interior construction services. BBB Accredited since 2014.</p>
+        <img src="logo-new.jpeg" alt="KJ Remodeling Interior Designs Inc." style="height: 70px; margin-bottom: 1.5rem;">
+        <p>KJ Remodeling Interior Designs Inc. &mdash; Professional interior construction services.</p>
       </div>
 
       <div class="footer-col">
         <h4>INSURANCE REQUIREMENTS</h4>
         <ul class="footer-links">
-          <li><a href="property-mgmt.html">Workers Comp</a></li>
-          <li><a href="property-mgmt.html">General Liability</a></li>
-          <li><a href="property-mgmt.html">Auto Insurance</a></li>
+          <li><a href="property-profile-creation.html">Workers Comp</a></li>
+          <li><a href="property-profile-creation.html">General Liability</a></li>
+          <li><a href="property-profile-creation.html">Auto Insurance</a></li>
           <li><a href="property-profile-creation.html">Vendor Profile</a></li>
         </ul>
       </div><div class="footer-col">
         <h4>CONTACT</h4>
         <p><a href="tel:888-944-6313" style="color: inherit; text-decoration: none;">888-944-6313</a><br>Open 24/7</p>
-        <p style="margin-top: 1rem;"><a href="https://maps.google.com/?q=1420+Industrial+Park+Road,+Paris,+TN+38242" target="_blank" style="color: inherit; text-decoration: none;">1420 Industrial Park Road<br>Paris, TN 38242</a></p>
+        <p style="margin-top: 1rem;"><a href="https://maps.google.com/?q=126+Castle+Club+Drive,+Stone+Mountain,+GA+30087" target="_blank" style="color: inherit; text-decoration: none;">126 Castle Club Drive<br>Stone Mountain, GA 30087</a></p>
       </div>
     </div>
 
     <div class="footer-bottom">
-      <div>&copy; 2024 KJR Interior Designs Inc. All rights reserved.</div>
+      <div>&copy; 2024 KJ Remodeling Interior Designs Inc. All rights reserved.</div>
       <div><a href="#">Privacy Policy</a> &nbsp;|&nbsp; <a href="#">Terms of Service</a></div>
     </div>
   </footer>
 
+  
+  <!-- Upload Work Photos -->
+  <section style="background:#fff;padding:3rem 2rem;text-align:center;">
+    <div style="max-width:600px;margin:0 auto;">
+      <h3 style="color:#cc0000;font-weight:800;margin-bottom:1rem;">Submit Work Photos</h3>
+      <form id="uploadWorkForm">
+        <div style="margin-bottom:1rem;text-align:left;">
+          <label style="font-weight:700;display:block;margin-bottom:.4rem;">Your Name / Company *</label>
+          <input type="text" name="name" required style="width:100%;padding:.75rem;border:2px solid #e0e0e0;border-radius:4px;font-size:1rem;box-sizing:border-box;">
+        </div>
+        <div style="margin-bottom:1rem;text-align:left;">
+          <label style="font-weight:700;display:block;margin-bottom:.4rem;">Email *</label>
+          <input type="email" name="email" required style="width:100%;padding:.75rem;border:2px solid #e0e0e0;border-radius:4px;font-size:1rem;box-sizing:border-box;">
+        </div>
+        <div style="margin-bottom:1rem;text-align:left;">
+          <label style="font-weight:700;display:block;margin-bottom:.4rem;">Project Description</label>
+          <textarea name="description" rows="3" style="width:100%;padding:.75rem;border:2px solid #e0e0e0;border-radius:4px;font-size:1rem;resize:vertical;box-sizing:border-box;"></textarea>
+        </div>
+        <div style="margin-bottom:1.5rem;text-align:left;">
+          <label style="font-weight:700;display:block;margin-bottom:.4rem;">Upload Photos *</label>
+          <input type="file" name="photos" multiple accept="image/*,.pdf" required style="width:100%;padding:.5rem;border:2px dashed #cc0000;border-radius:4px;background:#fff8f8;">
+        </div>
+        <button type="submit" style="background:#cc0000;color:#fff;border:none;padding:1rem 3rem;border-radius:50px;font-size:1rem;font-weight:700;cursor:pointer;">Upload Photos</button>
+        <div id="uploadMsg" style="margin-top:1rem;display:none;"></div>
+      </form>
+    </div>
+  </section>
+  <script>
+  document.getElementById('uploadWorkForm').addEventListener('submit',async function(e){
+    e.preventDefault();
+    var btn=this.querySelector('button[type="submit"]');
+    var msg=document.getElementById('uploadMsg');
+    btn.textContent='Uploading...'; btn.disabled=true;
+    try{
+      var fd=new FormData(this);
+      fd.set('_formType','workcompleted');
+      fd.set('_subject','Work Completed Photos Submission');
+      var res=await fetch('https://kjr-backend.onrender.com/api/forms',{method:'POST',body:fd});
+      var d=await res.json();
+      if(d.success){msg.style.display='block';msg.style.color='#15803d';msg.textContent='Photos submitted!';this.reset();}
+      else throw new Error();
+    }catch(err){msg.style.display='block';msg.style.color='#cc0000';msg.textContent='Error uploading. Please try again.';}
+    finally{btn.textContent='Upload Photos';btn.disabled=false;}
+  });
+  </script>
   <!-- Lightbox Overlay -->
   <div class="lightbox" id="lightbox">
     <span class="lightbox-close" id="lightbox-close">&times;</span>
@@ -323,7 +364,7 @@
   <div id="authModal" class="auth-modal" onclick="if(event.target===this)closeAuthModal()">
     <div class="auth-modal-box">
       <button class="auth-close" onclick="closeAuthModal()" aria-label="Close">&times;</button>
-      <div class="auth-logo"><img src="logo-new.jpeg" alt="KJIR Interior Designs"></div>
+      <div class="auth-logo"><img src="logo-new.jpeg" alt="KJ Remodeling Interior Designs"></div>
       <div class="auth-tabs">
         <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')">Login</button>
         <button class="auth-tab" id="tabSignup" onclick="switchTab('signup')">Sign Up</button>
@@ -499,7 +540,7 @@
   <!-- ══ Mobile Nav Drawer ═══════════════════════════════════════════════ -->
   <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
     <div class="mobile-nav-header">
-      <a href="index.html"><img src="logo-new.jpeg" alt="KJR Interior Designs"></a>
+      <a href="index.html"><img src="logo-new.jpeg" alt="KJ Remodeling Interior Designs"></a>
       <button class="mobile-nav-close" onclick="closeMobileNav()" aria-label="Close menu">&times;</button>
     </div>
     <ul class="mobile-nav-links">

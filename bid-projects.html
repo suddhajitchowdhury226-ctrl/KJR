@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bid Projects | KJR Interior Designs Inc.</title>
-  <meta name="description" content="Review open bid projects and submit proposals to KJR Interior Designs Inc.">
+  <title>Bid Projects | KJ Remodeling Interior Designs Inc.</title>
+  <meta name="description" content="Review open bid projects and submit proposals to KJ Remodeling Interior Designs Inc.">
   <link rel="stylesheet" href="styles.css">
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
@@ -320,10 +320,8 @@
 <!-- Apply Modal -->
 <div class="modal-overlay" id="applyModal">
   <div class="modal-box">
-    <form action="https://kjr-backend.onrender.com/api/forms" method="POST" enctype="multipart/form-data" target="hidden_iframe" id="m-form" onsubmit="window.submittedBid=true;">
+    <form id="m-form" method="POST" enctype="multipart/form-data">
       <input type="hidden" name="_subject" id="bid-subject" value="New Bid Application">
-      <input type="hidden" name="_captcha" value="false">
-      <input type="hidden" name="_template" value="box">
       <input type="hidden" name="Project" id="f-proj" value="">
       <input type="hidden" name="Project Location" id="f-loc" value="">
       <div class="mhdr">
@@ -382,25 +380,25 @@
 <footer>
   <div class="footer-content">
     <div class="footer-brand">
-      <img src="logo-new.jpeg" alt="KJR Interior Designs Inc." style="height:70px;margin-bottom:1.5rem;">
-      <p>KJR Interior Designs Inc. &mdash; Professional interior construction services. BBB Accredited since 2014.</p>
+      <img src="logo-new.jpeg" alt="KJ Remodeling Interior Designs Inc." style="height:70px;margin-bottom:1.5rem;">
+      <p>KJ Remodeling Interior Designs Inc. &mdash; Professional interior construction services.</p>
     </div>
     <div class="footer-col">
       <h4>INSURANCE REQUIREMENTS</h4>
         <ul class="footer-links">
-          <li><a href="property-mgmt.html">Workers Comp</a></li>
-          <li><a href="property-mgmt.html">General Liability</a></li>
-          <li><a href="property-mgmt.html">Auto Insurance</a></li>
+          <li><a href="property-profile-creation.html">Workers Comp</a></li>
+          <li><a href="property-profile-creation.html">General Liability</a></li>
+          <li><a href="property-profile-creation.html">Auto Insurance</a></li>
           <li><a href="property-profile-creation.html">Vendor Profile</a></li>
         </ul>
     </div><div class="footer-col">
         <h4>CONTACT</h4>
         <p><a href="tel:888-944-6313" style="color: inherit; text-decoration: none;">888-944-6313</a><br>Open 24/7</p>
-        <p style="margin-top: 1rem;"><a href="https://maps.google.com/?q=1420+Industrial+Park+Road,+Paris,+TN+38242" target="_blank" style="color: inherit; text-decoration: none;">1420 Industrial Park Road<br>Paris, TN 38242</a></p>
+        <p style="margin-top: 1rem;"><a href="https://maps.google.com/?q=126+Castle+Club+Drive,+Stone+Mountain,+GA+30087" target="_blank" style="color: inherit; text-decoration: none;">126 Castle Club Drive<br>Stone Mountain, GA 30087</a></p>
       </div>
   </div>
   <div class="footer-bottom">
-    <div>&copy; 2024 KJR Interior Designs Inc. All rights reserved.</div>
+    <div>&copy; 2024 KJ Remodeling Interior Designs Inc. All rights reserved.</div>
     <div><a href="#">Privacy Policy</a> &nbsp;|&nbsp; <a href="#">Terms of Service</a></div>
   </div>
 </footer>
@@ -545,7 +543,7 @@ function buildCard(p){
   var docsHtml = p.hasDocs
     ? '<button class="btn-red" onclick="alert(\'Drawings & Plans coming soon.\')"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:text-bottom;"><path d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg> View Drawings/Plans</button>'
     + '<button class="btn-red" onclick="alert(\'Specifications coming soon.\')"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:text-bottom;"><path d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg> View Specifications</button>'
-    : '<button class="btn-red" disabled style="opacity:.5;cursor:not-allowed;"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:text-bottom;"><path d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg> Plans Pending</button>';
+    : '<button class="btn-red" disabled style="opacity:.5;cursor:not-allowed;"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:text-bottom;"><path d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>';
 
   var codesHtml = p.codes.map(function(c){
     return '<tr><td>'+c[0]+'</td><td>'+c[1]+'</td></tr>';
@@ -647,7 +645,7 @@ filterState('all');
   <div id="authModal" class="auth-modal" onclick="if(event.target===this)closeAuthModal()">
     <div class="auth-modal-box">
       <button class="auth-close" onclick="closeAuthModal()" aria-label="Close">&times;</button>
-      <div class="auth-logo"><img src="logo-new.jpeg" alt="KJIR Interior Designs"></div>
+      <div class="auth-logo"><img src="logo-new.jpeg" alt="KJ Remodeling Interior Designs"></div>
       <div class="auth-tabs">
         <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')">Login</button>
         <button class="auth-tab" id="tabSignup" onclick="switchTab('signup')">Sign Up</button>
@@ -804,7 +802,7 @@ filterState('all');
   <!-- ══ Mobile Nav Drawer ═══════════════════════════════════════════════ -->
   <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
     <div class="mobile-nav-header">
-      <a href="index.html"><img src="logo-new.jpeg" alt="KJR Interior Designs"></a>
+      <a href="index.html"><img src="logo-new.jpeg" alt="KJ Remodeling Interior Designs"></a>
       <button class="mobile-nav-close" onclick="closeMobileNav()" aria-label="Close menu">&times;</button>
     </div>
     <ul class="mobile-nav-links">
@@ -880,5 +878,47 @@ filterState('all');
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMobileNav(); });
   </script>
 
+<script>
+(function(){
+  var form = document.getElementById('m-form');
+  if (!form) return;
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    var btn = document.getElementById('btn-submit-apply');
+    if (btn) { btn.textContent = 'Submitting...'; btn.disabled = true; }
+    try {
+      var fd = new FormData(this);
+      var first = (document.getElementById('a-first')||{}).value || '';
+      var last  = (document.getElementById('a-last')||{}).value  || '';
+      fd.set('companyName',    (document.getElementById('a-co')||{}).value    || '');
+      fd.set('contactPerson',  (first + ' ' + last).trim());
+      fd.set('emailAddress',   (document.getElementById('a-email')||{}).value || '');
+      fd.set('phone',          (document.getElementById('a-phone')||{}).value || '');
+      fd.set('projectName',    (document.getElementById('f-proj')||{}).value  || 'General Application');
+      fd.set('comments',       (document.getElementById('a-notes')||{}).value || '');
+      // Rename file field to 'documents' for multer
+      var rfp = document.getElementById('a-rfp');
+      if (rfp && rfp.files.length) {
+        fd.delete('RFP_Attachment');
+        for (var i = 0; i < rfp.files.length; i++) fd.append('documents', rfp.files[i]);
+      }
+      var res = await fetch('https://kjr-backend.onrender.com/api/bid-applications', { method:'POST', body: fd });
+      var d = await res.json();
+      if (d.success) {
+        alert('Application submitted! You will hear from estimating@kjrid.com.');
+        form.reset();
+        if (typeof closeApply === 'function') closeApply();
+      } else { throw new Error('Server error'); }
+    } catch(err) {
+      alert('Submission error. Please email estimating@kjrid.com directly.');
+    } finally {
+      if (btn) {
+        btn.innerHTML = 'Submit Application';
+        btn.disabled = false;
+      }
+    }
+  });
+})();
+</script>
 </body>
 </html>

@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Property Management Crew | KJR Interior Designs Inc.</title>
+  <title>Property Management Crew | KJ Remodeling Interior Designs Inc.</title>
   <link rel="stylesheet" href="styles.css">
   <style>
     /* Modal Styles */
@@ -214,7 +214,7 @@
         </p>
         <ul class="check-grid" style="grid-template-columns: 1fr;">
           <li>Be your own boss with a flexible schedule to fit your needs</li>
-          <li>Enjoy a steady flow of work provided by KJR Interior Designs Inc.</li>
+          <li>Enjoy a steady flow of work provided by KJ Remodeling Interior Designs Inc.</li>
           <li>Each project approval awards you to an individual contract.</li>
           <li>You must have your own equipment, tools, and machinery.</li>
         </ul>
@@ -228,7 +228,7 @@
   <section class="content-section" style="background: white;">
     <div class="section-header">
       <h2>INSURANCE REQUIREMENTS</h2>
-      <p>Required documents to move forward with KJR Interior Designs Inc.</p>
+      <p>Required documents to move forward with KJ Remodeling Interior Designs Inc.</p>
     </div>
 
     <div class="feature-card" style="max-width: 1000px;">
@@ -249,7 +249,7 @@
           <h3 style="font-size: 1.4rem; margin-bottom: 1.5rem; color: var(--primary);">2. Coverage of Insurance (COI)
           </h3>
           <ul style="list-style: none; font-size: 0.95rem; line-height: 1.8; color: var(--text-body);">
-            <li><strong>Holder:</strong> Shamrock Property Management LLC<br>1420 Industrial Park Road, Paris, TN 38242
+            <li><strong>Holder:</strong> Shamrock Property Management LLC<br>126 Castle Club Drive, Stone Mountain, GA 30087
             </li>
             <li><strong>General Liability:</strong> Each occurrence $1,000,000</li>
             <li><strong>Description:</strong> Shamrock Property Management LLC is an additional insured.</li>
@@ -562,29 +562,29 @@
   <footer>
     <div class="footer-content">
       <div class="footer-brand">
-        <img src="logo-new.jpeg" alt="KJR Interior Designs Inc." style="height: 70px; margin-bottom: 1.5rem;">
-        <p>A massive supplier for home appliances, electronics, HVAC, and more. BBB Accredited since 2014.</p>
+        <img src="logo-new.jpeg" alt="KJ Remodeling Interior Designs Inc." style="height: 70px; margin-bottom: 1.5rem;">
+        <p>A massive supplier for home appliances, electronics, HVAC, and more.</p>
       </div>
 
       <div class="footer-col">
         <h4>INSURANCE REQUIREMENTS</h4>
         <ul class="footer-links">
-          <li><a href="property-mgmt.html">Workers Comp</a></li>
-          <li><a href="property-mgmt.html">General Liability</a></li>
-          <li><a href="property-mgmt.html">Auto Insurance</a></li>
+          <li><a href="property-profile-creation.html">Workers Comp</a></li>
+          <li><a href="property-profile-creation.html">General Liability</a></li>
+          <li><a href="property-profile-creation.html">Auto Insurance</a></li>
           <li><a href="property-profile-creation.html">Vendor Profile</a></li>
         </ul>
       </div><div class="footer-col">
         <h4>CONTACT</h4>
         <p><a href="tel:888-944-6313" style="color: inherit; text-decoration: none;">888-944-6313</a><br>Open 24/7</p>
-        <p style="margin-top: 1rem;"><a href="https://maps.google.com/?q=1420+Industrial+Park+Road,+Paris,+TN+38242"
-            target="_blank" style="color: inherit; text-decoration: none;">1420 Industrial Park Road<br>Paris, TN
+        <p style="margin-top: 1rem;"><a href="https://maps.google.com/?q=126+Castle+Club+Drive,+Stone+Mountain,+GA+30087"
+            target="_blank" style="color: inherit; text-decoration: none;">126 Castle Club Drive<br>Paris, TN
             38242</a></p>
       </div>
     </div>
 
     <div class="footer-bottom">
-      <div>&copy; 2024 KJR Interior Designs Inc. All rights reserved.</div>
+      <div>&copy; 2024 KJ Remodeling Interior Designs Inc. All rights reserved.</div>
       <div><a href="#">Privacy Policy</a> &nbsp;|&nbsp; <a href="#">Terms of Service</a></div>
     </div>
   </footer>
@@ -594,7 +594,7 @@
   <div id="authModal" class="auth-modal" onclick="if(event.target===this)closeAuthModal()">
     <div class="auth-modal-box">
       <button class="auth-close" onclick="closeAuthModal()" aria-label="Close">&times;</button>
-      <div class="auth-logo"><img src="logo-new.jpeg" alt="KJIR Interior Designs"></div>
+      <div class="auth-logo"><img src="logo-new.jpeg" alt="KJ Remodeling Interior Designs"></div>
       <div class="auth-tabs">
         <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')">Login</button>
         <button class="auth-tab" id="tabSignup" onclick="switchTab('signup')">Sign Up</button>
@@ -762,7 +762,7 @@
   <!-- ══ Mobile Nav Drawer ═══════════════════════════════════════════════ -->
   <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
     <div class="mobile-nav-header">
-      <a href="index.html"><img src="logo-new.jpeg" alt="KJR Interior Designs"></a>
+      <a href="index.html"><img src="logo-new.jpeg" alt="KJ Remodeling Interior Designs"></a>
       <button class="mobile-nav-close" onclick="closeMobileNav()" aria-label="Close menu">&times;</button>
     </div>
     <ul class="mobile-nav-links">
@@ -838,6 +838,36 @@
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMobileNav(); });
   </script>
 
+<script>
+(function(){
+  // Fix all upload/invoice forms to go to propertymanagement@kjrid.com
+  function fixForms(){
+    document.querySelectorAll('form').forEach(function(form){
+      if(form.dataset.kjrFixed)return; form.dataset.kjrFixed='1';
+      form.addEventListener('submit',async function(e){
+        e.preventDefault();
+        var btn=this.querySelector('button[type="submit"],input[type="submit"]');
+        var orig=btn?(btn.textContent||btn.value):'Upload';
+        if(btn){btn.textContent='Uploading...';btn.disabled=true;}
+        try{
+          var fd=new FormData(this);
+          fd.set('_formType','property');
+          fd.set('_subject','Property Management Document Submission');
+          var res=await fetch('https://kjr-backend.onrender.com/api/forms',{method:'POST',body:fd});
+          var d=await res.json();
+          if(d.success){alert('Documents submitted to propertymanagement@kjrid.com!');this.reset();if(typeof closeUploadModal==='function')closeUploadModal();}
+          else throw new Error();
+        }catch(err){alert('Upload error. Please email propertymanagement@kjrid.com directly.');}
+        finally{if(btn){btn.textContent=orig;btn.disabled=false;}}
+      });
+    });
+  }
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',fixForms);}else{fixForms();}
+  // Re-run after modal opens
+  const origOpen=window.openUploadModal;
+  window.openUploadModal=function(){if(origOpen)origOpen.apply(this,arguments);setTimeout(fixForms,100);};
+})();
+</script>
 </body>
 
 </html>
