@@ -954,16 +954,17 @@ router.get('/site-content', async (req, res) => {
 // @access  Private
 router.put('/admin/site-content', auth, async (req, res) => {
   try {
+    const update = {};
     const allowed = [
       'heroHeading', 'heroSubtitle', 'heroVideoUrl',
       'missionSubLabel', 'missionQuote',
       'servicesSectionTitle', 'servicesSectionSubtitle', 'serviceCards',
-      'marketSectionTitle', 'marketSectionSubtitle', 'marketAreas'
+      'marketSectionTitle', 'marketSectionSubtitle', 'marketAreas',
+      'aboutUs', 'contactUs', 'careerMove', 'propertyMgmt',
+      'bidProjects', 'workCompleted', 'suggestFeature', 'global'
     ];
-    const update = {};
     allowed.forEach(k => { if (req.body[k] !== undefined) update[k] = req.body[k]; });
     update.updatedAt = new Date();
-
     const content = await SiteContent.findOneAndUpdate(
       { key: 'main' },
       { $set: update },
@@ -973,6 +974,27 @@ router.put('/admin/site-content', auth, async (req, res) => {
   } catch (err) {
     console.error('site-content PUT:', err.message);
     res.status(500).send('Server Error');
+  }
+});
+
+// @route   PUT api/admin/site-content/about-team
+// @desc    Update about page exec/support team photos directly
+// @access  Private
+router.put('/admin/site-content/about-team', auth, async (req, res) => {
+  try {
+    const { execTeam, supportTeam } = req.body;
+    const update = { updatedAt: new Date() };
+    if (execTeam)    update['aboutUs.execTeam']    = execTeam;
+    if (supportTeam) update['aboutUs.supportTeam'] = supportTeam;
+    const content = await SiteContent.findOneAndUpdate(
+      { key: 'main' },
+      { $set: update },
+      { new: true, upsert: true }
+    );
+    res.json({ success: true });
+  } catch (err) {
+    console.error('about-team PUT:', err.message);
+    res.status(500).json({ error: 'Server Error' });
   }
 });
 

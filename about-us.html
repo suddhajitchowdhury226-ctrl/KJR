@@ -357,8 +357,10 @@
         if (c.supportTitle) { const el = document.getElementById('au-support-title'); if(el) el.textContent = c.supportTitle; }
         // Exec team photos
         if (Array.isArray(c.execTeam)) {
+          // Hardcode correct photos to prevent stale DB values overriding them
+          const correctPhotos = ['CEO.png', 'COO.png', 'Superintendent.jpeg'];
           c.execTeam.forEach((m, i) => {
-            setSrc(`au-exec-photo-${i}`, m.photo);
+            setSrc(`au-exec-photo-${i}`, correctPhotos[i] || m.photo);
             setT(`au-exec-name-${i}`, m.name);
             setT(`au-exec-role-${i}`, m.role);
           });
